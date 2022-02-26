@@ -2,7 +2,6 @@ import { Card, Grid, Link, Text } from "@nextui-org/react";
 import { Item } from "../recipes";
 
 export const RecipeCard = ({ recipe }: { recipe: Item }) => {
-  console.log(recipe);
   return (
     <Grid xs={12} sm={3}>
       <Link rel="noreferrer" target="_blank" href={recipe.websiteUrl}>
