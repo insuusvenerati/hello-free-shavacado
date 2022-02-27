@@ -1,10 +1,10 @@
 import Head from "next/head";
 import { Navbar } from "../components/Nav";
-import { Grid, Input, Loading, Text } from "@nextui-org/react";
+import { Checkbox, Grid, Input, Loading, Text } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { getCookie, setCookies } from "cookies-next";
 import { useDebounce } from "../util/useDebounce";
-import { Item } from "../recipes";
+import { Allergen, Item, Recipes } from "../recipes";
 import { RecipeCard } from "../components/RecipeCard";
 
 const hellofreshGetToken = async () => {
@@ -15,7 +15,7 @@ const hellofreshGetToken = async () => {
   return await response.json();
 };
 
-const hellofreshSearch = async (searchText: string) => {
+const hellofreshSearch = async (searchText: string): Promise<Recipes> => {
   const response = await fetch(
     `https://www.hellofresh.com/gw/recipes/recipes/search?limit=25&locale=en-US&country=US&q=${searchText}`,
     { headers: { authorization: `Bearer ${getCookie("token")}` } }
@@ -26,10 +26,12 @@ const hellofreshSearch = async (searchText: string) => {
 export default function Home() {
   const [searchText, setSearchText] = useState("");
   const [recipes, setRecipes] = useState<Item[] | []>([]);
+  const [allergens, setAllergens] = useState<Allergen[] | []>([]);
   const [loading, setLoading] = useState(false);
   const debouncedSearchText = useDebounce(searchText, 500);
   const token = getCookie("token");
 
+  // Get token
   useEffect(() => {
     if (!token) {
       hellofreshGetToken()
@@ -38,6 +40,7 @@ export default function Home() {
     }
   }, []);
 
+  // Search recipes
   useEffect(() => {
     if (debouncedSearchText) {
       hellofreshSearch(debouncedSearchText)
@@ -52,6 +55,12 @@ export default function Home() {
       setLoading(false);
     }
   }, [debouncedSearchText]);
+
+  // Pull allergens from recipes
+  useEffect(() => {
+    recipes.map((recipe) => setAllergens(recipe.allergens));
+    return () => setAllergens([]);
+  }, [recipes]);
 
   return (
     <>
@@ -72,14 +81,29 @@ export default function Home() {
             <Input
               onChange={(event) => setSearchText(event.target.value)}
               labelPlaceholder="Ingredient"
+              clearable
             />
           </main>
         </Grid>
         <Grid.Container gap={2} justify="center">
-          {recipes.length !== 0 ? (
-            recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
-            ))
+          {!loading && allergens.length !== 0 ? (
+            <>
+              <Grid justify="center" xs>
+                <Checkbox.Group value={[]}>
+                  {allergens.map((allergen) => (
+                    <Checkbox key={allergen.id} value={allergen.name}>
+                      {allergen.name}
+                    </Checkbox>
+                  ))}
+                </Checkbox.Group>
+              </Grid>
+
+              {recipes.map((recipe) => (
+                <>
+                  <RecipeCard key={recipe.id} recipe={recipe} />
+                </>
+              ))}
+            </>
           ) : (
             <Grid>
               <Text h4>
