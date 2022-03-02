@@ -98,11 +98,12 @@ export default function Home() {
                 </Checkbox.Group>
               </Grid>
 
-              {recipes.map((recipe) => (
-                <>
-                  <RecipeCard key={recipe.id} recipe={recipe} />
-                </>
-              ))}
+              {!loading &&
+                recipes.map((recipe) => (
+                  <>
+                    <RecipeCard key={recipe.id} recipe={recipe} />
+                  </>
+                ))}
             </>
           ) : (
             <Grid>
