@@ -6,6 +6,7 @@ import { getCookie, setCookies } from "cookies-next";
 import { useDebounce } from "../util/useDebounce";
 import { Allergen, Item, Recipes } from "../recipes";
 import { RecipeCard } from "../components/RecipeCard";
+import Script from "next/script";
 
 const hellofreshGetToken = async () => {
   const response = await fetch(
@@ -72,6 +73,8 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <Script src="https://analytics.stiforr.tech/umami.js" strategy="lazyOnload" />
 
       <Navbar />
 
