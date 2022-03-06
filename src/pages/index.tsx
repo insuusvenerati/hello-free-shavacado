@@ -39,7 +39,7 @@ export default function Home() {
         .then((token) => setCookies("token", token.access_token))
         .catch((e) => console.error(e));
     }
-  }, []);
+  }, [token]);
 
   // Search recipes
   useEffect(() => {
@@ -74,7 +74,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Script src="https://analytics.stiforr.tech/umami.js" strategy="lazyOnload" />
+      <Script
+        src="https://analytics.stiforr.tech/umami.js"
+        strategy="lazyOnload"
+      />
 
       <Navbar />
 
