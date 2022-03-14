@@ -1,12 +1,20 @@
 import Head from "next/head";
 import { Navbar } from "../components/Nav";
-import { Checkbox, Grid, Input, Loading, Text } from "@nextui-org/react";
+import {
+  Checkbox,
+  Container,
+  Grid,
+  Input,
+  Loading,
+  Text,
+} from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { getCookie, setCookies } from "cookies-next";
 import { useDebounce } from "../util/useDebounce";
 import { Allergen, Item, Recipes } from "../recipes";
 import { RecipeCard } from "../components/RecipeCard";
 import Script from "next/script";
+import { PreviewLink } from "../components/PreviewLink";
 
 const hellofreshGetToken = async () => {
   const response = await fetch(
@@ -92,9 +100,9 @@ export default function Home() {
           </main>
         </Grid>
         <Grid.Container gap={2} justify="center">
-          {!loading && allergens.length !== 0 ? (
+          {!loading ? (
             <>
-              <Grid justify="center" xs>
+              {/* <Grid justify="center" xs>
                 <Checkbox.Group value={[]}>
                   {allergens.map((allergen) => (
                     <Checkbox key={allergen.id} value={allergen.name}>
@@ -102,14 +110,13 @@ export default function Home() {
                     </Checkbox>
                   ))}
                 </Checkbox.Group>
-              </Grid>
+              </Grid> */}
 
-              {!loading &&
-                recipes.map((recipe) => (
-                  <>
-                    <RecipeCard key={recipe.id} recipe={recipe} />
-                  </>
-                ))}
+              {recipes.map((recipe) => (
+                <>
+                  <RecipeCard key={recipe.id} recipe={recipe} />
+                </>
+              ))}
             </>
           ) : (
             <Grid>
