@@ -6,7 +6,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { url } = req.query;
+    //TODO: Hacky typescript fix.
+    const url = req.query.url[0];
     const image = await getImageBase64(url);
 
     res.status(200).json({ image });
