@@ -5,7 +5,13 @@ export const StyledNavContainer = styled("nav", {
   display: "flex",
   alignItems: "center",
   height: "76px",
+  // position: "sticky",
   background: "transparent",
+  marginBottom: "$10",
+  zIndex: "$max",
+  "& .navbar__social-icon": {
+    fill: "$colors$headerIconColor",
+  },
   variants: {
     showBlur: {
       true: {
