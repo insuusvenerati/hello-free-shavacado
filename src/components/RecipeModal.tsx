@@ -12,7 +12,12 @@ import {
 import Image from "next/image";
 import { Item } from "../recipes";
 
-export const RecipeModal = ({ recipe, ...props }: { recipe: Item }) => {
+type Props = {
+  recipe: Item;
+  [x: string]: any;
+};
+
+export const RecipeModal = ({ recipe, ...props }: Props) => {
   return (
     <Modal {...props}>
       <Modal.Header>

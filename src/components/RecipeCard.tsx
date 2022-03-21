@@ -1,17 +1,13 @@
 import { Button, Card, Container, Grid, Row, Text } from "@nextui-org/react";
 import { Item } from "../recipes";
 
-const baseUrl = "https://hellofresh.com/recipes";
-
-export const RecipeCard = ({
-  recipe,
-  handler,
-  setSelectedRecipe,
-}: {
+type Props = {
   recipe: Item;
-}) => {
-  const recipeUrl = `${baseUrl}/${recipe.slug}-${recipe.id}`;
+  handler: () => void;
+  setSelectedRecipe: (recipe: Item) => void;
+};
 
+export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
   return (
     <Grid xs={12} sm={3}>
       {/* <Link rel="noreferrer" target="_blank" href={recipeUrl}> */}
