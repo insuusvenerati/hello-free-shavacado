@@ -3,6 +3,9 @@ const runtimeCaching = require("next-pwa/cache");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    domains: ["img.hellofresh.com"],
+  },
   reactStrictMode: true,
   pwa: {
     dest: "public",

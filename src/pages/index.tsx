@@ -1,20 +1,13 @@
-import Head from "next/head";
-import { Navbar } from "../components/Nav";
-import {
-  Checkbox,
-  Container,
-  Grid,
-  Input,
-  Loading,
-  Text,
-} from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { Grid, Input, Loading, Text } from "@nextui-org/react";
 import { getCookie, setCookies } from "cookies-next";
-import { useDebounce } from "../util/useDebounce";
-import { Allergen, Item, Recipes } from "../recipes";
-import { RecipeCard } from "../components/RecipeCard";
+import Head from "next/head";
 import Script from "next/script";
-import { PreviewLink } from "../components/PreviewLink";
+import { useEffect, useState } from "react";
+import { Navbar } from "../components/Nav";
+import { RecipeCard } from "../components/RecipeCard";
+import { RecipeModal } from "../components/RecipeModal";
+import { Allergen, Item, Recipes } from "../recipes";
+import { useDebounce } from "../util/useDebounce";
 
 const hellofreshGetToken = async () => {
   const response = await fetch(
@@ -33,12 +26,18 @@ const hellofreshSearch = async (searchText: string): Promise<Recipes> => {
 };
 
 export default function Home() {
+  const [visible, setVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [recipes, setRecipes] = useState<Item[] | []>([]);
+  const [selectedRecipe, setSelectedRecipe] = useState<Item>();
   const [allergens, setAllergens] = useState<Allergen[] | []>([]);
   const [loading, setLoading] = useState(false);
   const debouncedSearchText = useDebounce(searchText, 500);
   const token = getCookie("token");
+
+  const modalHandler = () => setVisible(true);
+  const closeHandler = () => setVisible(false);
+  const recipeHandler = (recipe) => setSelectedRecipe(recipe);
 
   // Get token
   useEffect(() => {
@@ -66,10 +65,10 @@ export default function Home() {
   }, [debouncedSearchText]);
 
   // Pull allergens from recipes
-  useEffect(() => {
-    recipes.map((recipe) => setAllergens(recipe.allergens));
-    return () => setAllergens([]);
-  }, [recipes]);
+  // useEffect(() => {
+  //   recipes.map((recipe) => setAllergens(recipe.allergens));
+  //   return () => setAllergens([]);
+  // }, [recipes]);
 
   return (
     <>
@@ -89,35 +88,32 @@ export default function Home() {
 
       <Navbar />
 
+      <RecipeModal
+        recipe={selectedRecipe}
+        blur
+        open={visible}
+        onClose={closeHandler}
+        width={1200}
+      />
+
       <Grid.Container css={{ marginTop: "10px" }} gap={2} justify="center">
         <Grid>
-          <main>
-            <Input
-              onChange={(event) => setSearchText(event.target.value)}
-              labelPlaceholder="Ingredient"
-              clearable
-            />
-          </main>
+          <Input
+            onChange={(event) => setSearchText(event.target.value)}
+            labelPlaceholder="Ingredient"
+            clearable
+          />
         </Grid>
         <Grid.Container gap={2} justify="center">
-          {!loading ? (
-            <>
-              {/* <Grid justify="center" xs>
-                <Checkbox.Group value={[]}>
-                  {allergens.map((allergen) => (
-                    <Checkbox key={allergen.id} value={allergen.name}>
-                      {allergen.name}
-                    </Checkbox>
-                  ))}
-                </Checkbox.Group>
-              </Grid> */}
-
-              {recipes.map((recipe) => (
-                <>
-                  <RecipeCard key={recipe.id} recipe={recipe} />
-                </>
-              ))}
-            </>
+          {recipes.length > 0 ? (
+            recipes.map((recipe: Item) => (
+              <RecipeCard
+                key={recipe.id}
+                handler={modalHandler}
+                recipe={recipe}
+                setSelectedRecipe={setSelectedRecipe}
+              />
+            ))
           ) : (
             <Grid>
               <Text h4>
