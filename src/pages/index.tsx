@@ -1,43 +1,37 @@
-import { Grid, Input, Loading, Text } from "@nextui-org/react";
+import { Grid, Input, Text } from "@nextui-org/react";
 import { getCookie, setCookies } from "cookies-next";
 import Head from "next/head";
 import Script from "next/script";
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Navbar } from "../components/Nav";
 import { RecipeCard } from "../components/RecipeCard";
 import { RecipeModal } from "../components/RecipeModal";
-import { Allergen, Item, Recipes } from "../recipes";
+import { Item, Recipes } from "../recipes";
+import { hellofreshGetToken } from "../util/hellofresh";
 import { useDebounce } from "../util/useDebounce";
-
-const hellofreshGetToken = async () => {
-  const response = await fetch(
-    "https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials",
-    { method: "POST" }
-  );
-  return await response.json();
-};
-
-const hellofreshSearch = async (searchText: string): Promise<Recipes> => {
-  const response = await fetch(
-    `https://www.hellofresh.com/gw/recipes/recipes/search?limit=25&locale=en-US&country=US&q=${searchText}`,
-    { headers: { authorization: `Bearer ${getCookie("token")}` } }
-  );
-  return await response.json();
-};
 
 export default function Home() {
   const [visible, setVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [recipes, setRecipes] = useState<Item[] | []>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<Item>();
-  const [allergens, setAllergens] = useState<Allergen[] | []>([]);
-  const [loading, setLoading] = useState(false);
   const debouncedSearchText = useDebounce(searchText, 500);
   const token = getCookie("token");
+  const { data: recipes } = useQuery(
+    ["recipes", token, debouncedSearchText],
+    async (): Promise<Recipes> => {
+      const response = await fetch(
+        `/api/hellofresh?token=${token}&searchText=${debouncedSearchText}`
+      );
+      return response.json();
+    },
+    {
+      enabled: !!token && !!debouncedSearchText,
+    }
+  );
 
   const modalHandler = () => setVisible(true);
   const closeHandler = () => setVisible(false);
-  const recipeHandler = (recipe) => setSelectedRecipe(recipe);
 
   // Get token
   useEffect(() => {
@@ -47,28 +41,6 @@ export default function Home() {
         .catch((e) => console.error(e));
     }
   }, [token]);
-
-  // Search recipes
-  useEffect(() => {
-    if (debouncedSearchText) {
-      hellofreshSearch(debouncedSearchText)
-        .then((results) => {
-          setLoading(true);
-          setRecipes(results.items);
-        })
-        .catch((e) => console.error(e))
-        .finally(() => setLoading(false));
-    } else {
-      setRecipes([]);
-      setLoading(false);
-    }
-  }, [debouncedSearchText]);
-
-  // Pull allergens from recipes
-  // useEffect(() => {
-  //   recipes.map((recipe) => setAllergens(recipe.allergens));
-  //   return () => setAllergens([]);
-  // }, [recipes]);
 
   return (
     <>
@@ -97,16 +69,18 @@ export default function Home() {
       />
 
       <Grid.Container css={{ marginTop: "10px" }} gap={2} justify="center">
-        <Grid>
+        <Grid sm={6} xs={12}>
           <Input
             onChange={(event) => setSearchText(event.target.value)}
             labelPlaceholder="Ingredient"
             clearable
+            fullWidth
+            size="lg"
           />
         </Grid>
         <Grid.Container gap={2} justify="center">
-          {recipes.length > 0 ? (
-            recipes.map((recipe: Item) => (
+          {recipes?.items.length > 0 ? (
+            recipes?.items.map((recipe: Item) => (
               <RecipeCard
                 key={recipe.id}
                 handler={modalHandler}
@@ -121,7 +95,6 @@ export default function Home() {
               </Text>
             </Grid>
           )}
-          <Grid>{loading && <Loading />}</Grid>
         </Grid.Container>
       </Grid.Container>
     </>
