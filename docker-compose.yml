@@ -1,0 +1,13 @@
+version: "3"
+services:
+  redis:
+    image: bitnami/redis:latest
+    container_name: redis
+    network_mode: host
+    volumes:
+      - data:/bitnami/redis/data
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+volumes:
+  data:
