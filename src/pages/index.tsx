@@ -54,8 +54,10 @@ export default function Home() {
       </Head>
 
       <Script
+        async
+        defer
         src="https://analytics.stiforr.tech/umami.js"
-        strategy="lazyOnload"
+        data-website-id="679de944-0e27-4e1e-aa33-efc4feddd5bb"
       />
 
       <Navbar />
