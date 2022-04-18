@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { hellofreshSearch } from "../../util/hellofresh";
+import { withSentry } from "@sentry/nextjs";
 import redis from "../../util/redis";
 
 const oneDay = 60 * 24;
@@ -25,4 +26,4 @@ const getRecipes = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default getRecipes;
+export default withSentry(getRecipes);
