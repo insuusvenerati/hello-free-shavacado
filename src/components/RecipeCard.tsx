@@ -26,7 +26,7 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
         <Card.Footer>
           <Container>
             <Row justify="space-between">
-              <Text weight="bold" h4 color="black">
+              <Text weight="bold" h4>
                 {recipe?.name}
               </Text>
             </Row>
