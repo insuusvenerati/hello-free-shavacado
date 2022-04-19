@@ -1,4 +1,4 @@
-import { Recipes } from "../recipes";
+import { RecipeQuery } from "../types/recipes";
 
 export const hellofreshGetToken = async () => {
   const response = await fetch(
@@ -10,13 +10,19 @@ export const hellofreshGetToken = async () => {
 
 export const hellofreshSearch = async (
   searchText: string,
-  token: string
-): Promise<Recipes> => {
+  token: string,
+  skip?: number
+  // ingredients?: string | string[],
+  // tag?: string,
+  // maxPrepTime?: number,
+  // difficulty?: number,
+  // take?: number
+): Promise<RecipeQuery> => {
   if (!token) {
     throw new Error(`Missing token`);
   }
   const response = await fetch(
-    `https://www.hellofresh.com/gw/recipes/recipes/search?limit=25&locale=en-US&country=US&q=${searchText}`,
+    `https://www.hellofresh.com/gw/recipes/recipes/search?take=20&skip=${skip}&locale=en-US&country=US&q=${searchText}&ingredients=`,
     { headers: { authorization: `Bearer ${token}` } }
   );
   return await response.json();

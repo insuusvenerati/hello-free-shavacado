@@ -1,4 +1,8 @@
-export interface Recipes {
+export interface RecipeQuery {
+  take: number;
+  skip: number;
+  count: number;
+  total: number;
   items: Item[];
 }
 
@@ -17,7 +21,7 @@ export interface Item {
   comment: null;
   difficulty: number;
   prepTime: string;
-  totalTime: null | string;
+  totalTime: TotalTime | null;
   servingSize: number;
   createdAt: Date;
   updatedAt: Date;
@@ -71,9 +75,11 @@ export interface Allergen {
 }
 
 export enum ID {
-  The57962A07B7E8697D4B3052F4 = "57962a07b7e8697d4b3052f4",
   The57962A07B7E8697D4B3052F5 = "57962a07b7e8697d4b3052f5",
   The57962A07B7E8697D4B3052F6 = "57962a07b7e8697d4b3052f6",
+  The57962A07B7E8697D4B3052F7 = "57962a07b7e8697d4b3052f7",
+  The57962A07B7E8697D4B3052F8 = "57962a07b7e8697d4b3052f8",
+  The57962A07B7E8697D4B3052F9 = "57962a07b7e8697d4b3052f9",
   The57962A07B7E8697D4B3052Fa = "57962a07b7e8697d4b3052fa",
   The5B50A59331C241Ab96E75A8B = "5b50a59331c241ab96e75a8b",
 }
@@ -101,8 +107,8 @@ export interface ItemIngredient {
   description: null;
   internalName: null | string;
   shipped: boolean;
-  imageLink: null | string;
-  imagePath: null | string;
+  imageLink: string;
+  imagePath: string;
   usage: number;
   hasDuplicatedName: null;
   allergens: ID[];
@@ -115,8 +121,8 @@ export interface Family {
   type: string;
   description: null;
   priority: number;
-  iconLink: string;
-  iconPath: string;
+  iconLink: null | string;
+  iconPath: null | string;
   usageByCountry: { [key: string]: number };
   createdAt: Date;
   updatedAt: Date;
@@ -134,10 +140,36 @@ export interface Label {
 }
 
 export interface Nutrition {
-  type: string;
-  name: string;
+  type: Type;
+  name: Name;
   amount: number;
   unit: NutritionUnit;
+}
+
+export enum Name {
+  Calories = "Calories",
+  Carbohydrate = "Carbohydrate",
+  Cholesterol = "Cholesterol",
+  DietaryFiber = "Dietary Fiber",
+  EnergyKJ = "Energy (kJ)",
+  Fat = "Fat",
+  Protein = "Protein",
+  SaturatedFat = "Saturated Fat",
+  Sodium = "Sodium",
+  Sugar = "Sugar",
+}
+
+export enum Type {
+  The57B42A48B7E8697D4B305304 = "57b42a48b7e8697d4b305304",
+  The57B42A48B7E8697D4B305305 = "57b42a48b7e8697d4b305305",
+  The57B42A48B7E8697D4B305306 = "57b42a48b7e8697d4b305306",
+  The57B42A48B7E8697D4B305307 = "57b42a48b7e8697d4b305307",
+  The57B42A48B7E8697D4B305308 = "57b42a48b7e8697d4b305308",
+  The57B42A48B7E8697D4B305309 = "57b42a48b7e8697d4b305309",
+  The57B42A48B7E8697D4B30530A = "57b42a48b7e8697d4b30530a",
+  The57B42A48B7E8697D4B30530B = "57b42a48b7e8697d4b30530b",
+  The57B42A48B7E8697D4B30530C = "57b42a48b7e8697d4b30530c",
+  The57B42A48B7E8697D4B30530D = "57b42a48b7e8697d4b30530d",
 }
 
 export enum NutritionUnit {
@@ -190,12 +222,19 @@ export interface Tag {
 export enum ColorHandle {
   CalorieSmart = "calorieSmart",
   QuickPrep = "quickPrep",
+  Spicy = "spicy",
 }
 
 export enum Preference {
   CalorieSmart = "Calorie Smart",
+  FamilyFriendly = "Family Friendly",
   FitWholesome = "Fit & Wholesome",
   QuickEasy = "Quick & Easy",
+}
+
+export enum TotalTime {
+  Pt05M = "PT05M",
+  Pt10M = "PT10M",
 }
 
 export interface Utensil {
@@ -218,9 +257,11 @@ export interface YieldIngredient {
 export enum IngredientUnit {
   Clove = "clove",
   Cup = "cup",
+  G = "g",
+  Milliliters = "milliliters",
   Ounce = "ounce",
+  Slice = "slice",
   Tablespoon = "tablespoon",
   Teaspoon = "teaspoon",
-  Thumb = "thumb",
   Unit = "unit",
 }
