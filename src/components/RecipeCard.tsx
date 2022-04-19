@@ -1,4 +1,5 @@
 import { Button, Card, Container, Grid, Row, Text } from "@nextui-org/react";
+import { useCallback } from "react";
 import { Item } from "../recipes";
 
 type Props = {
@@ -8,11 +9,15 @@ type Props = {
 };
 
 export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
+  const selectedRecipeHandler = useCallback(() => {
+    setSelectedRecipe(recipe);
+  }, [setSelectedRecipe, recipe]);
+
   return (
     <Grid xs={12} sm={3}>
       {/* <Link rel="noreferrer" target="_blank" href={recipeUrl}> */}
       <Card
-        onMouseEnter={() => setSelectedRecipe(recipe)}
+        onMouseEnter={selectedRecipeHandler}
         onClick={handler}
         hoverable
         cover

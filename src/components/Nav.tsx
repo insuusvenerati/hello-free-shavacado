@@ -1,13 +1,21 @@
 import { Switch, useTheme, Container, Col, Row } from "@nextui-org/react";
 import { StyledNavContainer } from "./StyledNavContainer";
 import { useTheme as useNextTheme } from "next-themes";
+import { useCallback } from "react";
 
 export const Navbar = () => {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
 
+  const handleSetTheme = useCallback(
+    (event) => {
+      setTheme(event.target.checked ? "dark" : "light");
+    },
+    [setTheme]
+  );
+
   return (
-    <StyledNavContainer detached={true}>
+    <StyledNavContainer>
       <Container
         lg={true}
         as="nav"
@@ -23,10 +31,7 @@ export const Navbar = () => {
 
         <Col>
           <Row justify="flex-end" align="center">
-            <Switch
-              checked={isDark}
-              onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
-            />
+            <Switch checked={isDark} onChange={handleSetTheme} />
           </Row>
         </Col>
       </Container>

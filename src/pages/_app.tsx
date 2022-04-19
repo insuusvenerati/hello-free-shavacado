@@ -1,3 +1,4 @@
+// import "../util/wdyr";
 import { NextUIProvider } from "@nextui-org/react";
 import { createTheme } from "@nextui-org/react";
 import { ThemeProvider } from "next-themes";

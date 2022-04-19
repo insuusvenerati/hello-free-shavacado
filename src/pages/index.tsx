@@ -2,7 +2,7 @@ import { Grid, Input, Text } from "@nextui-org/react";
 import { getCookie, setCookies } from "cookies-next";
 import Head from "next/head";
 import Script from "next/script";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Navbar } from "../components/Nav";
 import { RecipeCard } from "../components/RecipeCard";
@@ -30,8 +30,20 @@ export default function Home() {
     }
   );
 
-  const modalHandler = () => setVisible(true);
-  const closeHandler = () => setVisible(false);
+  const onChangeHandler = useCallback(
+    (event) => {
+      setSearchText(event.target.value);
+    },
+    [setSearchText]
+  );
+
+  const modalHandler = useCallback(() => {
+    setVisible(true);
+  }, [setVisible]);
+
+  const closeHandler = useCallback(() => {
+    setVisible(false);
+  }, [setVisible]);
 
   // Get token
   useEffect(() => {
@@ -73,11 +85,12 @@ export default function Home() {
       <Grid.Container css={{ marginTop: "10px" }} gap={2} justify="center">
         <Grid sm={6} xs={12}>
           <Input
-            onChange={(event) => setSearchText(event.target.value)}
+            onChange={onChangeHandler}
             labelPlaceholder="Ingredient"
             clearable
             fullWidth
             size="lg"
+            animated={false}
           />
         </Grid>
         <Grid.Container gap={2} justify="center">
