@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@nextui-org/react": "1.0.8-beta.5",
+    "@plaiceholder/next": "^2.3.0",
     "@sentry/nextjs": "6.19.6",
     "axios": "0.26.1",
     "cookies-next": "2.0.4",
@@ -19,10 +20,12 @@
     "next-pwa": "5.5.2",
     "next-seo": "5.4.0",
     "next-themes": "0.1.1",
+    "plaiceholder": "^2.3.0",
     "puppeteer": "13.5.2",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-query": "3.35.0",
+    "sharp": "^0.30.4",
     "typescript": "4.5.5"
   },
   "devDependencies": {

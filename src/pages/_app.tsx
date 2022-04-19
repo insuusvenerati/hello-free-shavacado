@@ -1,10 +1,8 @@
-// import "../util/wdyr";
-import { NextUIProvider } from "@nextui-org/react";
-import { createTheme } from "@nextui-org/react";
-import { ThemeProvider } from "next-themes";
+import { createTheme, NextUIProvider } from "@nextui-org/react";
 import { DefaultSeo } from "next-seo";
-import SEO from "../../next-seo.config";
+import { ThemeProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "react-query";
+import SEO from "../../next-seo.config";
 
 const lightTheme = createTheme({
   type: "light",
@@ -21,18 +19,18 @@ const queryClient = new QueryClient();
 function MyApp({ Component, pageProps }) {
   return (
     <>
-      <DefaultSeo {...SEO} />
-      <ThemeProvider
-        defaultTheme="system"
-        attribute="class"
-        value={{ light: lightTheme.className, dark: darkTheme.className }}
-      >
-        <NextUIProvider>
+      <NextUIProvider>
+        <DefaultSeo {...SEO} />
+        <ThemeProvider
+          defaultTheme="system"
+          attribute="class"
+          value={{ light: lightTheme.className, dark: darkTheme.className }}
+        >
           <QueryClientProvider client={queryClient}>
             <Component {...pageProps} />
           </QueryClientProvider>
-        </NextUIProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </NextUIProvider>
     </>
   );
 }

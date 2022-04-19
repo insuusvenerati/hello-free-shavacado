@@ -1,4 +1,5 @@
 import { Button, Card, Container, Grid, Row, Text } from "@nextui-org/react";
+import Image from "next/image";
 import { useCallback } from "react";
 import { Item } from "../recipes";
 
@@ -15,7 +16,6 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
 
   return (
     <Grid xs={12} sm={3}>
-      {/* <Link rel="noreferrer" target="_blank" href={recipeUrl}> */}
       <Card
         onMouseEnter={selectedRecipeHandler}
         onClick={handler}
@@ -23,11 +23,14 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
         cover
         clickable
       >
-        <Card.Image
-          width="100%"
-          height={340}
-          src={`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}
-        />
+        <Card.Body>
+          <Image
+            width={600}
+            height={340}
+            src={`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}
+            alt={recipe.name}
+          />
+        </Card.Body>
         <Card.Footer>
           <Container>
             <Row justify="space-between">
@@ -47,7 +50,6 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
           </Container>
         </Card.Footer>
       </Card>
-      {/* </Link> */}
     </Grid>
   );
 };

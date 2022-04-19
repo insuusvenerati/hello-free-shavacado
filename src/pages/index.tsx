@@ -4,7 +4,7 @@ import Head from "next/head";
 import Script from "next/script";
 import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { Navbar } from "../components/Nav";
+import { Navbar1 } from "../components/Nav";
 import { RecipeCard } from "../components/RecipeCard";
 import { RecipeModal } from "../components/RecipeModal";
 import { Item, Recipes } from "../recipes";
@@ -72,7 +72,7 @@ export default function Home() {
         data-website-id="679de944-0e27-4e1e-aa33-efc4feddd5bb"
       />
 
-      <Navbar />
+      <Navbar1 />
 
       <RecipeModal
         recipe={selectedRecipe}
