@@ -41,3 +41,5 @@ public/sw*
 public/workbox-*
 # Sentry
 .sentryclirc
+
+tmp/
