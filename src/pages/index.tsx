@@ -80,6 +80,7 @@ export default function Home() {
         open={visible}
         onClose={closeHandler}
         width={1200}
+        closeButton
       />
 
       <Grid.Container css={{ marginTop: "10px" }} gap={2} justify="center">
