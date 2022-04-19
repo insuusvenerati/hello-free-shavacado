@@ -2,6 +2,7 @@ import { createTheme, NextUIProvider } from "@nextui-org/react";
 import { DefaultSeo } from "next-seo";
 import { ThemeProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import SEO from "../../next-seo.config";
 
 const lightTheme = createTheme({
@@ -27,6 +28,7 @@ function MyApp({ Component, pageProps }) {
           value={{ light: lightTheme.className, dark: darkTheme.className }}
         >
           <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools initialIsOpen={false} />
             <Component {...pageProps} />
           </QueryClientProvider>
         </ThemeProvider>

@@ -1,7 +1,7 @@
 import { Button, Card, Container, Grid, Row, Text } from "@nextui-org/react";
 import Image from "next/image";
 import { useCallback } from "react";
-import { Item } from "../recipes";
+import { Item } from "../types/recipes";
 
 type Props = {
   recipe: Item;

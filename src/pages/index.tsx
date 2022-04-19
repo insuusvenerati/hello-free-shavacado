@@ -1,4 +1,4 @@
-import { Grid, Input, Text } from "@nextui-org/react";
+import { Grid, Input, Pagination, Text } from "@nextui-org/react";
 import { getCookie, setCookies } from "cookies-next";
 import Head from "next/head";
 import Script from "next/script";
@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 import { Navbar1 } from "../components/Nav";
 import { RecipeCard } from "../components/RecipeCard";
 import { RecipeModal } from "../components/RecipeModal";
-import { Item, Recipes } from "../recipes";
+import { Item, RecipeQuery } from "../types/recipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 import { useDebounce } from "../util/useDebounce";
 
@@ -17,18 +17,25 @@ export default function Home() {
   const [selectedRecipe, setSelectedRecipe] = useState<Item>();
   const debouncedSearchText = useDebounce(searchText, 500);
   const token = getCookie("token");
+  const [page, setPage] = useState(1);
+
   const { data: recipes } = useQuery(
-    ["recipes", token, debouncedSearchText],
-    async (): Promise<Recipes> => {
+    ["recipes", token, debouncedSearchText, page],
+    async (): Promise<RecipeQuery> => {
       const response = await fetch(
-        `/api/hellofresh?token=${token}&searchText=${debouncedSearchText}`
+        `/api/hellofresh?token=${token}&searchText=${debouncedSearchText}&page=${page}`
       );
       return response.json();
     },
     {
       enabled: !!token && !!debouncedSearchText,
+      staleTime: 1000 * 60 * 60,
     }
   );
+
+  const pageChangeHandler = useCallback((pageNumber: number) => {
+    setPage(pageNumber);
+  }, []);
 
   const onChangeHandler = useCallback(
     (event) => {
@@ -83,7 +90,7 @@ export default function Home() {
         closeButton
       />
 
-      <Grid.Container css={{ marginTop: "10px" }} gap={2} justify="center">
+      <Grid.Container gap={2} justify="center">
         <Grid sm={6} xs={12}>
           <Input
             onChange={onChangeHandler}
@@ -94,6 +101,16 @@ export default function Home() {
             animated={false}
           />
         </Grid>
+        {recipes?.items?.length > 0 && (
+          <Grid.Container justify="center">
+            <Pagination
+              page={page}
+              total={Math.floor(recipes?.total / 20)}
+              onChange={pageChangeHandler}
+            />
+          </Grid.Container>
+        )}
+
         <Grid.Container gap={2} justify="center">
           {recipes?.items.length > 0 ? (
             recipes?.items.map((recipe: Item) => (
