@@ -112,8 +112,8 @@ export default function Home() {
         )}
 
         <Grid.Container gap={2} justify="center">
-          {recipes?.items.length > 0 ? (
-            recipes?.items.map((recipe: Item) => (
+          {recipes?.items?.length > 0 ? (
+            recipes?.items?.map((recipe: Item) => (
               <RecipeCard
                 key={recipe.id}
                 handler={modalHandler}
