@@ -1,4 +1,4 @@
-import { Grid, Input, Pagination, Text } from "@nextui-org/react";
+import { Grid, Input, Loading, Pagination, Text } from "@nextui-org/react";
 import { getCookie, setCookies } from "cookies-next";
 import Head from "next/head";
 import Script from "next/script";
@@ -19,17 +19,29 @@ export default function Home() {
   const token = getCookie("token");
   const [page, setPage] = useState(1);
 
-  const { data: recipes } = useQuery(
+  const {
+    data: recipes,
+    isLoading,
+    error,
+    isError,
+    failureCount,
+  } = useQuery(
     ["recipes", token, debouncedSearchText, page],
     async (): Promise<RecipeQuery> => {
       const response = await fetch(
         `/api/hellofresh?token=${token}&searchText=${debouncedSearchText}&page=${page}`
       );
-      return response.json();
+
+      if (!response.ok) {
+        throw new Error(`Unable to get recipes. Is Hellofresh down? 😔`);
+      }
+
+      return await response.json();
     },
     {
       enabled: !!token && !!debouncedSearchText,
       staleTime: 1000 * 60 * 60,
+      retry: 1,
     }
   );
 
@@ -98,7 +110,9 @@ export default function Home() {
             clearable
             fullWidth
             size="lg"
-            animated={false}
+            helperText={isError ? error.message : undefined}
+            helperColor="error"
+            contentLeft={isLoading ? <Loading size="sm" /> : undefined}
           />
         </Grid>
         {recipes?.items?.length > 0 && (

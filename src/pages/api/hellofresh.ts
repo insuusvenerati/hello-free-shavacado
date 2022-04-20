@@ -11,7 +11,11 @@ const getRecipes = async (req: NextApiRequest, res: NextApiResponse) => {
     const pageNumber = parseInt(page as string);
     const skip = pageNumber !== 1 ? pageNumber * 20 : 0;
 
-    const response = await redis.get(`cache-${searchText}-${page}`);
+    const response = await redis
+      .get(`cache-${searchText}-${page}`)
+      .catch((err) => {
+        throw new Error(`Unable to connect to redis`);
+      });
 
     if (response) {
       console.log("got cache");
@@ -24,13 +28,12 @@ const getRecipes = async (req: NextApiRequest, res: NextApiResponse) => {
       skip
     );
 
-    redis.set(
-      `cache-${searchText}-${page}`,
-      JSON.stringify(data),
-      "EX",
-      oneDay
-    );
-    console.log("set cache");
+    redis
+      .set(`cache-${searchText}-${page}`, JSON.stringify(data), "EX", oneDay)
+      .then(() => console.log("set cache"))
+      .catch((err) => {
+        throw new Error(`Unable to set cache`);
+      });
 
     return res.status(200).json(data);
   } catch (error) {
