@@ -24,8 +24,7 @@ export default function Home() {
     isLoading,
     error,
     isError,
-    failureCount,
-  } = useQuery(
+  } = useQuery<RecipeQuery, Error>(
     ["recipes", token, debouncedSearchText, page],
     async (): Promise<RecipeQuery> => {
       const response = await fetch(
