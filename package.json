@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "next export"
+    "prettier": "prettier --write src/",
+    "export": "next export",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@nextui-org/react": "1.0.8-beta.5",
@@ -30,6 +32,12 @@
     "@types/react": "18.0.5",
     "eslint": "8.13.0",
     "eslint-config-next": "12.1.5",
-    "prettier": "2.6.2"
+    "lint-staged": "^12.4.0",
+    "prettier": "2.6.2",
+    "husky": "^7.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --cache --fix",
+    "*.{ts,tsx,css,md}": "prettier --write"
   }
 }
