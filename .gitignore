@@ -43,3 +43,5 @@ public/workbox-*
 .sentryclirc
 
 tmp/
+
+.eslintcache
