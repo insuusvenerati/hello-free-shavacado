@@ -4,6 +4,21 @@ const { withSentryConfig } = require("@sentry/nextjs");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  sentry: {
+    disableServerWebpackPlugin: process.env.NODE_ENV === "development",
+    disableClientWebpackPlugin: process.env.NODE_ENV === "development",
+  },
+  sentryWebpackPluginOptions: {
+    silent: true,
+  },
+  webpack: (config, { webpack }) => {
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        __SENTRY_DEBUG__: false,
+      })
+    );
+    return config;
+  },
   experimental: {
     outputStandalone: true,
   },
@@ -17,7 +32,7 @@ const nextConfig = {
     disable: process.env.NODE_ENV === "development",
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
 };
 
