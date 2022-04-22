@@ -23,11 +23,11 @@ export const RecipeModal = ({ recipe, ...props }: Props) => {
       <Modal.Header>
         <Col>
           <Image
-            width={1900}
-            height={500}
-            src={`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}
             alt={recipe?.name}
+            height={500}
             objectFit="cover"
+            src={`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}
+            width={1900}
           />
           <Text h4>{recipe?.name}</Text>
         </Col>
@@ -47,7 +47,7 @@ export const RecipeModal = ({ recipe, ...props }: Props) => {
         <Spacer x={5} />
         <Grid.Container gap={1}>
           {recipe?.steps.map((step) => (
-            <Grid xs={5} key={step.index + Math.random()}>
+            <Grid key={step.index + Math.random()} xs={5}>
               <Avatar text={`${step.index}`} />
               <Text>{step?.instructionsMarkdown}</Text>
             </Grid>
@@ -58,7 +58,7 @@ export const RecipeModal = ({ recipe, ...props }: Props) => {
         <Container>
           <Row>
             {recipe?.allergens.map((allergen) => (
-              <Button css={{ marginRight: "$3" }} size="xs" key={allergen.id}>
+              <Button css={{ marginRight: "$3" }} key={allergen.id} size="xs">
                 {allergen.name}
               </Button>
             ))}

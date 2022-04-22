@@ -23,8 +23,8 @@ function MyApp({ Component, pageProps }) {
       <NextUIProvider>
         <DefaultSeo {...SEO} />
         <ThemeProvider
-          defaultTheme="system"
           attribute="class"
+          defaultTheme="system"
           value={{ light: lightTheme.className, dark: darkTheme.className }}
         >
           <QueryClientProvider client={queryClient}>

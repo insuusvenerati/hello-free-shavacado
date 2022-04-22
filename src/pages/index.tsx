@@ -142,53 +142,53 @@ export default function Home() {
       <Head>
         <title>Hello Free Shavacado</title>
         <meta
-          name="description"
           content="Search for Hello Fresh recipes by ingredient"
+          name="description"
         />
-        <link rel="icon" href="/favicon-32x32.png" />
+        <link href="/favicon-32x32.png" rel="icon" />
       </Head>
 
       <Script
         async
+        data-website-id="679de944-0e27-4e1e-aa33-efc4feddd5bb"
         defer
         src="https://analytics.stiforr.tech/umami.js"
-        data-website-id="679de944-0e27-4e1e-aa33-efc4feddd5bb"
       />
 
       <Navbar1 />
 
       <RecipeModal
-        recipe={selectedRecipe}
         blur
-        open={visible}
-        onClose={closeHandler}
-        width={1200}
         closeButton
+        onClose={closeHandler}
+        open={visible}
+        recipe={selectedRecipe}
+        width={1200}
       />
 
       <Grid.Container gap={2} justify="center">
         <Grid sm={6} xs={12}>
           <Input
+            clearable
+            contentLeft={isLoading ? <Loading size="sm" /> : undefined}
+            fullWidth
+            helperColor={isError ? "error" : "default"}
+            helperText={isError ? error : helperTextMessage}
+            labelPlaceholder="Ingredients"
+            // @ts-ignore
             onChange={onChangeHandler}
             onClearClick={clearRecipesHandler}
-            labelPlaceholder="Ingredients"
-            clearable
-            fullWidth
             size="lg"
-            // @ts-ignore
-            helperText={isError ? error : helperTextMessage}
-            helperColor={isError ? "error" : "default"}
-            contentLeft={isLoading ? <Loading size="sm" /> : undefined}
           />
         </Grid>
         {allergens.length > 0 && (
           <Grid sm={2} xs={12}>
             <Checkbox.Group
-              onChange={setSelectedAllergens}
-              value={selectedAllergens}
-              size="xs"
-              row
               label="Filter allergens"
+              onChange={setSelectedAllergens}
+              row
+              size="xs"
+              value={selectedAllergens}
             >
               {allergens.map((allergen, index) => (
                 <Checkbox key={index} value={allergen}>
@@ -201,9 +201,9 @@ export default function Home() {
         {filteredRecipes?.length > 0 && (
           <Grid.Container justify="center">
             <Pagination
+              onChange={pageChangeHandler}
               page={page}
               total={recipesTotal}
-              onChange={pageChangeHandler}
             />
           </Grid.Container>
         )}
@@ -213,8 +213,8 @@ export default function Home() {
             filteredRecipes?.map((recipe: Item) => {
               return (
                 <RecipeCard
-                  key={recipe.id}
                   handler={modalHandler}
+                  key={recipe.id}
                   recipe={recipe}
                   setSelectedRecipe={setSelectedRecipe}
                 />

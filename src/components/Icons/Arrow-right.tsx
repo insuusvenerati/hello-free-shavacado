@@ -16,20 +16,20 @@ const ArrowRight: React.FC<Props> = ({
 }) => {
   return (
     <svg
-      width={size || width}
-      height={size || height}
       className={className}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
+      viewBox="0 0 24 24"
+      width={size || width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <path
         d="M8.5 5l7 7-7 7"
         stroke={fill}
-        strokeWidth={1.5}
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeWidth={1.5}
       />
     </svg>
   );
