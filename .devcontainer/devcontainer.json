@@ -19,7 +19,9 @@
   "extensions": [
     "dbaeumer.vscode-eslint",
     "GitHub.vscode-pull-request-github",
-    "esbenp.prettier-vscode"
+    "esbenp.prettier-vscode",
+    "eamodio.gitlens",
+    "pflannery.vscode-versionlens"
   ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -32,6 +34,7 @@
   "remoteUser": "node",
   "features": {
     "docker-in-docker": "latest",
-    "git": "os-provided"
+    "git": "os-provided",
+    "fish": "latest"
   }
 }
