@@ -20,20 +20,20 @@ export const Navbar = () => {
   return (
     <StyledNavContainer>
       <Container
-        lg={true}
+        alignItems="center"
         as="nav"
         display="flex"
+        lg={true}
         wrap="nowrap"
-        alignItems="center"
       >
         <Col>
-          <Row justify="flex-start" align="center">
+          <Row align="center" justify="flex-start">
             Hello Fresh Recipe Search
           </Row>
         </Col>
 
         <Col>
-          <Row justify="flex-end" align="center">
+          <Row align="center" justify="flex-end">
             <Switch checked={isDark} onChange={handleSetTheme} />
           </Row>
         </Col>
@@ -56,24 +56,24 @@ export const Navbar1 = React.memo(function Navbar1() {
   return (
     <StyledNavContainer>
       <Container
-        lg={true}
+        alignItems="center"
         as="nav"
         display="flex"
+        lg={true}
         wrap="nowrap"
-        alignItems="center"
       >
         <Col>
-          <Row justify="flex-start" align="center">
+          <Row align="center" justify="flex-start">
             Hello Fresh Recipe Search
           </Row>
         </Col>
 
         <Col>
-          <Row justify="flex-end" align="center">
+          <Row align="center" justify="flex-end">
             <Switch
               checked={isDark}
-              onChange={handleSetTheme}
               icon={isDark ? <MoonIcon /> : <SunIcon />}
+              onChange={handleSetTheme}
             />
           </Row>
         </Col>

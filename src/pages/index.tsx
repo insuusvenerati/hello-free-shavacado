@@ -7,6 +7,7 @@ import {
   Pagination,
   Text,
 } from "@nextui-org/react";
+import * as Sentry from "@sentry/nextjs";
 import { getCookie, setCookies } from "cookies-next";
 import Head from "next/head";
 import Script from "next/script";
@@ -19,7 +20,7 @@ import { Item, RecipeQuery } from "../types/recipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 import { useDebounce } from "../util/useDebounce";
 
-export default function Home() {
+const Home = () => {
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
   const [visible, setVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -29,8 +30,8 @@ export default function Home() {
   const [page, setPage] = useState(1);
 
   const helperTextMessage = useMemo(
-    () => `For best results, separate multiple ingredients by space`,
-    []
+    () => "For best results, separate multiple ingredients by space",
+    [],
   );
 
   const {
@@ -42,14 +43,18 @@ export default function Home() {
     ["recipes", token, debouncedSearchText, page],
     async (): Promise<RecipeQuery> => {
       const response = await fetch(
-        `/api/hellofresh?token=${token}&searchText=${debouncedSearchText}&page=${page}`
+        `/api/hellofresh?token=${token}&searchText=${debouncedSearchText}&page=${page}`,
       );
 
+      // console.log(await response.json());
+
       if (!response.ok) {
-        throw new Error(`Unable to get recipes. Is Hellofresh down? 😔`);
+        throw new Error("Unable to get recipes. Is Hellofresh down? 😔");
       }
 
-      return await response.json();
+      const data = await response.json();
+
+      return data;
     },
     {
       enabled: !!token && !!debouncedSearchText,
@@ -60,17 +65,19 @@ export default function Home() {
       //     )
       //   ),
       staleTime: 1000 * 60 * 60,
-      retry: 1,
-    }
+      retry: false,
+    },
   );
 
   const [filteredRecipes, setFilteredRecipes] = useState<Item[]>([]);
+
+  console.log(recipes);
 
   const allergens = [
     ...new Set(
       recipes?.items
         .map((item) => item.allergens.map((allergen) => allergen.name))
-        .flat()
+        .flat(),
     ),
   ];
 
@@ -80,18 +87,12 @@ export default function Home() {
   //   )
   // )
 
-  const excludesAllergens = (recipe: Item) => {
-    return !recipe.allergens.some((allergen) =>
-      selectedAllergens.includes(allergen.name)
-    );
-  };
-
-  console.log(selectedAllergens);
-  console.log("filtered recipes", filteredRecipes);
+  // console.log(selectedAllergens);
+  // console.log("filtered recipes", filteredRecipes);
 
   const recipesTotal = useMemo(
     () => Math.floor(recipes?.total / 20),
-    [recipes?.total]
+    [recipes?.total],
   );
 
   const pageChangeHandler = useCallback((pageNumber: number) => {
@@ -102,7 +103,7 @@ export default function Home() {
     (event: ChangeEvent<FormElement>) => {
       setSearchText(event.target.value);
     },
-    [setSearchText]
+    [setSearchText],
   );
 
   const modalHandler = useCallback(() => {
@@ -130,9 +131,9 @@ export default function Home() {
     setFilteredRecipes(
       recipes?.items.filter((item) =>
         item.allergens.every(
-          (allergen) => !selectedAllergens.includes(allergen.name)
-        )
-      )
+          (allergen) => !selectedAllergens.includes(allergen.name),
+        ),
+      ),
     ),
       () => setFilteredRecipes([]);
   }, [recipes?.items, selectedAllergens]);
@@ -142,53 +143,53 @@ export default function Home() {
       <Head>
         <title>Hello Free Shavacado</title>
         <meta
-          name="description"
           content="Search for Hello Fresh recipes by ingredient"
+          name="description"
         />
-        <link rel="icon" href="/favicon-32x32.png" />
+        <link href="/favicon-32x32.png" rel="icon" />
       </Head>
 
       <Script
         async
+        data-website-id="679de944-0e27-4e1e-aa33-efc4feddd5bb"
         defer
         src="https://analytics.stiforr.tech/umami.js"
-        data-website-id="679de944-0e27-4e1e-aa33-efc4feddd5bb"
       />
 
       <Navbar1 />
 
       <RecipeModal
-        recipe={selectedRecipe}
         blur
-        open={visible}
-        onClose={closeHandler}
-        width={1200}
         closeButton
+        onClose={closeHandler}
+        open={visible}
+        recipe={selectedRecipe}
+        width={1200}
       />
 
       <Grid.Container gap={2} justify="center">
         <Grid sm={6} xs={12}>
           <Input
+            clearable
+            contentLeft={isLoading ? <Loading size="sm" /> : undefined}
+            fullWidth
+            helperColor={isError ? "error" : "default"}
+            helperText={isError ? error.message : helperTextMessage}
+            labelPlaceholder="Ingredients"
+            // @ts-ignore
             onChange={onChangeHandler}
             onClearClick={clearRecipesHandler}
-            labelPlaceholder="Ingredients"
-            clearable
-            fullWidth
             size="lg"
-            // @ts-ignore
-            helperText={isError ? error : helperTextMessage}
-            helperColor={isError ? "error" : "default"}
-            contentLeft={isLoading ? <Loading size="sm" /> : undefined}
           />
         </Grid>
         {allergens.length > 0 && (
           <Grid sm={2} xs={12}>
             <Checkbox.Group
-              onChange={setSelectedAllergens}
-              value={selectedAllergens}
-              size="xs"
-              row
               label="Filter allergens"
+              onChange={setSelectedAllergens}
+              row
+              size="xs"
+              value={selectedAllergens}
             >
               {allergens.map((allergen, index) => (
                 <Checkbox key={index} value={allergen}>
@@ -201,9 +202,9 @@ export default function Home() {
         {filteredRecipes?.length > 0 && (
           <Grid.Container justify="center">
             <Pagination
+              onChange={pageChangeHandler}
               page={page}
               total={recipesTotal}
-              onChange={pageChangeHandler}
             />
           </Grid.Container>
         )}
@@ -213,8 +214,8 @@ export default function Home() {
             filteredRecipes?.map((recipe: Item) => {
               return (
                 <RecipeCard
-                  key={recipe.id}
                   handler={modalHandler}
+                  key={recipe.id}
                   recipe={recipe}
                   setSelectedRecipe={setSelectedRecipe}
                 />
@@ -231,4 +232,6 @@ export default function Home() {
       </Grid.Container>
     </>
   );
-}
+};
+
+export default Home;

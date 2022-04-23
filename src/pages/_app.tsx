@@ -17,14 +17,14 @@ const darkTheme = createTheme({
 
 const queryClient = new QueryClient();
 
-function MyApp({ Component, pageProps }) {
+const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <NextUIProvider>
         <DefaultSeo {...SEO} />
         <ThemeProvider
-          defaultTheme="system"
           attribute="class"
+          defaultTheme="system"
           value={{ light: lightTheme.className, dark: darkTheme.className }}
         >
           <QueryClientProvider client={queryClient}>
@@ -35,6 +35,6 @@ function MyApp({ Component, pageProps }) {
       </NextUIProvider>
     </>
   );
-}
+};
 
 export default MyApp;

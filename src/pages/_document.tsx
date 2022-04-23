@@ -17,8 +17,8 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <HeadMeta
-            title="Hello Free Shavacado"
             description="Search for Hello Fresh recipes by ingredient"
+            title="Hello Free Shavacado"
           />
           {CssBaseline.flush()}
         </Head>
