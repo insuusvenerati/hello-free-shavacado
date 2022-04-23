@@ -22,36 +22,32 @@ const getRecipes = async (req: NextApiRequest, res: NextApiResponse) => {
       skip,
     });
 
-    redis
-      .set(cacheKey, JSON.stringify(data), "EX", oneDay)
-      .then(() => console.log("set cache"))
-      .catch((err) => {
-        console.log("Redis cache error", err);
-        Sentry.captureException(err);
-      });
+    redis.set(cacheKey, JSON.stringify(data), "EX", oneDay).catch((err) => {
+      console.log("Redis cache error", err);
+      Sentry.captureException(err);
+    });
 
-    return res.status(200).json({ data, error: err });
-
-    // return { errorMessage: "Unable to connect to Redis", error: err };
+    return res.status(200).json(data);
   });
 
   if (response) {
-    console.log("got cache");
+    console.log(`Got ${cacheKey} from cache`);
     return res.status(200).json(response);
   }
 
-  // const data = await hellofreshSearch(commaSeparatedList, token as string, {
-  //   skip,
-  // });
+  const data = await hellofreshSearch(commaSeparatedList, token as string, {
+    skip,
+  });
 
-  // redis
-  //   .set(cacheKey, JSON.stringify(data), "EX", oneDay)
-  //   .then(() => console.log("set cache"))
-  //   .catch((err) => {
-  //     throw new Error("Unable to set cache");
-  //   });
+  redis
+    .set(cacheKey, JSON.stringify(data), "EX", oneDay)
+    .then(() => console.log(`Added ${cacheKey} to the cache`))
+    .catch((err) => {
+      console.log("Redis cache error", err);
+      Sentry.captureException(err);
+    });
 
-  // return res.status(200).json(data);
+  return res.status(200).json(data);
 };
 
 export default withSentry(getRecipes);

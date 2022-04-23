@@ -54,14 +54,6 @@ const Home = () => {
 
       const data = await response.json();
 
-      if (data.error) {
-        console.log(data.error);
-        // Sentry.captureException(data.error);
-        throw new Error(
-          "Sorry we had a problem. Please try your search again.",
-        );
-      }
-
       return data;
     },
     {
@@ -78,6 +70,8 @@ const Home = () => {
   );
 
   const [filteredRecipes, setFilteredRecipes] = useState<Item[]>([]);
+
+  console.log(recipes);
 
   const allergens = [
     ...new Set(
