@@ -1,6 +1,6 @@
 import { Text } from "@nextui-org/react";
 
-export default function PrivacyPage() {
+const PrivacyPage = () => {
   return (
     <div>
       <Text h4>
@@ -10,4 +10,6 @@ export default function PrivacyPage() {
       </Text>
     </div>
   );
-}
+};
+
+export default PrivacyPage;

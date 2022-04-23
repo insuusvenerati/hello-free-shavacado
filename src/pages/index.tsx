@@ -7,6 +7,7 @@ import {
   Pagination,
   Text,
 } from "@nextui-org/react";
+import * as Sentry from "@sentry/nextjs";
 import { getCookie, setCookies } from "cookies-next";
 import Head from "next/head";
 import Script from "next/script";
@@ -19,7 +20,7 @@ import { Item, RecipeQuery } from "../types/recipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 import { useDebounce } from "../util/useDebounce";
 
-export default function Home() {
+const Home = () => {
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
   const [visible, setVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -29,8 +30,8 @@ export default function Home() {
   const [page, setPage] = useState(1);
 
   const helperTextMessage = useMemo(
-    () => `For best results, separate multiple ingredients by space`,
-    []
+    () => "For best results, separate multiple ingredients by space",
+    [],
   );
 
   const {
@@ -42,14 +43,26 @@ export default function Home() {
     ["recipes", token, debouncedSearchText, page],
     async (): Promise<RecipeQuery> => {
       const response = await fetch(
-        `/api/hellofresh?token=${token}&searchText=${debouncedSearchText}&page=${page}`
+        `/api/hellofresh?token=${token}&searchText=${debouncedSearchText}&page=${page}`,
       );
 
+      // console.log(await response.json());
+
       if (!response.ok) {
-        throw new Error(`Unable to get recipes. Is Hellofresh down? 😔`);
+        throw new Error("Unable to get recipes. Is Hellofresh down? 😔");
       }
 
-      return await response.json();
+      const data = await response.json();
+
+      if (data.error) {
+        console.log(data.error);
+        // Sentry.captureException(data.error);
+        throw new Error(
+          "Sorry we had a problem. Please try your search again.",
+        );
+      }
+
+      return data;
     },
     {
       enabled: !!token && !!debouncedSearchText,
@@ -60,8 +73,8 @@ export default function Home() {
       //     )
       //   ),
       staleTime: 1000 * 60 * 60,
-      retry: 1,
-    }
+      retry: false,
+    },
   );
 
   const [filteredRecipes, setFilteredRecipes] = useState<Item[]>([]);
@@ -70,7 +83,7 @@ export default function Home() {
     ...new Set(
       recipes?.items
         .map((item) => item.allergens.map((allergen) => allergen.name))
-        .flat()
+        .flat(),
     ),
   ];
 
@@ -80,18 +93,12 @@ export default function Home() {
   //   )
   // )
 
-  const excludesAllergens = (recipe: Item) => {
-    return !recipe.allergens.some((allergen) =>
-      selectedAllergens.includes(allergen.name)
-    );
-  };
-
-  console.log(selectedAllergens);
-  console.log("filtered recipes", filteredRecipes);
+  // console.log(selectedAllergens);
+  // console.log("filtered recipes", filteredRecipes);
 
   const recipesTotal = useMemo(
     () => Math.floor(recipes?.total / 20),
-    [recipes?.total]
+    [recipes?.total],
   );
 
   const pageChangeHandler = useCallback((pageNumber: number) => {
@@ -102,7 +109,7 @@ export default function Home() {
     (event: ChangeEvent<FormElement>) => {
       setSearchText(event.target.value);
     },
-    [setSearchText]
+    [setSearchText],
   );
 
   const modalHandler = useCallback(() => {
@@ -130,9 +137,9 @@ export default function Home() {
     setFilteredRecipes(
       recipes?.items.filter((item) =>
         item.allergens.every(
-          (allergen) => !selectedAllergens.includes(allergen.name)
-        )
-      )
+          (allergen) => !selectedAllergens.includes(allergen.name),
+        ),
+      ),
     ),
       () => setFilteredRecipes([]);
   }, [recipes?.items, selectedAllergens]);
@@ -173,7 +180,7 @@ export default function Home() {
             contentLeft={isLoading ? <Loading size="sm" /> : undefined}
             fullWidth
             helperColor={isError ? "error" : "default"}
-            helperText={isError ? error : helperTextMessage}
+            helperText={isError ? error.message : helperTextMessage}
             labelPlaceholder="Ingredients"
             // @ts-ignore
             onChange={onChangeHandler}
@@ -231,4 +238,6 @@ export default function Home() {
       </Grid.Container>
     </>
   );
-}
+};
+
+export default Home;

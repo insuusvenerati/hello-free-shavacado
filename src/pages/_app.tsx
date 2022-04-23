@@ -17,7 +17,7 @@ const darkTheme = createTheme({
 
 const queryClient = new QueryClient();
 
-function MyApp({ Component, pageProps }) {
+const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <NextUIProvider>
@@ -35,6 +35,6 @@ function MyApp({ Component, pageProps }) {
       </NextUIProvider>
     </>
   );
-}
+};
 
 export default MyApp;
