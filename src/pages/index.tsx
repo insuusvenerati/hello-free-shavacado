@@ -8,6 +8,7 @@ import {
   Text,
 } from "@nextui-org/react";
 import { getCookie, setCookies } from "cookies-next";
+import ky from "ky";
 import Head from "next/head";
 import Script from "next/script";
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
@@ -41,17 +42,13 @@ const Home = () => {
   } = useQuery<RecipeQuery, Error>(
     ["recipes", token, debouncedSearchText, page],
     async (): Promise<RecipeQuery> => {
-      const response = await fetch(
-        `/api/hellofresh?token=${token}&searchText=${debouncedSearchText}&page=${page}`,
-      );
+      const response = await ky
+        .get(
+          `/api/hellofresh?token=${token}&searchText=${debouncedSearchText}&page=${page}`,
+        )
+        .json<RecipeQuery>();
 
-      if (!response.ok) {
-        throw new Error("Unable to get recipes. Is Hellofresh down? 😔");
-      }
-
-      const data = await response.json();
-
-      return data;
+      return response;
     },
     {
       enabled: !!token && !!debouncedSearchText,
@@ -65,7 +62,7 @@ const Home = () => {
   const allergens = [
     ...new Set(
       recipes?.items
-        .map((item) => item.allergens.map((allergen) => allergen.name))
+        ?.map((item) => item.allergens.map((allergen) => allergen.name))
         .flat(),
     ),
   ];
