@@ -7,7 +7,6 @@ import {
   Pagination,
   Text,
 } from "@nextui-org/react";
-import * as Sentry from "@sentry/nextjs";
 import { getCookie, setCookies } from "cookies-next";
 import Head from "next/head";
 import Script from "next/script";
@@ -46,8 +45,6 @@ const Home = () => {
         `/api/hellofresh?token=${token}&searchText=${debouncedSearchText}&page=${page}`,
       );
 
-      // console.log(await response.json());
-
       if (!response.ok) {
         throw new Error("Unable to get recipes. Is Hellofresh down? 😔");
       }
@@ -58,20 +55,12 @@ const Home = () => {
     },
     {
       enabled: !!token && !!debouncedSearchText,
-      // select: (recipes) =>
-      //   recipes?.items.filter((item) =>
-      //     item.allergens.some(
-      //       (allergen) => !selectedAllergens.includes(allergen.name)
-      //     )
-      //   ),
       staleTime: 1000 * 60 * 60,
       retry: false,
     },
   );
 
   const [filteredRecipes, setFilteredRecipes] = useState<Item[]>([]);
-
-  console.log(recipes);
 
   const allergens = [
     ...new Set(
@@ -80,15 +69,6 @@ const Home = () => {
         .flat(),
     ),
   ];
-
-  // const filteredRecipes = recipes?.items.filter((item) =>
-  //   item.allergens.some(
-  //     (allergen) => !selectedAllergens.includes(allergen.name)
-  //   )
-  // )
-
-  // console.log(selectedAllergens);
-  // console.log("filtered recipes", filteredRecipes);
 
   const recipesTotal = useMemo(
     () => Math.floor(recipes?.total / 20),
