@@ -1,6 +1,6 @@
 {
   "name": "hello-free-shavacado",
-  "version": "1.0.0",
+  "version": "1.1.0-develop.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -18,6 +18,8 @@
     "@sentry/tracing": "6.19.6",
     "cookies-next": "2.0.4",
     "ioredis": "5.0.4",
+    "ky": "^0.30.0",
+    "ky-universal": "^0.10.1",
     "next": "12.1.5",
     "next-pwa": "5.5.2",
     "next-seo": "5.4.0",
