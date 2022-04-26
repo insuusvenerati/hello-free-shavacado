@@ -10,14 +10,7 @@ type Search = {
   (
     searchText: string,
     token: string,
-    options: {
-      skip?: number;
-      ingredients?: string;
-      tag?: string;
-      maxPrepTime?: string;
-      difficulty?: number;
-      take?: number;
-    },
+    ingredients?: string,
   ): Promise<RecipeQuery>;
 };
 
@@ -31,17 +24,28 @@ export const hellofreshGetToken = async () => {
   return token;
 };
 
-export const hellofreshSearch: Search = async (
-  searchText,
-  token,
-  options: { skip?; ingredients?; tag?; maxPrepTime?; difficulty?; take? },
-) => {
+export const hellofreshSearch = async (
+  searchText: string,
+  token: string,
+  ingredients: string,
+  options: {
+    skip?;
+    tag?;
+    maxPrepTime?;
+    difficulty?;
+    take?;
+  },
+): Promise<RecipeQuery> => {
   if (!token) {
     throw new Error("Missing token");
   }
 
+  // console.log(ingredients);
+
   const response = await ky.get(
-    `${HELLOFRESH_SEARCH_URL}take=20&skip=${options.skip}&q=&ingredients=${searchText}`,
+    `${HELLOFRESH_SEARCH_URL}take=20&skip=${options?.skip}&ingredients=${
+      ingredients ? ingredients : ""
+    }&q=${searchText}`,
     { headers: { authorization: `Bearer ${token}` } },
   );
 

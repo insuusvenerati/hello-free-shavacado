@@ -7,9 +7,11 @@ import redis from "../../util/redis";
 const oneDay = 60 * 60 * 24;
 
 const getRecipes = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { token, searchText, page } = req.query;
+  const { token, searchText, page, ingredients } = req.query;
   const pageNumber = parseInt(page as string);
   const skip = pageNumber !== 1 ? pageNumber * 20 : 0;
+
+  console.log(req.query);
 
   const commaSeparatedList = !Array.isArray(searchText)
     ? searchText.replace(/[ ,]+/g, ",")
@@ -18,9 +20,14 @@ const getRecipes = async (req: NextApiRequest, res: NextApiResponse) => {
   const cacheKey = `cache-${commaSeparatedList}-${page}`;
 
   const response = await redis.get(cacheKey).catch(async (err: Error) => {
-    const data = await hellofreshSearch(commaSeparatedList, token as string, {
-      skip,
-    });
+    const data = await hellofreshSearch(
+      commaSeparatedList,
+      token as string,
+      ingredients as string,
+      {
+        skip,
+      },
+    );
 
     redis.set(cacheKey, JSON.stringify(data), "EX", oneDay).catch((err) => {
       console.log("Redis cache error", err);
@@ -35,9 +42,14 @@ const getRecipes = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json(response);
   }
 
-  const data = await hellofreshSearch(commaSeparatedList, token as string, {
-    skip,
-  });
+  const data = await hellofreshSearch(
+    commaSeparatedList,
+    token as string,
+    ingredients as string,
+    {
+      skip,
+    },
+  );
 
   redis
     .set(cacheKey, JSON.stringify(data), "EX", oneDay)

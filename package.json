@@ -13,6 +13,9 @@
     "semantic-release": "semantic-release"
   },
   "dependencies": {
+    "@mantine/core": "^4.1.5",
+    "@mantine/hooks": "^4.1.5",
+    "@mantine/next": "^4.1.5",
     "@nextui-org/react": "1.0.8-beta.5",
     "@sentry/nextjs": "6.19.6",
     "@sentry/tracing": "6.19.6",

@@ -1,40 +1,42 @@
-import { createTheme, NextUIProvider } from "@nextui-org/react";
+import { AppProps } from "next/app";
+import Head from "next/head";
+import { MantineProvider } from "@mantine/core";
 import { DefaultSeo } from "next-seo";
-import { ThemeProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import SEO from "../../next-seo.config";
 
-const lightTheme = createTheme({
-  type: "light",
-  theme: {},
-});
-
-const darkTheme = createTheme({
-  type: "dark",
-  theme: {},
-});
-
 const queryClient = new QueryClient();
 
-const MyApp = ({ Component, pageProps }) => {
+const App = (props: AppProps) => {
+  const { Component, pageProps } = props;
+
   return (
     <>
-      <NextUIProvider>
+      <Head>
+        <title>Page title</title>
+        <meta
+          content="minimum-scale=1, initial-scale=1, width=device-width"
+          name="viewport"
+        />
+      </Head>
+
+      <MantineProvider
+        theme={{
+          /** Put your mantine theme override here */
+          colorScheme: "light",
+        }}
+        withGlobalStyles
+        withNormalizeCSS
+      >
         <DefaultSeo {...SEO} />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          value={{ light: lightTheme.className, dark: darkTheme.className }}
-        >
-          <QueryClientProvider client={queryClient}>
-            <ReactQueryDevtools initialIsOpen={false} />
-            <Component {...pageProps} />
-          </QueryClientProvider>
-        </ThemeProvider>
-      </NextUIProvider>
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <Component {...pageProps} />
+        </QueryClientProvider>
+      </MantineProvider>
     </>
   );
 };
 
-export default MyApp;
+export default App;
