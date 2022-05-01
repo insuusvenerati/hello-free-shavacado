@@ -29,10 +29,16 @@ const getRecipes = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     );
 
-    redis.set(cacheKey, JSON.stringify(data), "EX", oneDay).catch((err) => {
-      console.log("Redis cache error", err);
-      Sentry.captureException(err);
-    });
+    console.log("Data is not cached. Fetching from API");
+    console.log(`Return ${data.total} results from the API`);
+
+    redis
+      .set(cacheKey, JSON.stringify(data), "EX", oneDay)
+      .catch((err) => {
+        console.log("Redis cache error", err);
+        Sentry.captureException(err);
+      })
+      .finally(() => console.log(`Cached ${data.total} results from the API`));
 
     return res.status(200).json(data);
   });
