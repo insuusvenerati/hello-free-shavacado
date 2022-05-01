@@ -6,14 +6,22 @@ import {
   Loader,
   MultiSelect,
   Pagination,
+  Text,
   TextInput,
 } from "@mantine/core";
-import { FormElement, Text } from "@nextui-org/react";
+import { FormElement } from "@nextui-org/react";
 import { getCookie, setCookies } from "cookies-next";
 import ky from "ky";
 import Head from "next/head";
 import Script from "next/script";
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  ChangeEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useQuery } from "react-query";
 import { Navbar1 } from "../components/Nav";
 import { RecipeCard } from "../components/RecipeCard";
@@ -24,14 +32,14 @@ import { useDebounce } from "../util/useDebounce";
 
 const Home = () => {
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [selectedRecipe, setSelectedRecipe] = useState<Item>();
   const [visible, setVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [selectedRecipe, setSelectedRecipe] = useState<Item>();
   const debouncedSearchText = useDebounce(searchText, 1000);
   const token = getCookie("token");
   const [page, setPage] = useState(1);
   const [opened, setOpened] = useState(false);
-  const [selectedIngredients, setSelectedIngredients] = useState([]);
 
   const {
     data: recipes,
@@ -64,11 +72,35 @@ const Home = () => {
     ),
   ];
 
-  const filteredRecipes = recipes?.items.filter((item) =>
-    item.allergens.every(
-      (allergen) => !selectedAllergens.includes(allergen.name),
-    ),
+  const ingredientFilter = useCallback(
+    (recipe: Item) => {
+      if (recipe && selectedIngredients.length > 0) {
+        return recipe.ingredients.some((ingredient) =>
+          selectedIngredients.includes(ingredient.name),
+        );
+      }
+      return true;
+    },
+    [selectedIngredients],
   );
+
+  const allergenFilter = useCallback(
+    (recipe: Item) => {
+      if (recipe && selectedAllergens.length > 0) {
+        return recipe.allergens.every(
+          (ingredient) => !selectedAllergens.includes(ingredient.name),
+        );
+      }
+      return true;
+    },
+    [selectedAllergens],
+  );
+
+  const filteredRecipes = useMemo(() => {
+    return recipes?.items.filter(
+      (item) => allergenFilter(item) && ingredientFilter(item),
+    );
+  }, [ingredientFilter, allergenFilter, recipes?.items]);
 
   const recipesTotal = useMemo(
     () => Math.floor(recipes?.total / 20),
@@ -77,7 +109,7 @@ const Home = () => {
 
   const ingredients = [
     ...new Set(
-      filteredRecipes
+      recipes?.items
         ?.map((recipe) =>
           recipe.ingredients.map((ingredient) => ingredient.name),
         )
@@ -90,7 +122,7 @@ const Home = () => {
   }, []);
 
   const onChangeHandler = useCallback(
-    (event: ChangeEvent<FormElement>) => {
+    (event) => {
       setSearchText(event.target.value);
     },
     [setSearchText],
@@ -124,8 +156,6 @@ const Home = () => {
         .catch((e) => console.error(e));
     }
   }, [token]);
-
-  console.log(selectedIngredients);
 
   return (
     <>
@@ -210,7 +240,7 @@ const Home = () => {
           </Grid>
         </Center>
         <Grid columns={4} justify="center">
-          {filteredRecipes?.length > 0 ? (
+          {filteredRecipes !== undefined ? (
             filteredRecipes?.map((recipe) => {
               return (
                 <Grid.Col key={recipe.id} md={1} sm={2}>
@@ -223,8 +253,8 @@ const Home = () => {
               );
             })
           ) : (
-            <Grid.Col xs={12}>
-              <Text h4>
+            <Grid.Col sm={1}>
+              <Text size="xl" weight={500}>
                 Search for some great ingredients! I believe in you
               </Text>
             </Grid.Col>
