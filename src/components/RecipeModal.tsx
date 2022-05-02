@@ -9,7 +9,6 @@ import {
   Text,
   ThemeIcon,
 } from "@mantine/core";
-import { Avatar } from "@nextui-org/react";
 import Image from "next/image";
 import { memo, useCallback, useEffect, useState } from "react";
 import { CircleCheck } from "tabler-icons-react";
