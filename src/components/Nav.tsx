@@ -7,7 +7,9 @@ import {
   Text,
   useMantineColorScheme,
 } from "@mantine/core";
+import { NextLink } from "@mantine/next";
 import React from "react";
+import { BrandGithub } from "tabler-icons-react";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
 
@@ -37,6 +39,15 @@ export const Navbar1 = ({ handleDrawer, opened }) => {
               variant="outline"
             >
               {dark ? <SunIcon size={18} /> : <MoonIcon size={18} />}
+            </ActionIcon>
+            <ActionIcon
+              color={dark ? "yellow" : "blue"}
+              component={NextLink}
+              href="https://github.com/insuusvenerati/hello-free-shavacado"
+              size="lg"
+              target="_blank"
+            >
+              <BrandGithub />
             </ActionIcon>
           </Center>
         </Grid.Col>
