@@ -1,40 +1,57 @@
-import { createTheme, NextUIProvider } from "@nextui-org/react";
+import { AppProps } from "next/app";
+import Head from "next/head";
+import {
+  ColorScheme,
+  ColorSchemeProvider,
+  MantineProvider,
+} from "@mantine/core";
 import { DefaultSeo } from "next-seo";
-import { ThemeProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import SEO from "../../next-seo.config";
-
-const lightTheme = createTheme({
-  type: "light",
-  theme: {},
-});
-
-const darkTheme = createTheme({
-  type: "dark",
-  theme: {},
-});
+import { useCallback, useState } from "react";
 
 const queryClient = new QueryClient();
 
-const MyApp = ({ Component, pageProps }) => {
+const App = (props: AppProps) => {
+  const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
+
+  const toggleColorScheme = useCallback(
+    (value?: ColorScheme) => {
+      setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+    },
+    [colorScheme],
+  );
+
+  const { Component, pageProps } = props;
+
   return (
     <>
-      <NextUIProvider>
-        <DefaultSeo {...SEO} />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          value={{ light: lightTheme.className, dark: darkTheme.className }}
+      <Head>
+        <title>Page title</title>
+        <meta
+          content="minimum-scale=1, initial-scale=1, width=device-width"
+          name="viewport"
+        />
+      </Head>
+      <ColorSchemeProvider
+        colorScheme={colorScheme}
+        toggleColorScheme={toggleColorScheme}
+      >
+        <MantineProvider
+          theme={{ colorScheme }}
+          withGlobalStyles
+          withNormalizeCSS
         >
+          <DefaultSeo {...SEO} />
           <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools initialIsOpen={false} />
             <Component {...pageProps} />
           </QueryClientProvider>
-        </ThemeProvider>
-      </NextUIProvider>
+        </MantineProvider>
+      </ColorSchemeProvider>
     </>
   );
 };
 
-export default MyApp;
+export default App;

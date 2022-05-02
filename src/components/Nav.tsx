@@ -1,83 +1,57 @@
-import { Switch, useTheme, Container, Col, Row } from "@nextui-org/react";
-import { StyledNavContainer } from "./StyledNavContainer";
-import { useTheme as useNextTheme } from "next-themes";
-import { useCallback } from "react";
+import {
+  ActionIcon,
+  Burger,
+  Center,
+  Container,
+  Grid,
+  Text,
+  useMantineColorScheme,
+} from "@mantine/core";
+import { NextLink } from "@mantine/next";
 import React from "react";
+import { BrandGithub } from "tabler-icons-react";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
 
-export const Navbar = () => {
-  const { setTheme } = useNextTheme();
-  const { isDark } = useTheme();
-
-  const handleSetTheme = useCallback(
-    (event) => {
-      setTheme(event.target.checked ? "dark" : "light");
-    },
-    [setTheme]
-  );
+export const Navbar1 = ({ handleDrawer, opened }) => {
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const dark = colorScheme === "dark";
 
   return (
-    <StyledNavContainer>
-      <Container
-        alignItems="center"
-        as="nav"
-        display="flex"
-        lg={true}
-        wrap="nowrap"
-      >
-        <Col>
-          <Row align="center" justify="flex-start">
+    <Container fluid p="md">
+      <Grid>
+        <Grid.Col span={4}>
+          <Burger onClick={handleDrawer} opened={opened} />
+        </Grid.Col>
+        <Grid.Col span={4}>
+          <Text align="center" weight="bold">
             Hello Fresh Recipe Search
-          </Row>
-        </Col>
-
-        <Col>
-          <Row align="center" justify="flex-end">
-            <Switch checked={isDark} onChange={handleSetTheme} />
-          </Row>
-        </Col>
-      </Container>
-    </StyledNavContainer>
+          </Text>
+        </Grid.Col>
+        <Grid.Col span={4}>
+          <Center>
+            <ActionIcon
+              color={dark ? "yellow" : "blue"}
+              // eslint-disable-next-line react/jsx-no-bind
+              onClick={() => toggleColorScheme()}
+              size="lg"
+              title="Toggle color scheme"
+              variant="outline"
+            >
+              {dark ? <SunIcon size={18} /> : <MoonIcon size={18} />}
+            </ActionIcon>
+            <ActionIcon
+              color={dark ? "yellow" : "blue"}
+              component={NextLink}
+              href="https://github.com/insuusvenerati/hello-free-shavacado"
+              size="lg"
+              target="_blank"
+            >
+              <BrandGithub />
+            </ActionIcon>
+          </Center>
+        </Grid.Col>
+      </Grid>
+    </Container>
   );
 };
-
-export const Navbar1 = React.memo(function Navbar1() {
-  const { setTheme } = useNextTheme();
-  const { isDark } = useTheme();
-
-  const handleSetTheme = useCallback(
-    (event) => {
-      setTheme(event.target.checked ? "dark" : "light");
-    },
-    [setTheme]
-  );
-
-  return (
-    <StyledNavContainer>
-      <Container
-        alignItems="center"
-        as="nav"
-        display="flex"
-        lg={true}
-        wrap="nowrap"
-      >
-        <Col>
-          <Row align="center" justify="flex-start">
-            Hello Fresh Recipe Search
-          </Row>
-        </Col>
-
-        <Col>
-          <Row align="center" justify="flex-end">
-            <Switch
-              checked={isDark}
-              icon={isDark ? <MoonIcon /> : <SunIcon />}
-              onChange={handleSetTheme}
-            />
-          </Row>
-        </Col>
-      </Container>
-    </StyledNavContainer>
-  );
-});

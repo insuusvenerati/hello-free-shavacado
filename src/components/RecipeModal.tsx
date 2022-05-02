@@ -1,70 +1,113 @@
 import {
-  Avatar,
-  Button,
-  Col,
+  Badge,
+  Card,
   Container,
   Grid,
+  Group,
+  List,
   Modal,
-  Row,
-  Spacer,
   Text,
-} from "@nextui-org/react";
+  ThemeIcon,
+} from "@mantine/core";
 import Image from "next/image";
+import { memo, useCallback, useEffect, useState } from "react";
+import { CircleCheck } from "tabler-icons-react";
 import { Item } from "../types/recipes";
+import { getPlaceholder } from "../util/getPlaceholder";
 
 type Props = {
   recipe: Item;
-  [x: string]: any;
+  opened: boolean;
+  onClose: () => void;
 };
 
-export const RecipeModal = ({ recipe, ...props }: Props) => {
+const RecipeModal = ({ recipe, opened, onClose }: Props) => {
+  const [placeholder, setPlaceholder] = useState("");
+
+  useEffect(() => {
+    if (recipe) {
+      getPlaceholder(
+        `https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`,
+      )
+        .then((value) => setPlaceholder(value.base64))
+        .catch((err) => console.log(err));
+    }
+  }, [recipe?.imagePath, recipe]);
+
+  const removeSymbols = useCallback((text: string) => {
+    return text.replace(/[^a-zA-Z.\n ]/g, "");
+  }, []);
+
+  console.info(recipe?.steps);
+
   return (
-    <Modal {...props}>
-      <Modal.Header>
-        <Col>
-          <Image
-            alt={recipe?.name}
-            height={500}
-            objectFit="cover"
-            src={`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}
-            width={1900}
-          />
-          <Text h4>{recipe?.name}</Text>
-        </Col>
-      </Modal.Header>
-      <Modal.Body>
-        <Grid.Container>
-          <Grid xs={7}>
-            <Text>{recipe?.descriptionMarkdown}</Text>
-          </Grid>
-          <Grid xs={5}>
-            <Row gap={1} justify="space-between">
-              <Text b>Cooking Difficulty</Text>
-              <Text>{recipe?.difficulty}</Text>
-            </Row>
-          </Grid>
-        </Grid.Container>
-        <Spacer x={5} />
-        <Grid.Container gap={1}>
-          {recipe?.steps.map((step) => (
-            <Grid key={step.index + Math.random()} xs={5}>
-              <Avatar text={`${step.index}`} />
-              <Text>{step?.instructionsMarkdown}</Text>
-            </Grid>
-          ))}
-        </Grid.Container>
-      </Modal.Body>
-      <Modal.Footer>
-        <Container>
-          <Row>
-            {recipe?.allergens.map((allergen) => (
-              <Button css={{ marginRight: "$3" }} key={allergen.id} size="xs">
-                {allergen.name}
-              </Button>
-            ))}
-          </Row>
-        </Container>
-      </Modal.Footer>
+    <Modal
+      centered
+      onClose={onClose}
+      opened={opened}
+      overflow="inside"
+      size="1200"
+      title={recipe?.name}
+    >
+      <Container fluid>
+        <Grid>
+          {placeholder && (
+            <Image
+              alt={recipe?.name}
+              blurDataURL={placeholder}
+              height={500}
+              objectFit="cover"
+              placeholder="blur"
+              src={`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}
+              width={1900}
+            />
+          )}
+          <Card m="lg" shadow="sm" withBorder>
+            <Group position="center">
+              {recipe?.allergens.map((allergen) => (
+                <Badge key={allergen.id} size="xl" sx={{ marginRight: "$3" }}>
+                  {allergen.name}
+                </Badge>
+              ))}
+              <Text>{recipe?.descriptionMarkdown}</Text>
+            </Group>
+          </Card>
+          <Card m="lg" shadow="sm" withBorder>
+            <Group>
+              <Text size="xl" weight="bold">
+                Instructions
+              </Text>
+
+              {/* <Text weight="bold">Cooking Difficulty</Text>
+          <Text>{recipe?.difficulty}</Text> */}
+
+              <List
+                center
+                icon={
+                  <ThemeIcon color="teal" radius="xl" size={24}>
+                    <CircleCheck size={16} />
+                  </ThemeIcon>
+                }
+                size="xl"
+                spacing="xl"
+              >
+                {recipe?.steps.map((step) => (
+                  <List.Item key={step.index + Math.random()}>
+                    {/* <div
+                  dangerouslySetInnerHTML={{
+                    __html: removeSymbols(step?.instructionsHTML),
+                  }}
+                /> */}
+                    {removeSymbols(step?.instructionsMarkdown)}
+                  </List.Item>
+                ))}
+              </List>
+            </Group>
+          </Card>
+        </Grid>
+      </Container>
     </Modal>
   );
 };
+
+export default memo(RecipeModal);

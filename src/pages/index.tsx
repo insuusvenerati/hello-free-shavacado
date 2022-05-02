@@ -1,38 +1,37 @@
 import {
-  Checkbox,
-  FormElement,
+  Center,
+  Container,
+  Drawer,
   Grid,
-  Input,
-  Loading,
+  Loader,
+  MultiSelect,
   Pagination,
   Text,
-} from "@nextui-org/react";
+  TextInput,
+} from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
 import ky from "ky";
 import Head from "next/head";
 import Script from "next/script";
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { Navbar1 } from "../components/Nav";
 import { RecipeCard } from "../components/RecipeCard";
-import { RecipeModal } from "../components/RecipeModal";
+import RecipeModal from "../components/RecipeModal";
 import { Item, RecipeQuery } from "../types/recipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 import { useDebounce } from "../util/useDebounce";
 
 const Home = () => {
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [selectedRecipe, setSelectedRecipe] = useState<Item>();
   const [visible, setVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [selectedRecipe, setSelectedRecipe] = useState<Item>();
-  const debouncedSearchText = useDebounce(searchText, 1000);
+  const debouncedSearchText = useDebounce<string>(searchText, 1000);
   const token = getCookie("token");
   const [page, setPage] = useState(1);
-
-  const helperTextMessage = useMemo(
-    () => "For best results, separate multiple ingredients by space",
-    [],
-  );
+  const [opened, setOpened] = useState(false);
 
   const {
     data: recipes,
@@ -57,8 +56,6 @@ const Home = () => {
     },
   );
 
-  const [filteredRecipes, setFilteredRecipes] = useState<Item[]>([]);
-
   const allergens = [
     ...new Set(
       recipes?.items
@@ -67,17 +64,57 @@ const Home = () => {
     ),
   ];
 
+  const ingredientFilter = useCallback(
+    (recipe: Item) => {
+      if (recipe && selectedIngredients.length > 0) {
+        return recipe.ingredients.some((ingredient) =>
+          selectedIngredients.includes(ingredient.name),
+        );
+      }
+      return true;
+    },
+    [selectedIngredients],
+  );
+
+  const allergenFilter = useCallback(
+    (recipe: Item) => {
+      if (recipe && selectedAllergens.length > 0) {
+        return recipe.allergens.every(
+          (ingredient) => !selectedAllergens.includes(ingredient.name),
+        );
+      }
+      return true;
+    },
+    [selectedAllergens],
+  );
+
+  const filteredRecipes = useMemo(() => {
+    return recipes?.items.filter(
+      (item) => allergenFilter(item) && ingredientFilter(item),
+    );
+  }, [ingredientFilter, allergenFilter, recipes?.items]);
+
   const recipesTotal = useMemo(
     () => Math.floor(recipes?.total / 20),
     [recipes?.total],
   );
+
+  const ingredients = [
+    ...new Set(
+      recipes?.items
+        ?.map((recipe) =>
+          recipe.ingredients.map((ingredient) => ingredient.name),
+        )
+        .flat(),
+    ),
+  ];
 
   const pageChangeHandler = useCallback((pageNumber: number) => {
     setPage(pageNumber);
   }, []);
 
   const onChangeHandler = useCallback(
-    (event: ChangeEvent<FormElement>) => {
+    (event) => {
       setSearchText(event.target.value);
     },
     [setSearchText],
@@ -91,8 +128,16 @@ const Home = () => {
     setVisible(false);
   }, [setVisible]);
 
-  const clearRecipesHandler = useCallback(() => {
-    setFilteredRecipes([]);
+  const handleDrawer = useCallback(() => {
+    setOpened(!opened);
+  }, [opened]);
+
+  const handleSetSelectedIngredients = useCallback((value: string[]) => {
+    setSelectedIngredients(value);
+  }, []);
+
+  const handleSetSelectedAllergens = useCallback((value: string[]) => {
+    setSelectedAllergens(value);
   }, []);
 
   // Get token
@@ -103,17 +148,6 @@ const Home = () => {
         .catch((e) => console.error(e));
     }
   }, [token]);
-
-  useEffect(() => {
-    setFilteredRecipes(
-      recipes?.items.filter((item) =>
-        item.allergens.every(
-          (allergen) => !selectedAllergens.includes(allergen.name),
-        ),
-      ),
-    ),
-      () => setFilteredRecipes([]);
-  }, [recipes?.items, selectedAllergens]);
 
   return (
     <>
@@ -133,80 +167,89 @@ const Home = () => {
         src="https://analytics.stiforr.tech/umami.js"
       />
 
-      <Navbar1 />
+      <Navbar1 handleDrawer={handleDrawer} opened={opened} />
 
       <RecipeModal
-        blur
-        closeButton
         onClose={closeHandler}
-        open={visible}
+        opened={visible}
         recipe={selectedRecipe}
-        width={1200}
       />
-
-      <Grid.Container gap={2} justify="center">
-        <Grid sm={6} xs={12}>
-          <Input
-            clearable
-            contentLeft={isLoading ? <Loading size="sm" /> : undefined}
-            fullWidth
-            helperColor={isError ? "error" : "default"}
-            helperText={isError ? error.message : helperTextMessage}
-            labelPlaceholder="Ingredients"
-            // @ts-ignore
-            onChange={onChangeHandler}
-            onClearClick={clearRecipesHandler}
-            size="lg"
-          />
-        </Grid>
+      <Container fluid>
         {allergens.length > 0 && (
-          <Grid sm={2} xs={12}>
-            <Checkbox.Group
+          <Drawer
+            onClose={handleDrawer}
+            opened={opened}
+            padding="xl"
+            size="xl"
+            title="Sort & Filter"
+          >
+            <MultiSelect
+              clearable
+              data={allergens}
               label="Filter allergens"
-              onChange={setSelectedAllergens}
-              row
-              size="xs"
+              onChange={handleSetSelectedAllergens}
+              placeholder="Select an allergen"
+              searchable
               value={selectedAllergens}
-            >
-              {allergens.map((allergen, index) => (
-                <Checkbox key={index} value={allergen}>
-                  {allergen}
-                </Checkbox>
-              ))}
-            </Checkbox.Group>
-          </Grid>
-        )}
-        {filteredRecipes?.length > 0 && (
-          <Grid.Container justify="center">
-            <Pagination
-              onChange={pageChangeHandler}
-              page={page}
-              total={recipesTotal}
             />
-          </Grid.Container>
+            <MultiSelect
+              clearable
+              data={ingredients}
+              label="Filter ingredients"
+              onChange={handleSetSelectedIngredients}
+              placeholder="Select your ingredients"
+              searchable
+              value={selectedIngredients}
+            />
+          </Drawer>
         )}
-
-        <Grid.Container gap={2} justify="center">
-          {filteredRecipes?.length > 0 ? (
-            filteredRecipes?.map((recipe: Item) => {
-              return (
-                <RecipeCard
-                  handler={modalHandler}
-                  key={recipe.id}
-                  recipe={recipe}
-                  setSelectedRecipe={setSelectedRecipe}
+        <Grid justify="center">
+          <Grid.Col lg={6} md={12}>
+            <TextInput
+              error={isError && error.message}
+              label="Search"
+              onChange={onChangeHandler}
+              placeholder="Search"
+              rightSection={isLoading ? <Loader size="sm" /> : undefined}
+              size="md"
+            />
+          </Grid.Col>
+        </Grid>
+        <Center mb={5} mt={5}>
+          <Grid columns={1} justify="center">
+            <Grid.Col span={1}>
+              {recipesTotal > 0 && (
+                <Pagination
+                  onChange={pageChangeHandler}
+                  page={page}
+                  total={recipesTotal}
                 />
+              )}
+            </Grid.Col>
+          </Grid>
+        </Center>
+        <Grid columns={4} justify="center">
+          {filteredRecipes !== undefined ? (
+            filteredRecipes?.map((recipe) => {
+              return (
+                <Grid.Col key={recipe.id} md={1} sm={2}>
+                  <RecipeCard
+                    handler={modalHandler}
+                    recipe={recipe}
+                    setSelectedRecipe={setSelectedRecipe}
+                  />
+                </Grid.Col>
               );
             })
           ) : (
-            <Grid>
-              <Text h4>
-                Search for some great ingredients! I believe in you
+            <Grid.Col sm={1}>
+              <Text size="xl" weight={500}>
+                Search for some great recipes! I believe in you
               </Text>
-            </Grid>
+            </Grid.Col>
           )}
-        </Grid.Container>
-      </Grid.Container>
+        </Grid>
+      </Container>
     </>
   );
 };
