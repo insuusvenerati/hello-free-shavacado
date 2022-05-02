@@ -1,7 +1,8 @@
-import { Button, Card, Container, Grid, Row, Text } from "@nextui-org/react";
+import { Badge, Card, Text } from "@mantine/core";
 import Image from "next/image";
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Item } from "../types/recipes";
+import { getPlaceholder } from "../util/getPlaceholder";
 
 type Props = {
   recipe: Item;
@@ -13,43 +14,43 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
   const selectedRecipeHandler = useCallback(() => {
     setSelectedRecipe(recipe);
   }, [setSelectedRecipe, recipe]);
+  const [placeholder, setPlaceholder] = useState("");
+
+  useEffect(() => {
+    getPlaceholder(
+      `https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`,
+    )
+      .then((value) => setPlaceholder(value.base64))
+      .catch((err) => console.log(err));
+  }, [recipe?.imagePath]);
 
   return (
-    <Grid sm={3} xs={12}>
-      <Card
-        clickable
-        cover
-        hoverable
-        onClick={handler}
-        onMouseEnter={selectedRecipeHandler}
-      >
-        <Card.Body>
+    <Card onClick={handler} onMouseEnter={selectedRecipeHandler} shadow="sm">
+      {/** TODO Could be better. Style props bad */}
+      <Card.Section sx={{ width: 456.25, height: 258.5, marginBottom: 5 }}>
+        {placeholder && (
           <Image
             alt={recipe.name}
+            blurDataURL={placeholder}
             height={340}
+            placeholder="blur"
             src={`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}
             width={600}
           />
-        </Card.Body>
-        <Card.Footer>
-          <Container>
-            <Row justify="space-between">
-              <Text h4 weight="bold">
-                {recipe?.name}
-              </Text>
-            </Row>
-            {recipe.tags.length > 0 && (
-              <Grid.Container>
-                {recipe.tags.map((tag) => (
-                  <Grid key={tag.id} sm={3} xs={4}>
-                    <Button size="xs">{tag.name}</Button>
-                  </Grid>
-                ))}
-              </Grid.Container>
-            )}
-          </Container>
-        </Card.Footer>
-      </Card>
-    </Grid>
+        )}
+      </Card.Section>
+
+      <Text weight="bold">{recipe?.name}</Text>
+
+      {recipe.tags.length > 0 && (
+        <>
+          {recipe.tags.map((tag) => (
+            <Badge key={tag.id} size="xs">
+              {tag.name}
+            </Badge>
+          ))}
+        </>
+      )}
+    </Card>
   );
 };

@@ -1,27 +1,15 @@
-import Document, { Html, Head, Main, NextScript } from "next/document";
-import { CssBaseline } from "@nextui-org/react";
-import { HeadMeta } from "../components/HeadMeta";
+import { createGetInitialProps } from "@mantine/next";
+import Document, { Head, Html, Main, NextScript } from "next/document";
 
-// @ts-ignore
-class MyDocument extends Document {
-  static async getInitialProps(ctx) {
-    const initialProps = await Document.getInitialProps(ctx);
-    return {
-      ...initialProps,
-      styles: <>{initialProps.styles}</>,
-    };
-  }
+const getInitialProps = createGetInitialProps();
+
+export default class _Document extends Document {
+  static getInitialProps = getInitialProps;
 
   render() {
     return (
-      <Html lang="en">
-        <Head>
-          <HeadMeta
-            description="Search for Hello Fresh recipes by ingredient"
-            title="Hello Free Shavacado"
-          />
-          {CssBaseline.flush()}
-        </Head>
+      <Html>
+        <Head />
         <body>
           <Main />
           <NextScript />
@@ -30,5 +18,3 @@ class MyDocument extends Document {
     );
   }
 }
-
-export default MyDocument;
