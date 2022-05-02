@@ -9,23 +9,15 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { FormElement } from "@nextui-org/react";
 import { getCookie, setCookies } from "cookies-next";
 import ky from "ky";
 import Head from "next/head";
 import Script from "next/script";
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { Navbar1 } from "../components/Nav";
 import { RecipeCard } from "../components/RecipeCard";
-import { RecipeModal } from "../components/RecipeModal";
+import RecipeModal from "../components/RecipeModal";
 import { Item, RecipeQuery } from "../types/recipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 import { useDebounce } from "../util/useDebounce";
@@ -36,7 +28,7 @@ const Home = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Item>();
   const [visible, setVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const debouncedSearchText = useDebounce(searchText, 1000);
+  const debouncedSearchText = useDebounce<string>(searchText, 1000);
   const token = getCookie("token");
   const [page, setPage] = useState(1);
   const [opened, setOpened] = useState(false);
@@ -178,12 +170,9 @@ const Home = () => {
       <Navbar1 handleDrawer={handleDrawer} opened={opened} />
 
       <RecipeModal
-        blur
-        closeButton
         onClose={closeHandler}
-        open={visible}
+        opened={visible}
         recipe={selectedRecipe}
-        width={1200}
       />
       <Container fluid>
         {allergens.length > 0 && (
@@ -228,15 +217,15 @@ const Home = () => {
         </Grid>
         <Center mb={5} mt={5}>
           <Grid columns={1} justify="center">
-            {filteredRecipes?.length > 0 && (
-              <Grid.Col span={1}>
+            <Grid.Col span={1}>
+              {recipesTotal > 0 && (
                 <Pagination
                   onChange={pageChangeHandler}
                   page={page}
                   total={recipesTotal}
                 />
-              </Grid.Col>
-            )}
+              )}
+            </Grid.Col>
           </Grid>
         </Center>
         <Grid columns={4} justify="center">
@@ -255,7 +244,7 @@ const Home = () => {
           ) : (
             <Grid.Col sm={1}>
               <Text size="xl" weight={500}>
-                Search for some great ingredients! I believe in you
+                Search for some great recipes! I believe in you
               </Text>
             </Grid.Col>
           )}
