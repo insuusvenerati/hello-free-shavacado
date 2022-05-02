@@ -8,6 +8,7 @@ import { BrowserTracing } from "@sentry/tracing";
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
 Sentry.init({
+  environment: process.env.NODE_ENV,
   dsn:
     SENTRY_DSN ||
     "https://f5269bd6923c4d0888e2bacd659677fb@o122225.ingest.sentry.io/6345319",
