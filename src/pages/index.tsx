@@ -39,7 +39,7 @@ const Home = () => {
   const token = getCookie("token");
   const [page, setPage] = useState(1);
   const [opened, setOpened] = useState(false);
-  const matches = useMediaQuery("(min-width: 900px)");
+  const matches = useMediaQuery("(min-width: 900px)", false);
 
   const {
     data: recipes,
