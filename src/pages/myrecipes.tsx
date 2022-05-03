@@ -1,0 +1,46 @@
+import { useSession } from "@clerk/nextjs";
+import { Container, List, LoadingOverlay, Text } from "@mantine/core";
+import { useQuery } from "react-query";
+import { Navbar1 } from "../components/Nav";
+import { getRecipes } from "../util/getRecipes";
+
+// ... rest of code ...
+
+const RecipeList = () => {
+  const { session } = useSession();
+  const { data: recipes, isLoading } = useQuery(["recipes", session], () =>
+    getRecipes(session),
+  );
+
+  console.info(recipes);
+
+  // if loading, just show basic message
+  if (isLoading) {
+    return (
+      <Container>
+        <LoadingOverlay visible />
+      </Container>
+    );
+  }
+
+  // display all the recipes
+  return (
+    <>
+      <Navbar1 />
+
+      <Container>
+        {recipes?.length > 0 ? (
+          <List>
+            {recipes.map((todo) => (
+              <List.Item key={todo.id}>{todo.recipe}</List.Item>
+            ))}
+          </List>
+        ) : (
+          <Text>You don&apos;t have any recipes!</Text>
+        )}
+      </Container>
+    </>
+  );
+};
+
+export default RecipeList;
