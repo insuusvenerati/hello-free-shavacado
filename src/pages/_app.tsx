@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import SEO from "../../next-seo.config";
 import { useCallback, useState } from "react";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const queryClient = new QueryClient();
 
@@ -67,7 +68,9 @@ const App = (props: AppProps) => {
           <DefaultSeo {...SEO} />
           <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools initialIsOpen={false} />
-            <Component {...pageProps} />
+            <ClerkProvider>
+              <Component {...pageProps} />
+            </ClerkProvider>
           </QueryClientProvider>
         </MantineProvider>
       </ColorSchemeProvider>
