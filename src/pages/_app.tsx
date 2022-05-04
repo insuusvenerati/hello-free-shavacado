@@ -11,6 +11,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import SEO from "../../next-seo.config";
 import { useCallback, useState } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
+import Script from "next/script";
 
 const queryClient = new QueryClient();
 
@@ -55,7 +56,18 @@ const App = (props: AppProps) => {
         <link color="#5bbad5" href="/safari-pinned-tab.svg" rel="mask-icon" />
         <meta content="#da532c" name="msapplication-TileColor" />
         <meta content="#f69435" name="theme-color"></meta>
+        <title>Hello Free Shavacado</title>
+        <meta
+          content="Search for Hello Fresh recipes by ingredient"
+          name="description"
+        />
       </Head>
+      <Script
+        async
+        data-website-id="679de944-0e27-4e1e-aa33-efc4feddd5bb"
+        defer
+        src="https://analytics.stiforr.tech/umami.js"
+      />
       <ColorSchemeProvider
         colorScheme={colorScheme}
         toggleColorScheme={toggleColorScheme}
