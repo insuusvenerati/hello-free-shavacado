@@ -1,32 +1,34 @@
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { ActionIcon, Center, Text, useMantineColorScheme } from "@mantine/core";
 import { NextLink } from "@mantine/next";
-import React from "react";
 import { BrandGithub, Login } from "tabler-icons-react";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
 
-export const Navbar1 = () => {
+const SignInOrUserProfile = ({ isSignedIn, dark }) => {
+  if (!isSignedIn) {
+    return (
+      <SignInButton mode="modal">
+        <ActionIcon color={dark ? "yellow" : "blue"} size="lg">
+          <Login />
+        </ActionIcon>
+      </SignInButton>
+    );
+  }
+  return <UserButton />;
+};
+
+export const NavbarContent = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const { isSignedIn } = useUser();
   const dark = colorScheme === "dark";
 
   return (
-    // <Container fluid p="md">
-    // <Grid>
     <>
-      {/* <MediaQuery largerThan="sm" styles={{ display: "none" }}> */}
-      {/* <Grid.Col span={4}> */}
-      {/* <Burger onClick={handleDrawer} opened={opened} /> */}
-      {/* </Grid.Col> */}
-      {/* </MediaQuery> */}
-      {/* <Grid.Col span={8}> */}
-
       <Text align="center" weight="bold">
         Hello Fresh Recipe Search
       </Text>
 
-      {/* </Grid.Col>
-      <Grid.Col span={4}> */}
       <Center>
         <ActionIcon
           color={dark ? "yellow" : "blue"}
@@ -47,15 +49,8 @@ export const Navbar1 = () => {
         >
           <BrandGithub />
         </ActionIcon>
-        <SignInButton mode="modal">
-          <ActionIcon color={dark ? "yellow" : "blue"} size="lg">
-            <Login />
-          </ActionIcon>
-        </SignInButton>
+        <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
       </Center>
     </>
-    // {/* </Grid.Col> */}
-    // </Grid>
-    // </Container>
   );
 };
