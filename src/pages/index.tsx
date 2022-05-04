@@ -1,14 +1,21 @@
 import {
+  AppShell,
+  Burger,
   Center,
   Container,
   Drawer,
   Grid,
+  Header,
   Loader,
+  MediaQuery,
   MultiSelect,
+  Navbar,
   Pagination,
+  Stack,
   Text,
   TextInput,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { getCookie, setCookies } from "cookies-next";
 import ky from "ky";
 import Head from "next/head";
@@ -26,12 +33,13 @@ const Home = () => {
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<Item>();
-  const [visible, setVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
   const debouncedSearchText = useDebounce<string>(searchText, 1000);
   const token = getCookie("token");
   const [page, setPage] = useState(1);
   const [opened, setOpened] = useState(false);
+  const matches = useMediaQuery("(min-width: 900px)", false);
 
   const {
     data: recipes,
@@ -121,12 +129,12 @@ const Home = () => {
   );
 
   const modalHandler = useCallback(() => {
-    setVisible(true);
-  }, [setVisible]);
+    setModalVisible(true);
+  }, [setModalVisible]);
 
   const closeHandler = useCallback(() => {
-    setVisible(false);
-  }, [setVisible]);
+    setModalVisible(false);
+  }, [setModalVisible]);
 
   const handleDrawer = useCallback(() => {
     setOpened(!opened);
@@ -167,42 +175,72 @@ const Home = () => {
         src="https://analytics.stiforr.tech/umami.js"
       />
 
-      <Navbar1 handleDrawer={handleDrawer} opened={opened} />
+      <AppShell
+        fixed
+        header={
+          !matches ? (
+            <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+              <Header height={70} p="md">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    height: "100%",
+                  }}
+                >
+                  <Burger
+                    mr="xl"
+                    onClick={handleDrawer}
+                    opened={opened}
+                    size="sm"
+                  />
 
-      <RecipeModal
-        onClose={closeHandler}
-        opened={visible}
-        recipe={selectedRecipe}
-      />
-      <Container fluid>
-        {allergens.length > 0 && (
-          <Drawer
-            onClose={handleDrawer}
-            opened={opened}
-            padding="xl"
-            size="xl"
-            title="Sort & Filter"
+                  <Text>Hello Free Shavacado</Text>
+                </div>
+              </Header>
+            </MediaQuery>
+          ) : undefined
+        }
+        navbar={
+          <Navbar
+            hidden={!opened}
+            hiddenBreakpoint="sm"
+            p="md"
+            width={{ base: 300 }}
           >
-            <MultiSelect
-              clearable
-              data={allergens}
-              label="Filter allergens"
-              onChange={handleSetSelectedAllergens}
-              placeholder="Select an allergen"
-              searchable
-              value={selectedAllergens}
-            />
-            <MultiSelect
-              clearable
-              data={ingredients}
-              label="Filter ingredients"
-              onChange={handleSetSelectedIngredients}
-              placeholder="Select your ingredients"
-              searchable
-              value={selectedIngredients}
-            />
-          </Drawer>
-        )}
+            <Navbar1 />
+            <Container p="md">
+              <Stack>
+                <MultiSelect
+                  clearable
+                  data={allergens}
+                  label="Filter allergens"
+                  onChange={handleSetSelectedAllergens}
+                  placeholder="Select an allergen"
+                  searchable
+                  value={selectedAllergens}
+                />
+                <MultiSelect
+                  clearable
+                  data={ingredients}
+                  label="Filter ingredients"
+                  onChange={handleSetSelectedIngredients}
+                  placeholder="Select your ingredients"
+                  searchable
+                  value={selectedIngredients}
+                />
+              </Stack>
+            </Container>
+          </Navbar>
+        }
+        navbarOffsetBreakpoint="sm"
+      >
+        <RecipeModal
+          onClose={closeHandler}
+          opened={modalVisible}
+          recipe={selectedRecipe}
+        />
+
         <Grid justify="center">
           <Grid.Col lg={6} md={12}>
             <TextInput
@@ -229,27 +267,19 @@ const Home = () => {
           </Grid>
         </Center>
         <Grid columns={4} justify="center">
-          {filteredRecipes !== undefined ? (
-            filteredRecipes?.map((recipe) => {
-              return (
-                <Grid.Col key={recipe.id} md={1} sm={2}>
-                  <RecipeCard
-                    handler={modalHandler}
-                    recipe={recipe}
-                    setSelectedRecipe={setSelectedRecipe}
-                  />
-                </Grid.Col>
-              );
-            })
-          ) : (
-            <Grid.Col sm={1}>
-              <Text size="xl" weight={500}>
-                Search for some great recipes! I believe in you
-              </Text>
-            </Grid.Col>
-          )}
+          {filteredRecipes?.map((recipe) => {
+            return (
+              <Grid.Col key={recipe.id} md={1} sm={2}>
+                <RecipeCard
+                  handler={modalHandler}
+                  recipe={recipe}
+                  setSelectedRecipe={setSelectedRecipe}
+                />
+              </Grid.Col>
+            );
+          })}
         </Grid>
-      </Container>
+      </AppShell>
     </>
   );
 };

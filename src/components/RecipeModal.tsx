@@ -38,8 +38,6 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
     return text.replace(/[^a-zA-Z.\n ]/g, "");
   }, []);
 
-  console.info(recipe?.steps);
-
   return (
     <Modal
       centered
