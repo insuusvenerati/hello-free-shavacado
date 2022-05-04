@@ -1,7 +1,7 @@
 import { useSession } from "@clerk/nextjs";
 import { Container, List, LoadingOverlay, Text } from "@mantine/core";
 import { useQuery } from "react-query";
-import { Navbar1 } from "../components/Nav";
+import { NavbarContent } from "../components/NavContent";
 import { getRecipes } from "../util/getRecipes";
 
 // ... rest of code ...
@@ -26,7 +26,7 @@ const RecipeList = () => {
   // display all the recipes
   return (
     <>
-      <Navbar1 />
+      <NavbarContent />
 
       <Container>
         {recipes?.length > 0 ? (
