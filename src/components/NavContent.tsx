@@ -1,7 +1,7 @@
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { ActionIcon, Center, Text, useMantineColorScheme } from "@mantine/core";
 import { NextLink } from "@mantine/next";
-import { BrandGithub, Login } from "tabler-icons-react";
+import { Book2, BrandGithub, Home, Login } from "tabler-icons-react";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
 
@@ -32,6 +32,15 @@ export const NavbarContent = () => {
       <Center>
         <ActionIcon
           color={dark ? "yellow" : "blue"}
+          component={NextLink}
+          href="/"
+          size="lg"
+          title="Home"
+        >
+          <Home />
+        </ActionIcon>
+        <ActionIcon
+          color={dark ? "yellow" : "blue"}
           // eslint-disable-next-line react/jsx-no-bind
           onClick={() => toggleColorScheme()}
           size="lg"
@@ -46,9 +55,21 @@ export const NavbarContent = () => {
           href="https://github.com/insuusvenerati/hello-free-shavacado"
           size="lg"
           target="_blank"
+          title="Github"
         >
           <BrandGithub />
         </ActionIcon>
+        {isSignedIn && (
+          <ActionIcon
+            color={dark ? "yellow" : "blue"}
+            component={NextLink}
+            href="/myrecipes"
+            size="lg"
+            title="My Recipes"
+          >
+            <Book2 />
+          </ActionIcon>
+        )}
         <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
       </Center>
     </>

@@ -4,17 +4,15 @@ import { useQuery } from "react-query";
 import { NavbarContent } from "../components/NavContent";
 import { getRecipes } from "../util/getRecipes";
 
-// ... rest of code ...
-
 const RecipeList = () => {
   const { session } = useSession();
+
   const { data: recipes, isLoading } = useQuery(["recipes", session], () =>
     getRecipes(session),
   );
 
   console.info(recipes);
 
-  // if loading, just show basic message
   if (isLoading) {
     return (
       <Container>

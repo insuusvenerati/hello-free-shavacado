@@ -3,7 +3,7 @@ import ky from "ky";
 import { useCallback, useState } from "react";
 import { useQuery } from "react-query";
 import { Item, RecipeQuery } from "../types/recipes";
-import { useDebounce } from "../util/useDebounce";
+import { useDebounce } from "./useDebounce";
 import { useFilterRecipes } from "./useFilters";
 import { useRecipesQuery } from "./useRecipesQuery";
 

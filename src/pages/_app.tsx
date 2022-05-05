@@ -12,8 +12,10 @@ import SEO from "../../next-seo.config";
 import { useCallback, useState } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import Script from "next/script";
+import { NotificationsProvider } from "@mantine/notifications";
 
 const queryClient = new QueryClient();
+const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 
 const App = (props: AppProps) => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
@@ -77,13 +79,15 @@ const App = (props: AppProps) => {
           withGlobalStyles
           withNormalizeCSS
         >
-          <DefaultSeo {...SEO} />
-          <QueryClientProvider client={queryClient}>
-            <ReactQueryDevtools initialIsOpen={false} />
-            <ClerkProvider>
-              <Component {...pageProps} />
-            </ClerkProvider>
-          </QueryClientProvider>
+          <NotificationsProvider>
+            <DefaultSeo {...SEO} />
+            <QueryClientProvider client={queryClient}>
+              <ReactQueryDevtools initialIsOpen={false} />
+              <ClerkProvider frontendApi={CLERK_FRONTEND_KEY} {...pageProps}>
+                <Component {...pageProps} />
+              </ClerkProvider>
+            </QueryClientProvider>
+          </NotificationsProvider>
         </MantineProvider>
       </ColorSchemeProvider>
     </>
