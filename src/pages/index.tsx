@@ -1,5 +1,4 @@
 import { Center, Grid, Loader, Pagination, TextInput } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
 import { getCookie, setCookies } from "cookies-next";
 import { useCallback, useEffect, useState } from "react";
 import { MyAppShell } from "../components/MyAppShell";
@@ -11,8 +10,7 @@ import { hellofreshGetToken } from "../util/hellofresh";
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const token = getCookie("token");
-  const [opened, setOpened] = useState(false);
-  const matches = useMediaQuery("(min-width: 900px)", true);
+
   const {
     isLoading,
     isError,
@@ -33,16 +31,8 @@ const Home = () => {
   } = useRecipes();
 
   const modalHandler = useCallback(() => {
-    setModalVisible(true);
-  }, [setModalVisible]);
-
-  const closeHandler = useCallback(() => {
-    setModalVisible(false);
-  }, [setModalVisible]);
-
-  const handleDrawer = useCallback(() => {
-    setOpened(!opened);
-  }, [opened]);
+    setModalVisible(!modalVisible);
+  }, [modalVisible]);
 
   // Get token
   useEffect(() => {
@@ -54,9 +44,6 @@ const Home = () => {
   }, [token]);
 
   const appShellProps = {
-    matches,
-    handleDrawer,
-    opened,
     allergens,
     handleSetSelectedAllergens,
     selectedAllergens,
@@ -69,7 +56,7 @@ const Home = () => {
     <>
       <MyAppShell {...appShellProps}>
         <RecipeModal
-          onClose={closeHandler}
+          onClose={modalHandler}
           opened={modalVisible}
           recipe={selectedRecipe}
         />

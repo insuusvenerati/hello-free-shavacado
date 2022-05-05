@@ -9,13 +9,19 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+import { useCallback, useState } from "react";
 import { NavbarContent } from "./NavContent";
 
 export const MyAppShell = ({ children, ...props }) => {
+  const matches = useMediaQuery("(min-width: 900px)", true);
+  const [opened, setOpened] = useState(false);
+
+  const handleDrawer = useCallback(() => {
+    setOpened(!opened);
+  }, [opened]);
+
   const {
-    matches,
-    handleDrawer,
-    opened,
     allergens,
     handleSetSelectedAllergens,
     selectedAllergens,
