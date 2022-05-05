@@ -1,5 +1,8 @@
+/* eslint-disable react/jsx-no-bind */
+import { useSession } from "@clerk/nextjs";
 import {
   Badge,
+  Button,
   Card,
   Container,
   Grid,
@@ -9,10 +12,12 @@ import {
   Text,
   ThemeIcon,
 } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import Image from "next/image";
 import { memo, useCallback, useEffect, useState } from "react";
-import { CircleCheck } from "tabler-icons-react";
+import { CircleCheck, Star } from "tabler-icons-react";
 import { Item } from "../types/recipes";
+import { addRecipe } from "../util/addRecipe";
 import { getPlaceholder } from "../util/getPlaceholder";
 
 type Props = {
@@ -23,6 +28,23 @@ type Props = {
 
 const RecipeModal = ({ recipe, opened, onClose }: Props) => {
   const [placeholder, setPlaceholder] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { session } = useSession();
+
+  const handleSubmit = async (e) => {
+    setLoading(true);
+    e.preventDefault();
+    const { error, status } = await addRecipe(session, recipe?.slug);
+    setLoading(false);
+    if (error.code === "42501") {
+      console.info(error);
+      showNotification({
+        color: "red",
+        title: "Oh no",
+        message: "Hey there, you already have this recipe favorited 🤥",
+      });
+    }
+  };
 
   useEffect(() => {
     if (recipe) {
@@ -68,6 +90,11 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
                 </Badge>
               ))}
               <Text>{recipe?.descriptionMarkdown}</Text>
+              <form onSubmit={handleSubmit}>
+                <Button leftIcon={<Star />} loading={loading} type="submit">
+                  Add to favorites
+                </Button>
+              </form>
             </Group>
           </Card>
           <Card m="lg" shadow="sm" withBorder>
@@ -91,11 +118,6 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
               >
                 {recipe?.steps.map((step) => (
                   <List.Item key={step.index + Math.random()}>
-                    {/* <div
-                  dangerouslySetInnerHTML={{
-                    __html: removeSymbols(step?.instructionsHTML),
-                  }}
-                /> */}
                     {removeSymbols(step?.instructionsMarkdown)}
                   </List.Item>
                 ))}

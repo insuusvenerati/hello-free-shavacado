@@ -1,33 +1,44 @@
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { ActionIcon, Center, Text, useMantineColorScheme } from "@mantine/core";
 import { NextLink } from "@mantine/next";
-import React from "react";
-import { BrandGithub, Login } from "tabler-icons-react";
+import { Book2, BrandGithub, Home, Login } from "tabler-icons-react";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
 
-export const Navbar1 = () => {
+const SignInOrUserProfile = ({ isSignedIn, dark }) => {
+  if (!isSignedIn) {
+    return (
+      <SignInButton mode="modal">
+        <ActionIcon color={dark ? "yellow" : "blue"} size="lg">
+          <Login />
+        </ActionIcon>
+      </SignInButton>
+    );
+  }
+  return <UserButton />;
+};
+
+export const NavbarContent = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const { isSignedIn } = useUser();
   const dark = colorScheme === "dark";
 
   return (
-    // <Container fluid p="md">
-    // <Grid>
     <>
-      {/* <MediaQuery largerThan="sm" styles={{ display: "none" }}> */}
-      {/* <Grid.Col span={4}> */}
-      {/* <Burger onClick={handleDrawer} opened={opened} /> */}
-      {/* </Grid.Col> */}
-      {/* </MediaQuery> */}
-      {/* <Grid.Col span={8}> */}
-
       <Text align="center" weight="bold">
         Hello Fresh Recipe Search
       </Text>
 
-      {/* </Grid.Col>
-      <Grid.Col span={4}> */}
       <Center>
+        <ActionIcon
+          color={dark ? "yellow" : "blue"}
+          component={NextLink}
+          href="/"
+          size="lg"
+          title="Home"
+        >
+          <Home />
+        </ActionIcon>
         <ActionIcon
           color={dark ? "yellow" : "blue"}
           // eslint-disable-next-line react/jsx-no-bind
@@ -44,18 +55,23 @@ export const Navbar1 = () => {
           href="https://github.com/insuusvenerati/hello-free-shavacado"
           size="lg"
           target="_blank"
+          title="Github"
         >
           <BrandGithub />
         </ActionIcon>
-        <SignInButton mode="modal">
-          <ActionIcon color={dark ? "yellow" : "blue"} size="lg">
-            <Login />
+        {isSignedIn && (
+          <ActionIcon
+            color={dark ? "yellow" : "blue"}
+            component={NextLink}
+            href="/myrecipes"
+            size="lg"
+            title="My Recipes"
+          >
+            <Book2 />
           </ActionIcon>
-        </SignInButton>
+        )}
+        <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
       </Center>
     </>
-    // {/* </Grid.Col> */}
-    // </Grid>
-    // </Container>
   );
 };

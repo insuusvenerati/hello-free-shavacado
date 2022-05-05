@@ -17,6 +17,7 @@
     "@mantine/core": "4.2.2",
     "@mantine/hooks": "4.2.2",
     "@mantine/next": "4.2.2",
+    "@mantine/notifications": "^4.2.2",
     "@plaiceholder/next": "2.3.0",
     "@sentry/nextjs": "6.19.6",
     "@sentry/tracing": "6.19.6",

@@ -11,8 +11,11 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import SEO from "../../next-seo.config";
 import { useCallback, useState } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
+import Script from "next/script";
+import { NotificationsProvider } from "@mantine/notifications";
 
 const queryClient = new QueryClient();
+const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 
 const App = (props: AppProps) => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
@@ -55,7 +58,18 @@ const App = (props: AppProps) => {
         <link color="#5bbad5" href="/safari-pinned-tab.svg" rel="mask-icon" />
         <meta content="#da532c" name="msapplication-TileColor" />
         <meta content="#f69435" name="theme-color"></meta>
+        <title>Hello Free Shavacado</title>
+        <meta
+          content="Search for Hello Fresh recipes by ingredient"
+          name="description"
+        />
       </Head>
+      <Script
+        async
+        data-website-id="679de944-0e27-4e1e-aa33-efc4feddd5bb"
+        defer
+        src="https://analytics.stiforr.tech/umami.js"
+      />
       <ColorSchemeProvider
         colorScheme={colorScheme}
         toggleColorScheme={toggleColorScheme}
@@ -65,13 +79,15 @@ const App = (props: AppProps) => {
           withGlobalStyles
           withNormalizeCSS
         >
-          <DefaultSeo {...SEO} />
-          <QueryClientProvider client={queryClient}>
-            <ReactQueryDevtools initialIsOpen={false} />
-            <ClerkProvider>
-              <Component {...pageProps} />
-            </ClerkProvider>
-          </QueryClientProvider>
+          <NotificationsProvider>
+            <DefaultSeo {...SEO} />
+            <QueryClientProvider client={queryClient}>
+              <ReactQueryDevtools initialIsOpen={false} />
+              <ClerkProvider frontendApi={CLERK_FRONTEND_KEY} {...pageProps}>
+                <Component {...pageProps} />
+              </ClerkProvider>
+            </QueryClientProvider>
+          </NotificationsProvider>
         </MantineProvider>
       </ColorSchemeProvider>
     </>
