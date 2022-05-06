@@ -1,7 +1,9 @@
-import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
-import { ActionIcon, Center, Text, useMantineColorScheme } from "@mantine/core";
+import { SignInButton, UserButton, useSession, useUser } from "@clerk/nextjs";
+import { ActionIcon, Center, Container, Indicator, Text, useMantineColorScheme } from "@mantine/core";
 import { NextLink } from "@mantine/next";
+import { useQuery } from "react-query";
 import { Book2, BrandGithub, Home, Login } from "tabler-icons-react";
+import { getRecipes } from "../util/getRecipes";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
 
@@ -19,24 +21,22 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
 };
 
 export const NavbarContent = () => {
+  const { session } = useSession();
+  const { data: recipes } = useQuery(["recipes", session], () => getRecipes(session));
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { isSignedIn } = useUser();
   const dark = colorScheme === "dark";
 
+  const numRecipes = recipes?.length;
+
   return (
-    <>
+    <Container>
       <Text align="center" weight="bold">
         Hello Fresh Recipe Search
       </Text>
 
       <Center>
-        <ActionIcon
-          color={dark ? "yellow" : "blue"}
-          component={NextLink}
-          href="/"
-          size="lg"
-          title="Home"
-        >
+        <ActionIcon color={dark ? "yellow" : "blue"} component={NextLink} href="/" size="lg" title="Home">
           <Home />
         </ActionIcon>
         <ActionIcon
@@ -67,11 +67,13 @@ export const NavbarContent = () => {
             size="lg"
             title="My Recipes"
           >
-            <Book2 />
+            <Indicator inline label={numRecipes !== 0 ? numRecipes : undefined} size={14}>
+              <Book2 />
+            </Indicator>
           </ActionIcon>
         )}
         <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
       </Center>
-    </>
+    </Container>
   );
 };
