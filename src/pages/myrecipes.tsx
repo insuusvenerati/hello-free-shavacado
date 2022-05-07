@@ -2,16 +2,12 @@ import { useSession } from "@clerk/nextjs";
 import { Container, List, LoadingOverlay, Text } from "@mantine/core";
 import { useQuery } from "react-query";
 import { NavbarContent } from "../components/NavContent";
+import { RecipeLink } from "../components/RecipeLInk";
 import { getRecipes } from "../util/getRecipes";
 
 const RecipeList = () => {
   const { session } = useSession();
-
-  const { data: recipes, isLoading } = useQuery(["recipes", session], () =>
-    getRecipes(session),
-  );
-
-  console.info(recipes);
+  const { data: recipes, isLoading } = useQuery(["recipes", session], () => getRecipes(session));
 
   if (isLoading) {
     return (
@@ -29,8 +25,8 @@ const RecipeList = () => {
       <Container>
         {recipes?.length > 0 ? (
           <List>
-            {recipes.map((todo) => (
-              <List.Item key={todo.id}>{todo.recipe}</List.Item>
+            {recipes.map((recipe) => (
+              <RecipeLink favoritedRecipe={recipe} key={recipe.id} />
             ))}
           </List>
         ) : (

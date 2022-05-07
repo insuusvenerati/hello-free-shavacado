@@ -1,20 +1,11 @@
 /* eslint-disable react/jsx-no-bind */
 import { useSession } from "@clerk/nextjs";
-import {
-  Badge,
-  Button,
-  Card,
-  Container,
-  Grid,
-  Group,
-  List,
-  Modal,
-  Text,
-  ThemeIcon,
-} from "@mantine/core";
+import { Badge, Button, Card, Container, Grid, Group, List, Modal, Text, ThemeIcon } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
+import { PostgrestError } from "@supabase/supabase-js";
 import Image from "next/image";
-import { memo, useCallback, useEffect, useState } from "react";
+import { FormEvent, memo, useCallback, useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
 import { CircleCheck, Star } from "tabler-icons-react";
 import { Item } from "../types/recipes";
 import { addRecipe } from "../util/addRecipe";
@@ -28,29 +19,37 @@ type Props = {
 
 const RecipeModal = ({ recipe, opened, onClose }: Props) => {
   const [placeholder, setPlaceholder] = useState("");
-  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
   const { session } = useSession();
-
-  const handleSubmit = async (e) => {
-    setLoading(true);
-    e.preventDefault();
-    const { error, status } = await addRecipe(session, recipe?.slug);
-    setLoading(false);
-    if (error.code === "42501") {
-      console.info(error);
-      showNotification({
-        color: "red",
-        title: "Oh no",
-        message: "Hey there, you already have this recipe favorited 🤥",
-      });
-    }
-  };
+  const { mutate, isLoading } = useMutation<unknown, PostgrestError, FormEvent<HTMLFormElement>>(
+    async (event) => {
+      event.preventDefault();
+      return await addRecipe(session, recipe.slug);
+    },
+    {
+      onError: (error) => {
+        if (error.code === "42501") {
+          showNotification({
+            color: "red",
+            title: "Oh no",
+            message: "Hey there, you already have this recipe favorited 🤥",
+          });
+        }
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries(["recipes", session]);
+        showNotification({
+          color: "green",
+          title: "Success",
+          message: "Successfully added recipe to favorites",
+        });
+      },
+    },
+  );
 
   useEffect(() => {
     if (recipe) {
-      getPlaceholder(
-        `https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`,
-      )
+      getPlaceholder(`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`)
         .then((value) => setPlaceholder(value.base64))
         .catch((err) => console.log(err));
     }
@@ -61,14 +60,7 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
   }, []);
 
   return (
-    <Modal
-      centered
-      onClose={onClose}
-      opened={opened}
-      overflow="inside"
-      size="1200"
-      title={recipe?.name}
-    >
+    <Modal centered onClose={onClose} opened={opened} overflow="inside" size="1200" title={recipe?.name}>
       <Container fluid>
         <Grid>
           {placeholder && (
@@ -90,8 +82,8 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
                 </Badge>
               ))}
               <Text>{recipe?.descriptionMarkdown}</Text>
-              <form onSubmit={handleSubmit}>
-                <Button leftIcon={<Star />} loading={loading} type="submit">
+              <form onSubmit={mutate}>
+                <Button leftIcon={<Star />} loading={isLoading} type="submit">
                   Add to favorites
                 </Button>
               </form>
@@ -117,9 +109,7 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
                 spacing="xl"
               >
                 {recipe?.steps.map((step) => (
-                  <List.Item key={step.index + Math.random()}>
-                    {removeSymbols(step?.instructionsMarkdown)}
-                  </List.Item>
+                  <List.Item key={step.index + Math.random()}>{removeSymbols(step?.instructionsMarkdown)}</List.Item>
                 ))}
               </List>
             </Group>

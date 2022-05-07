@@ -1,18 +1,28 @@
+import { ActiveSessionResource } from "@clerk/types";
 import { supabaseClient } from "./supabase";
 
-export const addRecipe = async (session, recipeId: string) => {
+export const addRecipe = async (session: ActiveSessionResource, recipeId: string) => {
+  if (!session) {
+    throw new Error("No session available. Are you logged in?");
+  }
+
+  if (!recipeId) {
+    throw new Error("No recipe was given O.o");
+  }
+
   const supabaseAccessToken = await session.getToken({
     template: "supabase",
   });
 
   const supabase = await supabaseClient(supabaseAccessToken);
-  const { data, error, status } = await supabase
+  const { data, error } = await supabase
     .from("recipes")
-    .upsert(
-      { recipe: recipeId, user_id: session.user.id },
-      { onConflict: "recipe" },
-    )
+    .upsert({ recipe: recipeId, user_id: session.user.id }, { onConflict: "recipe" })
     .single();
 
-  return { data, error, status };
+  if (error) {
+    throw error;
+  }
+
+  return { data };
 };
