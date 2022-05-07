@@ -1,6 +1,7 @@
 import {
   AppShell,
   Burger,
+  Center,
   Container,
   Header,
   MediaQuery,
@@ -44,26 +45,25 @@ export const MyAppShell = ({ children, ...props }) => {
                   height: "100%",
                 }}
               >
-                <Burger
-                  mr="xl"
-                  onClick={handleDrawer}
-                  opened={opened}
-                  size="sm"
-                />
+                <Burger mr="xl" onClick={handleDrawer} opened={opened} size="sm" />
 
                 <Text>Hello Free Shavacado</Text>
               </div>
             </Header>
           </MediaQuery>
-        ) : undefined
+        ) : null
+        // (
+        //   <Header height={70} p="lg">
+        //     <Center>
+        //       <Text size="lg" weight="bold">
+        //         Hello Free Shavacado
+        //       </Text>
+        //     </Center>
+        //   </Header>
+        // )
       }
       navbar={
-        <Navbar
-          hidden={!opened}
-          hiddenBreakpoint="sm"
-          p="md"
-          width={{ base: 300 }}
-        >
+        <Navbar hidden={!opened} hiddenBreakpoint="sm" p="md" width={{ base: 300 }}>
           <NavbarContent />
           <Container p="md">
             <Stack>
