@@ -67,7 +67,7 @@ export const NavbarContent = () => {
             size="lg"
             title="My Recipes"
           >
-            <Indicator inline label={numRecipes !== 0 ? numRecipes : undefined} size={14}>
+            <Indicator inline label={numRecipes} size={14}>
               <Book2 />
             </Indicator>
           </ActionIcon>

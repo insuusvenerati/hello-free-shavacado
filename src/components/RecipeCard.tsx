@@ -1,6 +1,6 @@
 import { Badge, Card, Text } from "@mantine/core";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Item } from "../types/recipes";
 import { getPlaceholder } from "../util/getPlaceholder";
 
@@ -17,9 +17,7 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
   const [placeholder, setPlaceholder] = useState("");
 
   useEffect(() => {
-    getPlaceholder(
-      `https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`,
-    )
+    getPlaceholder(`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`)
       .then((value) => setPlaceholder(value.base64))
       .catch((err) => console.log(err));
   }, [recipe?.imagePath]);
