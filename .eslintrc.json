@@ -1,6 +1,8 @@
 {
   "extends": ["next/core-web-vitals"],
+  "plugins": ["unused-imports"],
   "rules": {
+    "unused-imports/no-unused-imports": "error",
     "react/jsx-no-bind": 2,
     "react/jsx-sort-props": 2,
     "react/destructuring-assignment": 2,
