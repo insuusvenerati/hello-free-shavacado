@@ -67,11 +67,11 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
             <Image
               alt={recipe?.name}
               blurDataURL={placeholder}
-              height={500}
+              height={800}
               objectFit="cover"
               placeholder="blur"
               src={`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}
-              width={1900}
+              width={3200}
             />
           )}
           <Card m="lg" shadow="sm" withBorder>
