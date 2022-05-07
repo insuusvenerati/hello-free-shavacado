@@ -1,9 +1,12 @@
+import { useSession } from "@clerk/nextjs";
 import {
   AppShell,
+  Aside,
   Burger,
   Center,
   Container,
   Header,
+  List,
   MediaQuery,
   MultiSelect,
   Navbar,
@@ -12,9 +15,14 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useCallback, useState } from "react";
+import { useQuery } from "react-query";
+import { getRecipes } from "../util/getRecipes";
 import { NavbarContent } from "./NavContent";
+import { RecipeLink } from "./RecipeLInk";
 
 export const MyAppShell = ({ children, ...props }) => {
+  const { session } = useSession();
+  const { data: recipes, isLoading } = useQuery(["recipes", session], () => getRecipes(session));
   const matches = useMediaQuery("(min-width: 900px)", true);
   const [opened, setOpened] = useState(false);
 
@@ -33,6 +41,24 @@ export const MyAppShell = ({ children, ...props }) => {
 
   return (
     <AppShell
+      aside={
+        <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
+          <Aside hiddenBreakpoint="sm" p="md" width={{ sm: 200, lg: 300 }}>
+            <Text size="lg" weight="bold">
+              Favorite Recipes
+            </Text>
+            {recipes?.length > 0 ? (
+              <List>
+                {recipes.map((recipe) => (
+                  <RecipeLink favoritedRecipe={recipe} key={recipe.id} />
+                ))}
+              </List>
+            ) : (
+              <Text>You don&apos;t have any recipes!</Text>
+            )}
+          </Aside>
+        </MediaQuery>
+      }
       fixed
       header={
         !matches ? (
