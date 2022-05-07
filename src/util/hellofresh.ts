@@ -42,3 +42,23 @@ export const hellofreshSearch = async (
 
   return await response.json();
 };
+
+export const hellofreshSearchBySlug = async ({
+  token,
+  slug,
+  take = 1,
+}: {
+  token: string;
+  slug: string;
+  take?: number;
+}): Promise<RecipeQuery> => {
+  if (!token) {
+    throw new Error("Missing hellofresh token");
+  }
+
+  const response = await ky.get(`${HELLOFRESH_SEARCH_URL}take=${take}&q=${slug}`, {
+    headers: { authorization: `Bearer ${token}` },
+  });
+
+  return await response.json();
+};
