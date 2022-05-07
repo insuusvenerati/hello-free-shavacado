@@ -1,7 +1,7 @@
 import { ActiveSessionResource } from "@clerk/types";
 import { supabaseClient } from "./supabase";
 
-type FavoritedRecipe = {
+export type FavoritedRecipe = {
   recipe: string;
   id: 1;
   user_id: string;
