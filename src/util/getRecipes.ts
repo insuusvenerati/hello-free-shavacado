@@ -3,7 +3,7 @@ import { supabaseClient } from "./supabase";
 
 export type FavoritedRecipe = {
   recipe: string;
-  id: 1;
+  id: number;
   user_id: string;
 };
 
