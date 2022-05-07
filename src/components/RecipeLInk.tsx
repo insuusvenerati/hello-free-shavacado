@@ -1,19 +1,39 @@
-import { List } from "@mantine/core";
+import { useSession } from "@clerk/nextjs";
+import { ActionIcon, Group, List, Loader } from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import { getCookie } from "cookies-next";
-import { Bookmark } from "tabler-icons-react";
+import { Trash } from "tabler-icons-react";
+import { useDeleteFavoriteRecipe } from "../hooks/useDeleteFavoriteRecipe";
 import { useHellofreshBySlug } from "../hooks/useHellofreshBySlug";
 import { FavoritedRecipe } from "../util/getRecipes";
 
 export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedRecipe }) => {
   const token = getCookie("token");
   const { data: recipe, isLoading } = useHellofreshBySlug(favoritedRecipe?.recipe, token.toString());
+  const { session } = useSession();
+  const { mutate } = useDeleteFavoriteRecipe(session, favoritedRecipe?.id);
 
-  if (isLoading) return <h4>Loading...</h4>;
+  if (isLoading) {
+    return (
+      <List.Item>
+        <Loader variant="dots" />
+      </List.Item>
+    );
+  }
 
   return (
-    <NextLink href={recipe?.items[0]?.websiteUrl} key={favoritedRecipe.id} target="_blank">
-      <List.Item icon={<Bookmark />}>{favoritedRecipe.recipe}</List.Item>
-    </NextLink>
+    <Group align="center">
+      <List.Item
+        icon={
+          <ActionIcon color="red" onClick={mutate}>
+            <Trash />
+          </ActionIcon>
+        }
+      >
+        <NextLink href={recipe?.items[0]?.websiteUrl} key={favoritedRecipe.id} target="_blank">
+          {recipe?.items[0].name}
+        </NextLink>
+      </List.Item>
+    </Group>
   );
 };
