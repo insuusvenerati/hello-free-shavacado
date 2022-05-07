@@ -1,3 +1,5 @@
+[![CI](https://github.com/insuusvenerati/hello-free-shavacado/actions/workflows/workflow.yml/badge.svg?branch=develop)](https://github.com/insuusvenerati/hello-free-shavacado/actions/workflows/workflow.yml)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
