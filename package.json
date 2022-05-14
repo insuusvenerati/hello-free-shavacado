@@ -1,6 +1,6 @@
 {
   "name": "hello-free-shavacado",
-  "version": "1.2.0",
+  "version": "1.2.1-develop.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
