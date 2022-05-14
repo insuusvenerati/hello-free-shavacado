@@ -9,6 +9,7 @@ import { useCallback, useState } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import Script from "next/script";
 import { NotificationsProvider } from "@mantine/notifications";
+import { useLocalStorage } from "@mantine/hooks";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 
@@ -34,13 +35,15 @@ export function reportWebVitals(metric: NextWebVitalsMetric) {
 const App = (props: AppProps) => {
   // eslint-disable-next-line react/hook-use-state
   const [queryClient] = useState(() => new QueryClient());
-  const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
+  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+    key: "color-scheme",
+    defaultValue: "light",
+    getInitialValueInEffect: true,
+  });
 
   const toggleColorScheme = useCallback(
-    (value?: ColorScheme) => {
-      setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
-    },
-    [colorScheme],
+    () => setColorScheme((current) => (current === "dark" ? "light" : "dark")),
+    [setColorScheme],
   );
 
   const { Component, pageProps } = props;
