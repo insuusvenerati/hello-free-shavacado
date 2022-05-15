@@ -16,7 +16,7 @@
   "dependencies": {
     "@clerk/nextjs": "^3.3.5-alpha.0",
     "@mantine/core": "4.2.2",
-    "@mantine/hooks": "4.2.2",
+    "@mantine/hooks": "4.2.5",
     "@mantine/next": "4.2.2",
     "@mantine/notifications": "^4.2.2",
     "@plaiceholder/next": "2.3.0",
