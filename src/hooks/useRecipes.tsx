@@ -1,8 +1,6 @@
 import { getCookie } from "cookies-next";
-import ky from "ky";
 import { useCallback, useState } from "react";
-import { useQuery } from "react-query";
-import { Item, RecipeQuery } from "../types/recipes";
+import { Item } from "../types/recipes";
 import { useDebounce } from "./useDebounce";
 import { useFilterRecipes } from "./useFilters";
 import { useRecipesQuery } from "./useRecipesQuery";
@@ -14,12 +12,7 @@ export const useRecipes = () => {
   const token = getCookie("token");
   const [page, setPage] = useState(1);
 
-  const {
-    data: recipes,
-    isLoading,
-    error,
-    isError,
-  } = useRecipesQuery({ debouncedSearchText, page, token });
+  const { data: recipes, isLoading, error, isError } = useRecipesQuery({ debouncedSearchText, page, token });
 
   const {
     filteredRecipes,
@@ -30,22 +23,10 @@ export const useRecipes = () => {
     setSelectedIngredients,
   } = useFilterRecipes(recipes);
 
-  const allergens = [
-    ...new Set(
-      recipes?.items
-        ?.map((item) => item.allergens.map((allergen) => allergen.name))
-        .flat(),
-    ),
-  ];
+  const allergens = [...new Set(recipes?.items?.map((item) => item.allergens.map((allergen) => allergen.name)).flat())];
 
   const ingredients = [
-    ...new Set(
-      recipes?.items
-        ?.map((recipe) =>
-          recipe.ingredients.map((ingredient) => ingredient.name),
-        )
-        .flat(),
-    ),
+    ...new Set(recipes?.items?.map((recipe) => recipe.ingredients.map((ingredient) => ingredient.name)).flat()),
   ];
 
   const onChangeHandler = useCallback(
