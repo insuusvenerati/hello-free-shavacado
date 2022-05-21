@@ -1,11 +1,9 @@
-import ky from "ky-universal";
 import { NextApiRequest, NextApiResponse } from "next";
-import { PLACEHOLDER_URL } from "../../util/constants";
+import { getPlaiceholder } from "plaiceholder";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { src } = req.query;
-  const response = await ky.get(`${PLACEHOLDER_URL}?src=${src}`);
-  const data = await response.json();
+  const { base64 } = await getPlaiceholder(src as string);
 
-  return res.status(200).json({ base64: data });
+  return res.status(200).json({ base64: base64 });
 }
