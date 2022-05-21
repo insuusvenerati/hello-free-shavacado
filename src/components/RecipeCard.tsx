@@ -1,6 +1,7 @@
 import { Badge, Card, Text } from "@mantine/core";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useQuery } from "react-query";
 import { Item } from "../types/recipes";
 import { getPlaceholder } from "../util/getPlaceholder";
 
@@ -11,16 +12,13 @@ type Props = {
 };
 
 export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
+  const { data: placeholder } = useQuery(["placeholder", recipe?.imageLink], () => getPlaceholder(recipe), {
+    staleTime: 86000,
+  });
+
   const selectedRecipeHandler = useCallback(() => {
     setSelectedRecipe(recipe);
   }, [setSelectedRecipe, recipe]);
-  const [placeholder, setPlaceholder] = useState("");
-
-  useEffect(() => {
-    getPlaceholder(`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`)
-      .then((value) => setPlaceholder(value.base64))
-      .catch((err) => console.log(err));
-  }, [recipe?.imagePath]);
 
   return (
     <Card onClick={handler} onMouseEnter={selectedRecipeHandler} shadow="sm">
@@ -40,15 +38,12 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
 
       <Text weight="bold">{recipe?.name}</Text>
 
-      {recipe.tags.length > 0 && (
-        <>
-          {recipe.tags.map((tag) => (
-            <Badge key={tag.id} size="xs">
-              {tag.name}
-            </Badge>
-          ))}
-        </>
-      )}
+      {recipe.tags.length > 0 &&
+        recipe.tags.map((tag) => (
+          <Badge key={`${recipe?.id}-${tag?.id}-${Math.random()}`} size="xs">
+            {tag.name}
+          </Badge>
+        ))}
     </Card>
   );
 };
