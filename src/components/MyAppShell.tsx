@@ -21,7 +21,10 @@ import { RecipeLink } from "./RecipeLInk";
 
 export const MyAppShell = ({ children, ...props }) => {
   const { session } = useSession();
-  const { data: recipes, isLoading } = useQuery(["recipes", session], () => getRecipes(session));
+  const { data: recipes, isLoading } = useQuery(["recipes", session], () => getRecipes(session), {
+    staleTime: 64000,
+    refetchOnWindowFocus: false,
+  });
   const matches = useMediaQuery("(min-width: 900px)", true);
   const [opened, setOpened] = useState(false);
 
