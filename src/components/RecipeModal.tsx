@@ -5,11 +5,10 @@ import { showNotification } from "@mantine/notifications";
 import { PostgrestError } from "@supabase/supabase-js";
 import Image from "next/image";
 import { FormEvent, memo, useCallback } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { CircleCheck, Star } from "tabler-icons-react";
 import { Item } from "../types/recipes";
 import { addRecipe } from "../util/addRecipe";
-import { getPlaceholder } from "../util/getPlaceholder";
 
 type Props = {
   recipe: Item;
@@ -18,11 +17,6 @@ type Props = {
 };
 
 const RecipeModal = ({ recipe, opened, onClose }: Props) => {
-  const { data: placeholder } = useQuery(["placeholder", recipe?.imageLink], () => getPlaceholder(recipe), {
-    enabled: !!recipe?.imagePath,
-    staleTime: 64000,
-  });
-  // const [placeholder, setPlaceholder] = useState("");
   const queryClient = useQueryClient();
   const { session } = useSession();
   const { mutate, isLoading } = useMutation<unknown, PostgrestError, FormEvent<HTMLFormElement>>(
@@ -59,17 +53,16 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
     <Modal centered onClose={onClose} opened={opened} overflow="inside" size="1200" title={recipe?.name}>
       <Container fluid>
         <Grid>
-          {placeholder && (
-            <Image
-              alt={recipe?.name}
-              blurDataURL={placeholder}
-              height={800}
-              objectFit="cover"
-              placeholder="blur"
-              src={`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}
-              width={3200}
-            />
-          )}
+          <Image
+            alt={recipe?.name}
+            blurDataURL={`https://img.hellofresh.com/w_100,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
+            height={800}
+            objectFit="cover"
+            placeholder="blur"
+            src={`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}
+            width={3200}
+          />
+
           <Card m="lg" shadow="sm" withBorder>
             <Group position="center">
               {recipe?.allergens.map((allergen) => (
