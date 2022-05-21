@@ -1,10 +1,9 @@
 import { Badge, Card, Text } from "@mantine/core";
-import ky from "ky";
 import Image from "next/image";
 import { useCallback } from "react";
 import { useQuery } from "react-query";
 import { Item } from "../types/recipes";
-import { PLACEHOLDER_URL } from "../util/constants";
+import { getPlaceholder } from "../util/getPlaceholder";
 
 type Props = {
   recipe: Item;
@@ -13,19 +12,9 @@ type Props = {
 };
 
 export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
-  const { data: placeholder } = useQuery(
-    ["placeholder", recipe?.imageLink],
-    async () => {
-      const data = await ky
-        .get(`${PLACEHOLDER_URL}?src=${`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}`)
-        .json<{ base64: string }>();
-
-      return data.base64;
-    },
-    {
-      staleTime: 86000,
-    },
-  );
+  const { data: placeholder } = useQuery(["placeholder", recipe?.imageLink], () => getPlaceholder(recipe), {
+    staleTime: 86000,
+  });
 
   const selectedRecipeHandler = useCallback(() => {
     setSelectedRecipe(recipe);
@@ -51,7 +40,7 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
 
       {recipe.tags.length > 0 &&
         recipe.tags.map((tag) => (
-          <Badge key={recipe.id + tag.id} size="xs">
+          <Badge key={`${recipe?.id}-${tag?.id}-${Math.random()}`} size="xs">
             {tag.name}
           </Badge>
         ))}

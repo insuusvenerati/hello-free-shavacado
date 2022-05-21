@@ -3,13 +3,13 @@ import { useSession } from "@clerk/nextjs";
 import { Badge, Button, Card, Container, Grid, Group, List, Modal, Text, ThemeIcon } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { PostgrestError } from "@supabase/supabase-js";
-import ky from "ky";
 import Image from "next/image";
 import { FormEvent, memo, useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { CircleCheck, Star } from "tabler-icons-react";
 import { Item } from "../types/recipes";
 import { addRecipe } from "../util/addRecipe";
+import { getPlaceholder } from "../util/getPlaceholder";
 
 type Props = {
   recipe: Item;
@@ -18,17 +18,10 @@ type Props = {
 };
 
 const RecipeModal = ({ recipe, opened, onClose }: Props) => {
-  const { data: placeholder } = useQuery(
-    ["placeholder", recipe?.imageLink],
-    async () => {
-      const data = await ky
-        .get(`/api/placeholder?src=${`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}`)
-        .json<{ base64: string }>();
-
-      return data.base64;
-    },
-    { enabled: !!recipe?.imagePath, staleTime: 64000 },
-  );
+  const { data: placeholder } = useQuery(["placeholder", recipe?.imageLink], () => getPlaceholder(recipe), {
+    enabled: !!recipe?.imagePath,
+    staleTime: 64000,
+  });
   // const [placeholder, setPlaceholder] = useState("");
   const queryClient = useQueryClient();
   const { session } = useSession();
@@ -57,14 +50,6 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
       },
     },
   );
-
-  // useEffect(() => {
-  //   if (recipe) {
-  //     getPlaceholder(`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`)
-  //       .then((value) => setPlaceholder(value.base64))
-  //       .catch((err) => console.log(err));
-  //   }
-  // }, [recipe?.imagePath, recipe]);
 
   const removeSymbols = useCallback((text: string) => {
     return text.replace(/[^a-zA-Z.\n ]/g, "");
