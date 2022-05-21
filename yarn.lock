@@ -1325,10 +1325,10 @@
   dependencies:
     "@mantine/ssr" "4.2.2"
 
-"@mantine/notifications@^4.2.2":
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-4.2.2.tgz#8229cb1717096da8aec35d9c577775f680b463b5"
-  integrity sha512-QC0j74jcQs0zsljgjEb8UicsIFfxKayZRVlEefrBzJUbm89bs+TOzHugL2GL+IMJ1WSQKTI9YWvGXVbf8ZCzww==
+"@mantine/notifications@4.2.5":
+  version "4.2.5"
+  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-4.2.5.tgz#f4b9ec33e78f3a01e3d0850b4c347c88a15b0bc9"
+  integrity sha512-Qb+Zs66N5u+nlO6cKWoQI+0b8Tp+0AzugtXGaTrhRq5kpjOdH6XwSDkSXpkLPHBUYGwlweuTkMrc2Md1FNORqg==
   dependencies:
     react-transition-group "^4.4.2"
 
