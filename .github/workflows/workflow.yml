@@ -9,8 +9,8 @@ jobs:
         with:
           node-version: "16"
 
-      # - name: Install Deps
-      #   run: yarn install --frozen-lockfile
+      - name: Install Deps
+        run: yarn install --frozen-lockfile
 
       # - name: Lint
       #   run: yarn lint
