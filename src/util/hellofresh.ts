@@ -7,7 +7,7 @@ type Token = {
 };
 
 type HelloFreshSearchOptions = {
-  skip?: number;
+  page?: number;
   tag?: string;
   maxPrepTime?: number;
   difficulty?: number;
@@ -25,20 +25,18 @@ export const hellofreshGetToken = async () => {
 export const hellofreshSearch = async (
   searchText: string,
   token: string,
-  ingredients: string,
-  options: HelloFreshSearchOptions,
+  options?: HelloFreshSearchOptions,
 ): Promise<RecipeQuery> => {
-  const { skip, tag, maxPrepTime, difficulty, take = 20 } = options;
+  const { page, tag, maxPrepTime, difficulty, take = 20 } = options;
   if (!token) {
     throw new Error("Missing token");
   }
 
   // console.log(ingredients);
 
-  const response = await ky.get(
-    `${HELLOFRESH_SEARCH_URL}take=${take}&skip=${skip}&ingredients=${ingredients ? ingredients : ""}&q=${searchText}`,
-    { headers: { authorization: `Bearer ${token}` } },
-  );
+  const response = await ky.get(`${HELLOFRESH_SEARCH_URL}?page=${page}&q=${searchText}`, {
+    headers: { authorization: `Bearer ${token}` },
+  });
 
   return await response.json();
 };
@@ -56,7 +54,7 @@ export const hellofreshSearchBySlug = async ({
     throw new Error("Missing hellofresh token");
   }
 
-  const response = await ky.get(`${HELLOFRESH_SEARCH_URL}take=${take}&q=${slug}`, {
+  const response = await ky.get(`${HELLOFRESH_SEARCH_URL}?take=${take}&q=${slug}`, {
     headers: { authorization: `Bearer ${token}` },
   });
 

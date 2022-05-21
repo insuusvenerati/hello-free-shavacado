@@ -22,7 +22,11 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
 
 export const NavbarContent = () => {
   const { session } = useSession();
-  const { data: recipes } = useQuery(["recipes", session], () => getRecipes(session));
+  const { data: recipes, isLoading } = useQuery(["recipes", session], () => getRecipes(session), {
+    staleTime: 64000,
+    refetchOnWindowFocus: false,
+    enabled: !!session,
+  });
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { isSignedIn } = useUser();
   const dark = colorScheme === "dark";
