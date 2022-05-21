@@ -1070,32 +1070,31 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
-"@clerk/backend-core@^1.5.5":
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/@clerk/backend-core/-/backend-core-1.5.5.tgz#f94765f674e4fa47b104fb905c35f33a469c3f5e"
-  integrity sha512-6kW1kRc8w+BO9s9v5RNVBPEWV1DqCKpaB/u6Jbjsdl2KABMx3XtnVL5KUFb+vjAzhC2xv/Yg1DUXp6oMgnq4vQ==
+"@clerk/backend-core@^1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@clerk/backend-core/-/backend-core-1.9.0.tgz#37e15983ec6af6301ee4859e92bdee5a146fc01a"
+  integrity sha512-2rW546QJcROAIR01jpqwEfjXrokFxPl0p2YZUyCrj1Ali915rDhbKvvrVxtnxK2/3QQTJl5PLq0ICsevPuLAeA==
   dependencies:
-    "@clerk/types" "^2.8.0"
-    camelcase-keys "^7.0.1"
+    "@clerk/types" "^2.14.0"
     query-string "^7.0.1"
     snakecase-keys "^5.1.2"
     tslib "^2.3.1"
 
-"@clerk/clerk-react@^3.2.7-alpha.0":
-  version "3.2.11"
-  resolved "https://registry.yarnpkg.com/@clerk/clerk-react/-/clerk-react-3.2.11.tgz#fb3b3003f1c610e1584804d67e8a4ecc4550cff5"
-  integrity sha512-rtTUagchK0029yz7hU5GVNcuihX5N3Wo4KIVg7W6DtS+zJC1Jr6CePGf7EARCLJAZsrkL8SaGJ+uisA1pfsPGw==
+"@clerk/clerk-react@^3.2.18":
+  version "3.2.18"
+  resolved "https://registry.yarnpkg.com/@clerk/clerk-react/-/clerk-react-3.2.18.tgz#848e74755b67d4106ae8b00c6a5c414e12f7662d"
+  integrity sha512-yGxPevFuhhtSqiju7TiABuDIlyMQv964UeS3SsP+HHMFFSFwEoFGABNpJak5s4CL8xgWZzfZtL/gCIZM8qw+LA==
   dependencies:
-    "@clerk/types" "^2.8.0"
+    "@clerk/types" "^2.14.0"
     tslib "^2.3.1"
 
-"@clerk/clerk-sdk-node@^3.3.5-alpha.0":
-  version "3.3.10"
-  resolved "https://registry.yarnpkg.com/@clerk/clerk-sdk-node/-/clerk-sdk-node-3.3.10.tgz#07e457f3e339174be3619d820a3d36fd5efd5583"
-  integrity sha512-odP2EY5Ak73UGaqxXtSL6Hegpkie68LNvpJkVoPXBd/USCdQsfp/vUUdEIkWXXUta/8vtioHhZklyRwrEeb6hw==
+"@clerk/clerk-sdk-node@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@clerk/clerk-sdk-node/-/clerk-sdk-node-3.6.0.tgz#04bca60539dae97d26abdb92206e6b8696f5c778"
+  integrity sha512-pGid6Mgx0iB8m2a2oAAJLvCbz6n6sRE7hyp5vfWkk9gtfZOjJyMi34FSn0uqBmvT2VVpgZ8xh/LRLtaY2OEVZA==
   dependencies:
-    "@clerk/backend-core" "^1.5.5"
-    "@clerk/types" "^2.8.0"
+    "@clerk/backend-core" "^1.9.0"
+    "@clerk/types" "^2.14.0"
     "@peculiar/webcrypto" "^1.2.3"
     camelcase-keys "^6.2.2"
     cookies "^0.8.0"
@@ -1106,30 +1105,30 @@
     snakecase-keys "^3.2.1"
     tslib "^2.3.1"
 
-"@clerk/edge@^1.3.2-alpha.0":
-  version "1.3.7"
-  resolved "https://registry.yarnpkg.com/@clerk/edge/-/edge-1.3.7.tgz#a2890427c1aee3bf79be912aeee722a95ec1674d"
-  integrity sha512-u3SntFWAIBb1sUxmOLpL5fmocNGHfAGLG5ZWhp90mebwX42sZSbPjHE4Crn4qekXkRvoDNhCbYrGXm1y/hBnpA==
+"@clerk/edge@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@clerk/edge/-/edge-1.5.1.tgz#2472c466ddf66df9183821779053a17895c522c5"
+  integrity sha512-0ALKjyf8YOApvS+IG8bZyjoXe2/xcrggxdsTFEAXMo7nDF40yChPYjmfcdsc8BaaeTPDAoG6ogAozJlQ+w/8Zw==
   dependencies:
-    "@clerk/backend-core" "^1.5.5"
+    "@clerk/backend-core" "^1.9.0"
     "@peculiar/webcrypto" "^1.2.3"
     next "^12.0.7"
 
-"@clerk/nextjs@^3.3.5-alpha.0":
-  version "3.3.5-alpha.0"
-  resolved "https://registry.yarnpkg.com/@clerk/nextjs/-/nextjs-3.3.5-alpha.0.tgz#d69a8f8969cbdc8b004ed01c983ddc26257d9560"
-  integrity sha512-lkxulztELt0reCbJn9fqaHzNtuUg27IhiMl+CZJKYjYw1STD9HKdCOec0f6Y3j3idyz6FE0PKA5XrXmtZau7ug==
+"@clerk/nextjs@3.6.5":
+  version "3.6.5"
+  resolved "https://registry.yarnpkg.com/@clerk/nextjs/-/nextjs-3.6.5.tgz#0b5c0f9a9a740b8a40d07e9441e0d6b1e0455774"
+  integrity sha512-notqmFSnRGZALQKRCS7o7TatuAozBxCSaPzs5380Ds6/2OZBdxBLAQTwxudp8Kwwdjnarv0W6o8AMkqyYK7HGQ==
   dependencies:
-    "@clerk/clerk-react" "^3.2.7-alpha.0"
-    "@clerk/clerk-sdk-node" "^3.3.5-alpha.0"
-    "@clerk/edge" "^1.3.2-alpha.0"
-    "@clerk/types" "^2.6.1-alpha.0"
+    "@clerk/clerk-react" "^3.2.18"
+    "@clerk/clerk-sdk-node" "^3.6.0"
+    "@clerk/edge" "^1.5.1"
+    "@clerk/types" "^2.14.0"
     tslib "^2.3.1"
 
-"@clerk/types@^2.6.1-alpha.0", "@clerk/types@^2.8.0":
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/@clerk/types/-/types-2.8.0.tgz#48d0d72079d7daffd941cd437180c9f74accf693"
-  integrity sha512-4pJz28Z2/nn/6l7OWXBBr+keoIQHQIlPlpNYfGbOiumwPiLOsSiE6lwFRQk9FiFthpes683dIsjOSxxeadg7xw==
+"@clerk/types@^2.14.0":
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/@clerk/types/-/types-2.14.0.tgz#ff0c38ef79fa94eb18821ab4561bc65c2c79d6f5"
+  integrity sha512-fLAd8N6Ohy9TNcJxLS34KBxDc7hcE7Im0Wl2jJOzxTx+5S+3T35TGsIcwBlDreC0WfZBJgPvKEGdiCrXFLuZrw==
 
 "@colors/colors@1.5.0":
   version "1.5.0"
@@ -3198,25 +3197,10 @@ camelcase-keys@^6.2.2:
     map-obj "^4.0.0"
     quick-lru "^4.0.1"
 
-camelcase-keys@^7.0.1:
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/camelcase-keys/-/camelcase-keys-7.0.2.tgz#d048d8c69448745bb0de6fc4c1c52a30dfbe7252"
-  integrity sha512-Rjs1H+A9R+Ig+4E/9oyB66UC5Mj9Xq3N//vcLf2WzgdTi/3gUu3Z9KoqmlrEG4VuuLK8wJHofxzdQXz/knhiYg==
-  dependencies:
-    camelcase "^6.3.0"
-    map-obj "^4.1.0"
-    quick-lru "^5.1.1"
-    type-fest "^1.2.1"
-
 camelcase@^5.3.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-5.3.1.tgz#e3c9b31569e106811df242f715725a1f4c494320"
   integrity sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
-
-camelcase@^6.3.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.3.0.tgz#5685b95eb209ac9c0c177467778c9c84df58ba9a"
-  integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001283:
   version "1.0.30001312"
@@ -8913,7 +8897,7 @@ type-fest@^0.8.1:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.8.1.tgz#09e249ebde851d3b1e48d27c105444667f17b83d"
   integrity sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
 
-type-fest@^1.0.2, type-fest@^1.2.1:
+type-fest@^1.0.2:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-1.4.0.tgz#e9fb813fe3bf1744ec359d55d1affefa76f14be1"
   integrity sha512-yGSza74xk0UG8k+pLh5oeoYirvIiWo5t0/o3zHHAO2tRDiZcxWP7fywNlXhqb6/r6sWvwi+RsyQMWhVLe4BVuA==
