@@ -45,3 +45,5 @@ public/workbox-*
 tmp/
 
 .eslintcache
+
+.layer0

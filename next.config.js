@@ -1,7 +1,6 @@
 const withPWA = require("next-pwa");
 const runtimeCaching = require("next-pwa/cache");
 const { withSentryConfig } = require("@sentry/nextjs");
-const { withPlaiceholder } = require("@plaiceholder/next");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -37,4 +36,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withPlaiceholder(withPWA(withSentryConfig(nextConfig)));
+module.exports = withPWA(withSentryConfig(nextConfig));
