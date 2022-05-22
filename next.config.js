@@ -21,25 +21,16 @@ const nextConfig = {
     return config;
   },
   target: "server",
-  experimental: {
-    outputStandalone: true,
-  },
-  outputFileTracing: true,
   images: {
     domains: ["img.hellofresh.com"],
   },
   reactStrictMode: true,
-  // pwa: {
-  //   dest: "public",
-  //   runtimeCaching,
-  //   disable: process.env.NODE_ENV === "development",
-  // },
   typescript: {
     ignoreBuildErrors: false,
   },
 };
 
-const _preLayer0Export = nextConfig;
+const _preLayer0Export = withSentryConfig(nextConfig);
 
 module.exports = (phase, config) =>
   withLayer0(
