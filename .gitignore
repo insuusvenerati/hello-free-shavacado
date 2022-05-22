@@ -44,5 +44,7 @@ public/workbox-*
 
 tmp/
 
-.eslintcache# Layer0 generated build directory
+.eslintcache 
+
+# Layer0 generated build directory
 .layer0
