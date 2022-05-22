@@ -7,6 +7,6 @@ export const useHellofreshBySlug = (slug: string, token: string) => {
     async () => {
       return await hellofreshSearchBySlug({ token, slug });
     },
-    { staleTime: 60000 },
+    { staleTime: 60, notifyOnChangeProps: ["data", "error"] },
   );
 };

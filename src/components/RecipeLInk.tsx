@@ -30,7 +30,7 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
           </ActionIcon>
         }
       >
-        <NextLink href={recipe?.items[0]?.websiteUrl} key={favoritedRecipe.id} target="_blank">
+        <NextLink href={recipe?.items[0]?.websiteUrl} key={favoritedRecipe?.id} target="_blank">
           {recipe?.items[0].name}
         </NextLink>
       </List.Item>
