@@ -1,36 +1,41 @@
-import { AppProps, NextWebVitalsMetric } from "next/app";
-import Head from "next/head";
+import { ClerkProvider } from "@clerk/nextjs";
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
+import { NotificationsProvider } from "@mantine/notifications";
 import { DefaultSeo } from "next-seo";
+import { AppProps } from "next/app";
+import Head from "next/head";
+import Script from "next/script";
+import { useCallback, useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { Metrics } from "@layer0/rum";
 import SEO from "../../next-seo.config";
-import { useCallback, useState } from "react";
-import { ClerkProvider } from "@clerk/nextjs";
-import Script from "next/script";
-import { NotificationsProvider } from "@mantine/notifications";
-import { useLocalStorage } from "@mantine/hooks";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 
-export function reportWebVitals(metric: NextWebVitalsMetric) {
-  const url = process.env.NEXT_PUBLIC_AXIOM_INGEST_ENDPOINT;
+new Metrics({
+  token: "165c6d06-4823-44d7-865c-e47b8644b116",
+}).collect();
 
-  if (!url) {
-    return;
-  }
+// export function reportWebVitals(metric: NextWebVitalsMetric) {
+//   const url = process.env.NEXT_PUBLIC_AXIOM_INGEST_ENDPOINT;
 
-  const body = JSON.stringify({
-    route: window.__NEXT_DATA__.page,
-    ...metric,
-  });
+//   if (!url) {
+//     return;
+//   }
 
-  if (navigator.sendBeacon) {
-    navigator.sendBeacon(url, body);
-  } else {
-    fetch(url, { body, method: "POST", keepalive: true });
-  }
-}
+//   const body = JSON.stringify({
+//     route: window.__NEXT_DATA__.page,
+//     ...metric,
+//   });
+
+//   if (navigator.sendBeacon) {
+//     navigator.sendBeacon(url, body);
+//   } else {
+//     fetch(url, { body, method: "POST", keepalive: true });
+//   }
+// }
 
 const App = (props: AppProps) => {
   // eslint-disable-next-line react/hook-use-state
