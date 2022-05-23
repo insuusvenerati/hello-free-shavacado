@@ -23,7 +23,7 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
           blurDataURL={`https://img.hellofresh.com/w_100,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
           height={340}
           placeholder="blur"
-          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_768,q_auto,w_1152/hellofresh_s3${recipe?.imagePath}`}
+          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
           width={600}
         />
       </Card.Section>

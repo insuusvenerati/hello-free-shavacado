@@ -1,15 +1,53 @@
-import { Center, Grid, Loader, Pagination, TextInput } from "@mantine/core";
+import { Center, Grid, Loader, LoadingOverlay, Pagination, Space, TextInput, Title } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
 import { useCallback, useEffect, useState } from "react";
 import { MyAppShell } from "../components/MyAppShell";
 import { RecipeCard } from "../components/RecipeCard";
 import RecipeModal from "../components/RecipeModal";
+import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
 import { useRecipes } from "../hooks/useRecipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 
+const FilteredOrPopularRecipesList = ({
+  filteredRecipes,
+  modalHandler,
+  setSelectedRecipe,
+  popularRecipes,
+  popularRecipesLoading,
+}) => {
+  return filteredRecipes ? (
+    <Grid columns={4} justify="center">
+      {filteredRecipes?.map((recipe) => {
+        return (
+          <Grid.Col key={recipe.id} md={1} sm={2}>
+            <RecipeCard handler={modalHandler} recipe={recipe} setSelectedRecipe={setSelectedRecipe} />
+          </Grid.Col>
+        );
+      })}
+    </Grid>
+  ) : (
+    <>
+      <Title align="center" order={1}>
+        Popular Recipes
+      </Title>
+      <Space />
+      <Grid columns={4} justify="center">
+        <LoadingOverlay visible={popularRecipesLoading} />
+        {popularRecipes?.items.map((recipe) => {
+          return (
+            <Grid.Col key={recipe.id} md={1} sm={2}>
+              <RecipeCard handler={modalHandler} recipe={recipe} setSelectedRecipe={setSelectedRecipe} />
+            </Grid.Col>
+          );
+        })}
+      </Grid>
+    </>
+  );
+};
+
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const token = getCookie("token");
+  const token = getCookie("token") as string;
 
   const {
     isLoading,
@@ -29,6 +67,8 @@ const Home = () => {
     selectedAllergens,
     selectedIngredients,
   } = useRecipes();
+
+  const { data: popularRecipes, isLoading: popularRecipesLoading } = usePopularRecipesQuery({ token });
 
   const modalHandler = useCallback(() => {
     setModalVisible(!modalVisible);
@@ -55,11 +95,7 @@ const Home = () => {
   return (
     <>
       <MyAppShell {...appShellProps}>
-        <RecipeModal
-          onClose={modalHandler}
-          opened={modalVisible}
-          recipe={selectedRecipe}
-        />
+        <RecipeModal onClose={modalHandler} opened={modalVisible} recipe={selectedRecipe} />
 
         <Grid justify="center">
           <Grid.Col lg={6} md={12}>
@@ -76,29 +112,17 @@ const Home = () => {
         <Center mb={5} mt={5}>
           <Grid columns={1} justify="center">
             <Grid.Col span={1}>
-              {recipesTotal > 0 && (
-                <Pagination
-                  onChange={pageChangeHandler}
-                  page={page}
-                  total={recipesTotal}
-                />
-              )}
+              {recipesTotal > 0 && <Pagination onChange={pageChangeHandler} page={page} total={recipesTotal} />}
             </Grid.Col>
           </Grid>
         </Center>
-        <Grid columns={4} justify="center">
-          {filteredRecipes?.map((recipe) => {
-            return (
-              <Grid.Col key={recipe.id} md={1} sm={2}>
-                <RecipeCard
-                  handler={modalHandler}
-                  recipe={recipe}
-                  setSelectedRecipe={setSelectedRecipe}
-                />
-              </Grid.Col>
-            );
-          })}
-        </Grid>
+        <FilteredOrPopularRecipesList
+          filteredRecipes={filteredRecipes}
+          modalHandler={modalHandler}
+          popularRecipes={popularRecipes}
+          popularRecipesLoading={popularRecipesLoading}
+          setSelectedRecipe={setSelectedRecipe}
+        />
       </MyAppShell>
     </>
   );
