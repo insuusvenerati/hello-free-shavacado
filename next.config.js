@@ -3,6 +3,10 @@
 const { withLayer0, withServiceWorker } = require("@layer0/next/config");
 const { withSentryConfig } = require("@sentry/nextjs");
 
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   sentry: {
@@ -30,7 +34,7 @@ const nextConfig = {
   },
 };
 
-const _preLayer0Export = withSentryConfig(nextConfig);
+const _preLayer0Export = withBundleAnalyzer(withSentryConfig(nextConfig));
 
 module.exports = (phase, config) =>
   withLayer0(
