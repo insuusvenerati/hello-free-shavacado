@@ -6,7 +6,7 @@ import { PostgrestError } from "@supabase/supabase-js";
 import Image from "next/image";
 import { FormEvent, memo, useCallback } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { CircleCheck, Star } from "tabler-icons-react";
+import { StarIcon, CheckCircleIcon } from "@heroicons/react/outline";
 import { Item } from "../types/recipes";
 import { addRecipe } from "../util/addRecipe";
 
@@ -55,12 +55,12 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
         <Grid>
           <Image
             alt={recipe?.name}
-            blurDataURL={`https://img.hellofresh.com/w_100,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
+            blurDataURL={`https://img.hellofresh.com/w_8,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
             height={800}
             objectFit="cover"
             placeholder="blur"
-            src={`https://img.hellofresh.com/hellofresh_s3${recipe?.imagePath}`}
-            width={3200}
+            src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_768,q_auto,w_1152/hellofresh_s3${recipe?.imagePath}`}
+            width={2400}
           />
 
           <Card m="lg" shadow="sm" withBorder>
@@ -72,7 +72,7 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
               ))}
               <Text>{recipe?.descriptionMarkdown}</Text>
               <form onSubmit={mutate}>
-                <Button leftIcon={<Star />} loading={isLoading} type="submit">
+                <Button leftIcon={<StarIcon width={16} />} loading={isLoading} type="submit">
                   Add to favorites
                 </Button>
               </form>
@@ -91,7 +91,7 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
                 center
                 icon={
                   <ThemeIcon color="teal" radius="xl" size={24}>
-                    <CircleCheck size={16} />
+                    <CheckCircleIcon height={16} width={16} />
                   </ThemeIcon>
                 }
                 size="xl"

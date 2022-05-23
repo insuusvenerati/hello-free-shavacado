@@ -1,8 +1,8 @@
 import { useSession } from "@clerk/nextjs";
-import { ActionIcon, Group, List, Loader } from "@mantine/core";
+import { TrashIcon } from "@heroicons/react/outline";
+import { ActionIcon, Group, List } from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import { getCookie } from "cookies-next";
-import { Trash } from "tabler-icons-react";
 import { useDeleteFavoriteRecipe } from "../hooks/useDeleteFavoriteRecipe";
 import { useHellofreshBySlug } from "../hooks/useHellofreshBySlug";
 import { FavoritedRecipe } from "../util/getRecipes";
@@ -13,20 +13,14 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
   const { session } = useSession();
   const { mutate } = useDeleteFavoriteRecipe(session, favoritedRecipe?.id);
 
-  if (isLoading) {
-    return (
-      <List.Item>
-        <Loader variant="dots" />
-      </List.Item>
-    );
-  }
+  if (isLoading) return null;
 
   return (
     <Group align="center">
       <List.Item
         icon={
           <ActionIcon color="red" onClick={mutate}>
-            <Trash />
+            <TrashIcon />
           </ActionIcon>
         }
       >
