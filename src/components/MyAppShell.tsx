@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-component-props */
 import { useSession } from "@clerk/nextjs";
 import {
   AppShell,
@@ -6,6 +7,7 @@ import {
   Container,
   Header,
   List,
+  LoadingOverlay,
   MediaQuery,
   MultiSelect,
   Navbar,
@@ -20,18 +22,6 @@ import { NavbarContent } from "./NavContent";
 import { RecipeLink } from "./RecipeLInk";
 
 export const MyAppShell = ({ children, ...props }) => {
-  const { session } = useSession();
-  const { data: recipes, isLoading } = useQuery(["recipes", session], () => getRecipes(session), {
-    staleTime: 64000,
-    refetchOnWindowFocus: false,
-  });
-  const matches = useMediaQuery("(min-width: 900px)", true);
-  const [opened, setOpened] = useState(false);
-
-  const handleDrawer = useCallback(() => {
-    setOpened(!opened);
-  }, [opened]);
-
   const {
     allergens,
     handleSetSelectedAllergens,
@@ -40,12 +30,25 @@ export const MyAppShell = ({ children, ...props }) => {
     handleSetSelectedIngredients,
     selectedIngredients,
   } = props;
+  const { session } = useSession();
+  const { data: recipes, isLoading } = useQuery(["recipes", session], () => getRecipes(session), {
+    staleTime: 60 * 60 * 24,
+    refetchOnWindowFocus: false,
+    notifyOnChangeProps: ["data", "error"],
+  });
+  const matches = useMediaQuery("(min-width: 900px)", true);
+  const [opened, setOpened] = useState(false);
+
+  const handleDrawer = useCallback(() => {
+    setOpened(!opened);
+  }, [opened]);
 
   return (
     <AppShell
       aside={
         <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
           <Aside hiddenBreakpoint="sm" p="md" width={{ sm: 200, lg: 300 }}>
+            <LoadingOverlay visible={isLoading} />
             <Text size="lg" weight="bold">
               Favorite Recipes
             </Text>
