@@ -12,6 +12,8 @@ type HelloFreshSearchOptions = {
   maxPrepTime?: number;
   difficulty?: number;
   take?: number;
+  order?: string;
+  cuisine?: string;
 };
 
 export const hellofreshGetToken = async () => {
@@ -34,7 +36,7 @@ export const hellofreshSearch = async (
 
   // console.log(ingredients);
 
-  const response = await ky.get(`/hellofresh?page=${page}&q=${searchText}`, {
+  const response = await ky.get(`${HELLOFRESH_SEARCH_URL}?page=${page}&q=${searchText}`, {
     headers: { authorization: `Bearer ${token}` },
   });
 
