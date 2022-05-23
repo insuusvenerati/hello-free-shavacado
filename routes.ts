@@ -18,7 +18,7 @@ export default new Router()
       },
     });
   })
-  .get("/hellofresh", ({ cache, proxy }) => {
+  .get("/hellofresh/favorites", ({ cache, proxy }) => {
     cache({
       edge: {
         maxAgeSeconds: 60 * 60,
