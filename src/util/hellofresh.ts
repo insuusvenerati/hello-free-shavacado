@@ -46,7 +46,6 @@ export const hellofreshSearch = async (
 export const hellofreshSearchBySlug = async ({
   token,
   slug,
-  take = 1,
 }: {
   token: string;
   slug: string;
@@ -56,7 +55,7 @@ export const hellofreshSearchBySlug = async ({
     throw new Error("Missing hellofresh token");
   }
 
-  const response = await ky.get(`${HELLOFRESH_SEARCH_URL}?take=${take}&q=${slug}`, {
+  const response = await ky.get(`${HELLOFRESH_SEARCH_URL}/recipe?q=${slug}`, {
     headers: { authorization: `Bearer ${token}` },
   });
 

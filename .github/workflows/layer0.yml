@@ -1,0 +1,29 @@
+name: "Layer0 Deploy"
+on:
+  push:
+    branches:
+      - "feat/layer0"
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for Layer0 deploy token secret
+        if: env.deploy_token == ''
+        run: |
+          echo You must define the "LAYER0_DEPLOY_TOKEN" secret in GitHub project settings
+          exit 1
+
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - name: Install packages
+        run: rm -rf node_modules && yarn install --frozen-lockfile # if using yarn for your project
+
+      - name: Deploy to Layer0
+        run: |
+          yarn layer0:deploy -- ${{'--branch=$BRANCH_NAME' || ''}} --token=$deploy_token
+        env:
+          deploy_token: ${{secrets.LAYER0_DEPLOY_TOKEN}}

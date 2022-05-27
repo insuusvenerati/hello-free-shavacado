@@ -11,31 +11,17 @@ import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Metrics } from "@layer0/rum";
 import SEO from "../../next-seo.config";
+import Router from "@layer0/rum/Router";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
-
-new Metrics({
-  token: "165c6d06-4823-44d7-865c-e47b8644b116",
-}).collect();
-
-// export function reportWebVitals(metric: NextWebVitalsMetric) {
-//   const url = process.env.NEXT_PUBLIC_AXIOM_INGEST_ENDPOINT;
-
-//   if (!url) {
-//     return;
-//   }
-
-//   const body = JSON.stringify({
-//     route: window.__NEXT_DATA__.page,
-//     ...metric,
-//   });
-
-//   if (navigator.sendBeacon) {
-//     navigator.sendBeacon(url, body);
-//   } else {
-//     fetch(url, { body, method: "POST", keepalive: true });
-//   }
-// }
+if (process.env.NODE_ENV === "production") {
+  new Metrics({
+    token: "165c6d06-4823-44d7-865c-e47b8644b116",
+    router: new Router()
+      .match("/", ({ setPageLabel }) => setPageLabel("home"))
+      .match("/recipe/:recipe", ({ setPageLabel }) => setPageLabel("recipe")),
+  }).collect();
+}
 
 const App = (props: AppProps) => {
   // eslint-disable-next-line react/hook-use-state
@@ -56,7 +42,6 @@ const App = (props: AppProps) => {
   return (
     <>
       <Head>
-        <title>Page title</title>
         <meta content="minimum-scale=1, initial-scale=1, width=device-width" name="viewport" />
         <link href="/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180" />
         <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
@@ -78,14 +63,14 @@ const App = (props: AppProps) => {
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
             <DefaultSeo {...SEO} />
-            <QueryClientProvider client={queryClient}>
-              <Hydrate state={pageProps.dehydratedState}>
+            <ClerkProvider frontendApi={CLERK_FRONTEND_KEY} {...pageProps}>
+              <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen={false} />
-                <ClerkProvider frontendApi={CLERK_FRONTEND_KEY} {...pageProps}>
+                <Hydrate state={pageProps.dehydratedState}>
                   <Component {...pageProps} />
-                </ClerkProvider>
-              </Hydrate>
-            </QueryClientProvider>
+                </Hydrate>
+              </QueryClientProvider>
+            </ClerkProvider>
           </NotificationsProvider>
         </MantineProvider>
       </ColorSchemeProvider>

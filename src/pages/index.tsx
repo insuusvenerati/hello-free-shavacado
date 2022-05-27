@@ -1,48 +1,20 @@
-import { Center, Grid, Loader, LoadingOverlay, Pagination, Space, TextInput, Title } from "@mantine/core";
+import { Center, Grid, Loader, LoadingOverlay, Pagination, TextInput } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
+import { GetServerSideProps } from "next";
 import { useCallback, useEffect, useState } from "react";
 import { MyAppShell } from "../components/MyAppShell";
-import { RecipeCard } from "../components/RecipeCard";
+import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
 import RecipeModal from "../components/RecipeModal";
 import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
 import { useRecipes } from "../hooks/useRecipes";
+import { HELLOFRESH_SEARCH_URL } from "../util/constants";
 import { hellofreshGetToken } from "../util/hellofresh";
 
-const FilteredOrPopularRecipesList = ({
-  filteredRecipes,
-  modalHandler,
-  setSelectedRecipe,
-  popularRecipes,
-  popularRecipesLoading,
-}) => {
-  return filteredRecipes ? (
-    <Grid columns={4} justify="center">
-      {filteredRecipes?.map((recipe) => {
-        return (
-          <Grid.Col key={recipe.id} md={1} sm={2}>
-            <RecipeCard handler={modalHandler} recipe={recipe} setSelectedRecipe={setSelectedRecipe} />
-          </Grid.Col>
-        );
-      })}
-    </Grid>
-  ) : (
-    <>
-      <Title align="center" order={1}>
-        Popular Recipes
-      </Title>
-      <Space />
-      <Grid columns={4} justify="center">
-        <LoadingOverlay visible={popularRecipesLoading} />
-        {popularRecipes?.items.map((recipe) => {
-          return (
-            <Grid.Col key={recipe.id} md={1} sm={2}>
-              <RecipeCard handler={modalHandler} recipe={recipe} setSelectedRecipe={setSelectedRecipe} />
-            </Grid.Col>
-          );
-        })}
-      </Grid>
-    </>
-  );
+export const getServerSideProps: GetServerSideProps = async () => {
+  const response = await fetch(`${HELLOFRESH_SEARCH_URL}/favorites`);
+  const data = await response.json();
+
+  return { props: { data } };
 };
 
 const Home = () => {
@@ -62,13 +34,13 @@ const Home = () => {
     pageChangeHandler,
     handleSetSelectedIngredients,
     handleSetSelectedAllergens,
-    allergens,
+    uniqueAllergens,
     ingredients,
     selectedAllergens,
     selectedIngredients,
   } = useRecipes();
 
-  const { data: popularRecipes, isLoading: popularRecipesLoading } = usePopularRecipesQuery({ token });
+  const { data: popularRecipes, isLoading: popularRecipesLoading } = usePopularRecipesQuery();
 
   const modalHandler = useCallback(() => {
     setModalVisible(!modalVisible);
@@ -84,12 +56,21 @@ const Home = () => {
   }, [token]);
 
   const appShellProps = {
-    allergens,
+    uniqueAllergens,
     handleSetSelectedAllergens,
     selectedAllergens,
     ingredients,
     handleSetSelectedIngredients,
     selectedIngredients,
+  };
+
+  const FilteredOrPopularRecipesListProps = {
+    filteredRecipes,
+    modalHandler,
+    popularRecipes,
+    popularRecipesLoading,
+    setSelectedRecipe,
+    isLoading,
   };
 
   return (
@@ -106,6 +87,7 @@ const Home = () => {
               placeholder="Search"
               rightSection={isLoading ? <Loader size="sm" /> : undefined}
               size="md"
+              type="search"
             />
           </Grid.Col>
         </Grid>
@@ -116,13 +98,11 @@ const Home = () => {
             </Grid.Col>
           </Grid>
         </Center>
-        <FilteredOrPopularRecipesList
-          filteredRecipes={filteredRecipes}
-          modalHandler={modalHandler}
-          popularRecipes={popularRecipes}
-          popularRecipesLoading={popularRecipesLoading}
-          setSelectedRecipe={setSelectedRecipe}
-        />
+        {filteredRecipes || popularRecipes || !isLoading ? (
+          <FilteredOrPopularRecipesList {...FilteredOrPopularRecipesListProps} />
+        ) : (
+          <LoadingOverlay visible />
+        )}
       </MyAppShell>
     </>
   );

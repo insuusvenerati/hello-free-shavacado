@@ -1,6 +1,7 @@
 import { getCookie } from "cookies-next";
 import { useCallback, useState } from "react";
 import { Item } from "../types/recipes";
+import { HF_AVATAR_IMAGE_URL } from "../util/constants";
 import { useDebounce } from "./useDebounce";
 import { useFilterRecipes } from "./useFilters";
 import { useRecipesQuery } from "./useRecipesQuery";
@@ -23,7 +24,23 @@ export const useRecipes = () => {
     setSelectedIngredients,
   } = useFilterRecipes(recipes);
 
-  const allergens = [...new Set(recipes?.items?.map((item) => item.allergens.map((allergen) => allergen.name)).flat())];
+  const allergens = [
+    ...new Set(
+      recipes?.items
+        ?.map((item) =>
+          item.allergens.map((allergen) => {
+            return {
+              value: allergen.name,
+              label: allergen.name,
+              image: `${HF_AVATAR_IMAGE_URL}${allergen.iconPath}`,
+            };
+          }),
+        )
+        .flat(),
+    ),
+  ];
+
+  const uniqueAllergens = allergens?.filter((val, i, self) => i === self.findIndex((a) => a.label === val.label));
 
   const ingredients = [
     ...new Set(recipes?.items?.map((recipe) => recipe.ingredients.map((ingredient) => ingredient.name)).flat()),
@@ -67,7 +84,7 @@ export const useRecipes = () => {
     pageChangeHandler,
     handleSetSelectedIngredients,
     handleSetSelectedAllergens,
-    allergens,
+    uniqueAllergens,
     ingredients,
     selectedAllergens,
     selectedIngredients,

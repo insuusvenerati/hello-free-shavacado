@@ -3,27 +3,58 @@ import { useSession } from "@clerk/nextjs";
 import {
   AppShell,
   Aside,
+  Avatar,
   Burger,
   Container,
+  Group,
   Header,
   List,
   LoadingOverlay,
   MediaQuery,
   MultiSelect,
   Navbar,
+  SelectItem,
   Stack,
   Text,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { useCallback, useState } from "react";
+import { forwardRef, useCallback, useState } from "react";
 import { useQuery } from "react-query";
 import { getRecipes } from "../util/getRecipes";
 import { NavbarContent } from "./NavContent";
 import { RecipeLink } from "./RecipeLInk";
 
-export const MyAppShell = ({ children, ...props }) => {
+interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
+  image: string;
+  label: string;
+}
+
+type AppShellProps = {
+  uniqueAllergens: SelectItem[];
+  handleSetSelectedAllergens: (value: string[]) => void;
+  selectedAllergens: string[];
+  ingredients: string[];
+  handleSetSelectedIngredients: (value: string[]) => void;
+  selectedIngredients: string[];
+  children: JSX.Element[] | JSX.Element;
+};
+
+// eslint-disable-next-line react/display-name
+const MySelectItem = forwardRef<HTMLDivElement, ItemProps>(({ image, label, ...others }: ItemProps, ref) => (
+  <div ref={ref} {...others}>
+    <Group noWrap>
+      <Avatar src={image} />
+
+      <div>
+        <Text>{label}</Text>
+      </div>
+    </Group>
+  </div>
+));
+
+export const MyAppShell = ({ children, ...props }: AppShellProps) => {
   const {
-    allergens,
+    uniqueAllergens,
     handleSetSelectedAllergens,
     selectedAllergens,
     ingredients,
@@ -83,15 +114,6 @@ export const MyAppShell = ({ children, ...props }) => {
             </Header>
           </MediaQuery>
         ) : null
-        // (
-        //   <Header height={70} p="lg">
-        //     <Center>
-        //       <Text size="lg" weight="bold">
-        //         Hello Free Shavacado
-        //       </Text>
-        //     </Center>
-        //   </Header>
-        // )
       }
       navbar={
         <Navbar hidden={!opened} hiddenBreakpoint="sm" p="md" width={{ base: 300 }}>
@@ -100,10 +122,12 @@ export const MyAppShell = ({ children, ...props }) => {
             <Stack>
               <MultiSelect
                 clearable
-                data={allergens}
+                data={uniqueAllergens}
+                itemComponent={MySelectItem}
                 label="Filter allergens"
+                nothingFound="Search for a recipe first"
                 onChange={handleSetSelectedAllergens}
-                placeholder="Select an allergen"
+                placeholder="Select your allergens"
                 searchable
                 value={selectedAllergens}
               />
@@ -111,6 +135,7 @@ export const MyAppShell = ({ children, ...props }) => {
                 clearable
                 data={ingredients}
                 label="Filter ingredients"
+                nothingFound="Search for a recipe first"
                 onChange={handleSetSelectedIngredients}
                 placeholder="Select your ingredients"
                 searchable
