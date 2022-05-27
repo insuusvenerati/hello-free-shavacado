@@ -41,7 +41,7 @@ module.exports = (phase, config) =>
     withServiceWorker({
       // Output sourcemaps so that stack traces have original source filenames and line numbers when tailing
       // the logs in the Layer0 developer console.
-      layer0SourceMaps: false,
+      layer0SourceMaps: true,
 
       ..._preLayer0Export,
     }),

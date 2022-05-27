@@ -1,23 +1,22 @@
 import { Center, Grid, Loader, LoadingOverlay, Pagination, TextInput } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import { useCallback, useEffect, useState } from "react";
 import { MyAppShell } from "../components/MyAppShell";
 import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
 import RecipeModal from "../components/RecipeModal";
-import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
 import { useRecipes } from "../hooks/useRecipes";
 import { HELLOFRESH_SEARCH_URL } from "../util/constants";
 import { hellofreshGetToken } from "../util/hellofresh";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const response = await fetch(`${HELLOFRESH_SEARCH_URL}/favorites`);
   const data = await response.json();
 
   return { props: { data } };
 };
 
-const Home = () => {
+const Home = ({ data: popularRecipes }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const token = getCookie("token") as string;
 
@@ -40,7 +39,7 @@ const Home = () => {
     selectedIngredients,
   } = useRecipes();
 
-  const { data: popularRecipes, isLoading: popularRecipesLoading } = usePopularRecipesQuery();
+  // const { data: popularRecipes, isLoading: popularRecipesLoading } = usePopularRecipesQuery();
 
   const modalHandler = useCallback(() => {
     setModalVisible(!modalVisible);
@@ -68,7 +67,6 @@ const Home = () => {
     filteredRecipes,
     modalHandler,
     popularRecipes,
-    popularRecipesLoading,
     setSelectedRecipe,
     isLoading,
   };

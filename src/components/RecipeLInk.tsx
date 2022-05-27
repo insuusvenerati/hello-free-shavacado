@@ -2,14 +2,12 @@ import { useSession } from "@clerk/nextjs";
 import { TrashIcon } from "@heroicons/react/outline";
 import { ActionIcon, Group, List } from "@mantine/core";
 import { NextLink } from "@mantine/next";
-import { getCookie } from "cookies-next";
 import { useDeleteFavoriteRecipe } from "../hooks/useDeleteFavoriteRecipe";
 import { useHellofreshBySlug } from "../hooks/useHellofreshBySlug";
 import { FavoritedRecipe } from "../util/getRecipes";
 
 export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedRecipe }) => {
-  const token = getCookie("token");
-  const { data: recipe, isLoading } = useHellofreshBySlug(favoritedRecipe?.recipe, token.toString());
+  const { data: recipe, isLoading } = useHellofreshBySlug(favoritedRecipe?.recipe);
   const { session } = useSession();
   const { mutate } = useDeleteFavoriteRecipe(session, favoritedRecipe?.id);
 

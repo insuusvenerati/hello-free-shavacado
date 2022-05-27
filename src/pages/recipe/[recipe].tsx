@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-no-bind */
-import { DocumentIcon } from "@heroicons/react/outline";
+import { ArrowLeftIcon, DocumentIcon } from "@heroicons/react/outline";
 import {
   Accordion,
+  Affix,
   Button,
   Card,
   Container,
@@ -10,21 +11,18 @@ import {
   Group,
   Header,
   List,
-  LoadingOverlay,
   Space,
   Text,
   Title,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
-import { getCookie } from "cookies-next";
-import { GetServerSideProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { QueryClient } from "react-query";
 import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
 import { NavbarContent } from "../../components/NavContent";
-import { useHellofreshBySlug } from "../../hooks/useHellofreshBySlug";
+import { RecipeQuery } from "../../types/recipes";
 import {
   HELLOFRESH_SEARCH_URL,
   HF_AVATAR_IMAGE_URL,
@@ -34,37 +32,52 @@ import {
 } from "../../util/constants";
 import { hellofreshSearchBySlug } from "../../util/hellofresh";
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const queryClient = new QueryClient();
-  const token = getCookie("token", ctx).toString();
-  const { recipe } = ctx.params;
-  const data = await hellofreshSearchBySlug({ token, slug: recipe as string });
+export const getStaticPaths: GetStaticPaths = async () => {
+  const response = await fetch(`${HELLOFRESH_SEARCH_URL}/favorites`);
+  const data: RecipeQuery = await response.json();
 
-  await queryClient.prefetchQuery(["hellofresh-by-slug", recipe, token], async () => {
-    const response = await fetch(`${HELLOFRESH_SEARCH_URL}?take=1&q=${recipe}`, {
-      headers: { authorization: `Bearer ${token}` },
-    });
-    return await response.json();
-  });
+  const paths = data.items.map((recipe) => ({
+    params: { recipe: recipe.slug },
+  }));
+
+  return {
+    paths,
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  // const queryClient = new QueryClient();
+  const { recipe } = ctx.params;
+  const data = await hellofreshSearchBySlug({ slug: recipe as string });
+
+  // await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], async () => {
+  //   const response = await fetch(`${HELLOFRESH_SEARCH_URL}?take=1&q=${recipe}`);
+  //   return await response.json();
+  // });
 
   return { props: { data } };
 };
 
-const Recipe = () => {
+const Recipe = ({ data: recipes }: { data: RecipeQuery }) => {
   const matches = useMediaQuery("(min-width: 900px)", true);
   const router = useRouter();
-  const token = getCookie("token");
-  const { recipe: slug } = router.query;
-  const { data: recipes, isLoading } = useHellofreshBySlug(slug?.toString(), token?.toString());
+  // const { recipe: slug } = router.query;
+  // const { data: recipes, isLoading } = useHellofreshBySlug(slug?.toString());
   const recipe = recipes?.items[0];
 
-  if (isLoading) return <LoadingOverlay visible />;
+  // if (isLoading) return <LoadingOverlay visible />;
 
   return (
     <>
       <Header height={70} mt={12}>
         <NavbarContent />
       </Header>
+      <Affix position={{ bottom: 20, left: 20 }}>
+        <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
+          Go back
+        </Button>
+      </Affix>
       <div style={{ backgroundColor: "#FDFCFA" }}>
         <Image
           alt={recipe?.name}
