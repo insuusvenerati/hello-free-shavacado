@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/forbid-component-props */
 import { useSession } from "@clerk/nextjs";
 import {
@@ -84,7 +85,13 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
               Favorite Recipes
             </Text>
             {recipes?.length > 0 ? (
-              <List>
+              <List
+                center
+                listStyleType="none"
+                styles={{
+                  withIcon: { height: 55 },
+                }}
+              >
                 {recipes.map((recipe) => (
                   <RecipeLink favoritedRecipe={recipe} key={recipe.id} />
                 ))}

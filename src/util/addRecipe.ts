@@ -1,6 +1,6 @@
 import { supabaseClient } from "./supabase";
 
-export const addRecipe = async ({ session, recipeSlug, recipeName, openSignIn }) => {
+export const addRecipe = async ({ session, recipeSlug, recipeName, openSignIn, imagePath }) => {
   if (!session) {
     openSignIn({});
   }
@@ -17,7 +17,10 @@ export const addRecipe = async ({ session, recipeSlug, recipeName, openSignIn })
 
   const { data, error } = await supabase
     .from("recipes")
-    .upsert({ recipe: recipeSlug, user_id: session.user.id, name: recipeName }, { onConflict: "recipe" })
+    .upsert(
+      { recipe: recipeSlug, user_id: session.user.id, name: recipeName, image_path: imagePath },
+      { onConflict: "recipe" },
+    )
     .single();
 
   if (error) {
