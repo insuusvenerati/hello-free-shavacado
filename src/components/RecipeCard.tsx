@@ -53,8 +53,8 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
         </Prefetch>
       </NextLink>
 
-      {recipe.tags.length > 0 &&
-        recipe.tags.map((tag) => (
+      {recipe?.tags?.length > 0 &&
+        recipe?.tags?.map((tag) => (
           <Badge key={`${recipe?.id}-${tag?.id}-${Math.random()}`} size="xs">
             {tag.name}
           </Badge>

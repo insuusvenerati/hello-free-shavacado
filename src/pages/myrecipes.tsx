@@ -1,11 +1,15 @@
 import { useSession } from "@clerk/nextjs";
 import { withServerSideAuth } from "@clerk/nextjs/ssr";
-import { Container, List, LoadingOverlay, Text } from "@mantine/core";
+import { Container, Grid, LoadingOverlay, Title } from "@mantine/core";
 import { GetServerSideProps } from "next";
+import { useCallback, useEffect, useState } from "react";
 import { QueryClient, useQuery } from "react-query";
 import { NavbarContent } from "../components/NavContent";
-import { RecipeLink } from "../components/RecipeLink";
+import { RecipeCard } from "../components/RecipeCard";
+import { useRecipes } from "../hooks/useRecipes";
+import { RecipeQuery } from "../types/recipes";
 import { FavoritedRecipe, getRecipes } from "../util/getRecipes";
+import { hellofreshSearchBySlug } from "../util/hellofresh";
 import { supabaseClient } from "../util/supabase";
 
 export const getServerSideProps: GetServerSideProps = withServerSideAuth(async ({ req }) => {
@@ -30,7 +34,26 @@ export const getServerSideProps: GetServerSideProps = withServerSideAuth(async (
 
 const RecipeList = () => {
   const { session } = useSession();
-  const { data: recipes, isLoading } = useQuery(["recipes", session], () => getRecipes(session));
+  const [recipes, setRecipes] = useState<RecipeQuery[]>();
+  const [modalVisible, setModalVisible] = useState(false);
+  const { setSelectedRecipe } = useRecipes();
+  const { data: favoriteRecipes, isLoading } = useQuery(["recipes", session], () => getRecipes(session));
+
+  useEffect(() => {
+    const getRecipesFromFavorites = async () =>
+      Promise.all(
+        favoriteRecipes?.map(async (recipe) => {
+          return await hellofreshSearchBySlug({ slug: recipe.recipe });
+        }),
+      )
+        .then((data) => setRecipes(data))
+        .catch((err) => console.log(err));
+    getRecipesFromFavorites();
+  }, [favoriteRecipes]);
+
+  const modalHandler = useCallback(() => {
+    setModalVisible(!modalVisible);
+  }, [modalVisible]);
 
   if (isLoading) {
     return (
@@ -45,16 +68,22 @@ const RecipeList = () => {
     <>
       <NavbarContent />
 
-      <Container>
-        {recipes?.length > 0 ? (
-          <List>
-            {recipes.map((recipe) => (
-              <RecipeLink favoritedRecipe={recipe} key={recipe.id} />
-            ))}
-          </List>
-        ) : (
-          <Text>You don&apos;t have any recipes!</Text>
-        )}
+      <Title mb="md" align="center" order={1}>
+        Favorite Recipes
+      </Title>
+
+      <Container size="xl">
+        <Grid columns={4} justify="center">
+          {recipes &&
+            recipes?.map((items) => {
+              const recipe = items.items[0];
+              return (
+                <Grid.Col key={recipe.id} md={1} sm={2}>
+                  <RecipeCard handler={modalHandler} recipe={recipe} setSelectedRecipe={setSelectedRecipe} />
+                </Grid.Col>
+              );
+            })}
+        </Grid>
       </Container>
     </>
   );
