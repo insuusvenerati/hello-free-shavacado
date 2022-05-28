@@ -23,7 +23,7 @@ import { forwardRef, useCallback, useState } from "react";
 import { useQuery } from "react-query";
 import { getRecipes } from "../util/getRecipes";
 import { NavbarContent } from "./NavContent";
-import { RecipeLink } from "./RecipeLInk";
+import { RecipeLink } from "./RecipeLink";
 
 interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
   image: string;
@@ -81,7 +81,7 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
         <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
           <Aside hiddenBreakpoint="sm" p="md" width={{ sm: 200, lg: 300 }}>
             <LoadingOverlay visible={isLoading} />
-            <Text size="lg" weight="bold">
+            <Text size="lg" weight="bold" mb="md">
               Favorite Recipes
             </Text>
             {recipes?.length > 0 ? (
@@ -89,7 +89,9 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
                 center
                 listStyleType="none"
                 styles={{
-                  withIcon: { height: 55 },
+                  withIcon: {
+                    height: 55,
+                  },
                 }}
               >
                 {recipes.map((recipe) => (

@@ -1,6 +1,6 @@
 import { useSession } from "@clerk/nextjs";
-import { TrashIcon } from "@heroicons/react/outline";
-import { ActionIcon, Avatar, Group, List, Paper } from "@mantine/core";
+import { LinkIcon, TrashIcon } from "@heroicons/react/outline";
+import { ActionIcon, Avatar, Group, List, Paper, Text, Tooltip } from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import { useDeleteFavoriteRecipe } from "../hooks/useDeleteFavoriteRecipe";
 import { useHellofreshBySlug } from "../hooks/useHellofreshBySlug";
@@ -27,12 +27,27 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
         }
       >
         <Group noWrap>
-          <NextLink href={recipe?.items[0]?.websiteUrl} key={favoritedRecipe?.id} target="_blank">
-            {recipe?.items[0].name}
-          </NextLink>
-          <ActionIcon color="red" mr="xs" onClick={mutate}>
-            <TrashIcon />
-          </ActionIcon>
+          <Tooltip
+            style={{ maxWidth: 100, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+            label={recipe?.items[0].name}
+            withArrow
+          >
+            <NextLink href={recipe?.items[0]?.websiteUrl} key={favoritedRecipe?.id} target="_blank">
+              <Text size="sm">{recipe?.items[0].name}</Text>
+            </NextLink>
+          </Tooltip>
+          <Tooltip label="Delete favorite" withArrow>
+            <ActionIcon color="red" onClick={mutate}>
+              <TrashIcon />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip label="View Instructions">
+            <NextLink href={`/recipe/${favoritedRecipe?.recipe}`}>
+              <ActionIcon mr="xs">
+                <LinkIcon />
+              </ActionIcon>
+            </NextLink>
+          </Tooltip>
         </Group>
       </List.Item>
     </Paper>

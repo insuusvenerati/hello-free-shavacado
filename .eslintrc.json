@@ -4,9 +4,7 @@
   "rules": {
     "unused-imports/no-unused-imports": "error",
     "react/jsx-no-bind": 2,
-    "react/jsx-sort-props": 2,
     "react/destructuring-assignment": 2,
-    "react/forbid-component-props": 1,
     "react/hook-use-state": 1,
     "quotes": ["error", "double"],
     "object-curly-newline": 0,

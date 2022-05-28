@@ -4,7 +4,7 @@ import { Container, List, LoadingOverlay, Text } from "@mantine/core";
 import { GetServerSideProps } from "next";
 import { QueryClient, useQuery } from "react-query";
 import { NavbarContent } from "../components/NavContent";
-import { RecipeLink } from "../components/RecipeLInk";
+import { RecipeLink } from "../components/RecipeLink";
 import { FavoritedRecipe, getRecipes } from "../util/getRecipes";
 import { supabaseClient } from "../util/supabase";
 
