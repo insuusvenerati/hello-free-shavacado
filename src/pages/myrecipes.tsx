@@ -1,36 +1,32 @@
 import { useSession } from "@clerk/nextjs";
-import { withServerSideAuth } from "@clerk/nextjs/ssr";
 import { Container, Grid, LoadingOverlay, Title } from "@mantine/core";
-import { GetServerSideProps } from "next";
 import { useCallback, useEffect, useState } from "react";
-import { QueryClient, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { NavbarContent } from "../components/NavContent";
 import { RecipeCard } from "../components/RecipeCard";
 import { useRecipes } from "../hooks/useRecipes";
 import { RecipeQuery } from "../types/recipes";
-import { FavoritedRecipe, getRecipes } from "../util/getRecipes";
+import { getRecipes } from "../util/getRecipes";
 import { hellofreshSearchBySlug } from "../util/hellofresh";
-import { supabaseClient } from "../util/supabase";
 
-export const getServerSideProps: GetServerSideProps = withServerSideAuth(async ({ req }) => {
-  const session = req.auth;
-  const queryClient = new QueryClient();
+// export const getServerSideProps: GetServerSideProps = withServerSideAuth(async ({ req }) => {
+//   const session = req.auth;
+//   const queryClient = new QueryClient();
 
-  async function fetchRecipes() {
-    const supabaseAccessToken = await session.getToken({ template: "supabase" });
-    const supabase = await supabaseClient(supabaseAccessToken);
-    const { data } = await supabase.from<FavoritedRecipe>("recipes").select("*");
-    return data;
-  }
-  const data = await fetchRecipes();
-  await queryClient.prefetchQuery(["recipes", session], fetchRecipes);
+//   async function fetchRecipes() {
+//     const supabaseAccessToken = await session.getToken({ template: "supabase" });
+//     const supabase = await supabaseClient(supabaseAccessToken);
+//     const { data } = await supabase.from<FavoritedRecipe>("recipes").select("*");
+//     return data;
+//   }
+//   await queryClient.prefetchQuery(["recipes", session], () => getRecipes(session));
 
-  if (!session.sessionId) {
-    return;
-  }
+//   if (!session.sessionId) {
+//     return;
+//   }
 
-  return { props: { data } };
-});
+//   return { props: { dehydratedState: dehydrate(queryClient) } };
+// });
 
 const RecipeList = () => {
   const { session } = useSession();
