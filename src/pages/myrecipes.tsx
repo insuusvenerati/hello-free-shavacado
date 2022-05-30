@@ -9,25 +9,6 @@ import { RecipeQuery } from "../types/recipes";
 import { getRecipes } from "../util/getRecipes";
 import { hellofreshSearchBySlug } from "../util/hellofresh";
 
-// export const getServerSideProps: GetServerSideProps = withServerSideAuth(async ({ req }) => {
-//   const session = req.auth;
-//   const queryClient = new QueryClient();
-
-//   async function fetchRecipes() {
-//     const supabaseAccessToken = await session.getToken({ template: "supabase" });
-//     const supabase = await supabaseClient(supabaseAccessToken);
-//     const { data } = await supabase.from<FavoritedRecipe>("recipes").select("*");
-//     return data;
-//   }
-//   await queryClient.prefetchQuery(["recipes", session], () => getRecipes(session));
-
-//   if (!session.sessionId) {
-//     return;
-//   }
-
-//   return { props: { dehydratedState: dehydrate(queryClient) } };
-// });
-
 const RecipeList = () => {
   const { session } = useSession();
   const [recipes, setRecipes] = useState<RecipeQuery[]>();
