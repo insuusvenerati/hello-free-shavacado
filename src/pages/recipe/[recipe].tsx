@@ -36,7 +36,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const response = await fetch(`${HELLOFRESH_SEARCH_URL}/favorites`);
   const data: RecipeQuery = await response.json();
 
-  const paths = data.items.map((recipe) => ({
+  const paths = data?.items?.map((recipe) => ({
     params: { recipe: recipe.slug },
   }));
 
@@ -47,14 +47,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  // const queryClient = new QueryClient();
   const { recipe } = ctx.params;
   const data = await hellofreshSearchBySlug({ slug: recipe as string });
-
-  // await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], async () => {
-  //   const response = await fetch(`${HELLOFRESH_SEARCH_URL}?take=1&q=${recipe}`);
-  //   return await response.json();
-  // });
 
   return { props: { data } };
 };
@@ -62,11 +56,8 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 const Recipe = ({ data: recipes }: { data: RecipeQuery }) => {
   const matches = useMediaQuery("(min-width: 900px)", true);
   const router = useRouter();
-  // const { recipe: slug } = router.query;
-  // const { data: recipes, isLoading } = useHellofreshBySlug(slug?.toString());
-  const recipe = recipes?.items[0];
 
-  // if (isLoading) return <LoadingOverlay visible />;
+  const recipe = recipes?.items[0];
 
   return (
     <>
@@ -150,17 +141,27 @@ const Recipe = ({ data: recipes }: { data: RecipeQuery }) => {
               >
                 <Grid columns={6}>
                   <Grid.Col lg={3} sm={6}>
-                    {recipe?.ingredients.slice(0, 5).map((ingredient) => (
-                      <Group key={ingredient.id} p="xs">
-                        <Image
-                          alt={ingredient.description}
-                          height={60}
-                          src={`${HF_AVATAR_IMAGE_URL}/${ingredient.imagePath}`}
-                          width={60}
-                        />
-                        {ingredient.name}
-                      </Group>
-                    ))}
+                    {recipe?.ingredients.slice(0, 5).map((ingredient) => {
+                      // const yields = recipe.ingredients
+                      //   .map((i) => {
+                      //     const usageTwo = recipe.yields.filter((y) => y.yields === 2);
+                      //     const usage = usageTwo.filter(u => u.ingredients.some(i => i.id === ))
+                      //     return usageTwo;
+                      //   })
+                      //   .flat();
+                      // console.log(yields);
+                      return (
+                        <Group key={ingredient.id} p="xs">
+                          <Image
+                            alt={ingredient.description}
+                            height={60}
+                            src={`${HF_AVATAR_IMAGE_URL}/${ingredient.imagePath}`}
+                            width={60}
+                          />
+                          {ingredient.name}
+                        </Group>
+                      );
+                    })}
                   </Grid.Col>
                   <Grid.Col lg={3} sm={6}>
                     {recipe?.ingredients.slice(5).map((ingredient) => (
