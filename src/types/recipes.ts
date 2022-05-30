@@ -244,7 +244,7 @@ export interface Utensil {
 }
 
 export interface Yield {
-  yields: number;
+  yields: 2 | 4;
   ingredients: YieldIngredient[];
 }
 

@@ -42,11 +42,7 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
         <Prefetch
           url={createNextDataURL({
             href: `/recipe/${recipe?.slug}`,
-            routeParams: {
-              // keys must match the param names in your next page routes
-              // So for example if your product page is /products/[productId].js:
-              recipe: recipe?.slug,
-            },
+            routeParams: {},
           })}
         >
           <Text weight="bold">{recipe?.name}</Text>
