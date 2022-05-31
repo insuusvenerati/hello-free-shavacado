@@ -1,5 +1,3 @@
-import { createNextDataURL } from "@layer0/next/client";
-import { Prefetch } from "@layer0/react";
 import { Badge, Card, MantineShadow, Text } from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import Image from "next/image";
@@ -39,14 +37,7 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
       </Card.Section>
 
       <NextLink href={`/recipe/${recipe?.slug}`}>
-        <Prefetch
-          url={createNextDataURL({
-            href: `/recipe/${recipe?.slug}`,
-            routeParams: {},
-          })}
-        >
-          <Text weight="bold">{recipe?.name}</Text>
-        </Prefetch>
+        <Text weight="bold">{recipe?.name}</Text>
       </NextLink>
 
       {recipe?.tags?.length > 0 &&

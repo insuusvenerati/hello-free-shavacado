@@ -9,19 +9,9 @@ import Script from "next/script";
 import { useCallback, useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { Metrics } from "@layer0/rum";
 import SEO from "../../next-seo.config";
-import Router from "@layer0/rum/Router";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
-if (process.env.NODE_ENV === "production") {
-  new Metrics({
-    token: "165c6d06-4823-44d7-865c-e47b8644b116",
-    router: new Router()
-      .match("/", ({ setPageLabel }) => setPageLabel("home"))
-      .match("/recipe/:recipe", ({ setPageLabel }) => setPageLabel("recipe")),
-  }).collect();
-}
 
 const App = (props: AppProps) => {
   // eslint-disable-next-line react/hook-use-state
