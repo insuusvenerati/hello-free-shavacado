@@ -2,7 +2,8 @@ import { SignInButton, UserButton, useSession, useUser } from "@clerk/nextjs";
 import { ActionIcon, Center, Container, Indicator, Text, useMantineColorScheme } from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import { useQuery } from "react-query";
-import { Book2, BrandGithub, Home, Login } from "tabler-icons-react";
+import { HomeIcon, BookmarkIcon, LoginIcon } from "@heroicons/react/outline";
+import { Github } from "@icons-pack/react-simple-icons";
 import { getRecipes } from "../util/getRecipes";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
@@ -11,8 +12,8 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
   if (!isSignedIn) {
     return (
       <SignInButton mode="modal">
-        <ActionIcon color={dark ? "yellow" : "blue"} size="lg">
-          <Login />
+        <ActionIcon color={dark ? "yellow" : "blue"} size="md">
+          <LoginIcon width={24} />
         </ActionIcon>
       </SignInButton>
     );
@@ -22,16 +23,15 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
 
 export const NavbarContent = () => {
   const { session } = useSession();
-  const { data: recipes, isLoading } = useQuery(["recipes", session], () => getRecipes(session), {
-    staleTime: 64000,
+  const { data: numRecipes } = useQuery(["recipes", session], () => getRecipes(session), {
+    staleTime: 60 * 60,
     refetchOnWindowFocus: false,
     enabled: !!session,
+    select: (data) => data.length,
   });
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { isSignedIn } = useUser();
   const dark = colorScheme === "dark";
-
-  const numRecipes = recipes?.length;
 
   return (
     <Container>
@@ -40,8 +40,8 @@ export const NavbarContent = () => {
       </Text>
 
       <Center>
-        <ActionIcon color={dark ? "yellow" : "blue"} component={NextLink} href="/" size="lg" title="Home">
-          <Home />
+        <ActionIcon color={dark ? "yellow" : "blue"} component={NextLink} href="/" size="md" title="Home">
+          <HomeIcon width={24} />
         </ActionIcon>
         <ActionIcon
           color={dark ? "yellow" : "blue"}
@@ -49,9 +49,8 @@ export const NavbarContent = () => {
           onClick={() => toggleColorScheme()}
           size="lg"
           title="Toggle color scheme"
-          variant="outline"
         >
-          {dark ? <SunIcon size={18} /> : <MoonIcon size={18} />}
+          {dark ? <SunIcon size={24} /> : <MoonIcon size={24} />}
         </ActionIcon>
         <ActionIcon
           color={dark ? "yellow" : "blue"}
@@ -61,18 +60,18 @@ export const NavbarContent = () => {
           target="_blank"
           title="Github"
         >
-          <BrandGithub />
+          <Github width={24} />
         </ActionIcon>
         {isSignedIn && (
           <ActionIcon
             color={dark ? "yellow" : "blue"}
             component={NextLink}
             href="/myrecipes"
-            size="lg"
+            size="md"
             title="My Recipes"
           >
-            <Indicator inline label={numRecipes} size={14}>
-              <Book2 />
+            <Indicator inline label={numRecipes} size={12}>
+              <BookmarkIcon width={24} />
             </Indicator>
           </ActionIcon>
         )}

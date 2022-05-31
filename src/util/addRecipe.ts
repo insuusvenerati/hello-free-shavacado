@@ -1,13 +1,12 @@
-import { ActiveSessionResource } from "@clerk/types";
 import { supabaseClient } from "./supabase";
 
-export const addRecipe = async (session: ActiveSessionResource, recipeId: string) => {
+export const addRecipe = async ({ session, recipeSlug, recipeName, openSignIn, imagePath }) => {
   if (!session) {
-    throw new Error("No session available. Are you logged in?");
+    openSignIn({});
   }
 
-  if (!recipeId) {
-    throw new Error("No recipe was given O.o");
+  if (!recipeSlug) {
+    console.log(recipeSlug);
   }
 
   const supabaseAccessToken = await session.getToken({
@@ -15,9 +14,13 @@ export const addRecipe = async (session: ActiveSessionResource, recipeId: string
   });
 
   const supabase = await supabaseClient(supabaseAccessToken);
+
   const { data, error } = await supabase
     .from("recipes")
-    .upsert({ recipe: recipeId, user_id: session.user.id }, { onConflict: "recipe" })
+    .upsert(
+      { recipe: recipeSlug, user_id: session.user.id, name: recipeName, image_path: imagePath },
+      { onConflict: "recipe" },
+    )
     .single();
 
   if (error) {

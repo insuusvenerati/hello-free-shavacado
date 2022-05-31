@@ -5,6 +5,8 @@ export type FavoritedRecipe = {
   recipe: string;
   id: number;
   user_id: string;
+  name: string;
+  image_path: string;
 };
 
 export const getRecipes = async (session: ActiveSessionResource) => {

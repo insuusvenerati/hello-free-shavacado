@@ -1,0 +1,32 @@
+name: "Layer0 Deploy"
+on:
+  push:
+    branches:
+      - "feat/layer0"
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Install packages
+        run: rm -rf node_modules && yarn install --frozen-lockfile # if using yarn for your project
+
+      - name: Deploy to Layer0
+        run: |
+          yarn layer0:deploy -- ${{'--branch=$BRANCH_NAME' || ''}} --token=$deploy_token
+        env:
+          deploy_token: ${{secrets.LAYER0_DEPLOY_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          NEXT_PUBLIC_CLERK_FRONTEND_API: ${{ secrets.NEXT_PUBLIC_CLERK_FRONTEND_API }}
+          NEXT_PUBLIC_SUPABASE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_KEY}}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          CLERK_API_KEY: ${{ secrets.CLERK_API_KEY }}
