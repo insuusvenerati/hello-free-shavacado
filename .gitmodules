@@ -1,0 +1,3 @@
+[submodule "supabase-dev"]
+	path = supabase-dev
+	url = https://github.com/supabase/supabase
