@@ -8,9 +8,7 @@ export const useFilterRecipes = (recipes: RecipeQuery) => {
   const ingredientFilter = useCallback(
     (recipe: Item) => {
       if (recipe && selectedIngredients.length > 0) {
-        return recipe.ingredients.some((ingredient) =>
-          selectedIngredients.includes(ingredient.name),
-        );
+        return recipe.ingredients.some((ingredient) => selectedIngredients.includes(ingredient.name));
       }
       return true;
     },
@@ -20,9 +18,7 @@ export const useFilterRecipes = (recipes: RecipeQuery) => {
   const allergenFilter = useCallback(
     (recipe: Item) => {
       if (recipe && selectedAllergens.length > 0) {
-        return recipe.allergens.every(
-          (ingredient) => !selectedAllergens.includes(ingredient.name),
-        );
+        return recipe.allergens.every((ingredient) => !selectedAllergens.includes(ingredient.name));
       }
       return true;
     },
@@ -30,15 +26,10 @@ export const useFilterRecipes = (recipes: RecipeQuery) => {
   );
 
   const filteredRecipes = useMemo(() => {
-    return recipes?.items.filter(
-      (item) => allergenFilter(item) && ingredientFilter(item),
-    );
+    return recipes?.items.filter((item) => allergenFilter(item) && ingredientFilter(item));
   }, [ingredientFilter, allergenFilter, recipes?.items]);
 
-  const recipesTotal = useMemo(
-    () => Math.floor(recipes?.total / 20),
-    [recipes?.total],
-  );
+  const recipesTotal = Math.floor(recipes?.total / 20);
 
   return {
     filteredRecipes,
