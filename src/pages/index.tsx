@@ -1,4 +1,5 @@
-import { Center, Grid, Loader, LoadingOverlay, Pagination, TextInput } from "@mantine/core";
+import { XIcon } from "@heroicons/react/outline";
+import { ActionIcon, Center, Grid, Loader, Pagination, TextInput, ThemeIcon } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
 import { GetStaticProps } from "next";
 import { useCallback, useEffect, useState } from "react";
@@ -37,6 +38,8 @@ const Home = ({ data: popularRecipes }) => {
     ingredients,
     selectedAllergens,
     selectedIngredients,
+    clearSearchHandler,
+    searchText,
   } = useRecipes();
 
   // const { data: popularRecipes, isLoading: popularRecipesLoading } = usePopularRecipesQuery();
@@ -79,28 +82,35 @@ const Home = ({ data: popularRecipes }) => {
         <Grid justify="center">
           <Grid.Col lg={6} md={12}>
             <TextInput
+              value={searchText}
               error={isError && error.message}
               label="Search"
               onChange={onChangeHandler}
               placeholder="Search"
-              rightSection={isLoading ? <Loader size="sm" /> : undefined}
+              rightSection={
+                isLoading ? (
+                  <Loader size="sm" />
+                ) : filteredRecipes ? (
+                  <ActionIcon onClick={clearSearchHandler} mr="xs">
+                    <ThemeIcon variant="outline">
+                      <XIcon width={16} />
+                    </ThemeIcon>
+                  </ActionIcon>
+                ) : undefined
+              }
               size="md"
-              type="search"
+              type="text"
             />
           </Grid.Col>
         </Grid>
         <Center mb={5} mt={5}>
           <Grid columns={1} justify="center">
             <Grid.Col span={1}>
-              {recipesTotal > 0 && <Pagination onChange={pageChangeHandler} page={page} total={recipesTotal} />}
+              <Pagination onChange={pageChangeHandler} page={page} total={recipesTotal} />
             </Grid.Col>
           </Grid>
         </Center>
-        {filteredRecipes || popularRecipes || !isLoading ? (
-          <FilteredOrPopularRecipesList {...FilteredOrPopularRecipesListProps} />
-        ) : (
-          <LoadingOverlay visible />
-        )}
+        <FilteredOrPopularRecipesList {...FilteredOrPopularRecipesListProps} />
       </MyAppShell>
     </>
   );

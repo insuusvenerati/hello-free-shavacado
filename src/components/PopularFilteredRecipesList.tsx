@@ -8,6 +8,7 @@ type Props = {
   modalHandler: () => void;
   setSelectedRecipe: Dispatch<SetStateAction<Item>>;
   popularRecipes: RecipeQuery;
+  isLoading: boolean;
 };
 
 export const FilteredOrPopularRecipesList = ({
@@ -15,6 +16,7 @@ export const FilteredOrPopularRecipesList = ({
   modalHandler,
   setSelectedRecipe,
   popularRecipes,
+  isLoading,
 }: Props) => {
   if (filteredRecipes) {
     return (
@@ -30,7 +32,7 @@ export const FilteredOrPopularRecipesList = ({
     );
   }
 
-  if (popularRecipes) {
+  if (popularRecipes && !isLoading) {
     return (
       <>
         <Title align="center" order={1}>

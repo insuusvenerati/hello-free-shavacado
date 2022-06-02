@@ -1,5 +1,5 @@
 import { SignInButton, UserButton, useSession, useUser } from "@clerk/nextjs";
-import { ActionIcon, Center, Container, Indicator, Text, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Center, Container, Indicator, Text, ThemeIcon, useMantineColorScheme } from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import { useQuery } from "react-query";
 import { HomeIcon, BookmarkIcon, LoginIcon } from "@heroicons/react/outline";
@@ -13,7 +13,9 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
     return (
       <SignInButton mode="modal">
         <ActionIcon color={dark ? "yellow" : "blue"} size="md">
-          <LoginIcon width={24} />
+          <ThemeIcon>
+            <LoginIcon width={24} />
+          </ThemeIcon>
         </ActionIcon>
       </SignInButton>
     );
@@ -41,7 +43,9 @@ export const NavbarContent = () => {
 
       <Center>
         <ActionIcon color={dark ? "yellow" : "blue"} component={NextLink} href="/" size="md" title="Home">
-          <HomeIcon width={24} />
+          <ThemeIcon variant="outline">
+            <HomeIcon width={24} />
+          </ThemeIcon>
         </ActionIcon>
         <ActionIcon
           color={dark ? "yellow" : "blue"}
@@ -50,7 +54,7 @@ export const NavbarContent = () => {
           size="lg"
           title="Toggle color scheme"
         >
-          {dark ? <SunIcon size={24} /> : <MoonIcon size={24} />}
+          <ThemeIcon variant="outline">{dark ? <SunIcon size={24} /> : <MoonIcon size={24} />}</ThemeIcon>
         </ActionIcon>
         <ActionIcon
           color={dark ? "yellow" : "blue"}
@@ -60,7 +64,9 @@ export const NavbarContent = () => {
           target="_blank"
           title="Github"
         >
-          <Github width={24} />
+          <ThemeIcon variant="outline">
+            <Github width={22} />
+          </ThemeIcon>
         </ActionIcon>
         {isSignedIn && (
           <ActionIcon
@@ -70,11 +76,14 @@ export const NavbarContent = () => {
             size="md"
             title="My Recipes"
           >
-            <Indicator inline label={numRecipes} size={12}>
-              <BookmarkIcon width={24} />
+            <Indicator disabled={numRecipes < 1} label={<Text size="xs">{numRecipes}</Text>} size={16}>
+              <ThemeIcon variant="outline">
+                <BookmarkIcon width={24} />
+              </ThemeIcon>
             </Indicator>
           </ActionIcon>
         )}
+
         <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
       </Center>
     </Container>
