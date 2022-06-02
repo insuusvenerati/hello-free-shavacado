@@ -20,6 +20,7 @@ import { NextLink } from "@mantine/next";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { Fragment } from "react";
 import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
 import { NavbarContent } from "../../components/NavContent";
 import { RecipeQuery } from "../../types/recipes";
@@ -185,8 +186,8 @@ const Recipe = ({ data: recipes }: { data: RecipeQuery }) => {
               <Title order={2}>Instructions</Title>
               <List listStyleType="none" size="xl">
                 {recipe?.steps?.map((step) => (
-                  <>
-                    <Group key={step.index + Math.random()} mb={24}>
+                  <Fragment key={step.index}>
+                    <Group mb={24}>
                       {step.images.map((image) => (
                         <Image
                           alt={image.caption}
@@ -201,7 +202,7 @@ const Recipe = ({ data: recipes }: { data: RecipeQuery }) => {
                       <List.Item sx={{ maxWidth: 600 }}>{step?.instructions}</List.Item>
                     </Group>
                     <Divider my="sm" />
-                  </>
+                  </Fragment>
                 ))}
               </List>
             </Group>
