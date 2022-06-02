@@ -4,6 +4,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "s:start": "supabase start",
+    "s:migrate": "supabase db commit create_recipes",
     "test": "vitest",
     "prettier": "prettier --write src/",
     "export": "next export",

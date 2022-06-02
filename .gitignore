@@ -48,3 +48,7 @@ tmp/
 
 # Layer0 generated build directory
 .layer0
+
+# Supabase
+**/supabase/.branches
+**/supabase/.temp
