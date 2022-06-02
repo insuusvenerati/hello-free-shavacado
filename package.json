@@ -13,7 +13,7 @@
     "semantic-release": "semantic-release"
   },
   "name": "hello-free-shavacado",
-  "version": "1.5.0-develop.1",
+  "version": "1.5.0-develop.2",
   "private": true,
   "dependencies": {
     "@clerk/nextjs": "3.6.5",
