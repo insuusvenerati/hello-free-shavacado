@@ -46,6 +46,10 @@ export const useRecipes = () => {
     ...new Set(recipes?.items?.map((recipe) => recipe.ingredients.map((ingredient) => ingredient.name)).flat()),
   ];
 
+  const clearSearchHandler = useCallback(() => {
+    setSearchText("");
+  }, []);
+
   const onChangeHandler = useCallback(
     (event) => {
       setSearchText(event.target.value);
@@ -80,6 +84,7 @@ export const useRecipes = () => {
     recipesTotal,
     page,
     setSelectedRecipe,
+    clearSearchHandler,
     onChangeHandler,
     pageChangeHandler,
     handleSetSelectedIngredients,
@@ -88,5 +93,6 @@ export const useRecipes = () => {
     ingredients,
     selectedAllergens,
     selectedIngredients,
+    searchText,
   };
 };
