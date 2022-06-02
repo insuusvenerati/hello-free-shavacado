@@ -10,8 +10,12 @@ export type FavoritedRecipe = {
 };
 
 export const getRecipes = async (session: ActiveSessionResource) => {
-  const supabaseAccessToken = await session?.getToken({ template: "supabase" });
-  const supabase = await supabaseClient(supabaseAccessToken);
-  const { data } = await supabase.from<FavoritedRecipe>("recipes").select("*");
-  return data;
+  try {
+    const supabaseAccessToken = await session?.getToken({ template: "supabase" });
+    const supabase = await supabaseClient(supabaseAccessToken);
+    const { data } = await supabase.from<FavoritedRecipe>("recipes").select("*");
+    return data;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
