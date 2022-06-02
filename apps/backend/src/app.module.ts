@@ -14,7 +14,6 @@ import { LoggerMiddleware } from './logger.middleware';
 import { PlaceholderModule } from './placeholder/placeholder.module';
 import * as redisStore from 'cache-manager-ioredis';
 
-const oneDay = 60 * 60 * 24;
 const ENV = process.env.NODE_ENV;
 
 @Module({

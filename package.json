@@ -13,10 +13,15 @@
     "lint": "turbo run lint"
   },
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "devDependencies": {
     "prettier": "^2.6.2",
     "turbo": "^1.2.15"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "TIMING=1 eslint --cache --fix",
+    "*.{ts,tsx,css,md}": "prettier --write"
   }
 }
