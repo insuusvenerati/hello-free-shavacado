@@ -6,6 +6,9 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    outputStandalone: true,
+  },
   sentry: {
     disableServerWebpackPlugin: process.env.NODE_ENV === "development",
     disableClientWebpackPlugin: process.env.NODE_ENV === "development",

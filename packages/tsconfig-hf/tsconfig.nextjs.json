@@ -1,8 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Next.js",
-  "extends": "./base.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "downlevelIteration": true,
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,

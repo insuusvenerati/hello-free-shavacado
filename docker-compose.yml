@@ -1,14 +1,12 @@
 version: "3"
 services:
-  redis:
-    image: bitnami/redis:latest
-    container_name: redis
-    ports:
-      - 6379:6379
-    volumes:
-      - data:/bitnami/redis/data
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+  backend:
+    build:
+      context: apps/backend
+      dockerfile: Dockerfile
 
-volumes:
-  data:
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    env_file: .env

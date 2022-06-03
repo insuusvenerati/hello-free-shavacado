@@ -10,18 +10,40 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "test": "turbo run test",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "stop": "turbo run stop",
+    "commit": "cz"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "dotenv": "^16.0.1",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.0",
+    "nps": "^5.10.0",
+    "nps-utils": "^1.7.0",
     "prettier": "^2.6.2",
-    "turbo": "^1.2.15"
+    "semantic-release": "^19.0.2",
+    "turbo": "^1.2.16"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "eslint --cache --fix",
+    "*.{ts,tsx}": "TIMING=1 eslint --cache --fix",
     "*.{ts,tsx,css,md}": "prettier --write"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "volta": {
+    "node": "14.19.3",
+    "yarn": "1.22.18",
+    "npm": "8.12.1"
   }
 }
