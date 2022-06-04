@@ -1,6 +1,8 @@
+import { useUser } from "@clerk/nextjs";
 import { XIcon } from "@heroicons/react/outline";
 import { ActionIcon, Center, Grid, Loader, Pagination, TextInput, ThemeIcon } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
+import LogRocket from "logrocket";
 import { GetStaticProps } from "next";
 import { useCallback, useEffect, useState } from "react";
 import { MyAppShell } from "../components/MyAppShell";
@@ -20,6 +22,7 @@ export const getStaticProps: GetStaticProps = async () => {
 const Home = ({ data: popularRecipes }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const token = getCookie("token") as string;
+  const { user } = useUser();
 
   const {
     isLoading,
@@ -47,6 +50,15 @@ const Home = ({ data: popularRecipes }) => {
   const modalHandler = useCallback(() => {
     setModalVisible(!modalVisible);
   }, [modalVisible]);
+
+  useEffect(() => {
+    if (user) {
+      LogRocket.identify(user.id, {
+        name: user.fullName,
+        email: user.primaryEmailAddress.emailAddress,
+      });
+    }
+  }, [user]);
 
   // Get token
   useEffect(() => {

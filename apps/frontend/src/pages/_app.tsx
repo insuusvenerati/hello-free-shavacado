@@ -2,11 +2,14 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
+import LogRocket from "logrocket";
+import setupLogRocketReact from "logrocket-react";
+import * as Sentry from "@sentry/nextjs";
 import { DefaultSeo } from "next-seo";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import Script from "next/script";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import SEO from "../../next-seo.config";
@@ -21,6 +24,16 @@ const App = (props: AppProps) => {
     defaultValue: "light",
     getInitialValueInEffect: true,
   });
+
+  useEffect(() => {
+    LogRocket.init("stiforr/hello-free-shavacado");
+    setupLogRocketReact(LogRocket);
+    LogRocket.getSessionURL((sessionURL) => {
+      Sentry.configureScope((scope) => {
+        scope.setExtra("sessionURL", sessionURL);
+      });
+    });
+  }, []);
 
   const toggleColorScheme = useCallback(
     () => setColorScheme((current) => (current === "dark" ? "light" : "dark")),

@@ -1,4 +1,4 @@
-const { concurrent } = require("nps-utils");
+const { concurrent, series } = require("nps-utils");
 const backendPackage = require("./apps/backend/package.json");
 const frontendPackage = require("./apps/frontend/package.json");
 require("dotenv").config();
@@ -20,7 +20,7 @@ module.exports = {
   scripts: {
     prepare: {
       description: "This sets up the project folder with dependencies and services",
-      default: concurrent.nps("prepare.frontend", "prepare.backend", "prepare.supabase"),
+      default: series.nps("prepare.frontend", "prepare.backend", "prepare.supabase"),
       frontend: "yarn install",
       backend: "docker-compose -f apps/backend/docker-compose.yml up -d",
       supabase: "nps supabase.start",

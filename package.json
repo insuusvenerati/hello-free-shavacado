@@ -12,6 +12,7 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "stop": "turbo run stop",
+    "start": "turbo run start",
     "commit": "cz"
   },
   "workspaces": {

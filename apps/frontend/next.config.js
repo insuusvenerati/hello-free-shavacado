@@ -40,4 +40,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withBundleAnalyzer(withPWA(nextConfig));
+module.exports = withSentryConfig(withBundleAnalyzer(withPWA(nextConfig)));

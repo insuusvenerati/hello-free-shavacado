@@ -10,6 +10,8 @@ services:
         - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
         - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+        - PM2_PUBLIC_KEY=${PM2_PUBLIC_KEY}
+        - PM2_SECRET_KEY=${PM2_SECRET_KEY}
     env_file: apps/frontend/.env.production.local
 
   nginx:

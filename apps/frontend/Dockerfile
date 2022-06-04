@@ -29,6 +29,11 @@ RUN yarn build --filter={./apps/frontend}...
 FROM node:16-alpine AS runner
 WORKDIR /app
 
+ARG PM2_PUBLIC_KEY
+ARG PM2_SECRET_KEY
+ENV PM2_PUBLIC_KEY=${PM2_PUBLIC_KEY}
+ENV PM2_SECRET_KEY=${PM2_SECRET_KEY}
+
 ENV NODE_ENV production
 
 RUN addgroup --system --gid 1001 nodejs
@@ -49,4 +54,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD [ "pm2-runtime", "server.js"]
+CMD [ "pm2-runtime", "server.js", "-i", "4"]
