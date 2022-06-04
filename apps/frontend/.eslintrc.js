@@ -1,4 +1,1 @@
-module.exports = {
-  root: true,
-  extends: ["eslint-config-hf"],
-};
+module.exports = require("@stiforr/eslint-config-hf");

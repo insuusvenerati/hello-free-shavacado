@@ -1,9 +1,9 @@
 module.exports = {
-  settings: {
-    next: {
-      rootDir: ["apps/*/", "packages/*/"],
-    },
-  },
+  // settings: {
+  //   next: {
+  //     rootDir: ["apps/*/", "packages/*/"],
+  //   },
+  // },
   extends: ["next/core-web-vitals"],
   plugins: ["unused-imports"],
   rules: {

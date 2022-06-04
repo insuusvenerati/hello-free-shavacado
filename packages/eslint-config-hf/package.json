@@ -1,8 +1,11 @@
 {
-  "name": "eslint-config-hf",
+  "name": "@stiforr/eslint-config-hf",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "files": [
+    "index.js"
+  ],
   "devDependencies": {
     "eslint": "8.15.0",
     "eslint-config-next": "12.1.5",

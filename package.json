@@ -14,10 +14,15 @@
     "stop": "turbo run stop",
     "commit": "cz"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "nohoist": [
+      "@stiforr/frontend/**"
+    ]
+  },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
@@ -42,7 +47,7 @@
     }
   },
   "volta": {
-    "node": "14.19.3",
+    "node": "16.15.1",
     "yarn": "1.22.18",
     "npm": "8.12.1"
   }

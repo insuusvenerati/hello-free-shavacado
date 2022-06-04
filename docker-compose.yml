@@ -1,12 +1,18 @@
 version: "3"
 services:
-  backend:
-    build:
-      context: apps/backend
-      dockerfile: Dockerfile
-
-  frontend:
+  nextjs:
     build:
       context: .
       dockerfile: apps/frontend/Dockerfile
-    env_file: .env
+      args:
+        - NEXT_PUBLIC_CLERK_FRONTEND_API=${NEXT_PUBLIC_CLERK_FRONTEND_API}
+        - NEXT_PUBLIC_SUPABASE_KEY=${NEXT_PUBLIC_SUPABASE_KEY}
+        - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+    env_file: apps/frontend/.env.production.local
+
+  nginx:
+    build: docker/nginx
+    ports:
+      - 8080:80
