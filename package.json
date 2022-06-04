@@ -39,7 +39,7 @@
     "turbo": "^1.2.16"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "TIMING=1 eslint --cache --fix",
+    "*.{ts,tsx}": "eslint --cache --fix",
     "*.{ts,tsx,css,md}": "prettier --write"
   },
   "config": {
