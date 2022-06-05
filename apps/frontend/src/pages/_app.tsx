@@ -46,7 +46,7 @@ const App = (props: AppProps) => {
     <>
       <Head>
         <meta content="minimum-scale=1, initial-scale=1, width=device-width" name="viewport" />
-        <link href="/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180" />
+        <link href="/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />
         <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
         <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
         <link href="/site.webmanifest" rel="manifest" />
