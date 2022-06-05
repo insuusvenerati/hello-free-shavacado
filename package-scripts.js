@@ -50,5 +50,11 @@ module.exports = {
       description: "Destroys backend services",
       default: concurrent.nps("supabase.stop", "docker.backend.down"),
     },
+    clean: {
+      description: "Remove dev and build outputs from all projects",
+      default: series.nps("clean.buildArtifacts", "clean.nodeModules"),
+      buildArtifacts: "rimraf apps/frontend/.next apps/backend/dist",
+      nodeModules: "rimraf node_modules apps/frontend/node_modules apps/backend/node_modules",
+    },
   },
 };

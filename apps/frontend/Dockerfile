@@ -26,6 +26,8 @@ ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
 
 RUN yarn build --filter={./apps/frontend}...
 
+# ---
+
 FROM node:16-alpine AS runner
 WORKDIR /app
 

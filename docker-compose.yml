@@ -1,6 +1,8 @@
 version: "3"
 services:
   nextjs:
+    image: hello-free-shavacado-frontend
+    container_name: hello-free-shavacado-frontend
     build:
       context: .
       dockerfile: apps/frontend/Dockerfile
@@ -10,11 +12,23 @@ services:
         - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
         - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
-        - PM2_PUBLIC_KEY=${PM2_PUBLIC_KEY}
-        - PM2_SECRET_KEY=${PM2_SECRET_KEY}
-    env_file: apps/frontend/.env.production.local
+  nestjs:
+    image: hello-free-shavacado-backend
+    container_name: hello-free-shavacado-backend
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    ports:
+      - 4000:4000
+    environment:
+      - REDISHOST=$REDISHOST
+      - REDISPORT=$REDISPORT
+      - REDISPASSWORD=$REDISPASSWORD
+    env_file: .env
 
   nginx:
+    container_name: hello-free-shavacado-proxy
+    image: hello-free-shavacado-proxy
     build: docker/nginx
     ports:
       - 8080:80
