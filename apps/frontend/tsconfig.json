@@ -1,0 +1,5 @@
+{
+  "extends": "@stiforr/tsconfig-hf/tsconfig.nextjs.json",
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "jest.setup.js"],
+  "exclude": ["node_modules"]
+}
