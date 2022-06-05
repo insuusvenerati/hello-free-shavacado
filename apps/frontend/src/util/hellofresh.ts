@@ -36,7 +36,7 @@ export const hellofreshSearch = async (
 
   // console.log(ingredients);
 
-  const response = await ky.get(`${HELLOFRESH_SEARCH_URL}?page=${page}&q=${searchText}`, {
+  const response = await fetch(`${HELLOFRESH_SEARCH_URL}?page=${page}&q=${searchText}`, {
     headers: { authorization: `Bearer ${token}` },
   });
 
@@ -44,7 +44,7 @@ export const hellofreshSearch = async (
 };
 
 export const hellofreshSearchBySlug = async ({ slug }: { slug: string; take?: number }): Promise<RecipeQuery> => {
-  const response = await ky.get(`${HELLOFRESH_SEARCH_URL}/recipe?q=${slug}`);
+  const response = await fetch(`${HELLOFRESH_SEARCH_URL}/recipe?q=${slug}`);
 
   return await response.json();
 };

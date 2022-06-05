@@ -22,7 +22,7 @@ const ENV = process.env.NODE_ENV;
       envFilePath: !ENV ? '.env' : `.env.${ENV}`,
     }),
     CacheModule.register({
-      ttl: 1,
+      ttl: 60 * 60,
       store: redisStore,
       host: process.env.REDISHOST,
       port: +process.env.REDISPORT || 6379,

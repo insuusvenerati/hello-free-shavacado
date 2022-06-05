@@ -67,6 +67,7 @@ const Recipe = ({ data: recipes }: { data: RecipeQuery }) => {
       <Head>
         <meta property="og:image" content={`${HF_OG_IMAGE_URL}${recipe.imagePath}`} />
         <meta property="og:description" content={recipe.description} />
+        <title> {recipe.name} </title>
       </Head>
       <Header height={70} mt={12}>
         <NavbarContent />
