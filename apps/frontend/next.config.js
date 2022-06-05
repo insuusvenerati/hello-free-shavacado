@@ -4,11 +4,13 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
+const onVercel = process.env.VERCEL === 1;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // experimental: {
-  //   outputStandalone: true,
-  // },
+  experimental: {
+    outputStandalone: !onVercel,
+  },
   sentry: {
     disableServerWebpackPlugin: process.env.NODE_ENV === "development",
     disableClientWebpackPlugin: process.env.NODE_ENV === "development",
