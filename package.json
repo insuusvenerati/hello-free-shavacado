@@ -13,7 +13,8 @@
     "lint": "turbo run lint",
     "stop": "turbo run stop",
     "start": "turbo run start",
-    "commit": "cz"
+    "commit": "cz",
+    "semantic-release": "semantic-release"
   },
   "workspaces": {
     "packages": [
@@ -36,6 +37,7 @@
     "nps-utils": "^1.7.0",
     "prettier": "^2.6.2",
     "semantic-release": "^19.0.2",
+    "semantic-release-monorepo": "^7.0.5",
     "turbo": "^1.2.16"
   },
   "lint-staged": {
