@@ -18,6 +18,7 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
 import { GetStaticPaths, GetStaticProps } from "next";
+import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
@@ -28,6 +29,7 @@ import {
   HELLOFRESH_SEARCH_URL,
   HF_AVATAR_IMAGE_URL,
   HF_ICON_IMAGE_URL,
+  HF_OG_IMAGE_URL,
   HF_PLACEHOLDERURL,
   HF_STEP_IMAGE_URL,
 } from "../../util/constants";
@@ -62,6 +64,10 @@ const Recipe = ({ data: recipes }: { data: RecipeQuery }) => {
 
   return (
     <>
+      <Head>
+        <meta property="og:image" content={`${HF_OG_IMAGE_URL}${recipe.imagePath}`} />
+        <meta property="og:description" content={recipe.description} />
+      </Head>
       <Header height={70} mt={12}>
         <NavbarContent />
       </Header>

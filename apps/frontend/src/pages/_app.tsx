@@ -56,6 +56,7 @@ const App = (props: AppProps) => {
         <title>Hello Free Shavacado</title>
         <meta content="Search for Hello Fresh recipes by ingredient" name="description" />
       </Head>
+      <DefaultSeo {...SEO} />
       <Script
         async
         data-website-id="679de944-0e27-4e1e-aa33-efc4feddd5bb"
@@ -65,7 +66,6 @@ const App = (props: AppProps) => {
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
-            <DefaultSeo {...SEO} />
             <ClerkProvider frontendApi={CLERK_FRONTEND_KEY} {...pageProps}>
               <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen={false} />
