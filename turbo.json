@@ -8,6 +8,14 @@
     "build": {
       "dependsOn": ["^build"]
     },
+    "frontend#build": {
+      "dependsOn": [
+        "$NEXT_PUBLIC_CLERK_FRONTEND_API",
+        "$NEXT_PUBLIC_SUPABASE_KEY",
+        "$NEXT_PUBLIC_SUPABASE_URL",
+        "$NEXT_PUBLIC_API_URL"
+      ]
+    },
     "test": {
       "dependsOn": ["^build"],
       "outputs": []

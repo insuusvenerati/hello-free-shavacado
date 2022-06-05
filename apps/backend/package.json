@@ -54,7 +54,6 @@
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.0.0",
     "typescript": "^4.3.5",
-    "@stiforr/eslint-config-hf": "*",
     "@stiforr/tsconfig-hf": "*"
   },
   "jest": {
