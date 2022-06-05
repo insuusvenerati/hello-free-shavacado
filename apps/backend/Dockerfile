@@ -1,16 +1,16 @@
 FROM node:16-alpine as builder
 
-ENV NODE_ENV build
+WORKDIR /app
 
-USER node
-WORKDIR /home/node
+COPY yarn.lock yarn.lock
+COPY package.json package.json
+COPY apps/backend apps/backend
+COPY packages/tsconfig-hf packages/tsconfig-hf
+COPY turbo.json turbo.json
 
-COPY package.json ./
-COPY yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-COPY --chown=node:node . .
-RUN yarn build
+RUN yarn build --filter=@stiforr/backend...
 
 # ---
 
@@ -18,15 +18,17 @@ FROM node:16-alpine
 
 ENV NODE_ENV production
 
-USER node
-WORKDIR /home/node
+RUN npm i -g pm2
 
-ARG PORT
+USER node
+WORKDIR /app
+
+ENV REDISHOST=${REDISPORT}
+ENV REDISPORT=${REDISPORT}
 ENV PORT=${PORT}
 
-COPY --from=builder --chown=node:node /home/node/package.json ./
-COPY --from=builder --chown=node:node /home/node/yarn.lock ./
-COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
-COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
+COPY --from=builder --chown=node:node /app/apps/backend/package.json ./
+COPY --from=builder --chown=node:node /app/apps/backend/dist ./dist
+COPY --from=builder --chown=node:node /app/node_modules/ ./node_modules/
 
-CMD ["node", "dist/main.js"]
+CMD ["pm2-runtime", "dist/main.js"]

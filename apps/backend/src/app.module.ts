@@ -25,7 +25,7 @@ const ENV = process.env.NODE_ENV;
       ttl: 1,
       store: redisStore,
       host: process.env.REDISHOST,
-      port: +process.env.REDISPORT,
+      port: +process.env.REDISPORT || 6379,
       // family: 6,
       password: process.env.REDISPASSWORD,
     }),
