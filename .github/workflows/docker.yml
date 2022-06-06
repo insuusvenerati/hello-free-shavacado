@@ -17,7 +17,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/insuusvenerati/hello-free-shavacado
+            ghcr.io/insuusvenerati/hello-free-shavacado-${{ matrix.app }}
           tags: |
             type=schedule
             type=ref,event=branch
