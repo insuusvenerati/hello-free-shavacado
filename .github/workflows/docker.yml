@@ -1,9 +1,6 @@
 name: docker
 
-on:
-  push:
-    branches:
-      - "feat/monorepo"
+on: push
 
 jobs:
   docker:
