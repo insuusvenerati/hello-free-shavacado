@@ -28,9 +28,9 @@ jobs:
             ghcr.io/insuusvenerati/hello-free-shavacado-${{ matrix.app }}
           tags: |
             type=ref,event=branch
-            type=pep440,pattern={{version}}
-            type=pep440,pattern={{major}}.{{minor}}
-            type=pep440,pattern={{major}}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
             type=sha
 
       - name: Set up QEMU
