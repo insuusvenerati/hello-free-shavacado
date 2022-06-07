@@ -2,6 +2,7 @@
   "extends": "@stiforr/tsconfig-hf/tsconfig.nestjs.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "resolveJsonModule": true
   }
 }
