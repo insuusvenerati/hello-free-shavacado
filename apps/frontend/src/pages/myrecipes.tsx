@@ -14,7 +14,11 @@ const RecipeList = () => {
   const [recipes, setRecipes] = useState<RecipeQuery[]>();
   const [modalVisible, setModalVisible] = useState(false);
   const { setSelectedRecipe } = useRecipes();
-  const { data: favoriteRecipes, isLoading } = useQuery(["recipes", session], () => getRecipes(session));
+  const { data: favoriteRecipes, isLoading } = useQuery(
+    ["recipes", session],
+    () => getRecipes(session),
+    { enabled: !!session },
+  );
 
   useEffect(() => {
     const getRecipesFromFavorites = async () =>
@@ -56,7 +60,11 @@ const RecipeList = () => {
               const recipe = items.items[0];
               return (
                 <Grid.Col key={recipe.id} md={1} sm={2}>
-                  <RecipeCard handler={modalHandler} recipe={recipe} setSelectedRecipe={setSelectedRecipe} />
+                  <RecipeCard
+                    handler={modalHandler}
+                    recipe={recipe}
+                    setSelectedRecipe={setSelectedRecipe}
+                  />
                 </Grid.Col>
               );
             })}
