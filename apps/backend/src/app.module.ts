@@ -19,7 +19,7 @@ const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: !ENV ? '.env' : `.env.${ENV}`,
+      envFilePath: !ENV ? '.env' : `.env.${ENV}.local`,
     }),
     CacheModule.register({
       ttl: ENV === 'development' ? 1 : 60 * 60,
