@@ -27,6 +27,7 @@ export const hellofreshGetToken = async () => {
 export const hellofreshSearch = async (
   searchText: string,
   token: string,
+  stoken: string,
   options?: HelloFreshSearchOptions,
 ): Promise<RecipeQuery> => {
   const { page, tag, maxPrepTime, difficulty, take = 20 } = options;
@@ -34,16 +35,22 @@ export const hellofreshSearch = async (
     throw new Error("Missing token");
   }
 
-  // console.log(ingredients);
-
-  const response = await fetch(`${HELLOFRESH_SEARCH_URL}?page=${page}&q=${searchText}`, {
-    headers: { authorization: `Bearer ${token}` },
-  });
+  const response = await fetch(
+    `${HELLOFRESH_SEARCH_URL}?page=${page}&q=${searchText}&stoken=${stoken}`,
+    {
+      headers: { authorization: `Bearer ${token}` },
+    },
+  );
 
   return await response.json();
 };
 
-export const hellofreshSearchBySlug = async ({ slug }: { slug: string; take?: number }): Promise<RecipeQuery> => {
+export const hellofreshSearchBySlug = async ({
+  slug,
+}: {
+  slug: string;
+  take?: number;
+}): Promise<RecipeQuery> => {
   const response = await fetch(`${HELLOFRESH_SEARCH_URL}/recipe?q=${slug}`);
 
   return await response.json();
