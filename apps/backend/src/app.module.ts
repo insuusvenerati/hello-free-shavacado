@@ -19,10 +19,10 @@ const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: !ENV ? '.env' : `.env.${ENV}`,
+      envFilePath: !ENV ? '.env' : `.env.${ENV}.local`,
     }),
     CacheModule.register({
-      ttl: 60 * 60,
+      ttl: ENV === 'development' ? 1 : 60 * 60,
       store: redisStore,
       host: process.env.REDISHOST,
       port: +process.env.REDISPORT || 6379,
@@ -39,7 +39,7 @@ const ENV = process.env.NODE_ENV;
   ],
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
+  public configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggerMiddleware).forRoutes(`*`);
   }
 }

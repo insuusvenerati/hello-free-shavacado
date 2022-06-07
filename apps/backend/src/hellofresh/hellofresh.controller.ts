@@ -7,7 +7,7 @@ export class HellofreshController {
 
   @Get()
   findAll(@Query() query) {
-    return this.hellofreshService.findAll(query.q, query.page);
+    return this.hellofreshService.findAll(query.q, query.page, query.stoken);
   }
 
   @Get('recipe')

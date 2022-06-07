@@ -13,7 +13,7 @@
     "dev": "NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "TIMING=1 eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -26,6 +26,7 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^8.0.0",
+    "@supabase/supabase-js": "^1.35.3",
     "axios": "^0.27.2",
     "cache-manager": "^3.6.1",
     "cache-manager-ioredis": "^2.1.0",
@@ -39,6 +40,7 @@
     "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
+    "@stiforr/tsconfig-hf": "*",
     "@types/cache-manager": "^3.4.3",
     "@types/cache-manager-ioredis": "^2.0.2",
     "@types/express": "^4.17.13",
@@ -53,8 +55,7 @@
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.0.0",
-    "typescript": "^4.3.5",
-    "@stiforr/tsconfig-hf": "*"
+    "typescript": "^4.3.5"
   },
   "jest": {
     "moduleFileExtensions": [
