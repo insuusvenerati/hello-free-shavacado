@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 
 services:
   redis:
@@ -9,9 +9,7 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
     ports:
-      - '6379:6379'
-    volumes:
-      - 'redis_data:/bitnami/redis/data'
+      - "6379:6379"
 
   redis-commander:
     image: rediscommander/redis-commander:latest
@@ -19,7 +17,14 @@ services:
     environment:
       - REDIS_HOSTS=local:redis:6379
     ports:
-      - '8081:8081'
+      - "8081:8081"
+
+  postgresql:
+    image: docker.io/bitnami/postgresql:14
+    ports:
+      - "5432:5432"
+    environment:
+      - "ALLOW_EMPTY_PASSWORD=yes"
 
   pgadmin:
     container_name: pgadmin4_container
@@ -28,8 +33,5 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
-    network_mode: host
-
-volumes:
-  redis_data:
-    driver: local
+    ports:
+      - 8080:80
