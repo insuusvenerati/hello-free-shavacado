@@ -1,31 +1,37 @@
-import { supabaseClient } from "./supabase";
+import { API_URL } from "./constants";
+import { ActiveSessionResource, SignInProps } from "@clerk/types";
 
-export const addRecipe = async ({ session, recipeSlug, recipeName, openSignIn, imagePath }) => {
+export const addRecipe = async ({
+  session,
+  recipeSlug,
+  recipeName,
+  openSignIn,
+  imagePath,
+}: {
+  session: ActiveSessionResource;
+  recipeSlug: string;
+  recipeName: string;
+  openSignIn: (signInProps?: SignInProps) => void;
+  imagePath: string;
+}) => {
   if (!session) {
     openSignIn({});
   }
 
-  if (!recipeSlug) {
-    console.log(recipeSlug);
-  }
-
-  const supabaseAccessToken = await session.getToken({
-    template: "supabase",
+  const response = await fetch(`${API_URL}/recipe`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      recipe: recipeSlug,
+      name: recipeName,
+      userId: session.user.id,
+      imagePath,
+    }),
   });
 
-  const supabase = await supabaseClient(supabaseAccessToken);
-
-  const { data, error } = await supabase
-    .from("recipes")
-    .upsert(
-      { recipe: recipeSlug, user_id: session.user.id, name: recipeName, image_path: imagePath },
-      { onConflict: "recipe" },
-    )
-    .single();
-
-  if (error) {
-    throw error;
-  }
+  const data = await response.json();
 
   return { data };
 };

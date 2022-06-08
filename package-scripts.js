@@ -20,7 +20,7 @@ module.exports = {
   scripts: {
     prepare: {
       description: "This sets up the project folder with dependencies and services",
-      default: series.nps("prepare.frontend", "prepare.backend", "prepare.supabase"),
+      default: series.nps("prepare.frontend", "prepare.backend"),
       frontend: "yarn install",
       backend: "docker-compose -f apps/backend/docker-compose.yml up -d",
       supabase: "nps supabase.start",
@@ -48,7 +48,7 @@ module.exports = {
     },
     down: {
       description: "Destroys backend services",
-      default: concurrent.nps("supabase.stop", "docker.backend.down"),
+      default: concurrent.nps("docker.backend.down"),
     },
     clean: {
       description: "Remove dev and build outputs from all projects",

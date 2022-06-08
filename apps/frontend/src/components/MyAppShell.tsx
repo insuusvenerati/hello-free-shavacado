@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/forbid-component-props */
-import { useSession } from "@clerk/nextjs";
 import {
   AppShell,
   Aside,
@@ -41,17 +40,19 @@ type AppShellProps = {
 };
 
 // eslint-disable-next-line react/display-name
-const MySelectItem = forwardRef<HTMLDivElement, ItemProps>(({ image, label, ...others }: ItemProps, ref) => (
-  <div ref={ref} {...others}>
-    <Group noWrap>
-      <Avatar src={image} />
+const MySelectItem = forwardRef<HTMLDivElement, ItemProps>(
+  ({ image, label, ...others }: ItemProps, ref) => (
+    <div ref={ref} {...others}>
+      <Group noWrap>
+        <Avatar src={image} />
 
-      <div>
-        <Text>{label}</Text>
-      </div>
-    </Group>
-  </div>
-));
+        <div>
+          <Text>{label}</Text>
+        </div>
+      </Group>
+    </div>
+  ),
+);
 
 export const MyAppShell = ({ children, ...props }: AppShellProps) => {
   const {
@@ -62,8 +63,8 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
     handleSetSelectedIngredients,
     selectedIngredients,
   } = props;
-  const { session } = useSession();
-  const { data: recipes, isLoading } = useQuery(["recipes", session], () => getRecipes(session), {
+
+  const { data: recipes, isLoading } = useQuery(["recipes"], () => getRecipes(), {
     staleTime: 60 * 60 * 24,
     refetchOnWindowFocus: false,
     notifyOnChangeProps: ["data", "error"],

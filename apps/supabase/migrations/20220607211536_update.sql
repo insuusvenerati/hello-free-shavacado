@@ -59,49 +59,50 @@ GRANT EXECUTE ON FUNCTION public.fn_ksuid() TO anon;
 GRANT EXECUTE ON FUNCTION public.fn_ksuid() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.fn_ksuid() TO postgres;
 GRANT EXECUTE ON FUNCTION public.fn_ksuid() TO service_role;
-CREATE OR REPLACE FUNCTION public.requesting_user_id() RETURNS text LANGUAGE 'sql' COST 100 STABLE PARALLEL UNSAFE AS $BODY$
-select nullif(
-		current_setting('request.jwt.claims', true)::json->>'sub',
-		''
-	)::text;
-$BODY$;
-ALTER FUNCTION public.requesting_user_id() OWNER TO supabase_admin;
-GRANT EXECUTE ON FUNCTION public.requesting_user_id() TO PUBLIC;
-GRANT EXECUTE ON FUNCTION public.requesting_user_id() TO anon;
-GRANT EXECUTE ON FUNCTION public.requesting_user_id() TO authenticated;
-GRANT EXECUTE ON FUNCTION public.requesting_user_id() TO postgres;
-GRANT EXECUTE ON FUNCTION public.requesting_user_id() TO service_role;
-GRANT EXECUTE ON FUNCTION public.requesting_user_id() TO supabase_admin;
-CREATE TABLE IF NOT EXISTS public.hellofresh (
-	created_at timestamp with time zone DEFAULT now(),
-	recipe jsonb,
-	id text NOT NULL DEFAULT public.fn_ksuid(),
-	CONSTRAINT hellofresh_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
-ALTER TABLE IF EXISTS public.hellofresh OWNER to postgres;
-GRANT ALL ON TABLE public.hellofresh TO anon;
-GRANT ALL ON TABLE public.hellofresh TO authenticated;
-GRANT ALL ON TABLE public.hellofresh TO postgres;
-GRANT ALL ON TABLE public.hellofresh TO service_role;
-CREATE TABLE IF NOT EXISTS public.recipes (
-	created_at timestamp with time zone DEFAULT now(),
-	recipe text COLLATE pg_catalog."default" NOT NULL,
-	user_id text COLLATE pg_catalog."default",
-	name text COLLATE pg_catalog."default" DEFAULT ''::text,
-	image_path text COLLATE pg_catalog."default",
-	id text NOT NULL DEFAULT public.fn_ksuid(),
-	CONSTRAINT recipes_pkey PRIMARY KEY (id),
-	CONSTRAINT recipes_recipe_key UNIQUE (recipe)
-) TABLESPACE pg_default;
-ALTER TABLE IF EXISTS public.recipes OWNER to supabase_admin;
-ALTER TABLE IF EXISTS public.recipes ENABLE ROW LEVEL SECURITY;
-GRANT ALL ON TABLE public.recipes TO anon;
-GRANT ALL ON TABLE public.recipes TO authenticated;
-GRANT ALL ON TABLE public.recipes TO postgres;
-GRANT ALL ON TABLE public.recipes TO service_role;
-GRANT ALL ON TABLE public.recipes TO supabase_admin;
-CREATE POLICY "Users can delete their own recipes" ON public.recipes AS PERMISSIVE FOR DELETE TO public USING ((requesting_user_id() = user_id));
-CREATE POLICY "Users can insert their own recipes" ON public.recipes AS PERMISSIVE FOR
-INSERT TO public WITH CHECK ((requesting_user_id() = user_id));
-CREATE POLICY "Users can select their own recipes" ON public.recipes AS PERMISSIVE FOR
-SELECT TO public USING ((requesting_user_id() = user_id));
+-- ALTER TABLE IF EXISTS public.hellofresh DROP COLUMN IF EXISTS uid;
+-- ALTER TABLE IF EXISTS public.hellofresh
+-- 	RENAME uid TO created_at;
+ALTER TABLE public.hellofresh
+ALTER COLUMN created_at TYPE timestamp with time zone;
+ALTER TABLE IF EXISTS public.hellofresh
+ALTER COLUMN created_at
+SET DEFAULT now();
+ALTER TABLE IF EXISTS public.hellofresh
+ALTER COLUMN created_at DROP NOT NULL;
+-- ALTER TABLE IF EXISTS public.hellofresh
+-- ALTER COLUMN created_at DROP IDENTITY;
+ALTER TABLE IF EXISTS public.hellofresh
+	RENAME uid TO id;
+ALTER TABLE public.hellofresh
+ALTER COLUMN id TYPE text COLLATE pg_catalog."default";
+ALTER TABLE IF EXISTS public.hellofresh
+ALTER COLUMN id
+SET DEFAULT fn_ksuid();
+ALTER TABLE IF EXISTS public.hellofresh
+ALTER COLUMN id DROP IDENTITY;
+ALTER TABLE IF EXISTS public.hellofresh
+ALTER COLUMN id
+SET STORAGE EXTENDED;
+ALTER TABLE IF EXISTS public.hellofresh
+	RENAME uid TO recipe;
+ALTER TABLE public.hellofresh
+ALTER COLUMN recipe TYPE jsonb;
+ALTER TABLE IF EXISTS public.hellofresh
+ALTER COLUMN recipe DROP NOT NULL;
+ALTER TABLE IF EXISTS public.hellofresh
+ALTER COLUMN recipe DROP IDENTITY;
+ALTER TABLE IF EXISTS public.hellofresh
+ALTER COLUMN recipe
+SET STORAGE EXTENDED;
+ALTER TABLE IF EXISTS public.hellofresh
+ADD CONSTRAINT hellofresh_pkey PRIMARY KEY (id);
+ALTER TABLE public.recipes
+ALTER COLUMN id TYPE text COLLATE pg_catalog."default";
+ALTER TABLE IF EXISTS public.recipes
+ALTER COLUMN id
+SET DEFAULT fn_ksuid();
+ALTER TABLE IF EXISTS public.recipes
+ALTER COLUMN id DROP IDENTITY;
+ALTER TABLE IF EXISTS public.recipes
+ALTER COLUMN id
+SET STORAGE EXTENDED;

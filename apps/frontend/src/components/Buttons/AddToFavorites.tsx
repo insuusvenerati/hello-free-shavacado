@@ -15,12 +15,16 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
   const { openSignIn } = useClerk();
   const queryClient = useQueryClient();
   const { session } = useSession();
-  const { data: favoriteRecipes } = useQuery(["recipes", session], () => getRecipes(session), {
+  const { data: favoriteRecipes } = useQuery(["recipes"], () => getRecipes(), {
     staleTime: 60 * 60 * 24,
     refetchOnWindowFocus: false,
     notifyOnChangeProps: ["data", "error"],
   });
-  const { mutate: addFavorite, isLoading } = useMutation<unknown, PostgrestError, FormEvent<HTMLFormElement>>(
+  const { mutate: addFavorite, isLoading } = useMutation<
+    unknown,
+    PostgrestError,
+    FormEvent<HTMLFormElement>
+  >(
     async (event) => {
       event.preventDefault();
       return await addRecipe({
@@ -42,7 +46,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
         }
       },
       onSuccess: () => {
-        queryClient.invalidateQueries(["recipes", session]);
+        queryClient.invalidateQueries(["recipes"]);
         showNotification({
           color: "green",
           title: "Success",

@@ -22,13 +22,18 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
             alt={favoritedRecipe.name}
             radius={0}
             size="lg"
-            src={`${HF_AVATAR_IMAGE_URL}${favoritedRecipe?.image_path}`}
+            src={`${HF_AVATAR_IMAGE_URL}${favoritedRecipe?.imagePath}`}
           />
         }
       >
         <Group noWrap>
           <Tooltip
-            style={{ maxWidth: 100, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+            style={{
+              maxWidth: 100,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
             label={recipe?.items[0].name}
             withArrow
           >
