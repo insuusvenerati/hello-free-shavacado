@@ -14,11 +14,9 @@ const RecipeList = () => {
   const [recipes, setRecipes] = useState<RecipeQuery[]>();
   const [modalVisible, setModalVisible] = useState(false);
   const { setSelectedRecipe } = useRecipes();
-  const { data: favoriteRecipes, isLoading } = useQuery(
-    ["recipes", session],
-    () => getRecipes(session),
-    { enabled: !!session },
-  );
+  const { data: favoriteRecipes, isLoading } = useQuery(["recipes"], () => getRecipes(), {
+    enabled: !!session,
+  });
 
   useEffect(() => {
     const getRecipesFromFavorites = async () =>

@@ -3,7 +3,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "next lint --cache --fix",
     "test": "vitest",
     "prettier": "prettier --write src/",
     "export": "next export"
@@ -46,8 +46,7 @@
     "@types/react-dom": "^18.0.5",
     "@vitejs/plugin-react": "^1.3.2",
     "jsdom": "^19.0.0",
-    "vitest": "^0.10.4",
-    "@stiforr/prisma": "*"
+    "vitest": "^0.10.4"
   },
   "repository": {
     "type": "git",
