@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "rootDir": "./src",
+    "declaration": true
+  },
+  "exclude": ["./prisma", "./dist"],
+  "include": ["src/**/*"]
+}

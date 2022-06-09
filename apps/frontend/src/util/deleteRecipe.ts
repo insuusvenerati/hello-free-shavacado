@@ -1,8 +1,7 @@
 import { ActiveSessionResource } from "@clerk/types";
-import { FavoritedRecipe } from "./getRecipes";
-import { supabaseClient } from "./supabase";
+import { API_URL } from "./constants";
 
-export const deleteRecipe = async (session: ActiveSessionResource, id: number) => {
+export const deleteRecipe = async (session: ActiveSessionResource, id: string) => {
   if (!session) {
     throw new Error("No session available. Are you logged in?");
   }
@@ -11,16 +10,10 @@ export const deleteRecipe = async (session: ActiveSessionResource, id: number) =
     throw new Error("No recipe was given O.o");
   }
 
-  const supabaseAccessToken = await session.getToken({
-    template: "supabase",
+  const response = await fetch(`${API_URL}/recipe/${id}`, {
+    method: "DELETE",
   });
-
-  const supabase = await supabaseClient(supabaseAccessToken);
-  const { data, error } = await supabase.from<FavoritedRecipe>("recipes").delete().match({ id: id });
-
-  if (error) {
-    throw error;
-  }
+  const data = await response.json();
 
   return { data };
 };

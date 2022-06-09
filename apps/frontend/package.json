@@ -46,7 +46,8 @@
     "@types/react-dom": "^18.0.5",
     "@vitejs/plugin-react": "^1.3.2",
     "jsdom": "^19.0.0",
-    "vitest": "^0.10.4"
+    "vitest": "^0.10.4",
+    "@stiforr/prisma": "*"
   },
   "repository": {
     "type": "git",

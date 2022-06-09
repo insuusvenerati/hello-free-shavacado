@@ -1,26 +1,26 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { HellofreshService } from './hellofresh.service';
+import { Controller, Get, Query } from "@nestjs/common";
+import { HellofreshService } from "./hellofresh.service";
 
-@Controller('hellofresh')
+@Controller("hellofresh")
 export class HellofreshController {
   constructor(private readonly hellofreshService: HellofreshService) {}
 
   @Get()
   findAll(@Query() query) {
-    return this.hellofreshService.findAll(query.q, query.page, query.stoken);
+    return this.hellofreshService.findAll(query.q, query.page);
   }
 
-  @Get('recipe')
+  @Get("recipe")
   findONe(@Query() query) {
     return this.hellofreshService.findOne(query.q);
   }
 
-  @Get('cuisines')
+  @Get("cuisines")
   getCuisines() {
     return this.hellofreshService.getAllCuisines();
   }
 
-  @Get('favorites')
+  @Get("favorites")
   async getFavoriteRecipes() {
     return await this.hellofreshService.getFavoriteRecipes();
   }

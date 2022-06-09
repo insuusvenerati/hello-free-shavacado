@@ -4,7 +4,7 @@ import { MouseEventHandler } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { deleteRecipe } from "../util/deleteRecipe";
 
-export const useDeleteFavoriteRecipe = (session: ActiveSessionResource, id: number) => {
+export const useDeleteFavoriteRecipe = (session: ActiveSessionResource, id: string) => {
   const queryClient = useQueryClient();
   return useMutation<unknown, PostgrestError, unknown, MouseEventHandler<HTMLButtonElement>>(
     async () => {
@@ -12,7 +12,7 @@ export const useDeleteFavoriteRecipe = (session: ActiveSessionResource, id: numb
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["recipes", session]);
+        queryClient.invalidateQueries(["recipes"]);
       },
     },
   );
