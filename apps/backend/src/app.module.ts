@@ -1,12 +1,5 @@
-import {
-  CacheInterceptor,
-  CacheModule,
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-} from "@nestjs/common";
+import { CacheModule, MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { APP_INTERCEPTOR } from "@nestjs/core";
 import * as redisStore from "cache-manager-ioredis";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -23,7 +16,8 @@ const ENV = process.env.NODE_ENV;
       envFilePath: !ENV ? ".env" : `.env.${ENV}.local`,
     }),
     CacheModule.register({
-      ttl: ENV === "development" ? 1 : 60 * 60,
+      isGlobal: true,
+      ttl: ENV === "development" ? 30 : 60 * 60,
       store: redisStore,
       host: process.env.REDISHOST,
       port: +process.env.REDISPORT || 6379,
@@ -35,7 +29,7 @@ const ENV = process.env.NODE_ENV;
     RecipeModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_INTERCEPTOR, useClass: CacheInterceptor }],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {

@@ -6,8 +6,10 @@ import { PrismaService } from "src/prisma.service";
 export class RecipeService {
   constructor(private prisma: PrismaService) {}
   async create(createRecipeDto: Prisma.RecipesCreateInput) {
-    return await this.prisma.recipes.create({
-      data: createRecipeDto,
+    return await this.prisma.recipes.upsert({
+      create: createRecipeDto,
+      update: createRecipeDto,
+      where: { recipe: createRecipeDto.recipe },
     });
   }
 

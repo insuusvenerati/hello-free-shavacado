@@ -1,7 +1,8 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { CacheInterceptor, Controller, Get, Query, UseInterceptors } from "@nestjs/common";
 import { HellofreshService } from "./hellofresh.service";
 
 @Controller("hellofresh")
+@UseInterceptors(CacheInterceptor)
 export class HellofreshController {
   constructor(private readonly hellofreshService: HellofreshService) {}
 
