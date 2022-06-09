@@ -2,4 +2,4 @@
 . "$(dirname "$0")/_/husky.sh"
 
 ggshield secret scan pre-commit
-yarn lint
+npx lint-staged

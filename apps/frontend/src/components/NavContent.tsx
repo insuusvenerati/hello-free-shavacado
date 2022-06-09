@@ -1,5 +1,13 @@
 import { SignInButton, UserButton, useSession, useUser } from "@clerk/nextjs";
-import { ActionIcon, Center, Container, Indicator, Text, ThemeIcon, useMantineColorScheme } from "@mantine/core";
+import {
+  ActionIcon,
+  Center,
+  Container,
+  Indicator,
+  Text,
+  ThemeIcon,
+  useMantineColorScheme,
+} from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import { useQuery } from "react-query";
 import { HomeIcon, BookmarkIcon, LoginIcon } from "@heroicons/react/outline";
@@ -25,7 +33,7 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
 
 export const NavbarContent = () => {
   const { session } = useSession();
-  const { data: numRecipes } = useQuery(["recipes", session], () => getRecipes(session), {
+  const { data: numRecipes } = useQuery(["recipes"], () => getRecipes(), {
     staleTime: 60 * 60,
     refetchOnWindowFocus: false,
     enabled: !!session,
@@ -42,7 +50,13 @@ export const NavbarContent = () => {
       </Text>
 
       <Center>
-        <ActionIcon color={dark ? "yellow" : "blue"} component={NextLink} href="/" size="md" title="Home">
+        <ActionIcon
+          color={dark ? "yellow" : "blue"}
+          component={NextLink}
+          href="/"
+          size="md"
+          title="Home"
+        >
           <ThemeIcon variant="outline">
             <HomeIcon width={24} />
           </ThemeIcon>
@@ -54,7 +68,9 @@ export const NavbarContent = () => {
           size="lg"
           title="Toggle color scheme"
         >
-          <ThemeIcon variant="outline">{dark ? <SunIcon size={24} /> : <MoonIcon size={24} />}</ThemeIcon>
+          <ThemeIcon variant="outline">
+            {dark ? <SunIcon size={24} /> : <MoonIcon size={24} />}
+          </ThemeIcon>
         </ActionIcon>
         <ActionIcon
           color={dark ? "yellow" : "blue"}
@@ -76,7 +92,11 @@ export const NavbarContent = () => {
             size="md"
             title="My Recipes"
           >
-            <Indicator disabled={numRecipes < 1} label={<Text size="xs">{numRecipes}</Text>} size={16}>
+            <Indicator
+              disabled={numRecipes < 1}
+              label={<Text size="xs">{numRecipes}</Text>}
+              size={16}
+            >
               <ThemeIcon variant="outline">
                 <BookmarkIcon width={24} />
               </ThemeIcon>

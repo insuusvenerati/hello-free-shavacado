@@ -24,7 +24,7 @@ ENV NEXT_PUBLIC_SUPABASE_KEY=${NEXT_PUBLIC_SUPABASE_KEY}
 ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
 ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
 
-RUN yarn build --filter={./apps/frontend}...
+RUN yarn build --filter=@stiforr/frontend...
 
 # ---
 
@@ -48,7 +48,8 @@ COPY --from=builder /app/apps/frontend/package.json ./package.json
 COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/.next/static ./.next/static
 
-RUN npm i -g pm2
+RUN yarn global add pm2 \
+  && apk add curl
 
 USER nextjs
 
@@ -56,4 +57,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD [ "pm2-runtime", "server.js", "-i", "4"]
+CMD [ "pm2-runtime", "server.js"]
