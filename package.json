@@ -13,15 +13,8 @@
     "lint": "turbo run lint",
     "stop": "turbo run stop",
     "start": "turbo run start",
-    "commit": "cz",
-    "prisma": "yarn workspace @stiforr/prisma prisma",
-    "prisma:studio": "yarn workspace @stiforr/prisma prisma studio",
-    "prisma:gen": "yarn workspace @stiforr/prisma prisma generate",
-    "prisma:migrate": "yarn workspace @stiforr/prisma prisma migrate",
-    "supabase": "cd apps && supabase",
-    "db": "cd apps && supabase db",
-    "db:migrate": "cd apps && supabase db commit",
-    "db:pull": "cd apps && supabase db pull"
+    "prisma:migrate": "yarn workspace @stiforr/backend prisma migrate",
+    "commit": "cz"
   },
   "workspaces": {
     "packages": [
@@ -29,7 +22,8 @@
       "packages/*"
     ],
     "nohoist": [
-      "@stiforr/frontend/**"
+      "@stiforr/frontend/**",
+      "@stiforr/backend/**"
     ]
   },
   "devDependencies": {

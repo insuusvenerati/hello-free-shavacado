@@ -16,6 +16,9 @@
         "$NEXT_PUBLIC_API_URL"
       ]
     },
+    "@stiforr/backend#build": {
+      "dependsOn": ["$DATABASE_URL"]
+    },
     "test": {
       "dependsOn": ["^build"],
       "outputs": []

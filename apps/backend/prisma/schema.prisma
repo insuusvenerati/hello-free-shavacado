@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Hellofresh {
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  recipe    Json?
+  id        String    @id @default(dbgenerated("fn_ksuid()"))
+
+  @@map("hellofresh")
+}
+
+model Recipes {
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  recipe    String    @unique
+  userId    String?   @map("user_id")
+  name      String?
+  imagePath String?   @map("image_path")
+  id        String    @id @default(dbgenerated("fn_ksuid()"))
+
+  @@map("recipes")
+}

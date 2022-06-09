@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
-import { Recipes as RecipeModel } from "@stiforr/prisma";
+import { Recipes as RecipeModel } from "@prisma/client";
 import { RecipeService } from "./recipe.service";
 
 @Controller("recipe")
