@@ -1,6 +1,8 @@
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/forbid-component-props */
+import { InformationCircleIcon } from "@heroicons/react/outline";
 import {
+  Alert,
   AppShell,
   Aside,
   Avatar,
@@ -82,6 +84,9 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
         <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
           <Aside hiddenBreakpoint="sm" p="md" width={{ sm: 200, lg: 300 }}>
             <LoadingOverlay visible={isLoading} />
+            <Alert icon={<InformationCircleIcon width={16} />} title="Bummer!" color="red">
+              Favorites are not being saved at the moment
+            </Alert>
             <Text size="lg" weight="bold" mb="md">
               Favorite Recipes
             </Text>
