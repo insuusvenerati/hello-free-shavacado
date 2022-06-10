@@ -28,16 +28,16 @@
     ]
   },
   "devDependencies": {
-    "commitizen": "^4.2.4",
-    "cz-conventional-changelog": "^3.3.0",
-    "dotenv": "^16.0.1",
-    "husky": "^8.0.1",
-    "lint-staged": "^13.0.0",
-    "nps": "^5.10.0",
-    "nps-utils": "^1.7.0",
-    "prettier": "^2.6.2",
-    "rimraf": "^3.0.2",
-    "turbo": "^1.2.16"
+    "commitizen": "4.2.4",
+    "cz-conventional-changelog": "3.3.0",
+    "dotenv": "16.0.1",
+    "husky": "8.0.1",
+    "lint-staged": "13.0.1",
+    "nps": "5.10.0",
+    "nps-utils": "1.7.0",
+    "prettier": "2.6.2",
+    "rimraf": "3.0.2",
+    "turbo": "1.2.16"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint",
