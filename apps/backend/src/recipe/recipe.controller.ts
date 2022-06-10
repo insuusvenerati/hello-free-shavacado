@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/common";
 import { Recipes as RecipeModel } from "@prisma/client";
 import { RecipeService } from "./recipe.service";
 
@@ -20,8 +20,8 @@ export class RecipeController {
   }
 
   @Get()
-  findAll() {
-    return this.recipeService.findAll();
+  findAll(@Query("user") user: string) {
+    return this.recipeService.findAll(user);
   }
 
   @Get(":id")

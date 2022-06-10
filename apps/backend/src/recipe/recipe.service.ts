@@ -6,15 +6,25 @@ import { PrismaService } from "src/prisma.service";
 export class RecipeService {
   constructor(private prisma: PrismaService) {}
   async create(createRecipeDto: Prisma.RecipesCreateInput) {
-    return await this.prisma.recipes.upsert({
-      create: createRecipeDto,
-      update: createRecipeDto,
-      where: { recipe: createRecipeDto.recipe },
-    });
+    try {
+      return await this.prisma.recipes.upsert({
+        create: createRecipeDto,
+        update: createRecipeDto,
+        where: { recipe: createRecipeDto.recipe },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        console.log(error);
+      }
+      if (error instanceof Prisma.PrismaClientValidationError) {
+        console.log(error);
+      }
+      throw error;
+    }
   }
 
-  async findAll() {
-    return await this.prisma.recipes.findMany();
+  async findAll(user: string) {
+    return await this.prisma.recipes.findMany({ where: { userId: user } });
   }
 
   findOne(id: number) {
