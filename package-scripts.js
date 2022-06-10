@@ -20,25 +20,24 @@ module.exports = {
   scripts: {
     prepare: {
       description: "This sets up the project folder with dependencies and services",
-      default: series.nps("prepare.frontend", "prepare.backend", "prepare.prisma"),
+      default: series.nps("prepare.frontend", "prepare.backend"),
       frontend: "yarn install",
       backend: "docker-compose -f apps/backend/docker-compose.yml up -d",
-      prisma: {
-        default: series.nps("prepare.prisma.generate", "prepare.prisma.build"),
-        generate: "yarn workspace @stiforr/prisma generate",
-        build: "yarn workspace @stiforr/prisma build",
-      },
       supabase: "nps supabase.start",
     },
     docker: {
       description: "Manages docker related backend services",
+      default: series.nps("docker.backend.build", "docker.frontend.build", "docker.nginx.build"),
       backend: {
         up: "docker-compose -f apps/backend/docker-compose.yml up -d",
         down: "docker-compose -f apps/backend/docker-compose.yml down",
-        build: `docker build -t stiforr/hfs-backend:${backendVersion} .`,
+        build: `docker build -f apps/backend/Dockerfile -t stiforr/hfs-backend:${backendVersion} .`,
       },
       frontend: {
         build: `docker build -f apps/frontend/Dockerfile ${buildArgs} -t stiforr/hfs-frontend:${frontendVersion} .`,
+      },
+      nginx: {
+        build: `docker build -f docker/nginx/Dockerfile -t stiforr/hfs-proxy docker/nginx/.`,
       },
     },
     supabase: {

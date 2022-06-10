@@ -14,6 +14,7 @@
     "stop": "turbo run stop",
     "start": "turbo run start",
     "prisma:migrate": "yarn workspace @stiforr/backend prisma migrate",
+    "prisma:studio": "yarn workspace @stiforr/backend prisma studio",
     "commit": "cz"
   },
   "workspaces": {

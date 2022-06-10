@@ -3,15 +3,23 @@ services:
   nextjs:
     image: hello-free-shavacado-frontend
     container_name: hello-free-shavacado-frontend
+    depends_on:
+      nestjs:
+        condition: service_healthy
     build:
       context: .
       dockerfile: apps/frontend/Dockerfile
       args:
         - NEXT_PUBLIC_CLERK_FRONTEND_API=${NEXT_PUBLIC_CLERK_FRONTEND_API}
-        - NEXT_PUBLIC_SUPABASE_KEY=${NEXT_PUBLIC_SUPABASE_KEY}
-        - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
         - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
   nestjs:
     image: hello-free-shavacado-backend
     container_name: hello-free-shavacado-backend
@@ -24,11 +32,20 @@ services:
       - REDISHOST=$REDISHOST
       - REDISPORT=$REDISPORT
       - REDISPASSWORD=$REDISPASSWORD
-    env_file: .env
+      - DATABASE_URL=$DATABASE_URL
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   nginx:
     container_name: hello-free-shavacado-proxy
     image: hello-free-shavacado-proxy
     build: docker/nginx
+    depends_on:
+      nextjs:
+        condition: service_healthy
     ports:
       - 8080:80
