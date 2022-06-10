@@ -1,24 +1,12 @@
-import { supabaseClient } from "./supabase";
 import { ActiveSessionResource } from "@clerk/types";
+import { Grocery } from "../types/grocery";
+import { API_URL } from "./constants";
 
-export type Grocery = {
-  id: number;
-  created_at: Date;
-  ingredient: string;
-  amount: number;
-  slug: string;
-  imagePath: string;
-  family: any;
-  user_id: string;
-};
-
-export const getGroceries = async (session: ActiveSessionResource) => {
-  try {
-    const supabaseAccessToken = await session?.getToken({ template: "supabase" });
-    const supabase = await supabaseClient(supabaseAccessToken);
-    const { data } = await supabase.from<Grocery>("groceries").select("*");
-    return data;
-  } catch (error) {
-    throw new Error(error);
+export const getGroceries = async (session: ActiveSessionResource): Promise<Grocery[]> => {
+  const user = session?.user?.id;
+  const response = await fetch(`${API_URL}/groceries?user=${user}`);
+  if (!response.ok) {
+    throw new Error(`Error adding grocery: ${response}`);
   }
+  return await response.json();
 };

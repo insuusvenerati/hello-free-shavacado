@@ -1,16 +1,18 @@
 /* eslint-disable react/jsx-no-bind */
-import { ArrowLeftIcon, DocumentIcon } from "@heroicons/react/outline";
+import { useSession } from "@clerk/nextjs";
+import { ArrowLeftIcon, CheckIcon, DocumentIcon, PlusIcon } from "@heroicons/react/outline";
 import {
   Accordion,
+  ActionIcon,
   Affix,
   Button,
   Card,
   Container,
   Divider,
-  Grid,
   Group,
   Header,
   List,
+  SimpleGrid,
   Space,
   Text,
   Title,
@@ -24,6 +26,8 @@ import { useRouter } from "next/router";
 import { Fragment } from "react";
 import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
 import { NavbarContent } from "../../components/NavContent";
+import { useAddGroceryMutation } from "../../hooks/useAddGroceryMutation";
+import { useGetGroceriesQuery } from "../../hooks/useGetGroceriesQuery";
 import { Item, RecipeQuery } from "../../types/recipes";
 import {
   HELLOFRESH_SEARCH_URL,
@@ -58,9 +62,13 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
 const Recipe = ({ data: recipes }: { data: RecipeQuery }) => {
   const matches = useMediaQuery("(min-width: 900px)", true);
+  const { session } = useSession();
   const router = useRouter();
-
   const recipe = recipes?.items[0];
+  const { mutate: addGrocery, isLoading } = useAddGroceryMutation();
+  const { data: groceries } = useGetGroceriesQuery();
+  const isGroceryAdded = (id: string) => groceries?.some((g) => g.uuid === id);
+  const yields = recipe.yields.map((y) => y.ingredients).flat();
 
   return (
     <>
@@ -139,7 +147,7 @@ const Recipe = ({ data: recipes }: { data: RecipeQuery }) => {
           </Card>
           <Space h="lg" />
           <Card p="lg" shadow="sm">
-            <Accordion initialItem={1} offsetIcon={false}>
+            <Accordion offsetIcon={false}>
               <Accordion.Item
                 label={
                   <Text size="lg" weight="bold">
@@ -147,73 +155,125 @@ const Recipe = ({ data: recipes }: { data: RecipeQuery }) => {
                   </Text>
                 }
               >
-                <Grid columns={6}>
-                  <Grid.Col lg={3} sm={6}>
-                    {recipe?.ingredients.slice(0, 5).map((ingredient) => {
-                      // const yields = recipe.ingredients
-                      //   .map((i) => {
-                      //     const usageTwo = recipe.yields.filter((y) => y.yields === 2);
-                      //     const usage = usageTwo.filter(u => u.ingredients.some(i => i.id === ))
-                      //     return usageTwo;
-                      //   })
-                      //   .flat();
-                      // console.log(yields);
-                      return (
-                        <Group key={ingredient.id} p="xs">
-                          <Image
-                            alt={ingredient.description}
-                            height={60}
-                            src={`${HF_AVATAR_IMAGE_URL}/${ingredient.imagePath}`}
-                            width={60}
-                          />
-                          {ingredient.name}
-                        </Group>
-                      );
-                    })}
-                  </Grid.Col>
-                  <Grid.Col lg={3} sm={6}>
-                    {recipe?.ingredients.slice(5).map((ingredient) => (
+                <SimpleGrid cols={2}>
+                  {recipe?.ingredients.map((ingredient) => {
+                    const ingredientYield = yields.filter((y) => y.id === ingredient.id);
+                    return (
                       <Group key={ingredient.id} p="xs">
+                        <form
+                          onSubmit={(event) => {
+                            event.preventDefault();
+                            addGrocery({
+                              ingredient: ingredient.name,
+                              amount: ingredientYield[0].amount,
+                              unit: ingredientYield[0].unit,
+                              imagePath: ingredient.imagePath,
+                              userId: session?.user?.id,
+                              slug: ingredient.slug,
+                              family: ingredient.family.name,
+                              uuid: ingredient.id,
+                            });
+                          }}
+                        >
+                          <ActionIcon
+                            loading={isLoading}
+                            type="submit"
+                            variant="light"
+                            color="green"
+                            disabled={isGroceryAdded(ingredient.id)}
+                          >
+                            {isGroceryAdded(ingredient.id) ? (
+                              <CheckIcon width={16} />
+                            ) : (
+                              <PlusIcon width={16} />
+                            )}
+                          </ActionIcon>
+                        </form>
                         <Image
                           alt={ingredient.description}
                           height={60}
                           src={`${HF_AVATAR_IMAGE_URL}/${ingredient.imagePath}`}
                           width={60}
                         />
-                        {ingredient.name}
+                        <Text>
+                          {ingredientYield[0].amount} {ingredientYield[0].unit}
+                        </Text>
+                        <Text>{ingredient.name}</Text>
                       </Group>
+                    );
+                  })}
+                </SimpleGrid>
+              </Accordion.Item>
+              <Accordion.Item
+                label={
+                  <Text size="lg" weight="bold">
+                    Instructions
+                  </Text>
+                }
+              >
+                <Group>
+                  <Title order={2}>Instructions</Title>
+                  <List listStyleType="none" size="xl">
+                    {recipe?.steps?.map((step) => (
+                      <Fragment key={step.index}>
+                        <Group mb={24}>
+                          {step.images.map((image) => (
+                            <Image
+                              alt={image.caption}
+                              blurDataURL={`${HF_PLACEHOLDERURL}/${image.path}`}
+                              height={230}
+                              key={image.path}
+                              placeholder="blur"
+                              src={`${HF_STEP_IMAGE_URL}/${image.path}`}
+                              width={340}
+                            />
+                          ))}
+                          <List.Item sx={{ maxWidth: 600 }}>{step?.instructions}</List.Item>
+                        </Group>
+                        <Divider my="sm" />
+                      </Fragment>
                     ))}
-                  </Grid.Col>
-                </Grid>
+                  </List>
+                </Group>
               </Accordion.Item>
             </Accordion>
           </Card>
-          <Card mt="xs" shadow="sm" withBorder>
-            <Group>
-              <Title order={2}>Instructions</Title>
-              <List listStyleType="none" size="xl">
-                {recipe?.steps?.map((step) => (
-                  <Fragment key={step.index}>
-                    <Group mb={24}>
-                      {step.images.map((image) => (
-                        <Image
-                          alt={image.caption}
-                          blurDataURL={`${HF_PLACEHOLDERURL}/${image.path}`}
-                          height={230}
-                          key={image.path}
-                          placeholder="blur"
-                          src={`${HF_STEP_IMAGE_URL}/${image.path}`}
-                          width={340}
-                        />
-                      ))}
-                      <List.Item sx={{ maxWidth: 600 }}>{step?.instructions}</List.Item>
-                    </Group>
-                    <Divider my="sm" />
-                  </Fragment>
-                ))}
-              </List>
-            </Group>
-          </Card>
+          {/* <Card mt="xs" shadow="sm" withBorder>
+            <Accordion offsetIcon={false}>
+              <Accordion.Item
+                label={
+                  <Text size="lg" weight="bold">
+                    Instructions
+                  </Text>
+                }
+              >
+                <Group>
+                  <Title order={2}>Instructions</Title>
+                  <List listStyleType="none" size="xl">
+                    {recipe?.steps?.map((step) => (
+                      <Fragment key={step.index}>
+                        <Group mb={24}>
+                          {step.images.map((image) => (
+                            <Image
+                              alt={image.caption}
+                              blurDataURL={`${HF_PLACEHOLDERURL}/${image.path}`}
+                              height={230}
+                              key={image.path}
+                              placeholder="blur"
+                              src={`${HF_STEP_IMAGE_URL}/${image.path}`}
+                              width={340}
+                            />
+                          ))}
+                          <List.Item sx={{ maxWidth: 600 }}>{step?.instructions}</List.Item>
+                        </Group>
+                        <Divider my="sm" />
+                      </Fragment>
+                    ))}
+                  </List>
+                </Group>
+              </Accordion.Item>
+            </Accordion>
+          </Card> */}
         </Container>
       </div>
     </>
