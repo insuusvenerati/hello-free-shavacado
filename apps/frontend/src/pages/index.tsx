@@ -9,17 +9,18 @@ import { MyAppShell } from "../components/MyAppShell";
 import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
 import RecipeModal from "../components/RecipeModal";
 import { useRecipes } from "../hooks/useRecipes";
+import { Item, RecipeQuery } from "../types/recipes";
 import { HELLOFRESH_SEARCH_URL } from "../util/constants";
 import { hellofreshGetToken } from "../util/hellofresh";
 
 export const getStaticProps: GetStaticProps = async () => {
   const response = await fetch(`${HELLOFRESH_SEARCH_URL}/favorites`);
-  const data = await response.json();
+  const data: RecipeQuery = await response.json();
 
   return { props: { data } };
 };
 
-const Home = ({ data: popularRecipes }) => {
+const Home = ({ data: popularRecipes }: { data: Item[] }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const token = getCookie("token") as string;
   const { user } = useUser();

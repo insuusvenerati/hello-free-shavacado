@@ -1,5 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { PrismaService } from "src/prisma.service";
 import { RecipeQuery } from "src/recipes";
 
@@ -57,18 +57,17 @@ export class HellofreshService {
 
   async getFavoriteRecipes() {
     const response = await axios.get<RecipeQuery>(
-      `${BASE_URL}take=16&order=favorites&min-rating=3`,
+      `${BASE_URL}take=250&order=favorites&min-rating=3`,
       {
         headers: { authorization: `Bearer ${DELETE_ME_TOKEN}` },
       },
     );
 
-    const filterRecipes = (response: AxiosResponse<RecipeQuery>) => {
-      return response.data.items.filter((item) => item.ratingsCount > 500);
-    };
+    const notAddonRecipe = response.data.items
+      .filter((item) => item.ratingsCount > 100)
+      .filter((item) => item.isAddon === false)
+      .slice(0, 16);
 
-    const filteredRecipes = filterRecipes(response);
-
-    return { ...response.data, filteredRecipes };
+    return notAddonRecipe;
   }
 }
