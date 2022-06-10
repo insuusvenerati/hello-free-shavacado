@@ -24,7 +24,7 @@ import { useRouter } from "next/router";
 import { Fragment } from "react";
 import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
 import { NavbarContent } from "../../components/NavContent";
-import { RecipeQuery } from "../../types/recipes";
+import { Item, RecipeQuery } from "../../types/recipes";
 import {
   HELLOFRESH_SEARCH_URL,
   HF_AVATAR_IMAGE_URL,
@@ -37,9 +37,9 @@ import { hellofreshSearchBySlug } from "../../util/hellofresh";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const response = await fetch(`${HELLOFRESH_SEARCH_URL}/favorites`);
-  const data: RecipeQuery = await response.json();
+  const data: Item[] = await response.json();
 
-  const paths = data?.items?.map((recipe) => ({
+  const paths = data?.map((recipe) => ({
     params: { recipe: recipe.slug },
   }));
 
