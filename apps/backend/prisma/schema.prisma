@@ -25,3 +25,18 @@ model Recipes {
 
   @@map("recipes")
 }
+
+model Groceries {
+  createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  ingredient String
+  amount     Int
+  unit       String
+  imagePath  String?   @map("image_path")
+  id         String    @id @default(dbgenerated("fn_ksuid()"))
+  userId     String    @map("user_id")
+  slug       String
+  family     String
+  uuid       String?   @unique
+
+  @@map("groceries")
+}

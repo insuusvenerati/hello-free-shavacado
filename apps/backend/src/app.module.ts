@@ -7,6 +7,7 @@ import { HellofreshModule } from "./hellofresh/hellofresh.module";
 import { LoggerMiddleware } from "./logger.middleware";
 import { PlaceholderModule } from "./placeholder/placeholder.module";
 import { RecipeModule } from "./recipe/recipe.module";
+import { GroceriesModule } from "./groceries/groceries.module";
 
 const ENV = process.env.NODE_ENV;
 
@@ -27,6 +28,7 @@ const ENV = process.env.NODE_ENV;
     HellofreshModule,
     PlaceholderModule,
     RecipeModule,
+    GroceriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
