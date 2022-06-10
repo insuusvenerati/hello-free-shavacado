@@ -15,7 +15,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
   const { openSignIn } = useClerk();
   const queryClient = useQueryClient();
   const { session } = useSession();
-  const { data: favoriteRecipes } = useQuery(["recipes"], () => getRecipes(), {
+  const { data: favoriteRecipes } = useQuery("recipes", () => getRecipes(), {
     staleTime: 60 * 60 * 24,
     refetchOnWindowFocus: false,
     notifyOnChangeProps: ["data", "error"],
@@ -46,7 +46,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
         }
       },
       onSuccess: () => {
-        queryClient.invalidateQueries(["recipes"]);
+        queryClient.invalidateQueries("recipes");
         showNotification({
           color: "green",
           title: "Success",
@@ -62,7 +62,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
     <form onSubmit={addFavorite}>
       <Button
         {...rest}
-        disabled={isFavoriteRecipe}
+        disabled
         leftIcon={<StarIcon width={16} />}
         loading={isLoading}
         type="submit"
