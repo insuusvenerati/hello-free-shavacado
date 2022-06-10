@@ -1,4 +1,6 @@
-import { SignInButton, UserButton, useSession, useUser } from "@clerk/nextjs";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { BookmarkIcon, HomeIcon, LoginIcon } from "@heroicons/react/outline";
+import { Github } from "@icons-pack/react-simple-icons";
 import {
   ActionIcon,
   Center,
@@ -9,10 +11,7 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 import { NextLink } from "@mantine/next";
-import { useQuery } from "react-query";
-import { HomeIcon, BookmarkIcon, LoginIcon } from "@heroicons/react/outline";
-import { Github } from "@icons-pack/react-simple-icons";
-import { getRecipes } from "../util/getRecipes";
+import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
 
@@ -32,16 +31,12 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
 };
 
 export const NavbarContent = () => {
-  const { session } = useSession();
-  const { data: numRecipes } = useQuery(["recipes"], () => getRecipes(), {
-    staleTime: 60 * 60,
-    refetchOnWindowFocus: false,
-    enabled: !!session,
-    select: (data) => data.length,
-  });
+  const { data } = useFavoriteRecipesQuery();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { isSignedIn } = useUser();
   const dark = colorScheme === "dark";
+
+  const numRecipes = data?.length;
 
   return (
     <Container>

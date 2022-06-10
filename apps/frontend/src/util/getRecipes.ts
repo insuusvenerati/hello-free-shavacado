@@ -1,4 +1,5 @@
 import { API_URL } from "./constants";
+import { ActiveSessionResource } from "@clerk/types";
 
 export type FavoritedRecipe = {
   createdAt: string;
@@ -9,15 +10,8 @@ export type FavoritedRecipe = {
   imagePath: string;
 };
 
-export const getRecipes = async (): Promise<FavoritedRecipe[]> => {
-  const response = await fetch(`${API_URL}/recipe`);
+export const getRecipes = async (session: ActiveSessionResource): Promise<FavoritedRecipe[]> => {
+  const user = session.user.id;
+  const response = await fetch(`${API_URL}/recipe?user=${user}`);
   return await response.json();
-  // try {
-  //   const supabaseAccessToken = await session?.getToken({ template: "supabase" });
-  //   const supabase = await supabaseClient(supabaseAccessToken);
-  //   const { data } = await supabase.from<FavoritedRecipe>("recipes").select("*");
-  //   return data;
-  // } catch (error) {
-  //   throw new Error(error);
-  // }
 };

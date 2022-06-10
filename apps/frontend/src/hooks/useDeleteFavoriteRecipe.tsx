@@ -12,7 +12,7 @@ export const useDeleteFavoriteRecipe = (session: ActiveSessionResource, id: stri
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["recipes"]);
+        queryClient.invalidateQueries("recipes");
       },
     },
   );

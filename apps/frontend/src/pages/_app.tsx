@@ -18,7 +18,9 @@ const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 
 const App = (props: AppProps) => {
   // eslint-disable-next-line react/hook-use-state
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () => new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } }),
+  );
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: "color-scheme",
     defaultValue: "light",

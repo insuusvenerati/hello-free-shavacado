@@ -1,22 +1,17 @@
-import { useSession } from "@clerk/nextjs";
 import { Container, Grid, LoadingOverlay, Title } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
-import { useQuery } from "react-query";
 import { NavbarContent } from "../components/NavContent";
 import { RecipeCard } from "../components/RecipeCard";
+import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useRecipes } from "../hooks/useRecipes";
 import { RecipeQuery } from "../types/recipes";
-import { getRecipes } from "../util/getRecipes";
 import { hellofreshSearchBySlug } from "../util/hellofresh";
 
 const RecipeList = () => {
-  const { session } = useSession();
   const [recipes, setRecipes] = useState<RecipeQuery[]>();
   const [modalVisible, setModalVisible] = useState(false);
   const { setSelectedRecipe } = useRecipes();
-  const { data: favoriteRecipes, isLoading } = useQuery(["recipes"], () => getRecipes(), {
-    enabled: !!session,
-  });
+  const { data: favoriteRecipes, isLoading } = useFavoriteRecipesQuery();
 
   useEffect(() => {
     const getRecipesFromFavorites = async () =>

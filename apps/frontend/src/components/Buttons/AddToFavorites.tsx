@@ -4,10 +4,10 @@ import { Button, SharedButtonProps } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { PostgrestError } from "@supabase/supabase-js";
 import { FormEvent } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
+import { useFavoriteRecipesQuery } from "../../hooks/useFavoriteRecipesQuery";
 import { Item } from "../../types/recipes";
 import { addRecipe } from "../../util/addRecipe";
-import { getRecipes } from "../../util/getRecipes";
 
 type Props = { selectedRecipe: Item } & SharedButtonProps;
 
@@ -15,11 +15,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
   const { openSignIn } = useClerk();
   const queryClient = useQueryClient();
   const { session } = useSession();
-  const { data: favoriteRecipes } = useQuery("recipes", () => getRecipes(), {
-    staleTime: 60 * 60 * 24,
-    refetchOnWindowFocus: false,
-    notifyOnChangeProps: ["data", "error"],
-  });
+  const { data: favoriteRecipes } = useFavoriteRecipesQuery();
   const { mutate: addFavorite, isLoading } = useMutation<
     unknown,
     PostgrestError,
@@ -62,7 +58,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
     <form onSubmit={addFavorite}>
       <Button
         {...rest}
-        disabled
+        disabled={isFavoriteRecipe}
         leftIcon={<StarIcon width={16} />}
         loading={isLoading}
         type="submit"
