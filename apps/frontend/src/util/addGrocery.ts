@@ -1,11 +1,11 @@
-import { ActiveSessionResource } from "@clerk/types";
+import { ActiveSessionResource, SignInProps } from "@clerk/types";
 import { Grocery } from "../types/grocery";
 import { API_URL } from "./constants";
 
 export const addGrocery = async (
   session: ActiveSessionResource,
   grocery: Grocery,
-  openSignIn,
+  openSignIn: (signInProps?: SignInProps) => void,
 ): Promise<Grocery> => {
   if (!session) {
     openSignIn({});

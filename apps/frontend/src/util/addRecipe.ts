@@ -7,12 +7,14 @@ export const addRecipe = async ({
   recipeName,
   openSignIn,
   imagePath,
+  uuid,
 }: {
   session: ActiveSessionResource;
   recipeSlug: string;
   recipeName: string;
   openSignIn: (signInProps?: SignInProps) => void;
   imagePath: string;
+  uuid: string;
 }) => {
   if (!session) {
     openSignIn({});
@@ -24,10 +26,11 @@ export const addRecipe = async ({
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      recipe: recipeSlug,
+      slug: recipeSlug,
       name: recipeName,
       userId: session.user.id,
       imagePath,
+      uuid,
     }),
   });
 

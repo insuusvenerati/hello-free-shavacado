@@ -1,4 +1,4 @@
-import { Grid, Space, Title } from "@mantine/core";
+import { Grid, Title } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
 import { Item } from "../types/recipes";
 import { RecipeCard } from "./RecipeCard";
@@ -39,10 +39,10 @@ export const FilteredOrPopularRecipesList = ({
   if (popularRecipes && !isLoading) {
     return (
       <>
-        <Title align="center" order={1}>
+        <Title mb={10} align="center" order={1}>
           Popular Recipes
         </Title>
-        <Space h={10} />
+
         <Grid columns={4} justify="center">
           {popularRecipes?.map((recipe) => {
             return (

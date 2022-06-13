@@ -4,11 +4,11 @@ import { ActionIcon, Avatar, Group, List, Paper, Text, Tooltip } from "@mantine/
 import { NextLink } from "@mantine/next";
 import { useDeleteFavoriteRecipe } from "../hooks/useDeleteFavoriteRecipe";
 import { useHellofreshBySlug } from "../hooks/useHellofreshBySlug";
+import { FavoritedRecipe } from "../types/favoriteRecipe";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
-import { FavoritedRecipe } from "../util/getRecipes";
 
 export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedRecipe }) => {
-  const { data: recipe, isLoading } = useHellofreshBySlug(favoritedRecipe?.recipe);
+  const { data: recipe, isLoading } = useHellofreshBySlug(favoritedRecipe?.slug);
   const { session } = useSession();
   const { mutate } = useDeleteFavoriteRecipe(session, favoritedRecipe?.id);
 
@@ -34,7 +34,7 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
               overflow: "hidden",
               textOverflow: "ellipsis",
             }}
-            label={recipe?.items[0].name}
+            label={recipe?.items[0]?.name}
             withArrow
           >
             <NextLink href={recipe?.items[0]?.websiteUrl} key={favoritedRecipe?.id} target="_blank">
@@ -47,7 +47,7 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
             </ActionIcon>
           </Tooltip>
           <Tooltip label="View Instructions">
-            <NextLink href={`/recipe/${favoritedRecipe?.recipe}`}>
+            <NextLink href={`/recipe/${favoritedRecipe?.slug}`}>
               <ActionIcon mr="xs">
                 <LinkIcon />
               </ActionIcon>

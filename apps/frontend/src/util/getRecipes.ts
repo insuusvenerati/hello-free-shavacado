@@ -1,14 +1,6 @@
 import { API_URL } from "./constants";
 import { ActiveSessionResource } from "@clerk/types";
-
-export type FavoritedRecipe = {
-  createdAt: string;
-  recipe: string;
-  id: string;
-  userId: string;
-  name: string;
-  imagePath: string;
-};
+import { FavoritedRecipe } from "../types/favoriteRecipe";
 
 export const getRecipes = async (session: ActiveSessionResource): Promise<FavoritedRecipe[]> => {
   const user = session.user.id;

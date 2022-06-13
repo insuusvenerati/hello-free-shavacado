@@ -4,10 +4,7 @@ import {
   AppShell,
   Aside,
   Avatar,
-  Burger,
-  Container,
   Group,
-  Header,
   List,
   LoadingOverlay,
   MediaQuery,
@@ -17,9 +14,9 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
-import { forwardRef, useCallback, useState } from "react";
+import { forwardRef, useState } from "react";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
+import { MyHeader } from "./MyHeader";
 import { NavbarContent } from "./NavContent";
 import { RecipeLink } from "./RecipeLink";
 
@@ -64,12 +61,7 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
   } = props;
 
   const { data: recipes, isLoading } = useFavoriteRecipesQuery();
-  const matches = useMediaQuery("(min-width: 900px)", true);
   const [opened, setOpened] = useState(false);
-
-  const handleDrawer = useCallback(() => {
-    setOpened(!opened);
-  }, [opened]);
 
   return (
     <AppShell
@@ -101,53 +93,34 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
         </MediaQuery>
       }
       fixed
-      header={
-        !matches ? (
-          <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-            <Header height={70} p="md">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  height: "100%",
-                }}
-              >
-                <Burger mr="xl" onClick={handleDrawer} opened={opened} size="sm" />
-
-                <Text>Hello Free Shavacado</Text>
-              </div>
-            </Header>
-          </MediaQuery>
-        ) : null
-      }
+      header={<MyHeader opened={opened} setOpened={setOpened} />}
       navbar={
-        <Navbar hidden={!opened} hiddenBreakpoint="sm" p="md" width={{ base: 300 }}>
+        <Navbar hidden={!opened} hiddenBreakpoint="sm" width={{ base: 300 }}>
           <NavbarContent />
-          <Container p="md">
-            <Stack>
-              <MultiSelect
-                clearable
-                data={uniqueAllergens}
-                itemComponent={MySelectItem}
-                label="Filter allergens"
-                nothingFound="Search for a recipe first"
-                onChange={handleSetSelectedAllergens}
-                placeholder="Select your allergens"
-                searchable
-                value={selectedAllergens}
-              />
-              <MultiSelect
-                clearable
-                data={ingredients}
-                label="Filter ingredients"
-                nothingFound="Search for a recipe first"
-                onChange={handleSetSelectedIngredients}
-                placeholder="Select your ingredients"
-                searchable
-                value={selectedIngredients}
-              />
-            </Stack>
-          </Container>
+
+          <Stack sx={{ padding: 5 }}>
+            <MultiSelect
+              clearable
+              data={uniqueAllergens}
+              itemComponent={MySelectItem}
+              label="Filter allergens"
+              nothingFound="Search for a recipe first"
+              onChange={handleSetSelectedAllergens}
+              placeholder="Select your allergens"
+              searchable
+              value={selectedAllergens}
+            />
+            <MultiSelect
+              clearable
+              data={ingredients}
+              label="Filter ingredients"
+              nothingFound="Search for a recipe first"
+              onChange={handleSetSelectedIngredients}
+              placeholder="Select your ingredients"
+              searchable
+              value={selectedIngredients}
+            />
+          </Stack>
         </Navbar>
       }
       navbarOffsetBreakpoint="sm"

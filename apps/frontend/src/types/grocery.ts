@@ -1,3 +1,5 @@
+import { FavoritedRecipe } from "./favoriteRecipe";
+
 export type Grocery = {
   id?: number;
   createdAt?: Date;
@@ -9,4 +11,7 @@ export type Grocery = {
   userId: string;
   unit: string;
   uuid: string;
+  recipe: {
+    connectOrCreate: { create: FavoritedRecipe; where: { uuid: string } };
+  };
 };

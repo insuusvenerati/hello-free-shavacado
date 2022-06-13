@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-no-bind */
 import { CheckCircleIcon, DocumentIcon } from "@heroicons/react/outline";
 import { Badge, Button, Card, Group, List, Modal, Text, ThemeIcon } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
 import Image from "next/image";
 import { useCallback } from "react";
 import { Item } from "../types/recipes";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
+import { IngredientCard } from "./IngredientsCard";
 
 type Props = {
   recipe: Item;
@@ -15,13 +15,20 @@ type Props = {
 };
 
 const RecipeModal = ({ recipe, opened, onClose }: Props) => {
-  const matches = useMediaQuery("(min-width: 900px)", true);
   const removeSymbols = useCallback((text: string) => {
     return text.replace(/[^a-zA-Z.\n ]/g, "");
   }, []);
 
   return (
-    <Modal centered onClose={onClose} opened={opened} overflow="inside" padding="xs" size="1200" title={recipe?.name}>
+    <Modal
+      centered
+      onClose={onClose}
+      opened={opened}
+      overflow="inside"
+      padding="xs"
+      size="1200"
+      title={recipe?.name}
+    >
       <Image
         alt={recipe?.name}
         blurDataURL={`https://img.hellofresh.com/w_8,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
@@ -46,6 +53,9 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
           </NextLink>
         </Group>
       </Card>
+
+      <IngredientCard recipe={recipe} />
+
       <Card mt="xs" shadow="sm" withBorder>
         <Group>
           <Text size="xl" weight="bold">
@@ -62,7 +72,9 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
             spacing="xl"
           >
             {recipe?.steps?.map((step) => (
-              <List.Item key={step.index + Math.random()}>{removeSymbols(step?.instructionsMarkdown)}</List.Item>
+              <List.Item key={step.index + Math.random()}>
+                {removeSymbols(step?.instructionsMarkdown)}
+              </List.Item>
             ))}
           </List>
         </Group>

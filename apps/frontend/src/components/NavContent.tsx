@@ -1,10 +1,9 @@
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
-import { BookmarkIcon, HomeIcon, LoginIcon } from "@heroicons/react/outline";
+import { BookmarkIcon, CakeIcon, HomeIcon, LoginIcon } from "@heroicons/react/outline";
 import { Github } from "@icons-pack/react-simple-icons";
 import {
   ActionIcon,
   Center,
-  Container,
   Indicator,
   Text,
   ThemeIcon,
@@ -39,8 +38,8 @@ export const NavbarContent = () => {
   const numRecipes = data?.length;
 
   return (
-    <Container>
-      <Text align="center" weight="bold">
+    <>
+      <Text mt="md" align="center" weight="bold">
         Hello Fresh Recipe Search
       </Text>
 
@@ -99,8 +98,14 @@ export const NavbarContent = () => {
           </ActionIcon>
         )}
 
+        <ActionIcon size="lg" href="/groceries" component={NextLink}>
+          <ThemeIcon variant="outline">
+            <CakeIcon width={22} />
+          </ThemeIcon>
+        </ActionIcon>
+
         <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
       </Center>
-    </Container>
+    </>
   );
 };

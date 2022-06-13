@@ -28,13 +28,15 @@ const App = (props: AppProps) => {
   });
 
   useEffect(() => {
-    LogRocket.init("stiforr/hello-free-shavacado");
-    setupLogRocketReact(LogRocket);
-    LogRocket.getSessionURL((sessionURL) => {
-      Sentry.configureScope((scope) => {
-        scope.setExtra("sessionURL", sessionURL);
+    if (process.env.NODE_ENV === "production") {
+      LogRocket.init("stiforr/hello-free-shavacado");
+      setupLogRocketReact(LogRocket);
+      LogRocket.getSessionURL((sessionURL) => {
+        Sentry.configureScope((scope) => {
+          scope.setExtra("sessionURL", sessionURL);
+        });
       });
-    });
+    }
   }, []);
 
   const toggleColorScheme = useCallback(

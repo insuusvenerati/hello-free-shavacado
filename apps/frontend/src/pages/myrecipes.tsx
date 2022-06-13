@@ -1,6 +1,6 @@
 import { Container, Grid, LoadingOverlay, Title } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
-import { NavbarContent } from "../components/NavContent";
+import { Layout } from "../components/Layout";
 import { RecipeCard } from "../components/RecipeCard";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useRecipes } from "../hooks/useRecipes";
@@ -39,9 +39,7 @@ const RecipeList = () => {
 
   // display all the recipes
   return (
-    <>
-      <NavbarContent />
-
+    <Layout>
       <Title mb="md" align="center" order={1}>
         Favorite Recipes
       </Title>
@@ -63,7 +61,7 @@ const RecipeList = () => {
             })}
         </Grid>
       </Container>
-    </>
+    </Layout>
   );
 };
 

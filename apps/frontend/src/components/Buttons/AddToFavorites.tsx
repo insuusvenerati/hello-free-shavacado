@@ -29,6 +29,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
         openSignIn,
         recipeName: selectedRecipe.name,
         imagePath: selectedRecipe.imagePath,
+        uuid: selectedRecipe.id,
       });
     },
     {

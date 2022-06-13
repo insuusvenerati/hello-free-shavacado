@@ -5,17 +5,17 @@ import { getCookie, setCookies } from "cookies-next";
 import LogRocket from "logrocket";
 import { GetStaticProps } from "next";
 import { useCallback, useEffect, useState } from "react";
-import { MyAppShell } from "../components/MyAppShell";
+import { Layout } from "../components/Layout";
 import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
 import RecipeModal from "../components/RecipeModal";
 import { useRecipes } from "../hooks/useRecipes";
-import { Item, RecipeQuery } from "../types/recipes";
+import { Item } from "../types/recipes";
 import { HELLOFRESH_SEARCH_URL } from "../util/constants";
 import { hellofreshGetToken } from "../util/hellofresh";
 
 export const getStaticProps: GetStaticProps = async () => {
   const response = await fetch(`${HELLOFRESH_SEARCH_URL}/favorites`);
-  const data: RecipeQuery = await response.json();
+  const data: Item[] = await response.json();
 
   return { props: { data } };
 };
@@ -36,12 +36,6 @@ const Home = ({ data: popularRecipes }: { data: Item[] }) => {
     setSelectedRecipe,
     onChangeHandler,
     pageChangeHandler,
-    handleSetSelectedIngredients,
-    handleSetSelectedAllergens,
-    uniqueAllergens,
-    ingredients,
-    selectedAllergens,
-    selectedIngredients,
     clearSearchHandler,
     searchText,
   } = useRecipes();
@@ -70,15 +64,6 @@ const Home = ({ data: popularRecipes }: { data: Item[] }) => {
     }
   }, [token]);
 
-  const appShellProps = {
-    uniqueAllergens,
-    handleSetSelectedAllergens,
-    selectedAllergens,
-    ingredients,
-    handleSetSelectedIngredients,
-    selectedIngredients,
-  };
-
   const FilteredOrPopularRecipesListProps = {
     filteredRecipes,
     modalHandler,
@@ -89,7 +74,7 @@ const Home = ({ data: popularRecipes }: { data: Item[] }) => {
 
   return (
     <>
-      <MyAppShell {...appShellProps}>
+      <Layout>
         <RecipeModal onClose={modalHandler} opened={modalVisible} recipe={selectedRecipe} />
 
         <Grid justify="center">
@@ -124,7 +109,7 @@ const Home = ({ data: popularRecipes }: { data: Item[] }) => {
           </Grid>
         </Center>
         <FilteredOrPopularRecipesList {...FilteredOrPopularRecipesListProps} />
-      </MyAppShell>
+      </Layout>
     </>
   );
 };
