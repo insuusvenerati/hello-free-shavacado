@@ -5,8 +5,6 @@ WORKDIR /app
 COPY yarn.lock yarn.lock
 COPY package.json package.json
 COPY apps/frontend apps/frontend
-COPY packages/eslint-config-hf packages/eslint-config-hf 
-COPY packages/tsconfig-hf packages/tsconfig-hf
 COPY turbo.json turbo.json
 
 RUN yarn install --frozen-lockfile \

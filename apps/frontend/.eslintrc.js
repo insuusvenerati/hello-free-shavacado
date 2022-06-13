@@ -1,1 +1,3 @@
-module.exports = require("@stiforr/eslint-config-hf");
+module.exports = {
+  extends: ["next/core-web-vitals"],
+};

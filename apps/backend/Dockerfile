@@ -2,13 +2,6 @@ FROM node:16-alpine as turbo
 
 WORKDIR /app
 
-# COPY yarn.lock yarn.lock
-# COPY package.json package.json
-# COPY apps/backend apps/backend
-# COPY packages/tsconfig-hf packages/tsconfig-hf
-# # COPY packages/prisma packages/prisma
-# COPY turbo.json turbo.json
-
 COPY . .
 RUN npx turbo prune --scope=@stiforr/backend --docker
 

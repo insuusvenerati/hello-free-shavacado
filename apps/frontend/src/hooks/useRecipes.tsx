@@ -13,7 +13,12 @@ export const useRecipes = () => {
   const token = getCookie("token");
   const [page, setPage] = useState(1);
 
-  const { data: recipes, isLoading, error, isError } = useRecipesQuery({ debouncedSearchText, page, token });
+  const {
+    data: recipes,
+    isLoading,
+    error,
+    isError,
+  } = useRecipesQuery({ debouncedSearchText, page, token });
 
   const {
     filteredRecipes,
@@ -40,10 +45,16 @@ export const useRecipes = () => {
     ),
   ];
 
-  const uniqueAllergens = allergens?.filter((val, i, self) => i === self.findIndex((a) => a.label === val.label));
+  const uniqueAllergens = allergens?.filter(
+    (val, i, self) => i === self.findIndex((a) => a.label === val.label),
+  );
 
   const ingredients = [
-    ...new Set(recipes?.items?.map((recipe) => recipe.ingredients.map((ingredient) => ingredient.name)).flat()),
+    ...new Set(
+      recipes?.items
+        ?.map((recipe) => recipe.ingredients.map((ingredient) => ingredient.name))
+        .flat(),
+    ),
   ];
 
   const clearSearchHandler = useCallback(() => {
