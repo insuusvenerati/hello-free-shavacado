@@ -65,8 +65,8 @@ export class HellofreshService {
 
     const notAddonRecipe = response.data.items
       .filter((item) => item.ratingsCount > 100)
-      .filter((item) => item.isAddon === false)
-      .slice(0, 16);
+      .filter((item) => item.isAddon === false);
+    // .slice(0, 16);
 
     return notAddonRecipe;
   }

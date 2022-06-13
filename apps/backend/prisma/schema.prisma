@@ -16,12 +16,14 @@ model Hellofresh {
 }
 
 model Recipes {
-  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
-  recipe    String    @unique
-  userId    String?   @map("user_id")
+  createdAt DateTime?   @default(now()) @map("created_at") @db.Timestamptz(6)
+  slug      String      @unique
+  userId    String?     @map("user_id")
   name      String?
-  imagePath String?   @map("image_path")
-  id        String    @id @default(dbgenerated("fn_ksuid()"))
+  imagePath String?     @map("image_path")
+  id        String      @id @default(dbgenerated("fn_ksuid()"))
+  groceries Groceries[]
+  uuid      String      @unique
 
   @@map("recipes")
 }
@@ -29,14 +31,16 @@ model Recipes {
 model Groceries {
   createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   ingredient String
-  amount     Int
-  unit       String
+  amount     Float?
+  unit       String?
   imagePath  String?   @map("image_path")
   id         String    @id @default(dbgenerated("fn_ksuid()"))
   userId     String    @map("user_id")
   slug       String
   family     String
-  uuid       String?   @unique
+  uuid       String    @unique
+  recipe     Recipes   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId   String    @map("recipe_id")
 
   @@map("groceries")
 }

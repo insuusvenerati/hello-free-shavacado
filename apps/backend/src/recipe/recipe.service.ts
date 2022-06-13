@@ -10,7 +10,7 @@ export class RecipeService {
       return await this.prisma.recipes.upsert({
         create: createRecipeDto,
         update: createRecipeDto,
-        where: { recipe: createRecipeDto.recipe },
+        where: { slug: createRecipeDto.slug },
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {

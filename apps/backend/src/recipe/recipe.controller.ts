@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/common";
-import { Recipes as RecipeModel } from "@prisma/client";
+import { Recipes as RecipeModel, Prisma } from "@prisma/client";
 import { RecipeService } from "./recipe.service";
 
 @Controller("recipe")
@@ -9,12 +9,7 @@ export class RecipeController {
   @Post()
   create(
     @Body()
-    recipeData: {
-      recipe: string;
-      userId: string;
-      name: string;
-      imagePath: string;
-    },
+    recipeData: Prisma.RecipesCreateInput,
   ): Promise<RecipeModel> {
     return this.recipeService.create(recipeData);
   }
