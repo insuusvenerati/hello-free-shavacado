@@ -17,7 +17,7 @@ const RecipeList = () => {
     const getRecipesFromFavorites = async () =>
       Promise.all(
         favoriteRecipes?.map(async (recipe) => {
-          return await hellofreshSearchBySlug({ slug: recipe.recipe });
+          return await hellofreshSearchBySlug({ slug: recipe.slug });
         }),
       )
         .then((data) => setRecipes(data))
