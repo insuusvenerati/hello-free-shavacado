@@ -12,8 +12,8 @@ export class GroceriesController {
   }
 
   @Get()
-  findAll(@Query("user") user: string) {
-    return this.groceriesService.findAll(user);
+  async findAll(@Query("user") user: string) {
+    return await this.groceriesService.findAll(user);
   }
 
   @Get(":id")

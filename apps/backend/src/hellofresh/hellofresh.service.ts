@@ -5,7 +5,7 @@ import { RecipeQuery } from "src/recipes";
 
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 const CUISINE_URL = `https://gw.hellofresh.com/api/cuisines?country=us&locale=en-US&take=250`;
-const DELETE_ME_TOKEN = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTUxOTE5MjgsImlhdCI6MTY1MjU2MjE4NSwiaXNzIjoic2VuZiIsImp0aSI6IjRkZWY5YTBlLTk3ODctNDBkYi05NzZhLWMxZDQ2OWU3ZjMzOCJ9.4j_4vQ0qmx0wOM_sRaZIEUrC0PzAufRoTtNdzxvQsVg`;
+const DELETE_ME_TOKEN = process.env.HF_TOKEN;
 
 @Injectable()
 export class HellofreshService {

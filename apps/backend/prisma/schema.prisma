@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -38,7 +39,7 @@ model Groceries {
   userId     String    @map("user_id")
   slug       String
   family     String
-  uuid       String    @unique
+  uuid       String
   recipe     Recipes   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId   String    @map("recipe_id")
 
