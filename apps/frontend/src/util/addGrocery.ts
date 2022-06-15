@@ -9,6 +9,7 @@ export const addGrocery = async (
 ): Promise<Grocery> => {
   if (!session) {
     openSignIn({});
+    return;
   }
   const response = await fetch(`${API_URL}/groceries?user=${session.user.id}`, {
     method: "POST",

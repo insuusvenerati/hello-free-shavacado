@@ -4,11 +4,16 @@ import { useMutation, useQueryClient } from "react-query";
 import { Grocery } from "../types/grocery";
 import { addGrocery } from "../util/addGrocery";
 
+type MutationError = {
+  statusCode: string;
+  message: string;
+};
+
 export const useAddGroceryMutation = () => {
   const { session } = useSession();
   const queryClient = useQueryClient();
   const { openSignIn } = useClerk();
-  return useMutation<Grocery, Error, Grocery>(
+  return useMutation<Grocery, MutationError, Grocery>(
     (grocery) => {
       return addGrocery(session, grocery, openSignIn);
     },
@@ -22,10 +27,10 @@ export const useAddGroceryMutation = () => {
           message: `Successfully added ${grocery.ingredient} to your grocery list`,
         });
       },
-      onError: () => {
+      onError: (error) => {
         showNotification({
           color: "red",
-          title: "Oh no",
+          title: `Code ${error.statusCode}`,
           message: "Unable to add ingredient",
         });
       },

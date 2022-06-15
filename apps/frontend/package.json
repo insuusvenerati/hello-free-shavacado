@@ -21,7 +21,6 @@
     "@mantine/notifications": "4.2.8",
     "@sentry/nextjs": "7.0.0",
     "@sentry/tracing": "7.0.0",
-    "@supabase/supabase-js": "1.35.3",
     "cookies-next": "2.0.4",
     "ky": "0.30.0",
     "ky-universal": "0.10.1",

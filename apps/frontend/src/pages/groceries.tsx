@@ -13,7 +13,9 @@ const Groceries = () => {
         </Title>
         <List>
           {groceries?.map((grocery) => (
-            <List.Item key={grocery.id}>{grocery.ingredient}</List.Item>
+            <List.Item key={grocery.id}>
+              {grocery.amount} {grocery.unit} {grocery.ingredient}
+            </List.Item>
           ))}
         </List>
       </Container>
