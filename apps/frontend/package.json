@@ -12,7 +12,7 @@
   "version": "1.5.0-develop.2",
   "private": true,
   "dependencies": {
-    "@clerk/nextjs": "3.6.5",
+    "@clerk/nextjs": "3.6.6",
     "@heroicons/react": "1.0.6",
     "@icons-pack/react-simple-icons": "4.7.0",
     "@mantine/core": "4.2.7",
