@@ -1023,7 +1023,7 @@
     snakecase-keys "^5.1.2"
     tslib "^2.3.1"
 
-"@clerk/clerk-react@^3.2.18":
+"@clerk/clerk-react@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@clerk/clerk-react/-/clerk-react-3.3.0.tgz#dc9192088a05d79b666d0a3c4b9941d1b9a2e1a0"
   integrity sha512-ZKcArKGuwM4/STz9O5hw8CGsf656oHbl44YsU02i1cPVyuzhIj/h+YBMeKVqvjG/w13oG/tYNLrx7Xlwn0CkHw==
@@ -1031,7 +1031,7 @@
     "@clerk/types" "^2.15.0"
     tslib "^2.3.1"
 
-"@clerk/clerk-sdk-node@^3.6.0":
+"@clerk/clerk-sdk-node@^3.6.1":
   version "3.6.1"
   resolved "https://registry.yarnpkg.com/@clerk/clerk-sdk-node/-/clerk-sdk-node-3.6.1.tgz#b2cdf5a5556d25bc889c31e7dec050af013940b9"
   integrity sha512-yIC3ej9nDMFI7pYmSsX38FoBzVpX1yXdFLL+F9H/1itrOvHoYapERFvx9LzEr/g526cexoHyCq/LDjVQTWXViQ==
@@ -1048,7 +1048,7 @@
     snakecase-keys "^3.2.1"
     tslib "^2.3.1"
 
-"@clerk/edge@^1.5.1":
+"@clerk/edge@^1.5.2":
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@clerk/edge/-/edge-1.5.2.tgz#414adeb9ceb22954ae352af857c5fccbc6f8327f"
   integrity sha512-e7Di2a1ItJ6QxiVVlZQ9tOOlTdkkXAbNCCNrOxbvuhOqMxPeZtjjcQAu1Bjf9Vi/jw2WLf/+tw45NCdGPQFjUg==
@@ -1057,18 +1057,18 @@
     "@peculiar/webcrypto" "^1.2.3"
     next "^12.0.7"
 
-"@clerk/nextjs@3.6.5":
-  version "3.6.5"
-  resolved "https://registry.yarnpkg.com/@clerk/nextjs/-/nextjs-3.6.5.tgz#0b5c0f9a9a740b8a40d07e9441e0d6b1e0455774"
-  integrity sha512-notqmFSnRGZALQKRCS7o7TatuAozBxCSaPzs5380Ds6/2OZBdxBLAQTwxudp8Kwwdjnarv0W6o8AMkqyYK7HGQ==
+"@clerk/nextjs@3.6.6":
+  version "3.6.6"
+  resolved "https://registry.yarnpkg.com/@clerk/nextjs/-/nextjs-3.6.6.tgz#602254be54f84fe6077926399e4b9ce8421e541b"
+  integrity sha512-vEtsNUpwzFSGcbq4Z+WQc58817+8scRoGlZ+JlQ4Z7DHRhCUUNEUu5N8Ke6VZK3eMXlRJ3GQt3hFrIjQdh/+Jw==
   dependencies:
-    "@clerk/clerk-react" "^3.2.18"
-    "@clerk/clerk-sdk-node" "^3.6.0"
-    "@clerk/edge" "^1.5.1"
-    "@clerk/types" "^2.14.0"
+    "@clerk/clerk-react" "^3.3.0"
+    "@clerk/clerk-sdk-node" "^3.6.1"
+    "@clerk/edge" "^1.5.2"
+    "@clerk/types" "^2.15.0"
     tslib "^2.3.1"
 
-"@clerk/types@^2.14.0", "@clerk/types@^2.15.0":
+"@clerk/types@^2.15.0":
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/@clerk/types/-/types-2.15.0.tgz#b76c665034d7a090f0d09b2174f7908d92313a1a"
   integrity sha512-/fnqMFJjNjq9P7Kf2o83QfYIoM6r8upUG5T7ak4e+DcN0OQR3Nt9QNCaubNOXvGC6pklgt4XUZq/4Njr/Wz6+g==
