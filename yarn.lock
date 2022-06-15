@@ -1551,18 +1551,6 @@
     csstype "3.0.9"
     html-react-parser "1.3.0"
 
-"@mantine/styles@4.2.7":
-  version "4.2.7"
-  resolved "https://registry.yarnpkg.com/@mantine/styles/-/styles-4.2.7.tgz#0d22c7b7f4187876e23c99ec63a0c4d8b58b762a"
-  integrity sha512-Ox9tgVqACQYAR7U1OvXELIoHUvPQS6ke4hXEa4Lzo6ErPN7kpopbve/HwJbcuipqieomvXkMCY4Fyt1pBt0xSQ==
-  dependencies:
-    "@emotion/cache" "11.7.1"
-    "@emotion/react" "11.7.1"
-    "@emotion/serialize" "1.0.2"
-    "@emotion/utils" "1.0.0"
-    clsx "^1.1.1"
-    csstype "3.0.9"
-
 "@mantine/styles@4.2.9":
   version "4.2.9"
   resolved "https://registry.yarnpkg.com/@mantine/styles/-/styles-4.2.9.tgz#97fbc96be5ea970218aab0ad62a8f7c736bc6225"
@@ -2291,10 +2279,15 @@
     "@types/cache-manager" "*"
     "@types/ioredis" "*"
 
-"@types/cache-manager@*", "@types/cache-manager@3.4.3":
+"@types/cache-manager@*":
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/@types/cache-manager/-/cache-manager-3.4.3.tgz#eba99bf795b997ad0c309658101398c34d7faecb"
   integrity sha512-71aBXoFYXZW4TnDHHH8gExw2lS28BZaWeKefgsiJI7QYZeJfUEbMKw6CQtzGjlYQcGIWwB76hcCrkVA3YHSvsw==
+
+"@types/cache-manager@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@types/cache-manager/-/cache-manager-4.0.0.tgz#6522a64432bb900d7e6654270fec21bc3c3de139"
+  integrity sha512-uGnPOCM3PtlqZagds3i8mNyEwKLgZpKgswqmlF2ahmh4D1TN1aLYxYez2PDFDy42IGwLTbuHWSiF62I2jouM7g==
 
 "@types/cacheable-request@^6.0.1":
   version "6.0.2"
@@ -3454,14 +3447,14 @@ cache-manager-ioredis@2.1.0:
   dependencies:
     ioredis "^4.14.1"
 
-cache-manager@3.6.3:
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/cache-manager/-/cache-manager-3.6.3.tgz#48052f3cf9ee4bac1cbb6adeedd69faf9da4ec04"
-  integrity sha512-dS4DnV6c6cQcVH5OxzIU1XZaACXwvVIiUPkFytnRmLOACuBGv3GQgRQ1RJGRRw4/9DF14ZK2RFlZu1TUgDniMg==
+cache-manager@4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/cache-manager/-/cache-manager-4.0.1.tgz#185b1d1aa1385fbb4fb0ec88fda7676f566a15b8"
+  integrity sha512-JWdtjdX8e0e6eMehAZsdJvBMvHn/pVQGYUjgzc1ILFH0vtcffb9R7XIEAqfYgEeaVJVCOSP4+dxCius+ciW0RA==
   dependencies:
     async "3.2.3"
     lodash.clonedeep "^4.5.0"
-    lru-cache "6.0.0"
+    lru-cache "^7.10.1"
 
 cacheable-lookup@^5.0.3:
   version "5.0.4"
@@ -7371,13 +7364,6 @@ lowercase-keys@^2.0.0:
   resolved "https://registry.yarnpkg.com/lowercase-keys/-/lowercase-keys-2.0.0.tgz#2603e78b7b4b0006cbca2fbcc8a3202558ac9479"
   integrity sha512-tqNXrS78oMOE73NMxK4EMLQsQowWf8jKooH9g7xPavRT706R6bkQJ6DY2Te7QukaZsulxa30wQ7bk0pm4XiHmA==
 
-lru-cache@6.0.0, lru-cache@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-6.0.0.tgz#6d6fe6570ebd96aaf90fcad1dafa3b2566db3a94"
-  integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
-  dependencies:
-    yallist "^4.0.0"
-
 lru-cache@^4.0.1, lru-cache@~4.0.0:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.0.2.tgz#1d17679c069cda5d040991a09dbc2c0db377e55e"
@@ -7385,6 +7371,18 @@ lru-cache@^4.0.1, lru-cache@~4.0.0:
   dependencies:
     pseudomap "^1.0.1"
     yallist "^2.0.0"
+
+lru-cache@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-6.0.0.tgz#6d6fe6570ebd96aaf90fcad1dafa3b2566db3a94"
+  integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
+  dependencies:
+    yallist "^4.0.0"
+
+lru-cache@^7.10.1:
+  version "7.10.1"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.10.1.tgz#db577f42a94c168f676b638d15da8fb073448cab"
+  integrity sha512-BQuhQxPuRl79J5zSXRP+uNzPOyZw2oFI9JLRQ80XswSvg21KMKNtQza9eF42rfI/3Z40RvzBdXgziEkudzjo8A==
 
 lru-memoizer@^2.1.4:
   version "2.1.4"
