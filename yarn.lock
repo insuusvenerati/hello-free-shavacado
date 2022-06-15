@@ -1523,12 +1523,12 @@
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-4.2.8.tgz#eeae72da40e30b6a8497a7e6c81a61aab051ef8e"
   integrity sha512-CZYATDBlEEazl5XsS4bpgHe9auIxgRAnshw5GL0maOE3gKiYUFuvNGbJe6wlhqIOHUyW/Bk6vKZJPbLs39iw/A==
 
-"@mantine/next@4.2.7":
-  version "4.2.7"
-  resolved "https://registry.yarnpkg.com/@mantine/next/-/next-4.2.7.tgz#b377edd74345b0547aec28fe279d9e0b7f570a29"
-  integrity sha512-ywtKch0nzjigG95xlbcUl7lCPymqEhM9fh2igNAECpAncDsR6iXOpoaVuyr5Fc5RMqfB2hqCQEI7lyEGAV7R/A==
+"@mantine/next@4.2.9":
+  version "4.2.9"
+  resolved "https://registry.yarnpkg.com/@mantine/next/-/next-4.2.9.tgz#cda2c227ee0776064cd464cb7e417c72d616a15d"
+  integrity sha512-avbxQeR9EerSHJ3HOg7rPAyBUoJ3/ifvYifyP/Sd6ap3hGzF1a/NN4tSRjoRmz1jTyAdmKIhL0k0alwi1OqA2A==
   dependencies:
-    "@mantine/ssr" "4.2.7"
+    "@mantine/ssr" "4.2.9"
 
 "@mantine/notifications@4.2.8":
   version "4.2.8"
@@ -1537,17 +1537,17 @@
   dependencies:
     react-transition-group "^4.4.2"
 
-"@mantine/ssr@4.2.7":
-  version "4.2.7"
-  resolved "https://registry.yarnpkg.com/@mantine/ssr/-/ssr-4.2.7.tgz#d4a47fa0459fba4e3ace9444b1708b5594569c33"
-  integrity sha512-mPmBbTbgzD4rBRvJUjN8quoePeimRDyKND/bqhSKHEc7KyNRWgJvGpQYRMWZJMO/eM6yg9AIM8Kn+VNLDmQU8g==
+"@mantine/ssr@4.2.9":
+  version "4.2.9"
+  resolved "https://registry.yarnpkg.com/@mantine/ssr/-/ssr-4.2.9.tgz#4ce7c687dfa12e4aab46ff2e78871fde0cd749d8"
+  integrity sha512-6B5R8ELRR+GQaXdnUUoSlZXEA5DiG4Pp91EOJTU+UYnieQ+gdLISp2HmYAvKMpETViOciBou6r8j2hH74tls4g==
   dependencies:
     "@emotion/cache" "11.7.1"
     "@emotion/react" "11.7.1"
     "@emotion/serialize" "1.0.2"
     "@emotion/server" "11.4.0"
     "@emotion/utils" "1.0.0"
-    "@mantine/styles" "4.2.7"
+    "@mantine/styles" "4.2.9"
     csstype "3.0.9"
     html-react-parser "1.3.0"
 
