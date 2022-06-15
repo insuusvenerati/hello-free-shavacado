@@ -8,6 +8,9 @@ const onVercel = process.env.VERCEL === 1;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  eslint: {
+    dirs: ["pages", "components", "hooks"],
+  },
   experimental: {
     outputStandalone: !onVercel,
   },

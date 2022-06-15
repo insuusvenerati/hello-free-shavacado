@@ -18,9 +18,9 @@ export const useAddGroceryMutation = () => {
       return addGrocery(session, grocery, openSignIn);
     },
     {
-      onSuccess: (grocery) => {
-        queryClient.invalidateQueries(["groceries", session]);
-        queryClient.invalidateQueries("recipes");
+      onSuccess: async (grocery) => {
+        await queryClient.invalidateQueries(["groceries", session]);
+        await queryClient.invalidateQueries("recipes");
         showNotification({
           color: "green",
           title: "Wooo",

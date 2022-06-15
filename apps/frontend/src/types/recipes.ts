@@ -250,8 +250,8 @@ export interface Yield {
 
 export interface YieldIngredient {
   id: string;
-  amount: number | null;
-  unit: IngredientUnit | null;
+  amount: number;
+  unit: IngredientUnit;
 }
 
 export enum IngredientUnit {

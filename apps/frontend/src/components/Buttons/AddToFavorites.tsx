@@ -1,8 +1,8 @@
 import { useClerk, useSession } from "@clerk/nextjs";
+import { ActiveSessionResource } from "@clerk/types";
 import { StarIcon } from "@heroicons/react/outline";
 import { Button, SharedButtonProps } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { PostgrestError } from "@supabase/supabase-js";
 import { FormEvent } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useFavoriteRecipesQuery } from "../../hooks/useFavoriteRecipesQuery";
@@ -11,6 +11,10 @@ import { addRecipe } from "../../util/addRecipe";
 
 type Props = { selectedRecipe: Item } & SharedButtonProps;
 
+type MutateError = {
+  code: string;
+};
+
 export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
   const { openSignIn } = useClerk();
   const queryClient = useQueryClient();
@@ -18,7 +22,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
   const { data: favoriteRecipes } = useFavoriteRecipesQuery();
   const { mutate: addFavorite, isLoading } = useMutation<
     unknown,
-    PostgrestError,
+    MutateError,
     FormEvent<HTMLFormElement>
   >(
     async (event) => {
@@ -42,8 +46,8 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
           });
         }
       },
-      onSuccess: () => {
-        queryClient.invalidateQueries("recipes");
+      onSuccess: async () => {
+        await queryClient.invalidateQueries("recipes");
         showNotification({
           color: "green",
           title: "Success",
