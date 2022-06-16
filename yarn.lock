@@ -1530,10 +1530,10 @@
   dependencies:
     "@mantine/ssr" "4.2.9"
 
-"@mantine/notifications@4.2.8":
-  version "4.2.8"
-  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-4.2.8.tgz#52ad42f57c47b2c4e1baa942f75cba9e11dda9d6"
-  integrity sha512-DXy6Crvt4DcWtadu8DTF6YaszLr2R7+TnWgVqnte2uOL6ZUEWfJafOqyk+Sr1QAbDnt3ez6bykz9ZzNLZca41Q==
+"@mantine/notifications@4.2.9":
+  version "4.2.9"
+  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-4.2.9.tgz#b25b84e7beaefe190893f5c749e3aac1c3a9a5fc"
+  integrity sha512-t19JCCBmJl9/vXlE4vLiz9WqssvNL50MFgJ30MwI+Rc36xO3PnvY3LX3hULKmqOtOlVdTcWz2RwbPkVjM8/c7A==
   dependencies:
     react-transition-group "^4.4.2"
 
