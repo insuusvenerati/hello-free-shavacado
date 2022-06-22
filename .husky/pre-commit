@@ -3,4 +3,3 @@
 
 ggshield secret scan pre-commit
 yarn lint-staged
-yarn build

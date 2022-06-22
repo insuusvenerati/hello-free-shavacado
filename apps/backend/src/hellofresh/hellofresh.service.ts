@@ -13,8 +13,6 @@ export class HellofreshService {
   private readonly logger = new Logger(HellofreshService.name);
 
   async findAll(query: string, page: number) {
-    if (!query) return "No query was supplied";
-
     const skip = page !== 1 ? page * 20 : 0;
     const response = await axios.get(`${BASE_URL}take=20&q=${query}&skip=${skip}`, {
       headers: { authorization: `Bearer ${DELETE_ME_TOKEN}` },
@@ -38,8 +36,6 @@ export class HellofreshService {
   }
 
   async findOne(query: string) {
-    if (!query) return "No query was supplied";
-
     const response = await axios.get(`${BASE_URL}take=1&q=${query}`, {
       headers: { authorization: `Bearer ${DELETE_ME_TOKEN}` },
     });
@@ -57,18 +53,12 @@ export class HellofreshService {
 
   async getFavoriteRecipes() {
     const response = await axios.get<RecipeQuery>(
-      `${BASE_URL}take=250&order=favorites&min-rating=3`,
+      `${BASE_URL}take=16&sort=-favorites&min-rating=3.3`,
       {
         headers: { authorization: `Bearer ${DELETE_ME_TOKEN}` },
       },
     );
 
-    const notAddonRecipe = response.data.items
-      .filter((item) => item.ratingsCount > 100)
-      .filter((item) => item.isAddon === false)
-      .filter((item) => item.id !== "60eef023f0590e4f0a2baa83");
-    // .slice(0, 16);
-
-    return notAddonRecipe;
+    return response.data;
   }
 }

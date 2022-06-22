@@ -1,20 +1,17 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.231.0/containers/typescript-node
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.238.0/containers/typescript-node
 {
   "name": "Node.js & TypeScript",
-  "image": "docker.io/stiforr/node-devcontainer",
+  "image": "stiforr/hellofresh-devcontainer",
 
-  // Set *default* container specific settings.json values on container create.
-  "settings": {},
-
-  // Add the IDs of extensions you want installed when the container is created.
-  "extensions": [
-    "dbaeumer.vscode-eslint",
-    "GitHub.vscode-pull-request-github",
-    "esbenp.prettier-vscode",
-    "eamodio.gitlens",
-    "pflannery.vscode-versionlens"
-  ],
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode", "Prisma.prisma"]
+    }
+  },
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
@@ -25,8 +22,8 @@
   // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
   "remoteUser": "node",
   "features": {
-    "docker-in-docker": "latest",
-    "git": "os-provided",
-    "fish": "latest"
+    "docker-in-docker": "20.10",
+    "git": "latest",
+    "python": "3.10"
   }
 }

@@ -16,20 +16,20 @@ model Hellofresh {
   @@map("hellofresh")
 }
 
-model Recipes {
-  createdAt DateTime?   @default(now()) @map("created_at") @db.Timestamptz(6)
-  slug      String      @unique
-  userId    String?     @map("user_id")
+model Recipe {
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  userId    String?   @map("user_id")
   name      String?
-  imagePath String?     @map("image_path")
-  id        String      @id @default(dbgenerated("fn_ksuid()"))
-  groceries Groceries[]
-  uuid      String      @unique
+  imagePath String?   @map("image_path")
+  id        String    @id @default(dbgenerated("fn_ksuid()"))
+  slug      String    @unique
+  uuid      String    @unique
+  groceries Grocery[]
 
-  @@map("recipes")
+  @@map("recipe")
 }
 
-model Groceries {
+model Grocery {
   createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   ingredient String
   amount     Float?
@@ -37,11 +37,33 @@ model Groceries {
   imagePath  String?   @map("image_path")
   id         String    @id @default(dbgenerated("fn_ksuid()"))
   userId     String    @map("user_id")
-  slug       String
   family     String
+  slug       String
   uuid       String
-  recipe     Recipes   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId   String    @map("recipe_id")
+  recipe     Recipe    @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
-  @@map("groceries")
+  @@map("grocery")
+}
+
+model ImportedRecipe {
+  id                      String   @id @default(dbgenerated("fn_ksuid()"))
+  name                    String
+  image                   String
+  description             String
+  cookTime                String   @map("cook_time")
+  prepTime                String   @map("prep_time")
+  totalTime               String   @map("total_time")
+  recipeYield             String
+  recipeIngredients       String[]
+  recipeInstructions      String[]
+  recipeCategories        String[]
+  recipeCuisines          String[]
+  recipeTypes             String[]
+  keywords                String[]
+  cookTimeOriginalFormat  String?  @map("cooktime_original_format")
+  prepTimeOriginalFormat  String?  @map("preptime_original_format")
+  totalTimeOriginalFormat String?  @map("totaltime_original_format")
+  url                     String
+  userId                  String   @map("user_id")
 }

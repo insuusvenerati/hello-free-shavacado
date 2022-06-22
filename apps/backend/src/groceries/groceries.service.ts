@@ -5,14 +5,24 @@ import { PrismaService } from "src/prisma.service";
 @Injectable()
 export class GroceriesService {
   constructor(private prisma: PrismaService) {}
-  async create(createGroceryDto: Prisma.GroceriesCreateInput) {
-    return this.prisma.groceries.create({
+  async create(createGroceryDto: Prisma.GroceryCreateInput) {
+    return await this.prisma.grocery.create({
       data: createGroceryDto,
     });
   }
 
-  findAll(user: string) {
-    return this.prisma.groceries.findMany({
+  async findAll(user: string) {
+    return await this.prisma.grocery.findMany({
+      where: { userId: user },
+    });
+  }
+
+  async count(user: string) {
+    return await this.prisma.grocery.groupBy({
+      by: ["ingredient"],
+      _sum: {
+        amount: true,
+      },
       where: { userId: user },
     });
   }

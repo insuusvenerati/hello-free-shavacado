@@ -8,6 +8,7 @@ import { LoggerMiddleware } from "./logger.middleware";
 import { PlaceholderModule } from "./placeholder/placeholder.module";
 import { RecipeModule } from "./recipe/recipe.module";
 import { GroceriesModule } from "./groceries/groceries.module";
+import { ScrapeModule } from "./scrape/scrape.module";
 
 const ENV = process.env.NODE_ENV;
 
@@ -29,6 +30,7 @@ const ENV = process.env.NODE_ENV;
     PlaceholderModule,
     RecipeModule,
     GroceriesModule,
+    ScrapeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

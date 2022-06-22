@@ -1,4 +1,12 @@
-import { CacheInterceptor, Controller, Get, Query, UseInterceptors } from "@nestjs/common";
+import {
+  CacheInterceptor,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Query,
+  UseInterceptors,
+} from "@nestjs/common";
 import { HellofreshService } from "./hellofresh.service";
 
 @Controller("hellofresh")
@@ -8,6 +16,7 @@ export class HellofreshController {
 
   @Get()
   findAll(@Query() query) {
+    if (!query.q) throw new HttpException("No query supplied", HttpStatus.NOT_FOUND);
     return this.hellofreshService.findAll(query.q, query.page);
   }
 

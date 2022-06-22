@@ -7,7 +7,7 @@ export class GroceriesController {
   constructor(private readonly groceriesService: GroceriesService) {}
 
   @Post()
-  create(@Body() createGroceryDto: Prisma.GroceriesCreateInput) {
+  create(@Body() createGroceryDto: Prisma.GroceryCreateInput) {
     return this.groceriesService.create(createGroceryDto);
   }
 
