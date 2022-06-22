@@ -1,13 +1,13 @@
 import { Grid, Title } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
-import { Item } from "../types/recipes";
+import { Item, RecipeQuery } from "../types/recipes";
 import { RecipeCard } from "./RecipeCard";
 
 type Props = {
   filteredRecipes: Item[];
   modalHandler: () => void;
   setSelectedRecipe: Dispatch<SetStateAction<Item>>;
-  popularRecipes: Item[];
+  popularRecipes: RecipeQuery;
   isLoading: boolean;
 };
 
@@ -44,17 +44,18 @@ export const FilteredOrPopularRecipesList = ({
         </Title>
 
         <Grid columns={4} justify="center">
-          {popularRecipes?.map((recipe) => {
-            return (
-              <Grid.Col key={recipe.id} md={1} sm={2}>
-                <RecipeCard
-                  handler={modalHandler}
-                  recipe={recipe}
-                  setSelectedRecipe={setSelectedRecipe}
-                />
-              </Grid.Col>
-            );
-          })}
+          {popularRecipes.items.length > 0 &&
+            popularRecipes?.items.map((recipe) => {
+              return (
+                <Grid.Col key={recipe.id} md={1} sm={2}>
+                  <RecipeCard
+                    handler={modalHandler}
+                    recipe={recipe}
+                    setSelectedRecipe={setSelectedRecipe}
+                  />
+                </Grid.Col>
+              );
+            })}
         </Grid>
       </>
     );

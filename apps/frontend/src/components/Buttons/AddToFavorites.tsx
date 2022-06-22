@@ -1,5 +1,4 @@
 import { useClerk, useSession } from "@clerk/nextjs";
-import { ActiveSessionResource } from "@clerk/types";
 import { StarIcon } from "@heroicons/react/outline";
 import { Button, SharedButtonProps } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
@@ -47,7 +46,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
         }
       },
       onSuccess: async () => {
-        await queryClient.invalidateQueries("recipes");
+        await queryClient.invalidateQueries(["favoriteRecipes", session]);
         showNotification({
           color: "green",
           title: "Success",

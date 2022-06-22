@@ -11,7 +11,7 @@ export const useDeleteFavoriteRecipe = (session: ActiveSessionResource, id: stri
     },
     {
       onSuccess: async () => {
-        await queryClient.invalidateQueries("recipes");
+        await queryClient.invalidateQueries(["favoriteRecipes", session]);
         await queryClient.invalidateQueries(["groceries", session]);
       },
     },

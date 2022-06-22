@@ -1,25 +1,23 @@
-import { getCookie } from "cookies-next";
-import { useCallback, useState } from "react";
+import { usePagination } from "@mantine/hooks";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { Item } from "../types/recipes";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
-import { useDebounce } from "./useDebounce";
 import { useFilterRecipes } from "./useFilters";
 import { useRecipesQuery } from "./useRecipesQuery";
 
 export const useRecipes = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Item>();
   const [searchText, setSearchText] = useState("");
-  const debouncedSearchText = useDebounce<string>(searchText, 1000);
-  const token = getCookie("token");
-  const [page, setPage] = useState(1);
-
+  const [page, onChange] = useState<number | undefined>();
   const {
     data: recipes,
     isLoading,
     error,
     isError,
-  } = useRecipesQuery({ debouncedSearchText, page, token });
-
+    refetch,
+    remove,
+    isFetching,
+  } = useRecipesQuery({ searchText, page });
   const {
     filteredRecipes,
     recipesTotal,
@@ -27,7 +25,16 @@ export const useRecipes = () => {
     selectedIngredients,
     setSelectedAllergens,
     setSelectedIngredients,
+    setFilteredRecipes,
+    setRecipesTotal,
   } = useFilterRecipes(recipes);
+
+  const { setPage, active } = usePagination({ total: recipesTotal, page, onChange });
+
+  const onSubmitHandler = (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    refetch().catch((error) => console.log(error));
+  };
 
   const allergens = [
     ...new Set(
@@ -57,34 +64,34 @@ export const useRecipes = () => {
     ),
   ];
 
-  const clearSearchHandler = useCallback(() => {
+  const clearSearchHandler = () => {
     setSearchText("");
-  }, []);
+    setPage(undefined);
+    setFilteredRecipes(undefined);
+    setRecipesTotal(undefined);
+    remove();
+  };
+  const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchText(event.target.value);
+  };
 
-  const onChangeHandler = useCallback(
-    (event) => {
-      setSearchText(event.target.value);
-    },
-    [setSearchText],
-  );
+  const pageChangeHandler = (pageNumber: number) => {
+    onChange(pageNumber);
+  };
 
-  const pageChangeHandler = useCallback((pageNumber: number) => {
-    setPage(pageNumber);
-  }, []);
+  const handleSetSelectedIngredients = (value: string[]) => {
+    setSelectedIngredients(value);
+  };
 
-  const handleSetSelectedIngredients = useCallback(
-    (value: string[]) => {
-      setSelectedIngredients(value);
-    },
-    [setSelectedIngredients],
-  );
+  const handleSetSelectedAllergens = (value: string[]) => {
+    setSelectedAllergens(value);
+  };
 
-  const handleSetSelectedAllergens = useCallback(
-    (value: string[]) => {
-      setSelectedAllergens(value);
-    },
-    [setSelectedAllergens],
-  );
+  useEffect(() => {
+    if (page) {
+      refetch().catch((error) => console.log(error));
+    }
+  }, [refetch, page]);
 
   return {
     isLoading,
@@ -105,5 +112,8 @@ export const useRecipes = () => {
     selectedAllergens,
     selectedIngredients,
     searchText,
+    onSubmitHandler,
+    isFetching,
+    active,
   };
 };

@@ -4,8 +4,8 @@ import { getRecipes } from "../util/getRecipes";
 
 export const useFavoriteRecipesQuery = () => {
   const { session } = useSession();
-  return useQuery(["recipes", session], () => getRecipes(session), {
-    staleTime: 60 * 60 * 24,
+  return useQuery(["favoriteRecipes", session], () => getRecipes(session), {
+    staleTime: 60 * 60,
     refetchOnWindowFocus: false,
     notifyOnChangeProps: ["data", "error"],
     enabled: !!session,

@@ -4,6 +4,8 @@ import {
   AppShell,
   Aside,
   Avatar,
+  Box,
+  Divider,
   Group,
   List,
   LoadingOverlay,
@@ -13,8 +15,10 @@ import {
   SelectItem,
   Stack,
   Text,
+  TextInput,
 } from "@mantine/core";
 import { forwardRef, useState } from "react";
+import { useAddImportedRecipeMutation } from "../hooks/useAddImportedRecipeMutation";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { MyHeader } from "./MyHeader";
 import { NavbarContent } from "./NavContent";
@@ -59,6 +63,14 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
     handleSetSelectedIngredients,
     selectedIngredients,
   } = props;
+  const {
+    onSubmitHandler,
+    error: addImportedRecipeError,
+    setUrl,
+    isError,
+    isLoading: addImportedRecipeLoading,
+    url,
+  } = useAddImportedRecipeMutation();
 
   const { data: recipes, isLoading } = useFavoriteRecipesQuery();
   const [opened, setOpened] = useState(false);
@@ -72,6 +84,16 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
             <Text size="lg" weight="bold" mb="md">
               Favorite Recipes
             </Text>
+            <Box onSubmit={onSubmitHandler} mb="sm" component="form">
+              <TextInput
+                onChange={(event) => setUrl(event.currentTarget.value)}
+                value={url}
+                disabled={addImportedRecipeLoading}
+                error={isError && addImportedRecipeError.message}
+                placeholder="Enter a URL"
+                label="Import Recipe"
+              />
+            </Box>
             {recipes?.length > 0 ? (
               <List
                 center
@@ -89,6 +111,7 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
             ) : (
               <Text>You don&apos;t have any recipes!</Text>
             )}
+            <Divider my="sm" />
           </Aside>
         </MediaQuery>
       }

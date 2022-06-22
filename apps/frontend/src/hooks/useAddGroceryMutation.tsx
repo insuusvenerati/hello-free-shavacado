@@ -20,7 +20,7 @@ export const useAddGroceryMutation = () => {
     {
       onSuccess: async (grocery) => {
         await queryClient.invalidateQueries(["groceries", session]);
-        await queryClient.invalidateQueries("recipes");
+        await queryClient.invalidateQueries(["favoriteRecipes", session]);
         showNotification({
           color: "green",
           title: "Wooo",

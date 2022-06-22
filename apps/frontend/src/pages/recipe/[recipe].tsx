@@ -25,21 +25,20 @@ import { IngredientCard } from "../../components/IngredientsCard";
 import { NavbarContent } from "../../components/NavContent";
 import { useAddGroceryMutation } from "../../hooks/useAddGroceryMutation";
 import { Grocery } from "../../types/grocery";
-import { Item, RecipeQuery } from "../../types/recipes";
+import { RecipeQuery } from "../../types/recipes";
 import {
-  HELLOFRESH_SEARCH_URL,
   HF_ICON_IMAGE_URL,
   HF_OG_IMAGE_URL,
   HF_PLACEHOLDERURL,
   HF_STEP_IMAGE_URL,
 } from "../../util/constants";
+import { getPopularRecipes } from "../../util/getPopularRecipes";
 import { hellofreshSearchBySlug } from "../../util/hellofresh";
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const response = await fetch(`${HELLOFRESH_SEARCH_URL}/favorites`);
-  const data: Item[] = await response.json();
+  const data = await getPopularRecipes();
 
-  const paths = data?.map((recipe) => ({
+  const paths = data?.items?.map((recipe) => ({
     params: { recipe: recipe.slug },
   }));
 
@@ -113,7 +112,7 @@ const Recipe = ({ data: recipes }: { data: RecipeQuery }) => {
           Go back
         </Button>
       </Affix>
-      <div style={{ backgroundColor: "#FDFCFA" }}>
+      <div>
         <Image
           alt={recipe?.name}
           blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}

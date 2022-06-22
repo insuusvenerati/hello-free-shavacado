@@ -3,27 +3,33 @@ import { XIcon } from "@heroicons/react/outline";
 import { ActionIcon, Center, Grid, Loader, Pagination, TextInput, ThemeIcon } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
 import LogRocket from "logrocket";
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { useCallback, useEffect, useState } from "react";
+import { dehydrate, QueryClient } from "react-query";
 import { Layout } from "../components/Layout";
 import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
 import RecipeModal from "../components/RecipeModal";
+import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
 import { useRecipes } from "../hooks/useRecipes";
-import { Item } from "../types/recipes";
-import { HELLOFRESH_SEARCH_URL } from "../util/constants";
+import { getPopularRecipes } from "../util/getPopularRecipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 
-export const getStaticProps: GetStaticProps = async () => {
-  const response = await fetch(`${HELLOFRESH_SEARCH_URL}/favorites`);
-  const data: Item[] = await response.json();
+export const getServerSideProps: GetServerSideProps = async () => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
 
-  return { props: { data } };
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
 };
 
-const Home = ({ data: popularRecipes }: { data: Item[] }) => {
+const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const token = getCookie("token") as string;
   const { user } = useUser();
+  const { data: popularRecipes } = usePopularRecipesQuery();
 
   const {
     isLoading,
@@ -32,12 +38,14 @@ const Home = ({ data: popularRecipes }: { data: Item[] }) => {
     filteredRecipes,
     selectedRecipe,
     recipesTotal,
-    page,
     setSelectedRecipe,
     onChangeHandler,
     pageChangeHandler,
     clearSearchHandler,
     searchText,
+    onSubmitHandler,
+    isFetching,
+    active,
   } = useRecipes();
 
   // const { data: popularRecipes, isLoading: popularRecipesLoading } = usePopularRecipesQuery();
@@ -79,32 +87,37 @@ const Home = ({ data: popularRecipes }: { data: Item[] }) => {
 
         <Grid justify="center">
           <Grid.Col lg={6} md={12}>
-            <TextInput
-              value={searchText}
-              error={isError && error.message}
-              label="Search"
-              onChange={onChangeHandler}
-              placeholder="Search"
-              rightSection={
-                isLoading ? (
-                  <Loader size="sm" />
-                ) : filteredRecipes ? (
-                  <ActionIcon onClick={clearSearchHandler} mr="xs">
-                    <ThemeIcon variant="outline">
-                      <XIcon width={16} />
-                    </ThemeIcon>
-                  </ActionIcon>
-                ) : undefined
-              }
-              size="md"
-              type="text"
-            />
+            <form onSubmit={onSubmitHandler}>
+              <TextInput
+                value={searchText}
+                error={isError && error.message}
+                label="Search"
+                onChange={onChangeHandler}
+                placeholder="Search"
+                rightSection={
+                  isLoading || isFetching ? (
+                    <Loader size="sm" />
+                  ) : filteredRecipes ? (
+                    <ActionIcon onClick={clearSearchHandler} mr="xs">
+                      <ThemeIcon variant="outline">
+                        <XIcon width={16} />
+                      </ThemeIcon>
+                    </ActionIcon>
+                  ) : undefined
+                }
+                disabled={isLoading}
+                size="md"
+                type="search"
+              />
+            </form>
           </Grid.Col>
         </Grid>
         <Center mb={5} mt={5}>
           <Grid columns={1} justify="center">
             <Grid.Col span={1}>
-              <Pagination onChange={pageChangeHandler} page={page} total={recipesTotal} />
+              {recipesTotal > 0 && (
+                <Pagination onChange={pageChangeHandler} page={active} total={recipesTotal} />
+              )}
             </Grid.Col>
           </Grid>
         </Center>
