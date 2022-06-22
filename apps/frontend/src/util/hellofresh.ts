@@ -1,4 +1,4 @@
-import ky from "ky-universal";
+import ky from "ky";
 import { RecipeQuery } from "../types/recipes";
 import { HELLOFRESH_SEARCH_URL } from "./constants";
 

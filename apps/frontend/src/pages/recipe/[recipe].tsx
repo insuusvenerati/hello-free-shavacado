@@ -15,55 +15,66 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment, SyntheticEvent } from "react";
+import { dehydrate, QueryClient } from "react-query";
 import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
 import { IngredientCard } from "../../components/IngredientsCard";
 import { NavbarContent } from "../../components/NavContent";
 import { useAddGroceryMutation } from "../../hooks/useAddGroceryMutation";
+import { useHellofreshBySlug } from "../../hooks/useHellofreshBySlug";
 import { Grocery } from "../../types/grocery";
-import { RecipeQuery } from "../../types/recipes";
 import {
   HF_ICON_IMAGE_URL,
   HF_OG_IMAGE_URL,
   HF_PLACEHOLDERURL,
   HF_STEP_IMAGE_URL,
 } from "../../util/constants";
-import { getPopularRecipes } from "../../util/getPopularRecipes";
 import { hellofreshSearchBySlug } from "../../util/hellofresh";
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const data = await getPopularRecipes();
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const data = await getPopularRecipes();
 
-  const paths = data?.items?.map((recipe) => ({
-    params: { recipe: recipe.slug },
-  }));
+//   const paths = data?.items?.map((recipe) => ({
+//     params: { recipe: recipe.slug },
+//   }));
+
+//   return {
+//     paths,
+//     fallback: "blocking",
+//   };
+// };
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const queryClient = new QueryClient();
+  const { recipe } = ctx.params;
+  await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], () =>
+    hellofreshSearchBySlug({ slug: recipe as string }),
+  );
+
+  // const data = await hellofreshSearchBySlug({ slug: slug as string });
+  // console.log(data);
 
   return {
-    paths,
-    fallback: "blocking",
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
   };
 };
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
-  const { recipe } = ctx.params;
-  const data = await hellofreshSearchBySlug({ slug: recipe as string });
-
-  return { props: { data } };
-};
-
-const Recipe = ({ data: recipes }: { data: RecipeQuery }) => {
+const Recipe = () => {
   const matches = useMediaQuery("(min-width: 900px)", true);
   const { session } = useSession();
   const router = useRouter();
+  const { data: recipes } = useHellofreshBySlug(router.query.recipe as string);
   const recipe = recipes?.items[0];
   const { mutate: addGroceryMutation, isLoading } = useAddGroceryMutation();
-  const yields = recipe.yields.map((y) => y.ingredients).flat();
+  const yields = recipe?.yields?.map((y) => y.ingredients).flat();
 
-  const addGroceriesIngredients = recipe.ingredients.map((ingredient) => {
+  const addGroceriesIngredients = recipe?.ingredients?.map((ingredient) => {
     const ingredientYield = yields.filter((y) => y.id === ingredient.id);
     return {
       ingredient: ingredient.name,
