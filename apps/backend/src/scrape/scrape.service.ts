@@ -19,8 +19,13 @@ export class ScrapeService {
     }
   }
 
-  findAll() {
-    return `This action returns all scrape`;
+  async findAll(user: string) {
+    if (!user) {
+      throw new HttpException("Forbidden", HttpStatus.FORBIDDEN);
+    }
+    return await this.prisma.importedRecipe.findMany({
+      where: { userId: user },
+    });
   }
 
   async findOne(id: string) {
@@ -33,7 +38,12 @@ export class ScrapeService {
     return `This action updates a #${id} scrape`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} scrape`;
+  async remove(id: string, user: string) {
+    if (!user) {
+      throw new HttpException("Forbidden", HttpStatus.FORBIDDEN);
+    }
+    return await this.prisma.importedRecipe.delete({
+      where: { id: id },
+    });
   }
 }

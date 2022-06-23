@@ -16,13 +16,18 @@ export class ScrapeController {
     return this.scrapeService.findOne(id);
   }
 
+  @Get()
+  async findAll(@Query("user") user: string) {
+    return this.scrapeService.findAll(user);
+  }
+
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateScrapeDto: UpdateScrapeDto) {
     return this.scrapeService.update(+id, updateScrapeDto);
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.scrapeService.remove(+id);
+  remove(@Param("id") id: string, @Query("user") user: string) {
+    return this.scrapeService.remove(id, user);
   }
 }
