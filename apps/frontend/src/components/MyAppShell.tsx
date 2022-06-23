@@ -16,10 +16,13 @@ import {
   Stack,
   Text,
   TextInput,
+  Title,
 } from "@mantine/core";
 import { forwardRef, useState } from "react";
 import { useAddImportedRecipeMutation } from "../hooks/useAddImportedRecipeMutation";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
+import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
+import { ImportedRecipeLink } from "./ImportedRecipeLink";
 import { MyHeader } from "./MyHeader";
 import { NavbarContent } from "./NavContent";
 import { RecipeLink } from "./RecipeLink";
@@ -71,6 +74,7 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
     isLoading: addImportedRecipeLoading,
     url,
   } = useAddImportedRecipeMutation();
+  const { data: importedRecipes } = useGetImportedRecipesQuery();
 
   const { data: recipes, isLoading } = useFavoriteRecipesQuery();
   const [opened, setOpened] = useState(false);
@@ -81,19 +85,9 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
         <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
           <Aside hiddenBreakpoint="sm" p="md" width={{ sm: 200, lg: 300 }}>
             <LoadingOverlay visible={isLoading} />
-            <Text size="lg" weight="bold" mb="md">
+            <Title order={3} mb="md">
               Favorite Recipes
-            </Text>
-            <Box onSubmit={onSubmitHandler} mb="sm" component="form">
-              <TextInput
-                onChange={(event) => setUrl(event.currentTarget.value)}
-                value={url}
-                disabled={addImportedRecipeLoading}
-                error={isError && addImportedRecipeError.message}
-                placeholder="Enter a URL"
-                label="Import Recipe"
-              />
-            </Box>
+            </Title>
             {recipes?.length > 0 ? (
               <List
                 center
@@ -112,6 +106,32 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
               <Text>You don&apos;t have any recipes!</Text>
             )}
             <Divider my="sm" />
+            <Title mb="sm" order={3}>
+              Imported Recipes
+            </Title>
+            <Box onSubmit={onSubmitHandler} mb="sm" component="form">
+              <TextInput
+                onChange={(event) => setUrl(event.currentTarget.value)}
+                value={url}
+                disabled={addImportedRecipeLoading}
+                error={isError && addImportedRecipeError.message}
+                placeholder="Enter a URL"
+                label="Import Recipe"
+              />
+            </Box>
+            <List
+              center
+              listStyleType="none"
+              styles={{
+                withIcon: {
+                  height: 55,
+                },
+              }}
+            >
+              {importedRecipes?.map((recipe) => (
+                <ImportedRecipeLink key={recipe.id} recipe={recipe} />
+              ))}
+            </List>
           </Aside>
         </MediaQuery>
       }

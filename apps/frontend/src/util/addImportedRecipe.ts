@@ -1,8 +1,8 @@
 import { ImportedRecipe } from "../types/importedRecipe";
-import { API_URL } from "./constants";
+import { HF_IMPORTED_RECIPE_URL } from "./constants";
 
 export const addImportedRecipe = async ({ url, user }: { url: string; user: string }) => {
-  const response = await fetch(`${API_URL}/scrape?url=${url}&user=${user}`, {
+  const response = await fetch(`${HF_IMPORTED_RECIPE_URL}?url=${url}&user=${user}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

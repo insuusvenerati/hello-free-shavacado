@@ -17,4 +17,5 @@ export interface ImportedRecipe {
   prepTimeOriginalFormat: string;
   totalTimeOriginalFormat: string;
   url: string;
+  userId: string;
 }

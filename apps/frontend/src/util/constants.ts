@@ -10,3 +10,4 @@ export const HF_OG_IMAGE_URL =
   "https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_630,q_auto,w_1200/hellofresh_s3";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+export const HF_IMPORTED_RECIPE_URL = `${API_URL}/scrape`;

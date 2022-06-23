@@ -29,6 +29,6 @@ export const hellofreshSearch = async (searchText: string, options?: HelloFreshS
   return await ky.get(`${HELLOFRESH_SEARCH_URL}?page=${page}&q=${searchText}`).json<RecipeQuery>();
 };
 
-export const hellofreshSearchBySlug = async ({ slug }: { slug: string; take?: number }) => {
+export const hellofreshSearchBySlug = async ({ slug }: { slug: string }) => {
   return await ky.get(`${HELLOFRESH_SEARCH_URL}/recipe?q=${slug}`).json<RecipeQuery>();
 };
