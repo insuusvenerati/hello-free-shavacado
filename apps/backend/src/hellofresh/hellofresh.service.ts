@@ -36,9 +36,12 @@ export class HellofreshService {
   }
 
   async findOne(query: string) {
-    const response = await axios.get(`${BASE_URL}take=1&q=${query}`, {
-      headers: { authorization: `Bearer ${DELETE_ME_TOKEN}` },
-    });
+    const response = await axios.get(
+      `${BASE_URL}take=1&q=${query}&order=-favorites&min-rating=3.3`,
+      {
+        headers: { authorization: `Bearer ${DELETE_ME_TOKEN}` },
+      },
+    );
 
     return response.data;
   }
