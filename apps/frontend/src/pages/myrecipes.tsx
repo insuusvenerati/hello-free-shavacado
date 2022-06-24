@@ -22,7 +22,7 @@ const RecipeList = () => {
       )
         .then((data) => setRecipes(data))
         .catch((err) => console.log(err));
-    getRecipesFromFavorites();
+    getRecipesFromFavorites().catch((e) => console.log(e));
   }, [favoriteRecipes]);
 
   const modalHandler = useCallback(() => {

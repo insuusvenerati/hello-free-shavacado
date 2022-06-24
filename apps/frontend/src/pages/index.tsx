@@ -1,10 +1,23 @@
 import { useUser } from "@clerk/nextjs";
 import { XIcon } from "@heroicons/react/outline";
-import { ActionIcon, Center, Grid, Loader, Pagination, TextInput, ThemeIcon } from "@mantine/core";
+import {
+  ActionIcon,
+  Avatar,
+  Center,
+  Grid,
+  Group,
+  Loader,
+  MantineColor,
+  Pagination,
+  SelectItemProps,
+  Text,
+  TextInput,
+  ThemeIcon,
+} from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
 import LogRocket from "logrocket";
 import { GetServerSideProps } from "next";
-import { useCallback, useEffect, useState } from "react";
+import { forwardRef, useCallback, useEffect, useState } from "react";
 import { dehydrate, QueryClient } from "react-query";
 import { Layout } from "../components/Layout";
 import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
@@ -25,11 +38,61 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
+interface ItemProps extends SelectItemProps {
+  color: MantineColor;
+  description: string;
+  image: string;
+}
+
+const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
+  ({ description, value, image, ...others }: ItemProps, ref) => {
+    return (
+      <div ref={ref} {...others}>
+        <Group noWrap>
+          <Avatar src={image} />
+
+          <div>
+            <Text>{value}</Text>
+            <Text size="xs" color="dimmed">
+              {description}
+            </Text>
+          </div>
+        </Group>
+      </div>
+    );
+  },
+);
+
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const token = getCookie("token") as string;
   const { user } = useUser();
   const { data: popularRecipes } = usePopularRecipesQuery();
+  // const [autocompleteData, setAutocompleteData] = useState([]);
+  // const {
+  //   data: suggestedRecipes,
+  //   searchText: suggestedRecipeSearchText,
+  //   setSearchText,
+  // } = useSuggestedRecipesQuery();
+
+  // useEffect(() => {
+  //   const autoCompleteData = suggestedRecipes?.items
+  //     ?.map((item) => {
+  //       return item.items.map((i) => {
+  //         const image = i.image.replace(
+  //           "https://d3hvwccx09j84u.cloudfront.net/80,80",
+  //           `${HF_AVATAR_IMAGE_URL}`,
+  //         );
+  //         return {
+  //           value: i.title,
+  //           description: i.headline,
+  //           image: image,
+  //         };
+  //       });
+  //     })
+  //     .flat();
+  //   setAutocompleteData(autoCompleteData);
+  // }, [suggestedRecipes?.items]);
 
   const {
     isLoading,
@@ -88,6 +151,26 @@ const Home = () => {
         <Grid justify="center">
           <Grid.Col lg={6} md={12}>
             <form onSubmit={onSubmitHandler}>
+              {/* <Autocomplete
+                label="Search"
+                placeholder="Search for ingredients"
+                itemComponent={AutoCompleteItem}
+                data={autocompleteData ? autocompleteData : []}
+                value={suggestedRecipeSearchText}
+                onChange={setSearchText}
+                onItemSubmit={onItemSubmitHandler}
+                rightSection={
+                  isLoading || isFetching ? (
+                    <Loader size="sm" />
+                  ) : filteredRecipes ? (
+                    <ActionIcon onClick={clearSearchHandler} mr="xs">
+                      <ThemeIcon variant="outline">
+                        <XIcon width={16} />
+                      </ThemeIcon>
+                    </ActionIcon>
+                  ) : undefined
+                }
+              /> */}
               <TextInput
                 value={searchText}
                 error={isError && error.message}
@@ -126,5 +209,7 @@ const Home = () => {
     </>
   );
 };
+
+AutoCompleteItem.displayName = "AutoCompleteItem";
 
 export default Home;

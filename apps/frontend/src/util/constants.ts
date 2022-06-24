@@ -11,3 +11,4 @@ export const HF_OG_IMAGE_URL =
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export const HF_IMPORTED_RECIPE_URL = `${API_URL}/scrape`;
+export const HF_SUGGESTED_RECIPE_URL = `https://www.hellofresh.com/gw/api/recipes/search/suggestions?country=US&locale=en-US&take=5&`;

@@ -1,3 +1,4 @@
+import { AutocompleteItem } from "@mantine/core";
 import { usePagination } from "@mantine/hooks";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { Item } from "../types/recipes";
@@ -75,6 +76,10 @@ export const useRecipes = () => {
     setSearchText(event.target.value);
   };
 
+  const onItemSubmitHandler = (item: AutocompleteItem) => {
+    setSearchText(item.value);
+  };
+
   const pageChangeHandler = (pageNumber: number) => {
     onChange(pageNumber);
   };
@@ -115,5 +120,7 @@ export const useRecipes = () => {
     onSubmitHandler,
     isFetching,
     active,
+    setSearchText,
+    onItemSubmitHandler,
   };
 };
