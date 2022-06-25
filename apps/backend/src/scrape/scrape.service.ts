@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import recipeDataScraper from "recipe-data-scraper";
 import { PrismaService } from "src/prisma.service";
-import { UpdateScrapeDto } from "./dto/update-scrape.dto";
 
 @Injectable()
 export class ScrapeService {
@@ -28,13 +27,14 @@ export class ScrapeService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: string) {
+    if (!user) throw new HttpException("Forbidden", HttpStatus.FORBIDDEN);
     return await this.prisma.importedRecipe.findUnique({
       where: { id: id },
     });
   }
 
-  update(id: number, updateScrapeDto: UpdateScrapeDto) {
+  update(id: number) {
     return `This action updates a #${id} scrape`;
   }
 

@@ -1,5 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
-import { UpdateScrapeDto } from "./dto/update-scrape.dto";
+import { Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { ScrapeService } from "./scrape.service";
 
 @Controller("scrape")
@@ -12,8 +11,8 @@ export class ScrapeController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.scrapeService.findOne(id);
+  findOne(@Param("id") id: string, @Query("user") user: string) {
+    return this.scrapeService.findOne(id, user);
   }
 
   @Get()
@@ -22,8 +21,8 @@ export class ScrapeController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateScrapeDto: UpdateScrapeDto) {
-    return this.scrapeService.update(+id, updateScrapeDto);
+  update(@Param("id") id: string) {
+    return this.scrapeService.update(+id);
   }
 
   @Delete(":id")
