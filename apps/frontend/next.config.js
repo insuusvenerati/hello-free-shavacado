@@ -37,7 +37,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["img.hellofresh.com"],
+    domains: ["img.hellofresh.com", "imagesvc.meredithcorp.io"],
   },
   reactStrictMode: true,
   typescript: {

@@ -1,7 +1,17 @@
 import { ImportedRecipe } from "../types/importedRecipe";
+import { SignInProps } from "@clerk/types";
 import { HF_IMPORTED_RECIPE_URL } from "./constants";
 
-export const addImportedRecipe = async ({ url, user }: { url: string; user: string }) => {
+type Props = {
+  url: string;
+  user: string;
+  openSignIn: (signInProps?: SignInProps) => void;
+};
+
+export const addImportedRecipe = async ({ url, user, openSignIn }: Props) => {
+  if (!user) {
+    openSignIn({});
+  }
   const response = await fetch(`${HF_IMPORTED_RECIPE_URL}?url=${url}&user=${user}`, {
     method: "POST",
     headers: {

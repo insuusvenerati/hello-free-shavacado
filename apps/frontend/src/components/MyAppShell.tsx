@@ -12,6 +12,7 @@ import {
   MediaQuery,
   MultiSelect,
   Navbar,
+  ScrollArea,
   SelectItem,
   Stack,
   Text,
@@ -83,12 +84,43 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
     <AppShell
       aside={
         <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-          <Aside hiddenBreakpoint="sm" p="md" width={{ sm: 200, lg: 300 }}>
-            <LoadingOverlay visible={isLoading} />
-            <Title order={3} mb="md">
-              Favorite Recipes
-            </Title>
-            {recipes?.length > 0 ? (
+          <Aside hiddenBreakpoint="sm" p="md" width={{ sm: 210, lg: 310 }}>
+            <Aside.Section grow component={ScrollArea}>
+              <LoadingOverlay visible={isLoading} />
+              <Title order={3} mb="md">
+                Favorite Recipes
+              </Title>
+              {recipes?.length > 0 ? (
+                <List
+                  center
+                  listStyleType="none"
+                  styles={{
+                    withIcon: {
+                      height: 55,
+                    },
+                  }}
+                >
+                  {recipes.map((recipe) => (
+                    <RecipeLink favoritedRecipe={recipe} key={recipe.id} />
+                  ))}
+                </List>
+              ) : (
+                <Text>You don&apos;t have any recipes!</Text>
+              )}
+              <Divider my="sm" />
+              <Title mb="sm" order={3}>
+                Imported Recipes
+              </Title>
+              <Box onSubmit={onSubmitHandler} mb="sm" component="form">
+                <TextInput
+                  onChange={(event) => setUrl(event.currentTarget.value)}
+                  value={url}
+                  disabled={addImportedRecipeLoading}
+                  error={isError && addImportedRecipeError.message}
+                  placeholder="Enter a URL"
+                  label="Import Recipe"
+                />
+              </Box>
               <List
                 center
                 listStyleType="none"
@@ -98,40 +130,11 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
                   },
                 }}
               >
-                {recipes.map((recipe) => (
-                  <RecipeLink favoritedRecipe={recipe} key={recipe.id} />
+                {importedRecipes?.map((recipe) => (
+                  <ImportedRecipeLink key={recipe.id} recipe={recipe} />
                 ))}
               </List>
-            ) : (
-              <Text>You don&apos;t have any recipes!</Text>
-            )}
-            <Divider my="sm" />
-            <Title mb="sm" order={3}>
-              Imported Recipes
-            </Title>
-            <Box onSubmit={onSubmitHandler} mb="sm" component="form">
-              <TextInput
-                onChange={(event) => setUrl(event.currentTarget.value)}
-                value={url}
-                disabled={addImportedRecipeLoading}
-                error={isError && addImportedRecipeError.message}
-                placeholder="Enter a URL"
-                label="Import Recipe"
-              />
-            </Box>
-            <List
-              center
-              listStyleType="none"
-              styles={{
-                withIcon: {
-                  height: 55,
-                },
-              }}
-            >
-              {importedRecipes?.map((recipe) => (
-                <ImportedRecipeLink key={recipe.id} recipe={recipe} />
-              ))}
-            </List>
+            </Aside.Section>
           </Aside>
         </MediaQuery>
       }

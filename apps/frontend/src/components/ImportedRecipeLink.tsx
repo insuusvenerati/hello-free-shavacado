@@ -30,7 +30,7 @@ export const ImportedRecipeLink = ({ recipe }: { recipe: ImportedRecipe }) => {
             </ActionIcon>
           </Tooltip>
           <Tooltip label="View Instructions">
-            <NextLink href={`/recipe/${recipe?.url}`}>
+            <NextLink href={`/imported-recipe/${recipe?.id}`}>
               <ActionIcon mr="xs">
                 <LinkIcon />
               </ActionIcon>
