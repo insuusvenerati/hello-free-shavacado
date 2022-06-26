@@ -1723,12 +1723,12 @@
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-4.2.11.tgz#936d3fdf4eff33620d90902b4091b219aaee7669"
   integrity sha512-kwbMbpT8ErroVSLK7fxEN0SypvK0rEErYyHKfKSMah5buWSu2F/diIuafL5UjvN7aQfS0ZJnqnH/avUN25H3qg==
 
-"@mantine/next@4.2.9":
-  version "4.2.9"
-  resolved "https://registry.yarnpkg.com/@mantine/next/-/next-4.2.9.tgz#cda2c227ee0776064cd464cb7e417c72d616a15d"
-  integrity sha512-avbxQeR9EerSHJ3HOg7rPAyBUoJ3/ifvYifyP/Sd6ap3hGzF1a/NN4tSRjoRmz1jTyAdmKIhL0k0alwi1OqA2A==
+"@mantine/next@4.2.11":
+  version "4.2.11"
+  resolved "https://registry.yarnpkg.com/@mantine/next/-/next-4.2.11.tgz#d70658d361e167b6af0b6b3bff677109fb2c97d7"
+  integrity sha512-JAs3fyFyHrmGGiKuo6ic1NunqAbXMPCyHJ4Wpwg3wjZs/wK6TjjV/Da8mVqsb7qfcQpMHYHP3IJGM8sp80sJwQ==
   dependencies:
-    "@mantine/ssr" "4.2.9"
+    "@mantine/ssr" "4.2.11"
 
 "@mantine/notifications@4.2.11":
   version "4.2.11"
@@ -1737,19 +1737,31 @@
   dependencies:
     react-transition-group "^4.4.2"
 
-"@mantine/ssr@4.2.9":
-  version "4.2.9"
-  resolved "https://registry.yarnpkg.com/@mantine/ssr/-/ssr-4.2.9.tgz#4ce7c687dfa12e4aab46ff2e78871fde0cd749d8"
-  integrity sha512-6B5R8ELRR+GQaXdnUUoSlZXEA5DiG4Pp91EOJTU+UYnieQ+gdLISp2HmYAvKMpETViOciBou6r8j2hH74tls4g==
+"@mantine/ssr@4.2.11":
+  version "4.2.11"
+  resolved "https://registry.yarnpkg.com/@mantine/ssr/-/ssr-4.2.11.tgz#c0da308446c52e6304b3858a03cae48e4e8c5c27"
+  integrity sha512-2MZbO2hFxvjH+KR32B3aGCUIWw7TmdrwIKCHhpe/MPMPS0hERix4qQOgOGSS1jbOZUAWrSCT+BQqfnta98LnWg==
   dependencies:
     "@emotion/cache" "11.7.1"
     "@emotion/react" "11.7.1"
     "@emotion/serialize" "1.0.2"
     "@emotion/server" "11.4.0"
     "@emotion/utils" "1.0.0"
-    "@mantine/styles" "4.2.9"
+    "@mantine/styles" "4.2.11"
     csstype "3.0.9"
     html-react-parser "1.3.0"
+
+"@mantine/styles@4.2.11":
+  version "4.2.11"
+  resolved "https://registry.yarnpkg.com/@mantine/styles/-/styles-4.2.11.tgz#7d4ac340de781285c4b55018dbd5ea93ae14e52e"
+  integrity sha512-K0Ih0TUkGOJoVZRpFg3FfXWcYTXWKsC4O43VC5sPRnejQ1bQ6WiYP8DPeYSlPyXAjPyEu2gKqZ72IIRQG9QOJA==
+  dependencies:
+    "@emotion/cache" "11.7.1"
+    "@emotion/react" "11.7.1"
+    "@emotion/serialize" "1.0.2"
+    "@emotion/utils" "1.0.0"
+    clsx "^1.1.1"
+    csstype "3.0.9"
 
 "@mantine/styles@4.2.9":
   version "4.2.9"
