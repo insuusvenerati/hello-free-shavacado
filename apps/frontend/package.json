@@ -15,7 +15,7 @@
     "@clerk/nextjs": "3.6.8",
     "@heroicons/react": "1.0.6",
     "@icons-pack/react-simple-icons": "4.7.0",
-    "@mantine/core": "4.2.9",
+    "@mantine/core": "4.2.11",
     "@mantine/hooks": "4.2.11",
     "@mantine/next": "4.2.9",
     "@mantine/notifications": "4.2.11",
