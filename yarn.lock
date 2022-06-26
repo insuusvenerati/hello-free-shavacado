@@ -1728,10 +1728,10 @@
   dependencies:
     "@mantine/ssr" "4.2.9"
 
-"@mantine/notifications@4.2.9":
-  version "4.2.9"
-  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-4.2.9.tgz#b25b84e7beaefe190893f5c749e3aac1c3a9a5fc"
-  integrity sha512-t19JCCBmJl9/vXlE4vLiz9WqssvNL50MFgJ30MwI+Rc36xO3PnvY3LX3hULKmqOtOlVdTcWz2RwbPkVjM8/c7A==
+"@mantine/notifications@4.2.11":
+  version "4.2.11"
+  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-4.2.11.tgz#0ea2f5a10facb7ae147739af80044f328a3ae6ef"
+  integrity sha512-jncNVNdGgs9+q+PgmDB6iTJU3D/4XgC2Thh/SVg8OIqpenwYS7LhyWHW8CoUUQj9xsK5Q13CWd5AE7q62ZNaSQ==
   dependencies:
     react-transition-group "^4.4.2"
 
