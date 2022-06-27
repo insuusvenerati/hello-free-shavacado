@@ -1,30 +1,13 @@
 import { withServerSideAuth } from "@clerk/nextjs/ssr";
-import { DocumentIcon } from "@heroicons/react/outline";
-import {
-  Button,
-  Card,
-  Container,
-  Divider,
-  Group,
-  Header,
-  List,
-  LoadingOverlay,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Card, Container, Divider, Group, Header, Image, List, Text, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { NextLink } from "@mantine/next";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 import { dehydrate, QueryClient } from "react-query";
-import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
-import { IngredientCard } from "../../components/IngredientsCard";
 import { NavbarContent } from "../../components/NavContent";
 import { useGetOneImportedRecipeQuery } from "../../hooks/useGetImportedRecipesQuery";
-import { HF_ICON_IMAGE_URL, HF_PLACEHOLDERURL, HF_STEP_IMAGE_URL } from "../../util/constants";
 
 export const getServerSideProps: GetServerSideProps = withServerSideAuth(
   async ({ req, params }) => {
@@ -32,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = withServerSideAuth(
     const { recipe } = params;
     const queryClient = new QueryClient();
     await queryClient.prefetchQuery(["importedRecipe", userId, recipe]);
-    console.log(recipe);
+
     return {
       props: { dehydratedState: dehydrate(queryClient) },
     };
@@ -42,10 +25,7 @@ export const getServerSideProps: GetServerSideProps = withServerSideAuth(
 const ImportedRecipe = () => {
   const matches = useMediaQuery("(min-width: 900px)", true);
   const { query } = useRouter();
-  const { data: recipe, isLoading } = useGetOneImportedRecipeQuery({ id: query.recipe as string });
-  console.log(query.recipe);
-
-  if (isLoading) return <LoadingOverlay visible />;
+  const { data: recipe } = useGetOneImportedRecipeQuery({ id: query.recipe as string });
 
   return (
     <>
@@ -60,7 +40,7 @@ const ImportedRecipe = () => {
       <Image
         alt={recipe?.name}
         height={matches ? 700 : 350}
-        objectFit="cover"
+        fit="cover"
         src={recipe?.image}
         width={matches ? 2500 : 600}
       />
