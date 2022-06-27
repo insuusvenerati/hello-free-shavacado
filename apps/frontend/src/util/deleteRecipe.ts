@@ -1,19 +1,24 @@
-import { ActiveSessionResource } from "@clerk/types";
+import { FavoritedRecipe } from "../types/favoriteRecipe";
 import { API_URL } from "./constants";
 
-export const deleteRecipe = async (session: ActiveSessionResource, id: string) => {
-  if (!session) {
-    throw new Error("No session available. Are you logged in?");
+type Args = {
+  userId: string | undefined | null;
+  id: string | undefined | null;
+};
+
+export const deleteRecipe = async ({ userId, id }: Args) => {
+  if (typeof userId === "undefined" || null) {
+    return Promise.reject(new Error("Missing User ID"));
   }
 
   if (!id) {
-    throw new Error("No recipe was given O.o");
+    return Promise.reject(new Error("No recipe was given O.o"));
   }
 
   const response = await fetch(`${API_URL}/recipe/${id}`, {
     method: "DELETE",
   });
-  const data = await response.json();
+  const data = (await response.json()) as FavoritedRecipe;
 
   return { data };
 };

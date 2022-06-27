@@ -1,9 +1,10 @@
-import { API_URL } from "./constants";
-import { ActiveSessionResource } from "@clerk/types";
 import { FavoritedRecipe } from "../types/favoriteRecipe";
+import { API_URL } from "./constants";
 
-export const getRecipes = async (session: ActiveSessionResource): Promise<FavoritedRecipe[]> => {
-  const user = session.user.id;
-  const response = await fetch(`${API_URL}/recipe?user=${user}`);
-  return await response.json();
+export const getRecipes = async (userId: string | undefined | null) => {
+  if (typeof userId === "undefined" || null) {
+    await Promise.reject(new Error("Missing User ID"));
+  }
+  const response = await fetch(`${API_URL}/recipe?user=${userId}`);
+  return (await response.json()) as FavoritedRecipe[];
 };

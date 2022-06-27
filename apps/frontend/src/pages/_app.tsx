@@ -1,27 +1,40 @@
+import SEO from "../../next-seo.config";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
+import * as Sentry from "@sentry/nextjs";
+import { withTRPC } from "@trpc/next";
 import LogRocket from "logrocket";
 import setupLogRocketReact from "logrocket-react";
-import * as Sentry from "@sentry/nextjs";
 import { DefaultSeo } from "next-seo";
-import { AppProps } from "next/app";
+import { AppProps as NextAppProps } from "next/app";
 import Head from "next/head";
 import Script from "next/script";
 import { useCallback, useEffect, useState } from "react";
-import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
+import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import SEO from "../../next-seo.config";
-import { withTRPC } from "@trpc/next";
-import { AppRouter } from "./api/trpc/[trpc]";
+import { AppRouter } from "../server/routers/_app";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 
-const App = (props: AppProps) => {
+type AppProps<P = unknown> = {
+  pageProps: P;
+} & Omit<NextAppProps<P>, "pageProps">;
+
+type CustomPageProps = {
+  dehydratedState: DehydratedState;
+};
+
+const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
   // eslint-disable-next-line react/hook-use-state
   const [queryClient] = useState(
-    () => new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } }),
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: { refetchOnWindowFocus: false, staleTime: 60, refetchOnMount: false },
+        },
+      }),
   );
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: "color-scheme",
@@ -46,8 +59,6 @@ const App = (props: AppProps) => {
     [setColorScheme],
   );
 
-  const { Component, pageProps } = props;
-
   return (
     <>
       <Head>
@@ -59,8 +70,6 @@ const App = (props: AppProps) => {
         <link color="#5bbad5" href="/safari-pinned-tab.svg" rel="mask-icon" />
         <meta content="#da532c" name="msapplication-TileColor" />
         <meta content="#f69435" name="theme-color"></meta>
-        <title>Hello Free Shavacado</title>
-        <meta content="Search for Hello Fresh recipes by ingredient" name="description" />
       </Head>
       <DefaultSeo {...SEO} />
       <Script
@@ -88,7 +97,7 @@ const App = (props: AppProps) => {
 };
 
 export default withTRPC<AppRouter>({
-  config({ ctx }) {
+  config() {
     /**
      * If you want to use SSR, you need to use the server's full URL
      * @link https://trpc.io/docs/ssr

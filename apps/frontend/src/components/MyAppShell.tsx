@@ -77,8 +77,10 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
   } = useAddImportedRecipeMutation();
   const { data: importedRecipes } = useGetImportedRecipesQuery();
 
-  const { data: recipes, isLoading } = useFavoriteRecipesQuery();
+  const { data: recipes, isSuccess, isLoading } = useFavoriteRecipesQuery();
   const [opened, setOpened] = useState(false);
+
+  if (!isSuccess) return <LoadingOverlay visible />;
 
   return (
     <AppShell
@@ -100,7 +102,7 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
                     },
                   }}
                 >
-                  {recipes.map((recipe) => (
+                  {recipes?.map((recipe) => (
                     <RecipeLink favoritedRecipe={recipe} key={recipe.id} />
                   ))}
                 </List>
@@ -116,7 +118,7 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
                   onChange={(event) => setUrl(event.currentTarget.value)}
                   value={url}
                   disabled={addImportedRecipeLoading}
-                  error={isError && addImportedRecipeError.message}
+                  error={isError && addImportedRecipeError?.message}
                   placeholder="Enter a URL"
                   label="Import Recipe"
                 />

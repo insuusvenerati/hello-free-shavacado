@@ -1,4 +1,5 @@
 import { useUser } from "@clerk/nextjs";
+import { withServerSideAuth } from "@clerk/nextjs/ssr";
 import { XIcon } from "@heroicons/react/outline";
 import {
   ActionIcon,
@@ -25,18 +26,22 @@ import RecipeModal from "../components/RecipeModal";
 import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
 import { useRecipes } from "../hooks/useRecipes";
 import { getPopularRecipes } from "../util/getPopularRecipes";
+import { getRecipes } from "../util/getRecipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = withServerSideAuth(async ({ req }) => {
+  const { userId } = req.auth;
+
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
+  await queryClient.prefetchQuery(["favoriteRecipes", userId], () => getRecipes(userId));
 
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
     },
   };
-};
+});
 
 interface ItemProps extends SelectItemProps {
   color: MantineColor;
@@ -68,31 +73,6 @@ const Home = () => {
   const token = getCookie("token") as string;
   const { user } = useUser();
   const { data: popularRecipes } = usePopularRecipesQuery();
-  // const [autocompleteData, setAutocompleteData] = useState([]);
-  // const {
-  //   data: suggestedRecipes,
-  //   searchText: suggestedRecipeSearchText,
-  //   setSearchText,
-  // } = useSuggestedRecipesQuery();
-
-  // useEffect(() => {
-  //   const autoCompleteData = suggestedRecipes?.items
-  //     ?.map((item) => {
-  //       return item.items.map((i) => {
-  //         const image = i.image.replace(
-  //           "https://d3hvwccx09j84u.cloudfront.net/80,80",
-  //           `${HF_AVATAR_IMAGE_URL}`,
-  //         );
-  //         return {
-  //           value: i.title,
-  //           description: i.headline,
-  //           image: image,
-  //         };
-  //       });
-  //     })
-  //     .flat();
-  //   setAutocompleteData(autoCompleteData);
-  // }, [suggestedRecipes?.items]);
 
   const {
     isLoading,
@@ -110,8 +90,6 @@ const Home = () => {
     isFetching,
     active,
   } = useRecipes();
-
-  // const { data: popularRecipes, isLoading: popularRecipesLoading } = usePopularRecipesQuery();
 
   const modalHandler = useCallback(() => {
     setModalVisible(!modalVisible);
@@ -135,7 +113,7 @@ const Home = () => {
     }
   }, [token]);
 
-  const FilteredOrPopularRecipesListProps = {
+  const filteredOrPopularRecipesListProps = {
     filteredRecipes,
     modalHandler,
     popularRecipes,
@@ -151,26 +129,6 @@ const Home = () => {
         <Grid justify="center">
           <Grid.Col lg={6} md={12}>
             <form onSubmit={onSubmitHandler}>
-              {/* <Autocomplete
-                label="Search"
-                placeholder="Search for ingredients"
-                itemComponent={AutoCompleteItem}
-                data={autocompleteData ? autocompleteData : []}
-                value={suggestedRecipeSearchText}
-                onChange={setSearchText}
-                onItemSubmit={onItemSubmitHandler}
-                rightSection={
-                  isLoading || isFetching ? (
-                    <Loader size="sm" />
-                  ) : filteredRecipes ? (
-                    <ActionIcon onClick={clearSearchHandler} mr="xs">
-                      <ThemeIcon variant="outline">
-                        <XIcon width={16} />
-                      </ThemeIcon>
-                    </ActionIcon>
-                  ) : undefined
-                }
-              /> */}
               <TextInput
                 value={searchText}
                 error={isError && error.message}
@@ -204,7 +162,7 @@ const Home = () => {
             </Grid.Col>
           </Grid>
         </Center>
-        <FilteredOrPopularRecipesList {...FilteredOrPopularRecipesListProps} />
+        <FilteredOrPopularRecipesList {...filteredOrPopularRecipesListProps} />
       </Layout>
     </>
   );

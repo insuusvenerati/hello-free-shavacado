@@ -4,10 +4,14 @@ import { getImportedRecipes, getOneImportedRecipe } from "../util/getImportedRec
 
 export const useGetImportedRecipesQuery = () => {
   const { userId } = useAuth();
-  return useQuery(["importedRecipes", userId], () => getImportedRecipes(userId));
+  return useQuery(["importedRecipes", userId], () => getImportedRecipes(userId), {
+    enabled: !!userId,
+  });
 };
 
 export const useGetOneImportedRecipeQuery = ({ id }: { id: string }) => {
   const { userId } = useAuth();
-  return useQuery(["importedRecipe", userId, id], () => getOneImportedRecipe({ id, userId }));
+  return useQuery(["importedRecipe", userId, id], () => getOneImportedRecipe({ id, userId }), {
+    enabled: !!userId && !!id,
+  });
 };

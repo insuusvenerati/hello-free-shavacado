@@ -4,7 +4,7 @@ import { HF_IMPORTED_RECIPE_URL } from "./constants";
 
 type Props = {
   url: string;
-  user: string;
+  user: string | undefined | null;
   openSignIn: (signInProps?: SignInProps) => void;
 };
 

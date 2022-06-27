@@ -1,9 +1,10 @@
-import { ActiveSessionResource } from "@clerk/types";
 import ky from "ky";
 import { Grocery } from "../types/grocery";
 import { API_URL } from "./constants";
 
-export const getGroceries = async (session: ActiveSessionResource) => {
-  const user = session?.user?.id;
-  return await ky.get(`${API_URL}/groceries?user=${user}`).json<Grocery[]>();
+export const getGroceries = async (userId: string | null | undefined) => {
+  if (!userId) {
+    await Promise.reject(new Error("Missing User ID"));
+  }
+  return await ky.get(`${API_URL}/groceries?user=${userId}`).json<Grocery[]>();
 };

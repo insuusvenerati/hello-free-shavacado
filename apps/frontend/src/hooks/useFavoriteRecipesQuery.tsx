@@ -1,13 +1,12 @@
-import { useSession } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "react-query";
+import { FavoritedRecipe } from "../types/favoriteRecipe";
 import { getRecipes } from "../util/getRecipes";
 
 export const useFavoriteRecipesQuery = () => {
-  const { session } = useSession();
-  return useQuery(["favoriteRecipes", session], () => getRecipes(session), {
+  const { userId } = useAuth();
+  return useQuery<FavoritedRecipe[], Error>(["favoriteRecipes", userId], () => getRecipes(userId), {
     staleTime: 60 * 60,
-    refetchOnWindowFocus: false,
-    notifyOnChangeProps: ["data", "error"],
-    enabled: !!session,
+    enabled: !!userId,
   });
 };

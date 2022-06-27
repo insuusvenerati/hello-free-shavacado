@@ -1,19 +1,19 @@
-import { ActiveSessionResource, SignInProps } from "@clerk/types";
+import { SignInProps } from "@clerk/types";
 import ky from "ky";
 import { Grocery } from "../types/grocery";
 import { API_URL } from "./constants";
 
 export const addGrocery = async (
-  session: ActiveSessionResource,
+  userId: string | undefined | null,
   grocery: Grocery,
   openSignIn: (signInProps?: SignInProps) => void,
 ) => {
-  if (!session) {
+  if (!userId) {
     openSignIn({});
   }
 
   return await ky
-    .post(`${API_URL}/groceries?user=${session.user.id}`, {
+    .post(`${API_URL}/groceries?user=${userId}`, {
       headers: {
         "Content-Type": "application/json",
       },

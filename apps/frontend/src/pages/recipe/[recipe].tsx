@@ -16,7 +16,7 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
 import { GetServerSideProps } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment, SyntheticEvent } from "react";
@@ -35,28 +35,13 @@ import {
 } from "../../util/constants";
 import { hellofreshSearchBySlug } from "../../util/hellofresh";
 
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   const data = await getPopularRecipes();
-
-//   const paths = data?.items?.map((recipe) => ({
-//     params: { recipe: recipe.slug },
-//   }));
-
-//   return {
-//     paths,
-//     fallback: "blocking",
-//   };
-// };
-
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
   const { recipe } = ctx.params;
+
   await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], () =>
     hellofreshSearchBySlug({ slug: recipe as string }),
   );
-
-  // const data = await hellofreshSearchBySlug({ slug: slug as string });
-  // console.log(data);
 
   return {
     props: {
@@ -110,11 +95,22 @@ const Recipe = () => {
 
   return (
     <>
-      <Head>
-        <meta property="og:image" content={`${HF_OG_IMAGE_URL}${recipe.imagePath}`} />
-        <meta property="og:description" content={recipe.description} />
-        <title> {recipe.name} </title>
-      </Head>
+      <NextSeo
+        openGraph={{
+          title: recipe?.name,
+          description: recipe?.description,
+          url: `${process.env.VERCEL_URL}${router.asPath}`,
+          images: [
+            {
+              url: `${HF_OG_IMAGE_URL}${recipe?.imagePath}`,
+              alt: recipe?.name,
+              type: "image/jpeg",
+            },
+          ],
+        }}
+        title={recipe?.name}
+        description={recipe?.description}
+      />
       <Header height={70} mt={12}>
         <NavbarContent />
       </Header>
@@ -139,8 +135,8 @@ const Recipe = () => {
             <Card.Section p={20}>
               <Group position="apart">
                 <Group direction="column" grow={false} spacing={0}>
-                  <Title order={1}>{recipe.name}</Title>
-                  <Title order={6}> {recipe.headline} </Title>
+                  <Title order={1}>{recipe?.name}</Title>
+                  <Title order={6}> {recipe?.headline} </Title>
                 </Group>
                 <Group position={matches ? "right" : "center"}>
                   <AddToFavorites selectedRecipe={recipe} />
