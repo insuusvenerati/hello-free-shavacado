@@ -3,8 +3,8 @@ import { usePagination } from "@mantine/hooks";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { Item } from "../types/recipes";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
+import { trpc } from "./trpc";
 import { useFilterRecipes } from "./useFilters";
-import { useRecipesQuery } from "./useRecipesQuery";
 
 export const useRecipes = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Item>();
@@ -18,7 +18,19 @@ export const useRecipes = () => {
     refetch,
     remove,
     isFetching,
-  } = useRecipesQuery({ searchText, page });
+  } = trpc.useQuery(["hellofresh.search", { query: searchText }], {
+    enabled: false,
+    keepPreviousData: true,
+  });
+  // const {
+  //   data: recipes,
+  //   isLoading,
+  //   error,
+  //   isError,
+  //   refetch,
+  //   remove,
+  //   isFetching,
+  // } = useRecipesQuery({ searchText, page });
   const {
     filteredRecipes,
     recipesTotal,
