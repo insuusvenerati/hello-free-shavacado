@@ -3,7 +3,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint --cache --cache-location .next/cache/eslint/ --fix",
     "test": "vitest",
     "prettier": "prettier --write src/",
     "export": "next export"
