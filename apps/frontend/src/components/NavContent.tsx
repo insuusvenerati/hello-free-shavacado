@@ -5,7 +5,6 @@ import {
   ActionIcon,
   Center,
   Indicator,
-  LoadingOverlay,
   Text,
   ThemeIcon,
   useMantineColorScheme,
@@ -31,13 +30,11 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
 };
 
 export const NavbarContent = () => {
-  const { data, isSuccess } = useFavoriteRecipesQuery();
+  const { data } = useFavoriteRecipesQuery();
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { isSignedIn } = useUser();
   const dark = colorScheme === "dark";
-
-  if (!isSuccess) return <LoadingOverlay visible />;
 
   const numRecipes = data?.length;
 
@@ -82,7 +79,7 @@ export const NavbarContent = () => {
             <Github width={22} />
           </ThemeIcon>
         </ActionIcon>
-        {isSignedIn && (
+        {isSignedIn && numRecipes && (
           <ActionIcon
             color={dark ? "yellow" : "blue"}
             component={NextLink}
