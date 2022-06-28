@@ -85,7 +85,7 @@ const Home = () => {
     searchText,
     onSubmitHandler,
     isFetching,
-    active,
+    page,
   } = useRecipes();
 
   const modalHandler = useCallback(() => {
@@ -119,7 +119,7 @@ const Home = () => {
             <form onSubmit={onSubmitHandler}>
               <TextInput
                 value={searchText}
-                error={isError && error.message}
+                error={isError && error?.message}
                 label="Search"
                 onChange={onChangeHandler}
                 placeholder="Search"
@@ -144,8 +144,8 @@ const Home = () => {
         <Center mb={5} mt={5}>
           <Grid columns={1} justify="center">
             <Grid.Col span={1}>
-              {recipesTotal > 0 && (
-                <Pagination onChange={pageChangeHandler} page={active} total={recipesTotal} />
+              {recipesTotal && recipesTotal > 0 && (
+                <Pagination onChange={pageChangeHandler} page={page} total={recipesTotal} />
               )}
             </Grid.Col>
           </Grid>

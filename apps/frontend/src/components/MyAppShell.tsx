@@ -77,10 +77,8 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
   } = useAddImportedRecipeMutation();
   const { data: importedRecipes } = useGetImportedRecipesQuery();
 
-  const { data: recipes, isSuccess, isLoading } = useFavoriteRecipesQuery();
+  const { data: recipes, isLoading } = useFavoriteRecipesQuery();
   const [opened, setOpened] = useState(false);
-
-  if (!isSuccess) return <LoadingOverlay visible />;
 
   return (
     <AppShell
@@ -92,7 +90,7 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
               <Title order={3} mb="md">
                 Favorite Recipes
               </Title>
-              {recipes?.length > 0 ? (
+              {recipes && recipes?.length > 0 ? (
                 <List
                   center
                   listStyleType="none"

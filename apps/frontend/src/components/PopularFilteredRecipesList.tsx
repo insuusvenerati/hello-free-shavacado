@@ -4,10 +4,10 @@ import { Item, RecipeQuery } from "../types/recipes";
 import { RecipeCard } from "./RecipeCard";
 
 type Props = {
-  filteredRecipes: Item[];
+  filteredRecipes: Item[] | undefined;
   modalHandler: () => void;
   setSelectedRecipe: Dispatch<SetStateAction<Item>>;
-  popularRecipes: RecipeQuery;
+  popularRecipes: RecipeQuery | undefined;
   isLoading: boolean;
 };
 

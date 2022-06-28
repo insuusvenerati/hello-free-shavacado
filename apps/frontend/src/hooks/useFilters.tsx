@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { Item, RecipeQuery } from "../types/recipes";
 
-export const useFilterRecipes = (recipes: RecipeQuery) => {
+export const useFilterRecipes = (recipes: RecipeQuery | undefined) => {
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [filteredRecipes, setFilteredRecipes] = useState<Item[]>();
-  const [recipesTotal, setRecipesTotal] = useState<number>();
+  const [recipesTotal, setRecipesTotal] = useState<number | undefined>();
 
   const ingredientFilter = useCallback(
     (recipe: Item) => {
@@ -36,14 +36,10 @@ export const useFilterRecipes = (recipes: RecipeQuery) => {
   }, [allergenFilter, ingredientFilter, recipes]);
 
   useEffect(() => {
-    setRecipesTotal(Math.floor(recipes?.total / 20));
+    if (recipes?.total) {
+      setRecipesTotal(Math.floor(recipes?.total / 20));
+    }
   }, [recipes?.total]);
-
-  // const filteredRecipes = useMemo(() => {
-  //   return recipes?.items?.filter((item) => allergenFilter(item) && ingredientFilter(item));
-  // }, [ingredientFilter, allergenFilter, recipes?.items]);
-
-  // const recipesTotal = Math.floor(recipes?.total / 20);
 
   return {
     filteredRecipes,

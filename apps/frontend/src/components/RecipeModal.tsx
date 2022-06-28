@@ -9,7 +9,7 @@ import { AddToFavorites } from "./Buttons/AddToFavorites";
 import { IngredientCard } from "./IngredientsCard";
 
 type Props = {
-  recipe: Item;
+  recipe: Item | undefined;
   opened: boolean;
   onClose: () => void;
 };
@@ -18,6 +18,8 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
   const removeSymbols = useCallback((text: string) => {
     return text.replace(/[^a-zA-Z.\n ]/g, "");
   }, []);
+
+  if (!recipe) return null;
 
   return (
     <Modal
@@ -48,9 +50,11 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
           ))}
           <Text>{recipe?.descriptionMarkdown}</Text>
           <AddToFavorites selectedRecipe={recipe} />
-          <NextLink href={`${recipe?.cardLink}`} target="_blank">
-            <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
-          </NextLink>
+          {recipe.cardLink && (
+            <NextLink href={`${recipe?.cardLink}`} target="_blank">
+              <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
+            </NextLink>
+          )}
         </Group>
       </Card>
 

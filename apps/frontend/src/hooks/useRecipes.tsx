@@ -1,5 +1,4 @@
-import { AutocompleteItem, LoadingOverlay } from "@mantine/core";
-import { usePagination } from "@mantine/hooks";
+import { AutocompleteItem } from "@mantine/core";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { Item } from "../types/recipes";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
@@ -9,7 +8,7 @@ import { useFilterRecipes } from "./useFilters";
 export const useRecipes = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Item>();
   const [searchText, setSearchText] = useState("");
-  const [page, onChange] = useState<number | undefined>();
+  const [page, setPage] = useState<number | undefined>();
   const {
     data: recipes,
     isLoading,
@@ -41,8 +40,6 @@ export const useRecipes = () => {
     setFilteredRecipes,
     setRecipesTotal,
   } = useFilterRecipes(recipes);
-
-  const { setPage, active } = usePagination({ total: recipesTotal, page, onChange });
 
   const onSubmitHandler = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -79,7 +76,7 @@ export const useRecipes = () => {
 
   const clearSearchHandler = () => {
     setSearchText("");
-    setPage(undefined);
+    setPage(0);
     setFilteredRecipes(undefined);
     setRecipesTotal(undefined);
     remove();
@@ -93,7 +90,7 @@ export const useRecipes = () => {
   };
 
   const pageChangeHandler = (pageNumber: number) => {
-    onChange(pageNumber);
+    setPage(pageNumber);
   };
 
   const handleSetSelectedIngredients = (value: string[]) => {
@@ -131,7 +128,6 @@ export const useRecipes = () => {
     searchText,
     onSubmitHandler,
     isFetching,
-    active,
     setSearchText,
     onItemSubmitHandler,
   };
