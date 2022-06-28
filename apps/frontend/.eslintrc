@@ -1,14 +1,21 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
-  ],
+  "extends": ["plugin:react-hooks/recommended", "next/core-web-vitals"],
   "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "tsconfigRootDir": ".",
-    "project": ["./tsconfig.json"]
-  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:react-hooks/recommended",
+        "next/core-web-vitals"
+      ],
+      "parserOptions": {
+        "tsconfigRootDir": ".",
+        "project": ["./tsconfig.json"]
+      }
+    }
+  ],
   "plugins": ["@typescript-eslint"],
   "settings": {
     "next": {
