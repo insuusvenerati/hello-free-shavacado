@@ -6,7 +6,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-const onVercel = process.env.VERCEL === 1;
+const onVercel = process.env.VERCEL === "1";
 
 /**
  * Don't be scared of the generics here.
@@ -22,11 +22,13 @@ function getConfig(config) {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  swcMinify: true,
   eslint: {
     dirs: ["pages", "components", "hooks"],
   },
+  output: !onVercel ? "standalone" : null,
   experimental: {
-    outputStandalone: !onVercel,
+    runtime: "experimental-edge",
   },
   pwa: {
     dest: "public",
