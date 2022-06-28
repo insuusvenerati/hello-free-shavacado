@@ -1,25 +1,28 @@
-import { API_URL } from "./constants";
-import { ActiveSessionResource, SignInProps } from "@clerk/types";
-import { FavoritedRecipe } from "../types/favoriteRecipe";
+import { SignInProps } from "@clerk/types";
 import ky from "ky";
+import { FavoritedRecipe } from "../types/favoriteRecipe";
+import { API_URL } from "./constants";
 
-export const addRecipe = async ({
-  session,
-  recipeSlug,
-  recipeName,
-  openSignIn,
-  imagePath,
-  uuid,
-}: {
-  session: ActiveSessionResource | null | undefined;
+type Args = {
+  userId: string | null | undefined;
   recipeSlug: string;
   recipeName: string;
   openSignIn: (signInProps?: SignInProps) => void;
   imagePath: string;
   uuid: string;
-}): Promise<{ data: FavoritedRecipe }> => {
-  if (!session) {
+};
+
+export const addRecipe = async ({
+  userId,
+  recipeSlug,
+  recipeName,
+  openSignIn,
+  imagePath,
+  uuid,
+}: Args) => {
+  if (!userId) {
     openSignIn({});
+    return await Promise.reject(new Error("No user ID. Please sign in"));
   }
 
   const data = await ky
@@ -30,7 +33,7 @@ export const addRecipe = async ({
       body: JSON.stringify({
         slug: recipeSlug,
         name: recipeName,
-        userId: session?.user?.id,
+        userId: userId,
         imagePath,
         uuid,
       }),

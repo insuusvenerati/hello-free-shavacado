@@ -1,4 +1,4 @@
-import { useAuth, useClerk, useSession } from "@clerk/nextjs";
+import { useAuth, useClerk } from "@clerk/nextjs";
 import { StarIcon } from "@heroicons/react/outline";
 import { Button, SharedButtonProps } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
@@ -17,7 +17,6 @@ type MutateError = {
 export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
   const { openSignIn } = useClerk();
   const queryClient = useQueryClient();
-  const { session } = useSession();
   const { userId } = useAuth();
   const { data: favoriteRecipes } = useFavoriteRecipesQuery();
   const { mutate: addFavorite, isLoading } = useMutation<
@@ -28,7 +27,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
     async (event) => {
       event.preventDefault();
       return await addRecipe({
-        session,
+        userId,
         recipeSlug: selectedRecipe?.slug,
         openSignIn,
         recipeName: selectedRecipe.name,

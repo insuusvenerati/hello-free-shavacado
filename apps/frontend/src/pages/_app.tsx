@@ -29,7 +29,12 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
     () =>
       new QueryClient({
         defaultOptions: {
-          queries: { refetchOnWindowFocus: false, staleTime: 60, refetchOnMount: false },
+          queries: {
+            refetchOnWindowFocus: false,
+            staleTime: 60,
+            refetchOnMount: false,
+            notifyOnChangeProps: ["data", "error"],
+          },
         },
       }),
   );
