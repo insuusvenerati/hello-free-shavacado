@@ -27,19 +27,22 @@ import { getPopularRecipes } from "../util/getPopularRecipes";
 import { getRecipes } from "../util/getRecipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 
-export const getServerSideProps: GetServerSideProps = withServerSideAuth(async ({ req }) => {
-  const { userId } = req.auth;
+export const getServerSideProps: GetServerSideProps = withServerSideAuth(
+  async ({ req }) => {
+    const queryClient = new QueryClient();
+    await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
+    await queryClient.prefetchQuery(["favoriteRecipes", req?.auth?.userId], () =>
+      getRecipes(req?.auth?.userId),
+    );
 
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
-  await queryClient.prefetchQuery(["favoriteRecipes", userId], () => getRecipes(userId));
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-});
+    return {
+      props: {
+        dehydratedState: dehydrate(queryClient),
+      },
+    };
+  },
+  { loadUser: true, loadSession: true },
+);
 
 interface ItemProps extends SelectItemProps {
   color: MantineColor;

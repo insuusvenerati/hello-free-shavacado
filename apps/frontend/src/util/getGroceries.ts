@@ -4,7 +4,7 @@ import { API_URL } from "./constants";
 
 export const getGroceries = async (userId: string | null | undefined) => {
   if (!userId) {
-    await Promise.reject(new Error("Missing User ID"));
+    return await Promise.reject(new Error("Missing User ID"));
   }
   return await ky.get(`${API_URL}/groceries?user=${userId}`).json<Grocery[]>();
 };
