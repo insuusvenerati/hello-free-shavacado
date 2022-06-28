@@ -6,7 +6,6 @@ import { withTRPC } from "@trpc/next";
 import { DefaultSeo } from "next-seo";
 import { AppProps as NextAppProps } from "next/app";
 import Head from "next/head";
-import Script from "next/script";
 import { useCallback, useState } from "react";
 import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -63,12 +62,6 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
         <meta content="#f69435" name="theme-color"></meta>
       </Head>
       <DefaultSeo {...SEO} />
-      <Script
-        async
-        data-website-id="679de944-0e27-4e1e-aa33-efc4feddd5bb"
-        defer
-        src="https://analytics.stiforr.tech/umami.js"
-      />
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
