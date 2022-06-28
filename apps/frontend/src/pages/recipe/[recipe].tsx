@@ -8,7 +8,6 @@ import {
   Container,
   Divider,
   Group,
-  Header,
   List,
   LoadingOverlay,
   Text,
@@ -25,7 +24,6 @@ import { Fragment, SyntheticEvent } from "react";
 import { dehydrate, QueryClient } from "react-query";
 import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
 import { IngredientCard } from "../../components/IngredientsCard";
-import { NavbarContent } from "../../components/NavContent";
 import { useAddGroceryMutation } from "../../hooks/useAddGroceryMutation";
 import { useHellofreshBySlug } from "../../hooks/useHellofreshBySlug";
 import { Grocery } from "../../types/grocery";
@@ -122,9 +120,6 @@ const Recipe = () => {
         title={recipe?.name}
         description={recipe?.description}
       />
-      <Header height={70} mt={12}>
-        <NavbarContent />
-      </Header>
       <Affix position={{ bottom: 20, left: 20 }}>
         <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
           Go back

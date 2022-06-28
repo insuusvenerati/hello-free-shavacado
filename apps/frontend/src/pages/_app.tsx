@@ -11,6 +11,7 @@ import { useCallback, useState } from "react";
 import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import SEO from "../../next-seo.config";
+import { Layout } from "../components/Layout";
 import { AppRouter } from "../server/routers/_app";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
@@ -75,7 +76,9 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
               <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen={false} />
                 <Hydrate state={pageProps.dehydratedState}>
-                  <Component {...pageProps} />
+                  <Layout>
+                    <Component {...pageProps} />
+                  </Layout>
                 </Hydrate>
               </QueryClientProvider>
             </ClerkProvider>
@@ -92,12 +95,19 @@ export default withTRPC<AppRouter>({
      * If you want to use SSR, you need to use the server's full URL
      * @link https://trpc.io/docs/ssr
      */
-    const url = process.env.NEXT_PUBLIC_VERCEL_URL
-      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/trpc`
-      : "http://localhost:3000/api/trpc";
+    const getUrl = () => {
+      if (process.env.NEXT_PUBLIC_TRPC_URL) {
+        return `${process.env.NEXT_PUBLIC_TRPC_URL}/api/trpc`;
+      }
+
+      if (process.env.NEXT_PUBLIC_VERCEL_URL)
+        return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/trpc`;
+
+      return "http://localhost:3000/api/trpc";
+    };
 
     return {
-      url,
+      url: getUrl(),
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */

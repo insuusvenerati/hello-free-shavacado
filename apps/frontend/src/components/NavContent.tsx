@@ -79,31 +79,28 @@ export const NavbarContent = () => {
             <Github width={22} />
           </ThemeIcon>
         </ActionIcon>
-        {isSignedIn && numRecipes && (
-          <ActionIcon
-            color={dark ? "yellow" : "blue"}
-            component={NextLink}
-            href="/myrecipes"
-            size="md"
-            title="My Recipes"
-          >
-            <Indicator
-              disabled={numRecipes < 1}
-              label={<Text size="xs">{numRecipes}</Text>}
-              size={16}
+        {isSignedIn && (
+          <>
+            <ActionIcon
+              color={dark ? "yellow" : "blue"}
+              component={NextLink}
+              href="/myrecipes"
+              size="md"
+              title="My Recipes"
             >
+              <Indicator label={<Text size="xs">{numRecipes}</Text>} size={16}>
+                <ThemeIcon variant="outline">
+                  <BookmarkIcon width={24} />
+                </ThemeIcon>
+              </Indicator>
+            </ActionIcon>
+            <ActionIcon size="lg" href="/groceries" component={NextLink}>
               <ThemeIcon variant="outline">
-                <BookmarkIcon width={24} />
+                <CakeIcon width={22} />
               </ThemeIcon>
-            </Indicator>
-          </ActionIcon>
+            </ActionIcon>
+          </>
         )}
-
-        <ActionIcon size="lg" href="/groceries" component={NextLink}>
-          <ThemeIcon variant="outline">
-            <CakeIcon width={22} />
-          </ThemeIcon>
-        </ActionIcon>
 
         <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
       </Center>

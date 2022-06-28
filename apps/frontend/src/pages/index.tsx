@@ -18,7 +18,6 @@ import { getCookie, setCookies } from "cookies-next";
 import { GetServerSideProps } from "next";
 import { forwardRef, useCallback, useEffect, useState } from "react";
 import { dehydrate, QueryClient } from "react-query";
-import { Layout } from "../components/Layout";
 import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
 import RecipeModal from "../components/RecipeModal";
 import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
@@ -114,47 +113,47 @@ const Home = () => {
 
   return (
     <>
-      <Layout>
-        <RecipeModal onClose={modalHandler} opened={modalVisible} recipe={selectedRecipe} />
+      {/* <Layout> */}
+      <RecipeModal onClose={modalHandler} opened={modalVisible} recipe={selectedRecipe} />
 
-        <Grid justify="center">
-          <Grid.Col lg={6} md={12}>
-            <form onSubmit={onSubmitHandler}>
-              <TextInput
-                value={searchText}
-                error={isError && error?.message}
-                label="Search"
-                onChange={onChangeHandler}
-                placeholder="Search"
-                rightSection={
-                  isLoading || isFetching ? (
-                    <Loader size="sm" />
-                  ) : filteredRecipes ? (
-                    <ActionIcon onClick={clearSearchHandler} mr="xs">
-                      <ThemeIcon variant="outline">
-                        <XIcon width={16} />
-                      </ThemeIcon>
-                    </ActionIcon>
-                  ) : undefined
-                }
-                disabled={isLoading}
-                size="md"
-                type="search"
-              />
-            </form>
+      <Grid justify="center">
+        <Grid.Col lg={6} md={12}>
+          <form onSubmit={onSubmitHandler}>
+            <TextInput
+              value={searchText}
+              error={isError && error?.message}
+              label="Search"
+              onChange={onChangeHandler}
+              placeholder="Search"
+              rightSection={
+                isLoading || isFetching ? (
+                  <Loader size="sm" />
+                ) : filteredRecipes ? (
+                  <ActionIcon onClick={clearSearchHandler} mr="xs">
+                    <ThemeIcon variant="outline">
+                      <XIcon width={16} />
+                    </ThemeIcon>
+                  </ActionIcon>
+                ) : undefined
+              }
+              disabled={isLoading}
+              size="md"
+              type="search"
+            />
+          </form>
+        </Grid.Col>
+      </Grid>
+      <Center mb={5} mt={5}>
+        <Grid columns={1} justify="center">
+          <Grid.Col span={1}>
+            {recipesTotal && recipesTotal > 0 && (
+              <Pagination onChange={pageChangeHandler} page={page} total={recipesTotal} />
+            )}
           </Grid.Col>
         </Grid>
-        <Center mb={5} mt={5}>
-          <Grid columns={1} justify="center">
-            <Grid.Col span={1}>
-              {recipesTotal && recipesTotal > 0 && (
-                <Pagination onChange={pageChangeHandler} page={page} total={recipesTotal} />
-              )}
-            </Grid.Col>
-          </Grid>
-        </Center>
-        <FilteredOrPopularRecipesList {...filteredOrPopularRecipesListProps} />
-      </Layout>
+      </Center>
+      <FilteredOrPopularRecipesList {...filteredOrPopularRecipesListProps} />
+      {/* </Layout> */}
     </>
   );
 };
