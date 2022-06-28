@@ -21,8 +21,8 @@ export class HellofreshController {
   }
 
   @Get("recipe")
-  findONe(@Query() query) {
-    return this.hellofreshService.findOne(query.q);
+  findOne(@Query("q") q: string) {
+    return this.hellofreshService.findOne(q);
   }
 
   @Get("cuisines")

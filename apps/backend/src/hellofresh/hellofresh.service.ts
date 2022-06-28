@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import axios from "axios";
 import { PrismaService } from "src/prisma.service";
 import { RecipeQuery } from "src/recipes";
@@ -35,13 +35,14 @@ export class HellofreshService {
     return response.data;
   }
 
-  async findOne(query: string) {
-    const response = await axios.get(
-      `${BASE_URL}take=1&q=${query}&order=-favorites&min-rating=3.3`,
-      {
-        headers: { authorization: `Bearer ${DELETE_ME_TOKEN}` },
-      },
-    );
+  async findOne(q: string) {
+    const response = await axios.get(`${BASE_URL}take=1&q=${q}`, {
+      headers: { authorization: `Bearer ${DELETE_ME_TOKEN}` },
+    });
+
+    if (response.status !== 200) {
+      throw new HttpException("Not found", HttpStatus.NOT_FOUND);
+    }
 
     return response.data;
   }
