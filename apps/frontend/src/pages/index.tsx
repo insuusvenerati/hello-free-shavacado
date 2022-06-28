@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/nextjs";
 import { withServerSideAuth } from "@clerk/nextjs/ssr";
 import { XIcon } from "@heroicons/react/outline";
 import {
@@ -16,7 +15,6 @@ import {
   ThemeIcon,
 } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
-import LogRocket from "logrocket";
 import { GetServerSideProps } from "next";
 import { forwardRef, useCallback, useEffect, useState } from "react";
 import { dehydrate, QueryClient } from "react-query";
@@ -71,7 +69,6 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const token = getCookie("token") as string;
-  const { user } = useUser();
   const { data: popularRecipes } = usePopularRecipesQuery();
 
   const {
@@ -94,15 +91,6 @@ const Home = () => {
   const modalHandler = useCallback(() => {
     setModalVisible(!modalVisible);
   }, [modalVisible]);
-
-  useEffect(() => {
-    if (user) {
-      LogRocket.identify(user.id, {
-        name: user.fullName,
-        email: user.primaryEmailAddress.emailAddress,
-      });
-    }
-  }, [user]);
 
   // Get token
   useEffect(() => {

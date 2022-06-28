@@ -1,19 +1,16 @@
-import SEO from "../../next-seo.config";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
-import * as Sentry from "@sentry/nextjs";
 import { withTRPC } from "@trpc/next";
-import LogRocket from "logrocket";
-import setupLogRocketReact from "logrocket-react";
 import { DefaultSeo } from "next-seo";
 import { AppProps as NextAppProps } from "next/app";
 import Head from "next/head";
 import Script from "next/script";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import SEO from "../../next-seo.config";
 import { AppRouter } from "../server/routers/_app";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
@@ -41,18 +38,6 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
     defaultValue: "light",
     getInitialValueInEffect: true,
   });
-
-  useEffect(() => {
-    if (process.env.NODE_ENV === "production") {
-      LogRocket.init("stiforr/hello-free-shavacado");
-      setupLogRocketReact(LogRocket);
-      LogRocket.getSessionURL((sessionURL) => {
-        Sentry.configureScope((scope) => {
-          scope.setExtra("sessionURL", sessionURL);
-        });
-      });
-    }
-  }, []);
 
   const toggleColorScheme = useCallback(
     () => setColorScheme((current) => (current === "dark" ? "light" : "dark")),
