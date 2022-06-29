@@ -14,7 +14,7 @@ const nextConfig = {
   eslint: {
     dirs: ["pages", "components", "hooks"],
   },
-  output: !onVercel ? "standalone" : null,
+  // output: !onVercel ? "standalone" : null,
   experimental: {
     runtime: "experimental-edge",
     serverComponents: true,
@@ -38,4 +38,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withPWA(nextConfig);
+module.exports = withBundleAnalyzer(withPWA(nextConfig));

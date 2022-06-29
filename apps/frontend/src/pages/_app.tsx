@@ -2,7 +2,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
-import { withTRPC } from "@trpc/next";
 import { DefaultSeo } from "next-seo";
 import { AppProps as NextAppProps } from "next/app";
 import Head from "next/head";
@@ -11,7 +10,6 @@ import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from "reac
 import { ReactQueryDevtools } from "react-query/devtools";
 import SEO from "../../next-seo.config";
 import { Layout } from "../components/Layout";
-import { AppRouter } from "../server/routers/_app";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 
@@ -82,41 +80,43 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
   );
 };
 
-export default withTRPC<AppRouter>({
-  config() {
-    if (typeof window !== "undefined") {
-      return {
-        url: "/api/trpc",
-      };
-    }
-    const getUrl = () => {
-      if (process.env.NEXT_PUBLIC_TRPC_URL) {
-        return `${process.env.NEXT_PUBLIC_TRPC_URL}/api/trpc`;
-      }
+export default App;
 
-      if (process.env.NEXT_PUBLIC_VERCEL_URL)
-        return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/trpc`;
+// export default withTRPC<AppRouter>({
+//   config() {
+//     if (typeof window !== "undefined") {
+//       return {
+//         url: "/api/trpc",
+//       };
+//     }
+//     const getUrl = () => {
+//       if (process.env.NEXT_PUBLIC_TRPC_URL) {
+//         return `${process.env.NEXT_PUBLIC_TRPC_URL}/api/trpc`;
+//       }
 
-      return "http://localhost:3000/api/trpc";
-    };
+//       if (process.env.NEXT_PUBLIC_VERCEL_URL)
+//         return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/trpc`;
 
-    return {
-      url: getUrl(),
-      queryClientConfig: { defaultOptions: { queries: { staleTime: 1000 * 60 * 60 } } },
-    };
-  },
-  ssr: true,
-  responseMeta({ clientErrors }) {
-    if (clientErrors.length) {
-      return {
-        status: clientErrors[0].data?.httpStatus ?? 500,
-      };
-    }
-    const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
-    return {
-      headers: {
-        "cache-control": `s-maxage=1, stale-while-revalidate=${ONE_DAY_IN_SECONDS}`,
-      },
-    };
-  },
-})(App);
+//       return "http://localhost:3000/api/trpc";
+//     };
+
+//     return {
+//       url: getUrl(),
+//       queryClientConfig: { defaultOptions: { queries: { staleTime: 1000 * 60 * 60 } } },
+//     };
+//   },
+//   ssr: true,
+//   responseMeta({ clientErrors }) {
+//     if (clientErrors.length) {
+//       return {
+//         status: clientErrors[0].data?.httpStatus ?? 500,
+//       };
+//     }
+//     const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
+//     return {
+//       headers: {
+//         "cache-control": `s-maxage=1, stale-while-revalidate=${ONE_DAY_IN_SECONDS}`,
+//       },
+//     };
+//   },
+// })(App);
