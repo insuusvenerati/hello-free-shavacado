@@ -1,8 +1,8 @@
-import { useSession } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "react-query";
 import { getGroceries } from "../util/getGroceries";
 
 export const useGetGroceriesQuery = () => {
-  const { session } = useSession();
-  return useQuery(["groceries", session], () => getGroceries(session));
+  const { userId } = useAuth();
+  return useQuery(["groceries", userId], () => getGroceries(userId), { enabled: !!userId });
 };

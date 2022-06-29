@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
-import { useSession } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { CheckIcon, PlusIcon } from "@heroicons/react/outline";
-import { Card, Accordion, SimpleGrid, Group, ActionIcon, Text } from "@mantine/core";
+import { Accordion, ActionIcon, Card, Group, SimpleGrid, Text } from "@mantine/core";
 import Image from "next/image";
 import { useAddGroceryMutation } from "../hooks/useAddGroceryMutation";
 import { useGetGroceriesQuery } from "../hooks/useGetGroceriesQuery";
@@ -10,7 +10,7 @@ import { HF_AVATAR_IMAGE_URL } from "../util/constants";
 
 export const IngredientCard = ({ recipe }: { recipe: Item }) => {
   const { mutate: addGroceryMutation, isLoading } = useAddGroceryMutation();
-  const { session } = useSession();
+  const { userId } = useAuth();
   const { data: groceries } = useGetGroceriesQuery();
 
   const isGroceryAdded = (id: string) => groceries?.some((g) => g.uuid === id);
@@ -39,28 +39,30 @@ export const IngredientCard = ({ recipe }: { recipe: Item }) => {
                   <form
                     onSubmit={(event) => {
                       event.preventDefault();
-                      addGroceryMutation({
-                        ingredient: ingredient.name,
-                        amount: ingredientYield[0].amount,
-                        unit: ingredientYield[0].unit,
-                        imagePath: ingredient.imagePath,
-                        userId: session?.user?.id,
-                        slug: ingredient.slug,
-                        family: ingredient.family.name,
-                        uuid: ingredient.id,
-                        recipe: {
-                          connectOrCreate: {
-                            create: {
-                              imagePath: recipe.imagePath,
-                              name: recipe.name,
-                              userId: session?.user?.id,
-                              slug: recipe.slug,
-                              uuid: recipe.id,
+                      if (userId) {
+                        addGroceryMutation({
+                          ingredient: ingredient.name,
+                          amount: ingredientYield[0].amount,
+                          unit: ingredientYield[0].unit,
+                          imagePath: ingredient.imagePath,
+                          userId: userId,
+                          slug: ingredient.slug,
+                          family: ingredient.family.name,
+                          uuid: ingredient.id,
+                          recipe: {
+                            connectOrCreate: {
+                              create: {
+                                imagePath: recipe.imagePath,
+                                name: recipe.name,
+                                userId: userId,
+                                slug: recipe.slug,
+                                uuid: recipe.id,
+                              },
+                              where: { uuid: recipe.id },
                             },
-                            where: { uuid: recipe.id },
                           },
-                        },
-                      });
+                        });
+                      }
                     }}
                   >
                     <ActionIcon

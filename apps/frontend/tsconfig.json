@@ -6,6 +6,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
+    "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "incremental": true,
@@ -16,6 +17,6 @@
     "jsx": "preserve",
     "downlevelIteration": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "./*.js", "./src/**/*.js"],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,3 @@
-import { useSession } from "@clerk/nextjs";
 import { LinkIcon, TrashIcon } from "@heroicons/react/outline";
 import { ActionIcon, Avatar, Group, List, Paper, Text, Tooltip } from "@mantine/core";
 import { NextLink } from "@mantine/next";
@@ -9,8 +8,7 @@ import { HF_AVATAR_IMAGE_URL } from "../util/constants";
 
 export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedRecipe }) => {
   const { data: recipe, isLoading } = useHellofreshBySlug(favoritedRecipe?.slug);
-  const { session } = useSession();
-  const { mutate } = useDeleteFavoriteRecipe(session, favoritedRecipe?.id);
+  const { mutate } = useDeleteFavoriteRecipe(favoritedRecipe.id);
 
   if (isLoading) return null;
 
@@ -38,7 +36,7 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
             withArrow
           >
             <NextLink href={recipe?.items[0]?.websiteUrl} key={favoritedRecipe?.id} target="_blank">
-              <Text size="sm">{recipe?.items[0].name}</Text>
+              <Text size="sm">{recipe?.items[0]?.name}</Text>
             </NextLink>
           </Tooltip>
           <Tooltip label="Delete favorite" withArrow>

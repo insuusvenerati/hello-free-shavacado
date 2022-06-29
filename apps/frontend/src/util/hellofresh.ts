@@ -25,10 +25,14 @@ export const hellofreshGetToken = async () => {
 };
 
 export const hellofreshSearch = async (searchText: string, options?: HelloFreshSearchOptions) => {
-  const { page, tag, maxPrepTime, difficulty, take = 20 } = options;
+  const { page = 1, tag, maxPrepTime, difficulty, take = 20 } = options || {};
   return await ky.get(`${HELLOFRESH_SEARCH_URL}?page=${page}&q=${searchText}`).json<RecipeQuery>();
 };
 
-export const hellofreshSearchBySlug = async ({ slug }: { slug: string }) => {
+export const hellofreshSearchBySlug = async ({ slug }: { slug: string | string[] | undefined }) => {
+  if (!slug || typeof slug !== "string") {
+    return await Promise.reject(new Error("Invalid recipe slug was provided"));
+  }
+
   return await ky.get(`${HELLOFRESH_SEARCH_URL}/recipe?q=${slug}`).json<RecipeQuery>();
 };

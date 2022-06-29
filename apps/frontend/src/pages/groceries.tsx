@@ -1,12 +1,13 @@
 import { Container, List, Title } from "@mantine/core";
-import { Layout } from "../components/Layout";
+import { NextSeo } from "next-seo";
 import { useGetGroceriesQuery } from "../hooks/useGetGroceriesQuery";
 
 const Groceries = () => {
   const { data: groceries } = useGetGroceriesQuery();
 
   return (
-    <Layout>
+    <>
+      <NextSeo title="Groceries" />
       <Container>
         <Title mb="lg" order={2}>
           Groceries
@@ -19,7 +20,7 @@ const Groceries = () => {
           ))}
         </List>
       </Container>
-    </Layout>
+    </>
   );
 };
 

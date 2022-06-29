@@ -104,7 +104,7 @@ export interface ItemIngredient {
   type: string;
   name: string;
   slug: string;
-  description: null;
+  description: string;
   internalName: null | string;
   shipped: boolean;
   imageLink: string;

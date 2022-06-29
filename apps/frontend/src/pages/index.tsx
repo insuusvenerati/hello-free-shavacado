@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/nextjs";
 import { XIcon } from "@heroicons/react/outline";
 import {
   ActionIcon,
@@ -15,13 +14,11 @@ import {
   ThemeIcon,
 } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
-import LogRocket from "logrocket";
 import { GetServerSideProps } from "next";
 import { forwardRef, useCallback, useEffect, useState } from "react";
 import { dehydrate, QueryClient } from "react-query";
-import { Layout } from "../components/Layout";
-import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
-import RecipeModal from "../components/RecipeModal";
+import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList.server";
+import { LazyRecipeModal } from "../components/RecipeModal";
 import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
 import { useRecipes } from "../hooks/useRecipes";
 import { getPopularRecipes } from "../util/getPopularRecipes";
@@ -66,33 +63,7 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const token = getCookie("token") as string;
-  const { user } = useUser();
   const { data: popularRecipes } = usePopularRecipesQuery();
-  // const [autocompleteData, setAutocompleteData] = useState([]);
-  // const {
-  //   data: suggestedRecipes,
-  //   searchText: suggestedRecipeSearchText,
-  //   setSearchText,
-  // } = useSuggestedRecipesQuery();
-
-  // useEffect(() => {
-  //   const autoCompleteData = suggestedRecipes?.items
-  //     ?.map((item) => {
-  //       return item.items.map((i) => {
-  //         const image = i.image.replace(
-  //           "https://d3hvwccx09j84u.cloudfront.net/80,80",
-  //           `${HF_AVATAR_IMAGE_URL}`,
-  //         );
-  //         return {
-  //           value: i.title,
-  //           description: i.headline,
-  //           image: image,
-  //         };
-  //       });
-  //     })
-  //     .flat();
-  //   setAutocompleteData(autoCompleteData);
-  // }, [suggestedRecipes?.items]);
 
   const {
     isLoading,
@@ -107,24 +78,13 @@ const Home = () => {
     clearSearchHandler,
     searchText,
     onSubmitHandler,
+    page,
     isFetching,
-    active,
   } = useRecipes();
-
-  // const { data: popularRecipes, isLoading: popularRecipesLoading } = usePopularRecipesQuery();
 
   const modalHandler = useCallback(() => {
     setModalVisible(!modalVisible);
   }, [modalVisible]);
-
-  useEffect(() => {
-    if (user) {
-      LogRocket.identify(user.id, {
-        name: user.fullName,
-        email: user.primaryEmailAddress.emailAddress,
-      });
-    }
-  }, [user]);
 
   // Get token
   useEffect(() => {
@@ -135,7 +95,7 @@ const Home = () => {
     }
   }, [token]);
 
-  const FilteredOrPopularRecipesListProps = {
+  const filteredOrPopularRecipesListProps = {
     filteredRecipes,
     modalHandler,
     popularRecipes,
@@ -145,67 +105,47 @@ const Home = () => {
 
   return (
     <>
-      <Layout>
-        <RecipeModal onClose={modalHandler} opened={modalVisible} recipe={selectedRecipe} />
+      {/* <Layout> */}
+      <LazyRecipeModal onClose={modalHandler} opened={modalVisible} recipe={selectedRecipe} />
 
-        <Grid justify="center">
-          <Grid.Col lg={6} md={12}>
-            <form onSubmit={onSubmitHandler}>
-              {/* <Autocomplete
-                label="Search"
-                placeholder="Search for ingredients"
-                itemComponent={AutoCompleteItem}
-                data={autocompleteData ? autocompleteData : []}
-                value={suggestedRecipeSearchText}
-                onChange={setSearchText}
-                onItemSubmit={onItemSubmitHandler}
-                rightSection={
-                  isLoading || isFetching ? (
-                    <Loader size="sm" />
-                  ) : filteredRecipes ? (
-                    <ActionIcon onClick={clearSearchHandler} mr="xs">
-                      <ThemeIcon variant="outline">
-                        <XIcon width={16} />
-                      </ThemeIcon>
-                    </ActionIcon>
-                  ) : undefined
-                }
-              /> */}
-              <TextInput
-                value={searchText}
-                error={isError && error.message}
-                label="Search"
-                onChange={onChangeHandler}
-                placeholder="Search"
-                rightSection={
-                  isLoading || isFetching ? (
-                    <Loader size="sm" />
-                  ) : filteredRecipes ? (
-                    <ActionIcon onClick={clearSearchHandler} mr="xs">
-                      <ThemeIcon variant="outline">
-                        <XIcon width={16} />
-                      </ThemeIcon>
-                    </ActionIcon>
-                  ) : undefined
-                }
-                disabled={isLoading}
-                size="md"
-                type="search"
-              />
-            </form>
+      <Grid justify="center">
+        <Grid.Col lg={6} md={12}>
+          <form onSubmit={onSubmitHandler}>
+            <TextInput
+              value={searchText}
+              error={isError && error?.message}
+              label="Search"
+              onChange={onChangeHandler}
+              placeholder="Search"
+              rightSection={
+                isLoading || isFetching ? (
+                  <Loader size="sm" />
+                ) : filteredRecipes ? (
+                  <ActionIcon onClick={clearSearchHandler} mr="xs">
+                    <ThemeIcon variant="outline">
+                      <XIcon width={16} />
+                    </ThemeIcon>
+                  </ActionIcon>
+                ) : undefined
+              }
+              disabled={isLoading}
+              size="md"
+              type="search"
+            />
+          </form>
+        </Grid.Col>
+      </Grid>
+      <Center mb={5} mt={5}>
+        <Grid columns={1} justify="center">
+          <Grid.Col span={1}>
+            {recipesTotal && recipesTotal > 0 && (
+              <Pagination onChange={pageChangeHandler} page={page} total={recipesTotal} />
+            )}
           </Grid.Col>
         </Grid>
-        <Center mb={5} mt={5}>
-          <Grid columns={1} justify="center">
-            <Grid.Col span={1}>
-              {recipesTotal > 0 && (
-                <Pagination onChange={pageChangeHandler} page={active} total={recipesTotal} />
-              )}
-            </Grid.Col>
-          </Grid>
-        </Center>
-        <FilteredOrPopularRecipesList {...FilteredOrPopularRecipesListProps} />
-      </Layout>
+      </Center>
+      <FilteredOrPopularRecipesList {...filteredOrPopularRecipesListProps} />
+      {/* </Layout> */}
     </>
   );
 };

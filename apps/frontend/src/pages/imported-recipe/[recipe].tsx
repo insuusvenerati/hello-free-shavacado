@@ -1,18 +1,35 @@
 import { withServerSideAuth } from "@clerk/nextjs/ssr";
-import { Card, Container, Divider, Group, Header, Image, List, Text, Title } from "@mantine/core";
+import {
+  Card,
+  Container,
+  Divider,
+  Group,
+  Header,
+  Image,
+  List,
+  LoadingOverlay,
+  Text,
+  Title,
+} from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { GetServerSideProps } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
 import { Fragment } from "react";
 import { dehydrate, QueryClient } from "react-query";
 import { NavbarContent } from "../../components/NavContent";
 import { useGetOneImportedRecipeQuery } from "../../hooks/useGetImportedRecipesQuery";
+import { VERCEL_URL } from "../../util/constants";
+
+interface Params extends ParsedUrlQuery {
+  recipe: string;
+}
 
 export const getServerSideProps: GetServerSideProps = withServerSideAuth(
   async ({ req, params }) => {
     const { userId } = req.auth;
-    const { recipe } = params;
+    const { recipe } = params as Params;
     const queryClient = new QueryClient();
     await queryClient.prefetchQuery(["importedRecipe", userId, recipe]);
 
@@ -24,16 +41,35 @@ export const getServerSideProps: GetServerSideProps = withServerSideAuth(
 
 const ImportedRecipe = () => {
   const matches = useMediaQuery("(min-width: 900px)", true);
-  const { query } = useRouter();
-  const { data: recipe } = useGetOneImportedRecipeQuery({ id: query.recipe as string });
+  const { query, asPath } = useRouter();
+  const { data: recipe, isSuccess } = useGetOneImportedRecipeQuery({ id: query.recipe as string });
+
+  if (!isSuccess) {
+    return (
+      <Container>
+        <LoadingOverlay visible />
+      </Container>
+    );
+  }
 
   return (
     <>
-      <Head>
-        <meta property="og:image" content={recipe?.image} />
-        <meta property="og:description" content={recipe?.description} />
-        <title> {recipe?.name} </title>
-      </Head>
+      <NextSeo
+        openGraph={{
+          title: recipe?.name,
+          description: recipe?.description,
+          url: `${VERCEL_URL}${asPath}`,
+          images: [
+            {
+              url: recipe?.image,
+              alt: recipe?.name,
+              type: "image/jpeg",
+            },
+          ],
+        }}
+        title={recipe?.name}
+        description={recipe?.description}
+      />
       <Header height={70} mt={12}>
         <NavbarContent />
       </Header>
@@ -49,8 +85,8 @@ const ImportedRecipe = () => {
           <Card.Section p={20}>
             <Group position="apart">
               <Group direction="column" grow={false} spacing={0}>
-                <Title order={1}>{recipe.name}</Title>
-                <Title order={6}> {recipe.description} </Title>
+                <Title order={1}>{recipe?.name}</Title>
+                <Title order={6}> {recipe?.description} </Title>
               </Group>
               <Group position={matches ? "right" : "center"}>
                 {/* <AddToFavorites selectedRecipe={recipe} /> */}
@@ -65,7 +101,7 @@ const ImportedRecipe = () => {
             <Group position="apart">
               <Group direction="column">
                 <Text sx={{ maxWidth: "750px" }}>{recipe?.description}</Text>
-                {recipe?.keywords.length > 0 ? (
+                {recipe && recipe?.keywords?.length > 0 ? (
                   <Group>
                     <Text weight="bolder">Tags:</Text>
                     {recipe?.keywords.map((tag) => (
@@ -100,7 +136,7 @@ const ImportedRecipe = () => {
           <Title order={2}>Ingredients</Title>
 
           <List listStyleType="none">
-            {recipe.recipeIngredients.map((ingredient) => (
+            {recipe?.recipeIngredients.map((ingredient) => (
               <List.Item key={ingredient}>
                 <Text>{ingredient}</Text>
               </List.Item>

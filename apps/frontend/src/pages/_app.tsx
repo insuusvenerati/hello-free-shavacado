@@ -2,24 +2,39 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
-import LogRocket from "logrocket";
-import setupLogRocketReact from "logrocket-react";
-import * as Sentry from "@sentry/nextjs";
 import { DefaultSeo } from "next-seo";
-import { AppProps } from "next/app";
+import { AppProps as NextAppProps } from "next/app";
 import Head from "next/head";
-import Script from "next/script";
-import { useCallback, useEffect, useState } from "react";
-import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
+import { useCallback, useState } from "react";
+import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import SEO from "../../next-seo.config";
+import { Layout } from "../components/Layout";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 
-const App = (props: AppProps) => {
+type AppProps<P = unknown> = {
+  pageProps: P;
+} & Omit<NextAppProps<P>, "pageProps">;
+
+type CustomPageProps = {
+  dehydratedState: DehydratedState;
+};
+
+const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
   // eslint-disable-next-line react/hook-use-state
   const [queryClient] = useState(
-    () => new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } }),
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+            staleTime: 1000 * 60 * 60,
+            refetchOnMount: false,
+            notifyOnChangeProps: ["data", "error"],
+          },
+        },
+      }),
   );
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: "color-scheme",
@@ -27,24 +42,10 @@ const App = (props: AppProps) => {
     getInitialValueInEffect: true,
   });
 
-  useEffect(() => {
-    if (process.env.NODE_ENV === "production") {
-      LogRocket.init("stiforr/hello-free-shavacado");
-      setupLogRocketReact(LogRocket);
-      LogRocket.getSessionURL((sessionURL) => {
-        Sentry.configureScope((scope) => {
-          scope.setExtra("sessionURL", sessionURL);
-        });
-      });
-    }
-  }, []);
-
   const toggleColorScheme = useCallback(
     () => setColorScheme((current) => (current === "dark" ? "light" : "dark")),
     [setColorScheme],
   );
-
-  const { Component, pageProps } = props;
 
   return (
     <>
@@ -57,16 +58,8 @@ const App = (props: AppProps) => {
         <link color="#5bbad5" href="/safari-pinned-tab.svg" rel="mask-icon" />
         <meta content="#da532c" name="msapplication-TileColor" />
         <meta content="#f69435" name="theme-color"></meta>
-        <title>Hello Free Shavacado</title>
-        <meta content="Search for Hello Fresh recipes by ingredient" name="description" />
       </Head>
       <DefaultSeo {...SEO} />
-      <Script
-        async
-        data-website-id="679de944-0e27-4e1e-aa33-efc4feddd5bb"
-        defer
-        src="https://analytics.stiforr.tech/umami.js"
-      />
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
@@ -74,7 +67,9 @@ const App = (props: AppProps) => {
               <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen={false} />
                 <Hydrate state={pageProps.dehydratedState}>
-                  <Component {...pageProps} />
+                  <Layout>
+                    <Component {...pageProps} />
+                  </Layout>
                 </Hydrate>
               </QueryClientProvider>
             </ClerkProvider>
@@ -86,3 +81,42 @@ const App = (props: AppProps) => {
 };
 
 export default App;
+
+// export default withTRPC<AppRouter>({
+//   config() {
+//     if (typeof window !== "undefined") {
+//       return {
+//         url: "/api/trpc",
+//       };
+//     }
+//     const getUrl = () => {
+//       if (process.env.NEXT_PUBLIC_TRPC_URL) {
+//         return `${process.env.NEXT_PUBLIC_TRPC_URL}/api/trpc`;
+//       }
+
+//       if (process.env.NEXT_PUBLIC_VERCEL_URL)
+//         return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/trpc`;
+
+//       return "http://localhost:3000/api/trpc";
+//     };
+
+//     return {
+//       url: getUrl(),
+//       queryClientConfig: { defaultOptions: { queries: { staleTime: 1000 * 60 * 60 } } },
+//     };
+//   },
+//   ssr: true,
+//   responseMeta({ clientErrors }) {
+//     if (clientErrors.length) {
+//       return {
+//         status: clientErrors[0].data?.httpStatus ?? 500,
+//       };
+//     }
+//     const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
+//     return {
+//       headers: {
+//         "cache-control": `s-maxage=1, stale-while-revalidate=${ONE_DAY_IN_SECONDS}`,
+//       },
+//     };
+//   },
+// })(App);

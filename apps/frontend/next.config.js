@@ -1,25 +1,23 @@
-const { withSentryConfig } = require("@sentry/nextjs");
+// @ts-check
+/* eslint-disable @typescript-eslint/no-var-requires */
 const withPWA = require("next-pwa");
+const { env } = require("./src/server/env");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-const onVercel = process.env.VERCEL === 1;
+const onVercel = process.env.VERCEL === "1";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  swcMinify: true,
   eslint: {
     dirs: ["pages", "components", "hooks"],
   },
+  // output: !onVercel ? "standalone" : null,
   experimental: {
-    outputStandalone: !onVercel,
-  },
-  sentry: {
-    disableServerWebpackPlugin: process.env.NODE_ENV === "development",
-    disableClientWebpackPlugin: process.env.NODE_ENV === "development",
-  },
-  sentryWebpackPluginOptions: {
-    silent: true,
+    runtime: "experimental-edge",
+    serverComponents: true,
   },
   pwa: {
     dest: "public",
@@ -28,21 +26,16 @@ const nextConfig = {
     // scope: '/app',
     // sw: 'service-worker.js',
   },
-  webpack: (config, { webpack }) => {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        __SENTRY_DEBUG__: false,
-      }),
-    );
-    return config;
-  },
   images: {
     domains: ["img.hellofresh.com", "imagesvc.meredithcorp.io"],
   },
   reactStrictMode: true,
   typescript: {
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: true,
+  },
+  publicRuntimeConfig: {
+    NODE_ENV: env.NODE_ENV,
   },
 };
 
-module.exports = withSentryConfig(withBundleAnalyzer(withPWA(nextConfig)));
+module.exports = withBundleAnalyzer(withPWA(nextConfig));

@@ -1,6 +1,5 @@
 import { AutocompleteItem } from "@mantine/core";
-import { usePagination } from "@mantine/hooks";
-import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { Item } from "../types/recipes";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
 import { useFilterRecipes } from "./useFilters";
@@ -9,7 +8,20 @@ import { useRecipesQuery } from "./useRecipesQuery";
 export const useRecipes = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Item>();
   const [searchText, setSearchText] = useState("");
-  const [page, onChange] = useState<number | undefined>();
+  const [page, setPage] = useState<number>(1);
+  // const {
+  //   data: recipes,
+  //   isLoading,
+  //   error,
+  //   isError,
+  //   refetch,
+  //   remove,
+  //   isFetching,
+  // } = trpc.useQuery(["hellofresh.search", { query: searchText, page }], {
+  //   enabled: !!searchText && page > 1,
+  //   keepPreviousData: true,
+  // });
+
   const {
     data: recipes,
     isLoading,
@@ -18,7 +30,9 @@ export const useRecipes = () => {
     refetch,
     remove,
     isFetching,
+    isSuccess,
   } = useRecipesQuery({ searchText, page });
+
   const {
     filteredRecipes,
     recipesTotal,
@@ -29,8 +43,6 @@ export const useRecipes = () => {
     setFilteredRecipes,
     setRecipesTotal,
   } = useFilterRecipes(recipes);
-
-  const { setPage, active } = usePagination({ total: recipesTotal, page, onChange });
 
   const onSubmitHandler = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -67,7 +79,7 @@ export const useRecipes = () => {
 
   const clearSearchHandler = () => {
     setSearchText("");
-    setPage(undefined);
+    setPage(1);
     setFilteredRecipes(undefined);
     setRecipesTotal(undefined);
     remove();
@@ -81,7 +93,7 @@ export const useRecipes = () => {
   };
 
   const pageChangeHandler = (pageNumber: number) => {
-    onChange(pageNumber);
+    setPage(pageNumber);
   };
 
   const handleSetSelectedIngredients = (value: string[]) => {
@@ -91,12 +103,6 @@ export const useRecipes = () => {
   const handleSetSelectedAllergens = (value: string[]) => {
     setSelectedAllergens(value);
   };
-
-  useEffect(() => {
-    if (page) {
-      refetch().catch((error) => console.log(error));
-    }
-  }, [refetch, page]);
 
   return {
     isLoading,
@@ -119,8 +125,8 @@ export const useRecipes = () => {
     searchText,
     onSubmitHandler,
     isFetching,
-    active,
     setSearchText,
     onItemSubmitHandler,
+    isSuccess,
   };
 };

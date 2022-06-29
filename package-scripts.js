@@ -12,6 +12,8 @@ const envArray = new Array(
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_API_URL",
   "SENTRY_AUTH_TOKEN",
+  "CLERK_API_KEY",
+  "DATABASE_URL",
 );
 
 const buildArgs = envArray.map((env) => `--build-arg ${env} `).join("");

@@ -1,4 +1,4 @@
-import { useClerk, useSession } from "@clerk/nextjs";
+import { useAuth, useClerk } from "@clerk/nextjs";
 import { StarIcon } from "@heroicons/react/outline";
 import { Button, SharedButtonProps } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
@@ -17,7 +17,7 @@ type MutateError = {
 export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
   const { openSignIn } = useClerk();
   const queryClient = useQueryClient();
-  const { session } = useSession();
+  const { userId } = useAuth();
   const { data: favoriteRecipes } = useFavoriteRecipesQuery();
   const { mutate: addFavorite, isLoading } = useMutation<
     unknown,
@@ -27,7 +27,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
     async (event) => {
       event.preventDefault();
       return await addRecipe({
-        session,
+        userId,
         recipeSlug: selectedRecipe?.slug,
         openSignIn,
         recipeName: selectedRecipe.name,
@@ -46,7 +46,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
         }
       },
       onSuccess: async () => {
-        await queryClient.invalidateQueries(["favoriteRecipes", session]);
+        await queryClient.invalidateQueries(["favoriteRecipes", userId]);
         showNotification({
           color: "green",
           title: "Success",

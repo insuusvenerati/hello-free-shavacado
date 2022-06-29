@@ -1,12 +1,14 @@
-import { Badge, Card, MantineShadow, Text } from "@mantine/core";
+import { Badge, Card, Container, Loader, LoadingOverlay, MantineShadow, Text } from "@mantine/core";
 import { NextLink } from "@mantine/next";
-import Image from "next/image";
-import { useCallback, useState } from "react";
+import dynamic from "next/dynamic";
+import { Suspense, useState } from "react";
 import { Item } from "../types/recipes";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
 
+const LazyImage = dynamic(() => import("next/image"));
+
 type Props = {
-  recipe: Item;
+  recipe: Item | undefined;
   handler: () => void;
   setSelectedRecipe: (recipe: Item) => void;
 };
@@ -14,14 +16,22 @@ type Props = {
 export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
   const [shadow, setShadow] = useState<MantineShadow>("sm");
 
-  const onMouseEnterHandler = useCallback(() => {
+  if (!recipe) {
+    return (
+      <Container>
+        <LoadingOverlay visible />
+      </Container>
+    );
+  }
+
+  const onMouseEnterHandler = () => {
     setShadow("md");
     setSelectedRecipe(recipe);
-  }, [setSelectedRecipe, recipe]);
+  };
 
-  const onMouseLeaveHandler = useCallback(() => {
+  const onMouseLeaveHandler = () => {
     setShadow("sm");
-  }, []);
+  };
 
   return (
     <Card onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler} shadow={shadow}>
@@ -29,14 +39,16 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
         onClick={handler}
         sx={{ width: 456.25, height: 258.5, marginBottom: 5, cursor: "pointer" }}
       >
-        <Image
-          alt={recipe.name}
-          blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
-          height={340}
-          placeholder="blur"
-          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
-          width={600}
-        />
+        <Suspense fallback={<Loader />}>
+          <LazyImage
+            alt={recipe?.name}
+            blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
+            height={340}
+            placeholder="blur"
+            src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
+            width={600}
+          />
+        </Suspense>
       </Card.Section>
 
       <NextLink href={`/recipe/${recipe?.slug}`}>

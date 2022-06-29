@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
-import { useSession } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { ArrowLeftIcon, DocumentIcon } from "@heroicons/react/outline";
 import {
   Affix,
@@ -8,80 +8,74 @@ import {
   Container,
   Divider,
   Group,
-  Header,
   List,
+  Loader,
+  LoadingOverlay,
   Text,
   Title,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
-import { GetServerSideProps } from "next";
-import Head from "next/head";
-import Image from "next/image";
+import { NextSeo } from "next-seo";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { Fragment, SyntheticEvent } from "react";
-import { dehydrate, QueryClient } from "react-query";
+import { ParsedUrlQuery } from "querystring";
+import { Fragment, Suspense, SyntheticEvent } from "react";
 import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
 import { IngredientCard } from "../../components/IngredientsCard";
-import { NavbarContent } from "../../components/NavContent";
 import { useAddGroceryMutation } from "../../hooks/useAddGroceryMutation";
 import { useHellofreshBySlug } from "../../hooks/useHellofreshBySlug";
 import { Grocery } from "../../types/grocery";
 import {
+  getOgImageUrl,
   HF_ICON_IMAGE_URL,
-  HF_OG_IMAGE_URL,
   HF_PLACEHOLDERURL,
   HF_STEP_IMAGE_URL,
+  VERCEL_URL,
 } from "../../util/constants";
-import { hellofreshSearchBySlug } from "../../util/hellofresh";
 
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   const data = await getPopularRecipes();
+const LazyImage = dynamic(() => import("next/image"));
 
-//   const paths = data?.items?.map((recipe) => ({
-//     params: { recipe: recipe.slug },
-//   }));
+interface Params extends ParsedUrlQuery {
+  recipe: string;
+}
+
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+//   const queryClient = new QueryClient();
+//   const { recipe } = ctx.params as Params;
+
+//   await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], () =>
+//     hellofreshSearchBySlug({ slug: recipe }),
+//   );
 
 //   return {
-//     paths,
-//     fallback: "blocking",
+//     props: {
+//       dehydratedState: dehydrate(queryClient),
+//     },
 //   };
 // };
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const queryClient = new QueryClient();
-  const { recipe } = ctx.params;
-  await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], () =>
-    hellofreshSearchBySlug({ slug: recipe as string }),
-  );
-
-  // const data = await hellofreshSearchBySlug({ slug: slug as string });
-  // console.log(data);
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
-
 const Recipe = () => {
   const matches = useMediaQuery("(min-width: 900px)", true);
-  const { session } = useSession();
+  const { userId } = useAuth();
   const router = useRouter();
-  const { data: recipes } = useHellofreshBySlug(router.query.recipe as string);
-  const recipe = recipes?.items[0];
+  const { data: recipes, isSuccess } = useHellofreshBySlug(router.query.recipe);
   const { mutate: addGroceryMutation, isLoading } = useAddGroceryMutation();
+
+  if (!isSuccess) {
+    return <LoadingOverlay visible />;
+  }
+  const recipe = recipes?.items[0];
   const yields = recipe?.yields?.map((y) => y.ingredients).flat();
 
   const addGroceriesIngredients = recipe?.ingredients?.map((ingredient) => {
-    const ingredientYield = yields.filter((y) => y.id === ingredient.id);
+    const ingredientYield = yields?.filter((y) => y.id === ingredient.id);
     return {
       ingredient: ingredient.name,
       amount: ingredientYield[0].amount,
       unit: ingredientYield[0].unit,
       imagePath: ingredient.imagePath,
-      userId: session?.user?.id,
+      userId: userId,
       slug: ingredient.slug,
       family: ingredient.family.name,
       uuid: ingredient.id,
@@ -91,7 +85,7 @@ const Recipe = () => {
             id: recipe.id,
             imagePath: recipe.imagePath,
             name: recipe.name,
-            userId: session?.user?.id,
+            userId: userId,
             slug: recipe.slug,
             uuid: recipe.id,
           },
@@ -103,50 +97,65 @@ const Recipe = () => {
 
   const handleAddAllIngredients = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    addGroceriesIngredients.map((addg) => {
+    addGroceriesIngredients?.map((addg) => {
       addGroceryMutation(addg);
     });
   };
 
   return (
     <>
-      <Head>
-        <meta property="og:image" content={`${HF_OG_IMAGE_URL}${recipe.imagePath}`} />
-        <meta property="og:description" content={recipe.description} />
-        <title> {recipe.name} </title>
-      </Head>
-      <Header height={70} mt={12}>
-        <NavbarContent />
-      </Header>
-      <Affix position={{ bottom: 20, left: 20 }}>
-        <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
-          Go back
-        </Button>
-      </Affix>
-      <div>
-        <Image
-          alt={recipe?.name}
-          blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
-          height={matches ? 700 : 350}
-          objectFit="cover"
-          placeholder="blur"
-          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_500,q_auto,w_2400/hellofresh_s3${recipe?.imagePath}`}
-          width={matches ? 2500 : 600}
-        />
+      <NextSeo
+        openGraph={{
+          title: recipe?.name,
+          description: recipe?.description,
+          url: `${VERCEL_URL}${router.asPath}`,
+          images: [
+            {
+              url: getOgImageUrl(recipe?.imagePath),
+              alt: recipe?.name,
+              type: "image/jpeg",
+            },
+          ],
+        }}
+        title={recipe?.name}
+        description={recipe?.description}
+      />
+      <Suspense fallback={<Loader />}>
+        <Affix position={{ bottom: 20, left: 20 }}>
+          <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
+            Go back
+          </Button>
+        </Affix>
+
+        {recipe?.imagePath ? (
+          <LazyImage
+            alt={recipe?.name}
+            blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
+            height={matches ? 700 : 350}
+            objectFit="cover"
+            placeholder="blur"
+            src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_500,q_auto,w_2400/hellofresh_s3${recipe?.imagePath}`}
+            width={matches ? 2500 : 600}
+          />
+        ) : (
+          <Loader />
+        )}
 
         <Container size="lg">
           <Card mt="md" mb="lg" p="lg" shadow="sm">
             <Card.Section p={20}>
               <Group position="apart">
                 <Group direction="column" grow={false} spacing={0}>
-                  <Title order={1}>{recipe.name}</Title>
-                  <Title order={6}> {recipe.headline} </Title>
+                  <Title order={1}>{recipe?.name}</Title>
+                  <Title order={6}> {recipe?.headline} </Title>
                 </Group>
                 <Group position={matches ? "right" : "center"}>
                   <AddToFavorites selectedRecipe={recipe} />
-                  <NextLink href={`${recipe?.cardLink}`} target="_blank">
-                    <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
-                  </NextLink>
+                  {recipe?.cardLink && (
+                    <NextLink href={recipe?.cardLink} target="_blank">
+                      <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
+                    </NextLink>
+                  )}
                   <form onSubmit={handleAddAllIngredients}>
                     <Button loading={isLoading} type="submit">
                       Add all ingredients to groceries
@@ -158,7 +167,7 @@ const Recipe = () => {
               <Group position="apart">
                 <Group direction="column">
                   <Text sx={{ maxWidth: "750px" }}>{recipe?.description}</Text>
-                  {recipe?.tags.length > 0 ? (
+                  {recipe && recipe?.tags.length > 0 ? (
                     <Group>
                       <Text weight="bolder">Tags:</Text>
                       {recipe?.tags.map((tag) => (
@@ -170,7 +179,7 @@ const Recipe = () => {
                     <Text weight="bolder">Allergens:</Text>
                     {recipe?.allergens.map((allergen) => (
                       <Group key={allergen.id}>
-                        <Image
+                        <LazyImage
                           alt={allergen.id}
                           height={32}
                           src={`${HF_ICON_IMAGE_URL}/${allergen.iconPath}`}
@@ -199,7 +208,7 @@ const Recipe = () => {
                   <Fragment key={step.index}>
                     <Group mb={24}>
                       {step.images.map((image) => (
-                        <Image
+                        <LazyImage
                           alt={image.caption}
                           blurDataURL={`${HF_PLACEHOLDERURL}/${image.path}`}
                           height={230}
@@ -218,9 +227,13 @@ const Recipe = () => {
             </Group>
           </Card>
         </Container>
-      </div>
+      </Suspense>
     </>
   );
 };
 
 export default Recipe;
+
+export const config = {
+  runtime: "experimental-edge",
+};

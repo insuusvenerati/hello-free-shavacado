@@ -90,7 +90,7 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
               <Title order={3} mb="md">
                 Favorite Recipes
               </Title>
-              {recipes?.length > 0 ? (
+              {recipes && recipes?.length > 0 ? (
                 <List
                   center
                   listStyleType="none"
@@ -100,7 +100,7 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
                     },
                   }}
                 >
-                  {recipes.map((recipe) => (
+                  {recipes?.map((recipe) => (
                     <RecipeLink favoritedRecipe={recipe} key={recipe.id} />
                   ))}
                 </List>
@@ -116,7 +116,7 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
                   onChange={(event) => setUrl(event.currentTarget.value)}
                   value={url}
                   disabled={addImportedRecipeLoading}
-                  error={isError && addImportedRecipeError.message}
+                  error={isError && addImportedRecipeError?.message}
                   placeholder="Enter a URL"
                   label="Import Recipe"
                 />

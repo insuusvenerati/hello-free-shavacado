@@ -1,4 +1,4 @@
-import { useClerk, useSession } from "@clerk/nextjs";
+import { useAuth, useClerk } from "@clerk/nextjs";
 import { showNotification } from "@mantine/notifications";
 import { useMutation, useQueryClient } from "react-query";
 import { Grocery } from "../types/grocery";
@@ -10,17 +10,17 @@ type MutationError = {
 };
 
 export const useAddGroceryMutation = () => {
-  const { session } = useSession();
+  const { userId } = useAuth();
   const queryClient = useQueryClient();
   const { openSignIn } = useClerk();
   return useMutation<Grocery, MutationError, Grocery>(
     (grocery) => {
-      return addGrocery(session, grocery, openSignIn);
+      return addGrocery(userId, grocery, openSignIn);
     },
     {
       onSuccess: async (grocery) => {
-        await queryClient.invalidateQueries(["groceries", session]);
-        await queryClient.invalidateQueries(["favoriteRecipes", session]);
+        await queryClient.invalidateQueries(["groceries", userId]);
+        await queryClient.invalidateQueries(["favoriteRecipes", userId]);
         showNotification({
           color: "green",
           title: "Wooo",

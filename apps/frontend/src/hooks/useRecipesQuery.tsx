@@ -10,13 +10,11 @@ type RecipesQueryProps = {
 export const useRecipesQuery = ({ searchText, page }: RecipesQueryProps) => {
   return useQuery<RecipeQuery, Error>(
     ["recipes", searchText, page],
-    async (): Promise<RecipeQuery> => {
+    async () => {
       return await hellofreshSearch(searchText, { page });
     },
     {
-      enabled: false,
-      staleTime: Infinity,
-      retry: false,
+      enabled: !!searchText && page > 1,
       keepPreviousData: true,
     },
   );
