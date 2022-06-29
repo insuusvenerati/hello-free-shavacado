@@ -2,6 +2,7 @@
 import { CheckCircleIcon, DocumentIcon } from "@heroicons/react/outline";
 import { Badge, Button, Card, Group, List, Modal, Text, ThemeIcon } from "@mantine/core";
 import { NextLink } from "@mantine/next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useCallback } from "react";
 import { Item } from "../types/recipes";
@@ -88,3 +89,4 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
 };
 
 export default RecipeModal;
+export const LazyRecipeModal = dynamic(() => import("../components/RecipeModal"));

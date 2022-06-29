@@ -2,7 +2,7 @@ import { Container, Grid, LoadingOverlay, Title } from "@mantine/core";
 import { NextSeo } from "next-seo";
 import { useCallback, useState } from "react";
 import { useQueries } from "react-query";
-import { RecipeCard } from "../components/RecipeCard";
+import { RecipeCard } from "../components/RecipeCard.server";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useRecipes } from "../hooks/useRecipes";
 import { hellofreshSearchBySlug } from "../util/hellofresh";

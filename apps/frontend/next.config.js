@@ -8,18 +8,6 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 const onVercel = process.env.VERCEL === "1";
 
-/**
- * Don't be scared of the generics here.
- * All they do is to give us autocompletion when using this.
- *
- * @template {import('next').NextConfig} T
- * @param {T} config - A generic parameter that flows through to the return type
- * @constraint {{import('next').NextConfig}}
- */
-function getConfig(config) {
-  return config;
-}
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   swcMinify: true,
@@ -29,6 +17,7 @@ const nextConfig = {
   output: !onVercel ? "standalone" : null,
   experimental: {
     runtime: "experimental-edge",
+    serverComponents: true,
   },
   pwa: {
     dest: "public",
@@ -49,4 +38,4 @@ const nextConfig = {
   },
 };
 
-module.exports = getConfig(withBundleAnalyzer(withPWA(nextConfig)));
+module.exports = withPWA(nextConfig);

@@ -16,13 +16,11 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
-import { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
-import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
-import { Fragment, SyntheticEvent } from "react";
-import { dehydrate, QueryClient } from "react-query";
+import { Fragment, Suspense, SyntheticEvent } from "react";
 import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
 import { IngredientCard } from "../../components/IngredientsCard";
 import { useAddGroceryMutation } from "../../hooks/useAddGroceryMutation";
@@ -35,26 +33,27 @@ import {
   HF_STEP_IMAGE_URL,
   VERCEL_URL,
 } from "../../util/constants";
-import { hellofreshSearchBySlug } from "../../util/hellofresh";
+
+const LazyImage = dynamic(() => import("next/image"));
 
 interface Params extends ParsedUrlQuery {
   recipe: string;
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const queryClient = new QueryClient();
-  const { recipe } = ctx.params as Params;
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+//   const queryClient = new QueryClient();
+//   const { recipe } = ctx.params as Params;
 
-  await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], () =>
-    hellofreshSearchBySlug({ slug: recipe }),
-  );
+//   await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], () =>
+//     hellofreshSearchBySlug({ slug: recipe }),
+//   );
 
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
+//   return {
+//     props: {
+//       dehydratedState: dehydrate(queryClient),
+//     },
+//   };
+// };
 
 const Recipe = () => {
   const matches = useMediaQuery("(min-width: 900px)", true);
@@ -121,14 +120,15 @@ const Recipe = () => {
         title={recipe?.name}
         description={recipe?.description}
       />
-      <Affix position={{ bottom: 20, left: 20 }}>
-        <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
-          Go back
-        </Button>
-      </Affix>
-      <div>
+      <Suspense fallback={<Loader />}>
+        <Affix position={{ bottom: 20, left: 20 }}>
+          <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
+            Go back
+          </Button>
+        </Affix>
+
         {recipe?.imagePath ? (
-          <Image
+          <LazyImage
             alt={recipe?.name}
             blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
             height={matches ? 700 : 350}
@@ -179,7 +179,7 @@ const Recipe = () => {
                     <Text weight="bolder">Allergens:</Text>
                     {recipe?.allergens.map((allergen) => (
                       <Group key={allergen.id}>
-                        <Image
+                        <LazyImage
                           alt={allergen.id}
                           height={32}
                           src={`${HF_ICON_IMAGE_URL}/${allergen.iconPath}`}
@@ -208,7 +208,7 @@ const Recipe = () => {
                   <Fragment key={step.index}>
                     <Group mb={24}>
                       {step.images.map((image) => (
-                        <Image
+                        <LazyImage
                           alt={image.caption}
                           blurDataURL={`${HF_PLACEHOLDERURL}/${image.path}`}
                           height={230}
@@ -227,9 +227,13 @@ const Recipe = () => {
             </Group>
           </Card>
         </Container>
-      </div>
+      </Suspense>
     </>
   );
 };
 
 export default Recipe;
+
+export const config = {
+  runtime: "experimental-edge",
+};

@@ -1,7 +1,7 @@
 import { Grid, Title } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
 import { Item, RecipeQuery } from "../types/recipes";
-import { RecipeCard } from "./RecipeCard";
+import { RecipeCard } from "./RecipeCard.server";
 
 type Props = {
   filteredRecipes: Item[] | undefined;

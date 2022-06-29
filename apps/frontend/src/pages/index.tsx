@@ -17,8 +17,8 @@ import { getCookie, setCookies } from "cookies-next";
 import { GetServerSideProps } from "next";
 import { forwardRef, useCallback, useEffect, useState } from "react";
 import { dehydrate, QueryClient } from "react-query";
-import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
-import RecipeModal from "../components/RecipeModal";
+import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList.server";
+import { LazyRecipeModal } from "../components/RecipeModal";
 import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
 import { useRecipes } from "../hooks/useRecipes";
 import { getPopularRecipes } from "../util/getPopularRecipes";
@@ -105,7 +105,7 @@ const Home = () => {
   return (
     <>
       {/* <Layout> */}
-      <RecipeModal onClose={modalHandler} opened={modalVisible} recipe={selectedRecipe} />
+      <LazyRecipeModal onClose={modalHandler} opened={modalVisible} recipe={selectedRecipe} />
 
       <Grid justify="center">
         <Grid.Col lg={6} md={12}>
