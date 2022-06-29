@@ -79,6 +79,7 @@ const Home = () => {
     searchText,
     onSubmitHandler,
     page,
+    isFetching,
   } = useRecipes();
 
   const modalHandler = useCallback(() => {
@@ -117,7 +118,7 @@ const Home = () => {
               onChange={onChangeHandler}
               placeholder="Search"
               rightSection={
-                isLoading ? (
+                isLoading || isFetching ? (
                   <Loader size="sm" />
                 ) : filteredRecipes ? (
                   <ActionIcon onClick={clearSearchHandler} mr="xs">

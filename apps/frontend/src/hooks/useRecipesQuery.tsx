@@ -14,9 +14,7 @@ export const useRecipesQuery = ({ searchText, page }: RecipesQueryProps) => {
       return await hellofreshSearch(searchText, { page });
     },
     {
-      enabled: false,
-      staleTime: Infinity,
-      retry: false,
+      enabled: !!searchText && page > 1,
       keepPreviousData: true,
     },
   );
