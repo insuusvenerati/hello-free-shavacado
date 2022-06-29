@@ -6,7 +6,6 @@ import { getRecipes } from "../util/getRecipes";
 export const useFavoriteRecipesQuery = () => {
   const { userId } = useAuth();
   return useQuery<FavoritedRecipe[], Error>(["favoriteRecipes", userId], () => getRecipes(userId), {
-    staleTime: 1000 * 60,
     enabled: !!userId,
     placeholderData: [],
   });

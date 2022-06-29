@@ -9,6 +9,7 @@ import {
   Divider,
   Group,
   List,
+  Loader,
   LoadingOverlay,
   Text,
   Title,
@@ -126,15 +127,19 @@ const Recipe = () => {
         </Button>
       </Affix>
       <div>
-        <Image
-          alt={recipe?.name}
-          blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
-          height={matches ? 700 : 350}
-          objectFit="cover"
-          placeholder="blur"
-          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_500,q_auto,w_2400/hellofresh_s3${recipe?.imagePath}`}
-          width={matches ? 2500 : 600}
-        />
+        {recipe?.imagePath ? (
+          <Image
+            alt={recipe?.name}
+            blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
+            height={matches ? 700 : 350}
+            objectFit="cover"
+            placeholder="blur"
+            src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_500,q_auto,w_2400/hellofresh_s3${recipe?.imagePath}`}
+            width={matches ? 2500 : 600}
+          />
+        ) : (
+          <Loader />
+        )}
 
         <Container size="lg">
           <Card mt="md" mb="lg" p="lg" shadow="sm">

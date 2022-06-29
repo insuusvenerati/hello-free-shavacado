@@ -1,7 +1,7 @@
 import { Container, Grid, LoadingOverlay, Title } from "@mantine/core";
+import { NextSeo } from "next-seo";
 import { useCallback, useState } from "react";
 import { useQueries } from "react-query";
-import { Layout } from "../components/Layout";
 import { RecipeCard } from "../components/RecipeCard";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useRecipes } from "../hooks/useRecipes";
@@ -39,29 +39,28 @@ const RecipeList = () => {
 
   // display all the recipes
   return (
-    <Layout>
+    <>
+      <NextSeo title="Favorites" />
       <Title mb="md" align="center" order={1}>
         Favorite Recipes
       </Title>
 
-      <Container size="xl">
-        <Grid columns={4} justify="center">
-          {recipes &&
-            recipes?.map((items) => {
-              const recipe = items?.items[0];
-              return (
-                <Grid.Col key={recipe?.id} md={1} sm={2}>
-                  <RecipeCard
-                    handler={modalHandler}
-                    recipe={recipe}
-                    setSelectedRecipe={setSelectedRecipe}
-                  />
-                </Grid.Col>
-              );
-            })}
-        </Grid>
-      </Container>
-    </Layout>
+      <Grid justify="center">
+        {recipes &&
+          recipes?.map((items) => {
+            const recipe = items?.items[0];
+            return (
+              <Grid.Col key={recipe?.id} lg={3} md={12}>
+                <RecipeCard
+                  handler={modalHandler}
+                  recipe={recipe}
+                  setSelectedRecipe={setSelectedRecipe}
+                />
+              </Grid.Col>
+            );
+          })}
+      </Grid>
+    </>
   );
 };
 

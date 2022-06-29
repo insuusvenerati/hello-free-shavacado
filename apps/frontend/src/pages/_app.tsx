@@ -31,7 +31,7 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
         defaultOptions: {
           queries: {
             refetchOnWindowFocus: false,
-            staleTime: 60,
+            staleTime: 1000 * 60 * 60,
             refetchOnMount: false,
             notifyOnChangeProps: ["data", "error"],
           },
@@ -84,10 +84,11 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
 
 export default withTRPC<AppRouter>({
   config() {
-    /**
-     * If you want to use SSR, you need to use the server's full URL
-     * @link https://trpc.io/docs/ssr
-     */
+    if (typeof window !== "undefined") {
+      return {
+        url: "/api/trpc",
+      };
+    }
     const getUrl = () => {
       if (process.env.NEXT_PUBLIC_TRPC_URL) {
         return `${process.env.NEXT_PUBLIC_TRPC_URL}/api/trpc`;
@@ -101,14 +102,21 @@ export default withTRPC<AppRouter>({
 
     return {
       url: getUrl(),
-      /**
-       * @link https://react-query.tanstack.com/reference/QueryClient
-       */
-      // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+      queryClientConfig: { defaultOptions: { queries: { staleTime: 1000 * 60 * 60 } } },
     };
   },
-  /**
-   * @link https://trpc.io/docs/ssr
-   */
   ssr: true,
+  responseMeta({ clientErrors }) {
+    if (clientErrors.length) {
+      return {
+        status: clientErrors[0].data?.httpStatus ?? 500,
+      };
+    }
+    const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
+    return {
+      headers: {
+        "cache-control": `s-maxage=1, stale-while-revalidate=${ONE_DAY_IN_SECONDS}`,
+      },
+    };
+  },
 })(App);

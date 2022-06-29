@@ -7,6 +7,6 @@ export const useHellofreshBySlug = (slug: string | string[] | undefined) => {
     async () => {
       return await hellofreshSearchBySlug({ slug });
     },
-    { staleTime: 60 * 60, enabled: !!slug },
+    { enabled: !!slug },
   );
 };

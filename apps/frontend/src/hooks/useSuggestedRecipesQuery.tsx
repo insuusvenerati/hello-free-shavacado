@@ -12,7 +12,7 @@ export const useSuggestedRecipesQuery = () => {
   const { data, isLoading, error } = useQuery(
     ["suggested-recipe", token, debouncedSearchText],
     () => getSuggestedRecipes(debouncedSearchText, token),
-    { enabled: !!debouncedSearchText && !!token, staleTime: 60 * 60 },
+    { enabled: !!debouncedSearchText && !!token },
   );
 
   return { data, isLoading, error, setSearchText, searchText };

@@ -1,4 +1,3 @@
-import { withServerSideAuth } from "@clerk/nextjs/ssr";
 import { XIcon } from "@heroicons/react/outline";
 import {
   ActionIcon,
@@ -23,25 +22,18 @@ import RecipeModal from "../components/RecipeModal";
 import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
 import { useRecipes } from "../hooks/useRecipes";
 import { getPopularRecipes } from "../util/getPopularRecipes";
-import { getRecipes } from "../util/getRecipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 
-export const getServerSideProps: GetServerSideProps = withServerSideAuth(
-  async ({ req }) => {
-    const queryClient = new QueryClient();
-    await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
-    await queryClient.prefetchQuery(["favoriteRecipes", req?.auth?.userId], () =>
-      getRecipes(req?.auth?.userId),
-    );
+export const getServerSideProps: GetServerSideProps = async () => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
 
-    return {
-      props: {
-        dehydratedState: dehydrate(queryClient),
-      },
-    };
-  },
-  { loadUser: true, loadSession: true },
-);
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};
 
 interface ItemProps extends SelectItemProps {
   color: MantineColor;
@@ -86,7 +78,6 @@ const Home = () => {
     clearSearchHandler,
     searchText,
     onSubmitHandler,
-    isFetching,
     page,
   } = useRecipes();
 
@@ -126,7 +117,7 @@ const Home = () => {
               onChange={onChangeHandler}
               placeholder="Search"
               rightSection={
-                isLoading || isFetching ? (
+                isLoading ? (
                   <Loader size="sm" />
                 ) : filteredRecipes ? (
                   <ActionIcon onClick={clearSearchHandler} mr="xs">

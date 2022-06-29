@@ -1,5 +1,5 @@
 import { AutocompleteItem } from "@mantine/core";
-import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { Item } from "../types/recipes";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
 import { trpc } from "./trpc";
@@ -8,7 +8,7 @@ import { useFilterRecipes } from "./useFilters";
 export const useRecipes = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Item>();
   const [searchText, setSearchText] = useState("");
-  const [page, setPage] = useState<number | undefined>();
+  const [page, setPage] = useState<number>(1);
   const {
     data: recipes,
     isLoading,
@@ -17,19 +17,11 @@ export const useRecipes = () => {
     refetch,
     remove,
     isFetching,
-  } = trpc.useQuery(["hellofresh.search", { query: searchText }], {
-    enabled: false,
+  } = trpc.useQuery(["hellofresh.search", { query: searchText, page }], {
+    enabled: !!searchText && page > 1,
     keepPreviousData: true,
   });
-  // const {
-  //   data: recipes,
-  //   isLoading,
-  //   error,
-  //   isError,
-  //   refetch,
-  //   remove,
-  //   isFetching,
-  // } = useRecipesQuery({ searchText, page });
+
   const {
     filteredRecipes,
     recipesTotal,
@@ -76,7 +68,7 @@ export const useRecipes = () => {
 
   const clearSearchHandler = () => {
     setSearchText("");
-    setPage(0);
+    setPage(1);
     setFilteredRecipes(undefined);
     setRecipesTotal(undefined);
     remove();
@@ -100,12 +92,6 @@ export const useRecipes = () => {
   const handleSetSelectedAllergens = (value: string[]) => {
     setSelectedAllergens(value);
   };
-
-  useEffect(() => {
-    if (page) {
-      refetch().catch((error) => console.log(error));
-    }
-  }, [refetch, page]);
 
   return {
     isLoading,
