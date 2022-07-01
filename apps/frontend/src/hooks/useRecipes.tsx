@@ -1,4 +1,3 @@
-import { AutocompleteItem } from "@mantine/core";
 import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { Item } from "../types/recipes";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
@@ -88,10 +87,6 @@ export const useRecipes = () => {
     setSearchText(event.target.value);
   };
 
-  const onItemSubmitHandler = (item: AutocompleteItem) => {
-    setSearchText(item.value);
-  };
-
   const pageChangeHandler = (pageNumber: number) => {
     setPage(pageNumber);
   };
@@ -126,7 +121,6 @@ export const useRecipes = () => {
     onSubmitHandler,
     isFetching,
     setSearchText,
-    onItemSubmitHandler,
     isSuccess,
   };
 };

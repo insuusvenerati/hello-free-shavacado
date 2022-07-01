@@ -1,7 +1,7 @@
 import { Grid, Title } from "@mantine/core";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, memo, SetStateAction } from "react";
 import { Item, RecipeQuery } from "../types/recipes";
-import { RecipeCard } from "./RecipeCard.server";
+import { RecipeCard } from "./RecipeCard";
 
 type Props = {
   filteredRecipes: Item[] | undefined;
@@ -63,3 +63,4 @@ export const FilteredOrPopularRecipesList = ({
 
   return null;
 };
+export const FilteredOrPopularRecipesListMemo = memo(FilteredOrPopularRecipesList);

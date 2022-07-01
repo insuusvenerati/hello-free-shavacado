@@ -1,4 +1,4 @@
-import { useRecipes } from "../hooks/useRecipes";
+import { RecipesProvider, useRecipesContext } from "../context/RecipesContext";
 import { MyAppShell } from "./MyAppShell";
 
 export const Layout = ({ children }) => {
@@ -9,7 +9,7 @@ export const Layout = ({ children }) => {
     ingredients,
     selectedAllergens,
     selectedIngredients,
-  } = useRecipes();
+  } = useRecipesContext();
 
   const appShellProps = {
     uniqueAllergens,
@@ -20,5 +20,9 @@ export const Layout = ({ children }) => {
     selectedIngredients,
   };
 
-  return <MyAppShell {...appShellProps}>{children}</MyAppShell>;
+  return (
+    <RecipesProvider>
+      <MyAppShell {...appShellProps}>{children}</MyAppShell>
+    </RecipesProvider>
+  );
 };

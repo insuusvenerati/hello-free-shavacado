@@ -1,7 +1,7 @@
 import { Badge, Card, Container, Loader, LoadingOverlay, MantineShadow, Text } from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import dynamic from "next/dynamic";
-import { Suspense, useState } from "react";
+import { Dispatch, SetStateAction, Suspense, useState } from "react";
 import { Item } from "../types/recipes";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
 
@@ -10,7 +10,7 @@ const LazyImage = dynamic(() => import("next/image"));
 type Props = {
   recipe: Item | undefined;
   handler: () => void;
-  setSelectedRecipe: (recipe: Item) => void;
+  setSelectedRecipe: Dispatch<SetStateAction<Item>>;
 };
 
 export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {

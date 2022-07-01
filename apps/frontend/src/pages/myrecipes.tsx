@@ -2,25 +2,26 @@ import { Container, Grid, LoadingOverlay, Title } from "@mantine/core";
 import { NextSeo } from "next-seo";
 import { useCallback, useState } from "react";
 import { useQueries } from "react-query";
-import { RecipeCard } from "../components/RecipeCard.server";
+import { RecipeCard } from "../components/RecipeCard";
+import { useRecipesContext } from "../context/RecipesContext";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
-import { useRecipes } from "../hooks/useRecipes";
 import { hellofreshSearchBySlug } from "../util/hellofresh";
 
 const RecipeList = () => {
   // const [recipes, setRecipes] = useState<RecipeQuery[]>();
   const [modalVisible, setModalVisible] = useState(false);
-  const { setSelectedRecipe } = useRecipes();
+  const { setSelectedRecipe } = useRecipesContext();
   const { data: favoriteRecipes, isSuccess } = useFavoriteRecipesQuery();
 
   const recipeQueries = useQueries(
-    favoriteRecipes?.map((recipe) => {
-      return {
-        queryKey: ["recipe", recipe.slug],
-        queryFn: () => hellofreshSearchBySlug({ slug: recipe.slug }),
-        enabled: !(typeof favoriteRecipes === "undefined"),
-      };
-    }),
+    favoriteRecipes &&
+      favoriteRecipes?.map((recipe) => {
+        return {
+          queryKey: ["recipe", recipe.slug],
+          queryFn: () => hellofreshSearchBySlug({ slug: recipe.slug }),
+          enabled: !(typeof favoriteRecipes === "undefined"),
+        };
+      }),
   );
 
   const recipes = recipeQueries.map((query) => query.data);

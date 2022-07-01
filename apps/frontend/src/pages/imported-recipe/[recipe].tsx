@@ -4,7 +4,6 @@ import {
   Container,
   Divider,
   Group,
-  Header,
   Image,
   List,
   LoadingOverlay,
@@ -18,7 +17,6 @@ import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { Fragment } from "react";
 import { dehydrate, QueryClient } from "react-query";
-import { NavbarContent } from "../../components/NavContent";
 import { useGetOneImportedRecipeQuery } from "../../hooks/useGetImportedRecipesQuery";
 import { VERCEL_URL } from "../../util/constants";
 
@@ -70,9 +68,6 @@ const ImportedRecipe = () => {
         title={recipe?.name}
         description={recipe?.description}
       />
-      <Header height={70} mt={12}>
-        <NavbarContent />
-      </Header>
       <Image
         alt={recipe?.name}
         height={matches ? 700 : 350}

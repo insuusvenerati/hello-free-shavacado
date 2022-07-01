@@ -1,26 +1,21 @@
-import { XIcon } from "@heroicons/react/outline";
 import {
-  ActionIcon,
   Avatar,
   Center,
   Grid,
   Group,
-  Loader,
   MantineColor,
   Pagination,
   SelectItemProps,
   Text,
-  TextInput,
-  ThemeIcon,
 } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
 import { GetServerSideProps } from "next";
 import { forwardRef, useCallback, useEffect, useState } from "react";
 import { dehydrate, QueryClient } from "react-query";
-import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList.server";
+import { FilteredOrPopularRecipesListMemo } from "../components/PopularFilteredRecipesList";
 import { LazyRecipeModal } from "../components/RecipeModal";
+import { useRecipesContext } from "../context/RecipesContext";
 import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
-import { useRecipes } from "../hooks/useRecipes";
 import { getPopularRecipes } from "../util/getPopularRecipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 
@@ -67,20 +62,13 @@ const Home = () => {
 
   const {
     isLoading,
-    isError,
-    error,
     filteredRecipes,
     selectedRecipe,
     recipesTotal,
     setSelectedRecipe,
-    onChangeHandler,
     pageChangeHandler,
-    clearSearchHandler,
-    searchText,
-    onSubmitHandler,
     page,
-    isFetching,
-  } = useRecipes();
+  } = useRecipesContext();
 
   const modalHandler = useCallback(() => {
     setModalVisible(!modalVisible);
@@ -105,10 +93,9 @@ const Home = () => {
 
   return (
     <>
-      {/* <Layout> */}
       <LazyRecipeModal onClose={modalHandler} opened={modalVisible} recipe={selectedRecipe} />
 
-      <Grid justify="center">
+      {/* <Grid justify="center">
         <Grid.Col lg={6} md={12}>
           <form onSubmit={onSubmitHandler}>
             <TextInput
@@ -134,7 +121,7 @@ const Home = () => {
             />
           </form>
         </Grid.Col>
-      </Grid>
+      </Grid> */}
       <Center mb={5} mt={5}>
         <Grid columns={1} justify="center">
           <Grid.Col span={1}>
@@ -144,8 +131,7 @@ const Home = () => {
           </Grid.Col>
         </Grid>
       </Center>
-      <FilteredOrPopularRecipesList {...filteredOrPopularRecipesListProps} />
-      {/* </Layout> */}
+      <FilteredOrPopularRecipesListMemo {...filteredOrPopularRecipesListProps} />
     </>
   );
 };
