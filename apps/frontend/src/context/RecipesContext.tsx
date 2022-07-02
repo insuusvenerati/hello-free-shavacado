@@ -13,7 +13,7 @@ type RecipesContextType = {
   isLoading: boolean;
   isError: boolean;
   error?: Error | null;
-  filteredRecipes: Item[] | undefined;
+  filteredRecipes?: Item[] | undefined;
   selectedRecipe?: Item;
   recipesTotal?: number;
   page: number;
@@ -28,9 +28,9 @@ type RecipesContextType = {
     label: string;
     image: string;
   }[];
-  ingredients: string[];
-  selectedAllergens: string[];
-  selectedIngredients: string[];
+  ingredients?: string[];
+  selectedAllergens?: string[];
+  selectedIngredients?: string[];
   searchText?: string;
   onSubmitHandler: (event: SyntheticEvent<HTMLFormElement>) => void;
   isFetching: boolean;
@@ -44,17 +44,56 @@ const RecipesContext = createContext<RecipesContextType>({
   isError: false,
   isFetching: false,
   isSuccess: false,
-  uniqueAllergens: [],
+  uniqueAllergens: [
+    {
+      value: "Eggs",
+      label: "Eggs",
+      image:
+        "https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_70,q_auto,w_70/hellofresh_s3/allergens/57962a07b7e8697d4b3052f6-63afd198.png",
+    },
+    {
+      value: "Wheat",
+      label: "Wheat",
+      image:
+        "https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_70,q_auto,w_70/hellofresh_s3/allergens/57962a07b7e8697d4b3052f5-e20d9ca4.png",
+    },
+    {
+      value: "Milk",
+      label: "Milk",
+      image:
+        "https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_70,q_auto,w_70/hellofresh_s3/allergens/57962a07b7e8697d4b3052fa-be127d3f.png",
+    },
+    {
+      value: "Soy",
+      label: "Soy",
+      image:
+        "https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_70,q_auto,w_70/hellofresh_s3/allergens/57962a07b7e8697d4b3052f9-feb8e168.png",
+    },
+    {
+      value: "Fish",
+      label: "Fish",
+      image:
+        "https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_70,q_auto,w_70/hellofresh_s3/allergens/57962a07b7e8697d4b3052f7-feb8e168.png",
+    },
+    {
+      value: "Shellfish",
+      label: "Shellfish",
+      image:
+        "https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_70,q_auto,w_70/hellofresh_s3/allergens/57962a07b7e8697d4b3052f4-feb8e168.png",
+    },
+    {
+      value: "Tree Nuts",
+      label: "Tree Nuts",
+      image:
+        "https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_70,q_auto,w_70/hellofresh_s3/allergens/57962a07b7e8697d4b3052fb-172b155c.png",
+    },
+  ],
   handleSetSelectedAllergens: () => undefined,
   handleSetSelectedIngredients: () => undefined,
   clearSearchHandler: () => undefined,
   onChangeHandler: () => undefined,
   pageChangeHandler: () => undefined,
-  filteredRecipes: [],
-  ingredients: [],
   page: 1,
-  selectedAllergens: [],
-  selectedIngredients: [],
   onSubmitHandler: () => undefined,
   setSearchText: () => undefined,
 });

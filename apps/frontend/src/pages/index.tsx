@@ -12,10 +12,9 @@ import { getCookie, setCookies } from "cookies-next";
 import { GetServerSideProps } from "next";
 import { forwardRef, useCallback, useEffect, useState } from "react";
 import { dehydrate, QueryClient } from "react-query";
-import { FilteredOrPopularRecipesListMemo } from "../components/PopularFilteredRecipesList";
+import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
 import { LazyRecipeModal } from "../components/RecipeModal";
 import { useRecipesContext } from "../context/RecipesContext";
-import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
 import { getPopularRecipes } from "../util/getPopularRecipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 
@@ -58,17 +57,8 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const token = getCookie("token") as string;
-  const { data: popularRecipes } = usePopularRecipesQuery();
 
-  const {
-    isLoading,
-    filteredRecipes,
-    selectedRecipe,
-    recipesTotal,
-    setSelectedRecipe,
-    pageChangeHandler,
-    page,
-  } = useRecipesContext();
+  const { selectedRecipe, recipesTotal, pageChangeHandler, page } = useRecipesContext();
 
   const modalHandler = useCallback(() => {
     setModalVisible(!modalVisible);
@@ -83,45 +73,9 @@ const Home = () => {
     }
   }, [token]);
 
-  const filteredOrPopularRecipesListProps = {
-    filteredRecipes,
-    modalHandler,
-    popularRecipes,
-    setSelectedRecipe,
-    isLoading,
-  };
-
   return (
     <>
       <LazyRecipeModal onClose={modalHandler} opened={modalVisible} recipe={selectedRecipe} />
-
-      {/* <Grid justify="center">
-        <Grid.Col lg={6} md={12}>
-          <form onSubmit={onSubmitHandler}>
-            <TextInput
-              value={searchText}
-              error={isError && error?.message}
-              label="Search"
-              onChange={onChangeHandler}
-              placeholder="Search"
-              rightSection={
-                isLoading || isFetching ? (
-                  <Loader size="sm" />
-                ) : filteredRecipes ? (
-                  <ActionIcon onClick={clearSearchHandler} mr="xs">
-                    <ThemeIcon variant="outline">
-                      <XIcon width={16} />
-                    </ThemeIcon>
-                  </ActionIcon>
-                ) : undefined
-              }
-              disabled={isLoading}
-              size="md"
-              type="search"
-            />
-          </form>
-        </Grid.Col>
-      </Grid> */}
       <Center mb={5} mt={5}>
         <Grid columns={1} justify="center">
           <Grid.Col span={1}>
@@ -131,7 +85,7 @@ const Home = () => {
           </Grid.Col>
         </Grid>
       </Center>
-      <FilteredOrPopularRecipesListMemo {...filteredOrPopularRecipesListProps} />
+      <FilteredOrPopularRecipesList modalHandler={modalHandler} />
     </>
   );
 };

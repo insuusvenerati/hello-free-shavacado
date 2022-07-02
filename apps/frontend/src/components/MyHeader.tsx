@@ -6,11 +6,11 @@ import {
   Header,
   Loader,
   MediaQuery,
-  Text,
   TextInput,
   ThemeIcon,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import Image from "next/image";
 import { useCallback } from "react";
 import { useRecipesContext } from "../context/RecipesContext";
 
@@ -48,9 +48,35 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
             height: "100%",
           }}
         >
-          <Burger mr="xl" onClick={handleDrawer} opened={opened} size="sm" />
-
-          <Text>Hello Free Shavacado</Text>
+          <Burger mr="md" onClick={handleDrawer} opened={opened} size="sm" />
+          <Image alt="logo" src="/android-chrome-192x192.png" width={50} height={50} />
+          <Grid justify="center">
+            <Grid.Col lg={6} md={12}>
+              <form onSubmit={onSubmitHandler}>
+                <TextInput
+                  value={searchText}
+                  error={isError && error?.message}
+                  aria-label="Search"
+                  onChange={onChangeHandler}
+                  placeholder="Search"
+                  rightSection={
+                    isLoading || isFetching ? (
+                      <Loader size="sm" />
+                    ) : filteredRecipes ? (
+                      <ActionIcon onClick={clearSearchHandler} mr="xs">
+                        <ThemeIcon variant="outline">
+                          <XIcon width={16} />
+                        </ThemeIcon>
+                      </ActionIcon>
+                    ) : undefined
+                  }
+                  disabled={isLoading}
+                  size="md"
+                  type="search"
+                />
+              </form>
+            </Grid.Col>
+          </Grid>
         </div>
       </Header>
     </MediaQuery>

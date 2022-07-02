@@ -8,18 +8,6 @@ export const useRecipes = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Item>();
   const [searchText, setSearchText] = useState("");
   const [page, setPage] = useState<number>(1);
-  // const {
-  //   data: recipes,
-  //   isLoading,
-  //   error,
-  //   isError,
-  //   refetch,
-  //   remove,
-  //   isFetching,
-  // } = trpc.useQuery(["hellofresh.search", { query: searchText, page }], {
-  //   enabled: !!searchText && page > 1,
-  //   keepPreviousData: true,
-  // });
 
   const {
     data: recipes,
