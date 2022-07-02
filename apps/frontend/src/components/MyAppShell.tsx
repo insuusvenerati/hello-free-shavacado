@@ -13,13 +13,13 @@ import {
   MultiSelect,
   Navbar,
   ScrollArea,
-  SelectItem,
   Stack,
   Text,
   TextInput,
   Title,
 } from "@mantine/core";
 import { forwardRef, useState } from "react";
+import { useRecipesContext } from "../context/RecipesContext";
 import { useAddImportedRecipeMutation } from "../hooks/useAddImportedRecipeMutation";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
@@ -34,12 +34,6 @@ interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
 }
 
 type AppShellProps = {
-  uniqueAllergens: SelectItem[];
-  handleSetSelectedAllergens: (value: string[]) => void;
-  selectedAllergens: string[];
-  ingredients: string[];
-  handleSetSelectedIngredients: (value: string[]) => void;
-  selectedIngredients: string[];
   children: JSX.Element[] | JSX.Element;
 };
 
@@ -58,15 +52,15 @@ const MySelectItem = forwardRef<HTMLDivElement, ItemProps>(
   ),
 );
 
-export const MyAppShell = ({ children, ...props }: AppShellProps) => {
+export const MyAppShell = ({ children }: AppShellProps) => {
   const {
+    ingredients,
     uniqueAllergens,
     handleSetSelectedAllergens,
     selectedAllergens,
-    ingredients,
     handleSetSelectedIngredients,
     selectedIngredients,
-  } = props;
+  } = useRecipesContext();
   const {
     onSubmitHandler,
     error: addImportedRecipeError,
@@ -145,27 +139,31 @@ export const MyAppShell = ({ children, ...props }: AppShellProps) => {
           <NavbarContent />
 
           <Stack sx={{ padding: 5 }}>
-            <MultiSelect
-              clearable
-              data={uniqueAllergens}
-              itemComponent={MySelectItem}
-              label="Filter allergens"
-              nothingFound="Search for a recipe first"
-              onChange={handleSetSelectedAllergens}
-              placeholder="Select your allergens"
-              searchable
-              value={selectedAllergens}
-            />
-            <MultiSelect
-              clearable
-              data={ingredients}
-              label="Filter ingredients"
-              nothingFound="Search for a recipe first"
-              onChange={handleSetSelectedIngredients}
-              placeholder="Select your ingredients"
-              searchable
-              value={selectedIngredients}
-            />
+            {ingredients && (
+              <>
+                <MultiSelect
+                  clearable
+                  data={uniqueAllergens}
+                  itemComponent={MySelectItem}
+                  label="Filter allergens"
+                  nothingFound="Search for a recipe first"
+                  onChange={handleSetSelectedAllergens}
+                  placeholder="Select your allergens"
+                  searchable
+                  value={selectedAllergens}
+                />
+                <MultiSelect
+                  clearable
+                  data={ingredients}
+                  label="Filter ingredients"
+                  nothingFound="Search for a recipe first"
+                  onChange={handleSetSelectedIngredients}
+                  placeholder="Select your ingredients"
+                  searchable
+                  value={selectedIngredients}
+                />
+              </>
+            )}
           </Stack>
         </Navbar>
       }

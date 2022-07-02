@@ -1,24 +1,18 @@
-import { useRecipes } from "../hooks/useRecipes";
+import { Affix, Loader, Transition } from "@mantine/core";
+import { useIsFetching } from "react-query";
+import { RecipesProvider } from "../context/RecipesContext";
 import { MyAppShell } from "./MyAppShell";
 
 export const Layout = ({ children }) => {
-  const {
-    handleSetSelectedIngredients,
-    handleSetSelectedAllergens,
-    uniqueAllergens,
-    ingredients,
-    selectedAllergens,
-    selectedIngredients,
-  } = useRecipes();
-
-  const appShellProps = {
-    uniqueAllergens,
-    handleSetSelectedAllergens,
-    selectedAllergens,
-    ingredients,
-    handleSetSelectedIngredients,
-    selectedIngredients,
-  };
-
-  return <MyAppShell {...appShellProps}>{children}</MyAppShell>;
+  const isFetching = useIsFetching();
+  return (
+    <RecipesProvider>
+      <Affix position={{ bottom: 20, right: 20 }}>
+        <Transition transition="slide-up" mounted={!!isFetching}>
+          {(transitionStyles) => <Loader styles={transitionStyles} />}
+        </Transition>
+      </Affix>
+      <MyAppShell>{children}</MyAppShell>
+    </RecipesProvider>
+  );
 };

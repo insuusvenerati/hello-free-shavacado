@@ -1,4 +1,3 @@
-import { AutocompleteItem } from "@mantine/core";
 import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { Item } from "../types/recipes";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
@@ -9,18 +8,6 @@ export const useRecipes = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Item>();
   const [searchText, setSearchText] = useState("");
   const [page, setPage] = useState<number>(1);
-  // const {
-  //   data: recipes,
-  //   isLoading,
-  //   error,
-  //   isError,
-  //   refetch,
-  //   remove,
-  //   isFetching,
-  // } = trpc.useQuery(["hellofresh.search", { query: searchText, page }], {
-  //   enabled: !!searchText && page > 1,
-  //   keepPreviousData: true,
-  // });
 
   const {
     data: recipes,
@@ -88,10 +75,6 @@ export const useRecipes = () => {
     setSearchText(event.target.value);
   };
 
-  const onItemSubmitHandler = (item: AutocompleteItem) => {
-    setSearchText(item.value);
-  };
-
   const pageChangeHandler = (pageNumber: number) => {
     setPage(pageNumber);
   };
@@ -126,7 +109,6 @@ export const useRecipes = () => {
     onSubmitHandler,
     isFetching,
     setSearchText,
-    onItemSubmitHandler,
     isSuccess,
   };
 };

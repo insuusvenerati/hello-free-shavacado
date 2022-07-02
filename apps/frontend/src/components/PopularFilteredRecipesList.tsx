@@ -1,23 +1,17 @@
 import { Grid, Title } from "@mantine/core";
-import { Dispatch, SetStateAction } from "react";
-import { Item, RecipeQuery } from "../types/recipes";
-import { RecipeCard } from "./RecipeCard.server";
+import { memo } from "react";
+import { useRecipesContext } from "../context/RecipesContext";
+import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
+import { RecipeCard } from "./RecipeCard";
 
 type Props = {
-  filteredRecipes: Item[] | undefined;
   modalHandler: () => void;
-  setSelectedRecipe: Dispatch<SetStateAction<Item>>;
-  popularRecipes: RecipeQuery | undefined;
-  isLoading: boolean;
 };
 
-export const FilteredOrPopularRecipesList = ({
-  filteredRecipes,
-  modalHandler,
-  setSelectedRecipe,
-  popularRecipes,
-  isLoading,
-}: Props) => {
+export const FilteredOrPopularRecipesList = ({ modalHandler }: Props) => {
+  const { filteredRecipes, setSelectedRecipe, isLoading } = useRecipesContext();
+  const { data: popularRecipes } = usePopularRecipesQuery();
+
   if (filteredRecipes) {
     return (
       <Grid columns={4} justify="center">
@@ -63,3 +57,4 @@ export const FilteredOrPopularRecipesList = ({
 
   return null;
 };
+export const FilteredOrPopularRecipesListMemo = memo(FilteredOrPopularRecipesList);
