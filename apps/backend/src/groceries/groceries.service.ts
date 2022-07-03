@@ -12,9 +12,30 @@ export class GroceriesService {
   }
 
   async findAll(user: string) {
-    return await this.prisma.grocery.findMany({
+    const groceries = await this.prisma.grocery.findMany({
       where: { userId: user },
+      select: {
+        ingredient: true,
+        imagePath: true,
+        id: true,
+        slug: true,
+        family: true,
+        uuid: true,
+      },
     });
+
+    const ingredientsGroup = await this.prisma.grocery.groupBy({
+      by: ["ingredient", "unit"],
+      where: { userId: user },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    return {
+      groceries,
+      ingredientsGroup,
+    };
   }
 
   async count(user: string) {
