@@ -13,7 +13,7 @@ export const IngredientCard = ({ recipe }: { recipe: Item }) => {
   const { userId } = useAuth();
   const { data: groceries } = useGetGroceriesQuery();
 
-  const isGroceryAdded = (id: string) => groceries?.some((g) => g.uuid === id);
+  const isGroceryAdded = (id: string) => groceries?.groceries.some((g) => g.uuid === id);
   const yields = recipe?.yields?.map((y) => y.ingredients).flat();
 
   return (

@@ -40,9 +40,9 @@ export const NavbarContent = () => {
 
   return (
     <>
-      <Text mt="md" align="center" weight="bold">
+      {/* <Text mt="md" align="center" weight="bold">
         Hello Fresh Recipe Search
-      </Text>
+      </Text> */}
 
       <Center>
         <ActionIcon
