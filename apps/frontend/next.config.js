@@ -1,7 +1,6 @@
 // @ts-check
 /* eslint-disable @typescript-eslint/no-var-requires */
 const withPWA = require("next-pwa");
-const { env } = require("./src/server/env");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
@@ -32,9 +31,6 @@ const nextConfig = {
   reactStrictMode: true,
   typescript: {
     ignoreBuildErrors: true,
-  },
-  publicRuntimeConfig: {
-    NODE_ENV: env.NODE_ENV,
   },
 };
 
