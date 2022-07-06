@@ -16,31 +16,22 @@ export type AddGrocery = {
   };
 };
 
-export interface Groceries {
-  groceries: Grocery[];
-  ingredientsGroup: IngredientsGroup[];
-}
-
 export interface Grocery {
+  createdAt: Date;
   ingredient: string;
+  amount: number | null;
+  unit: Unit | null;
   imagePath: null | string;
   id: string;
-  slug: string;
+  userId: string;
   family: string;
+  slug: string;
   uuid: string;
-}
-
-export interface IngredientsGroup {
-  _sum: Sum;
-  ingredient: string;
-  unit: Unit | null;
-}
-
-export interface Sum {
-  amount: number | null;
+  recipeId: string;
 }
 
 export enum Unit {
+  Clove = "clove",
   Cup = "cup",
   Jar = "jar",
   Ounce = "ounce",

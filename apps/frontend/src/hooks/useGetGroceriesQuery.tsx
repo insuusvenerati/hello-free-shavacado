@@ -1,12 +1,16 @@
 import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "react-query";
-import { Groceries } from "../types/grocery";
+import { Grocery } from "../types/grocery";
 import { getGroceries } from "../util/getGroceries";
 
-export const useGetGroceriesQuery = () => {
+export const useGetGroceriesQuery = ({ take }: { take: string }) => {
   const { userId } = useAuth();
-  return useQuery<Groceries, Error>(["groceries", userId], () => getGroceries(userId), {
-    enabled: !!userId,
-    placeholderData: { groceries: [], ingredientsGroup: [] },
-  });
+  return useQuery<Grocery[], Error>(
+    ["groceries", userId, take],
+    () => getGroceries({ userId, take }),
+    {
+      enabled: !!userId,
+      placeholderData: [],
+    },
+  );
 };

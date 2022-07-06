@@ -11,9 +11,9 @@ import { HF_AVATAR_IMAGE_URL } from "../util/constants";
 export const IngredientCard = ({ recipe }: { recipe: Item }) => {
   const { mutate: addGroceryMutation, isLoading } = useAddGroceryMutation();
   const { userId } = useAuth();
-  const { data: groceries } = useGetGroceriesQuery();
+  const { data: groceries } = useGetGroceriesQuery({ take: "999" });
 
-  const isGroceryAdded = (id: string) => groceries?.groceries.some((g) => g.uuid === id);
+  const isGroceryAdded = (id: string) => groceries?.some((g) => g.uuid === id);
   const yields = recipe?.yields?.map((y) => y.ingredients).flat();
 
   return (
