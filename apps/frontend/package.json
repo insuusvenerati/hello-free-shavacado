@@ -17,7 +17,7 @@
     "@icons-pack/react-simple-icons": "4.7.0",
     "@mantine/core": "4.2.11",
     "@mantine/hooks": "4.2.12",
-    "@mantine/next": "4.2.11",
+    "@mantine/next": "4.2.12",
     "@mantine/notifications": "4.2.12",
     "@prisma/client": "3.15.2",
     "cookies-next": "2.1.1",
