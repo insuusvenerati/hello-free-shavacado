@@ -12,7 +12,12 @@ services:
       args:
         - NEXT_PUBLIC_CLERK_FRONTEND_API=${NEXT_PUBLIC_CLERK_FRONTEND_API}
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-        - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+        - NEXT_PUBLIC_VERCEL_URL=${NEXT_PUBLIC_VERCEL_URL}
+        - CLERK_API_KEY=${CLERK_API_KEY}
+        - DATABASE_URL=${DATABASE_URL}
+    environment:
+      - CLERK_API_KEY=${CLERK_API_KEY}
+      - DATABASE_URL=${DATABASE_URL}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 10s
@@ -49,3 +54,16 @@ services:
         condition: service_healthy
     ports:
       - 8080:80
+
+  postgresql:
+    image: docker.io/bitnami/postgresql:14
+    environment:
+      - "ALLOW_EMPTY_PASSWORD=yes"
+
+  redis:
+    image: docker.io/bitnami/redis:6.2
+    restart: unless-stopped
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
