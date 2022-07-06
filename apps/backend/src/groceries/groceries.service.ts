@@ -1,41 +1,41 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "src/prisma.service";
 
 @Injectable()
 export class GroceriesService {
+  private readonly logger = new Logger(GroceriesService.name);
+
   constructor(private prisma: PrismaService) {}
+
   async create(createGroceryDto: Prisma.GroceryCreateInput) {
     return await this.prisma.grocery.create({
       data: createGroceryDto,
     });
   }
 
-  async findAll(user: string) {
-    const groceries = await this.prisma.grocery.findMany({
-      where: { userId: user },
-      select: {
-        ingredient: true,
-        imagePath: true,
-        id: true,
-        slug: true,
-        family: true,
-        uuid: true,
-      },
-    });
+  async findAll(params: {
+    user: string;
+    take: number;
+    skip?: number;
+    orderBy?: Prisma.GroceryOrderByWithRelationAndSearchRelevanceInput;
+  }) {
+    const { user, take, skip, orderBy } = params;
+    this.logger.debug(orderBy);
 
-    const ingredientsGroup = await this.prisma.grocery.groupBy({
-      by: ["ingredient", "unit"],
-      where: { userId: user },
-      _sum: {
-        amount: true,
-      },
-    });
+    if (isNaN(skip)) {
+      return this.prisma.grocery.findMany({
+        where: { userId: user },
+        take,
+        orderBy,
+      });
+    }
 
-    return {
-      groceries,
-      ingredientsGroup,
-    };
+    return this.prisma.grocery.findMany({
+      where: { userId: user },
+      skip,
+      take,
+    });
   }
 
   async count(user: string) {

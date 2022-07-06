@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { GroceriesService } from "./groceries.service";
 
@@ -12,8 +22,14 @@ export class GroceriesController {
   }
 
   @Get()
-  async findAll(@Query("user") user: string) {
-    return await this.groceriesService.findAll(user);
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async findAll(
+    @Query("user") user: string,
+    @Query("take") take: number,
+    @Query("skip") skip?: number,
+    @Query("orderBy") orderBy?: Prisma.GroceryOrderByWithRelationAndSearchRelevanceInput,
+  ) {
+    return await this.groceriesService.findAll({ skip, take, user, orderBy });
   }
 
   @Get(":id")
