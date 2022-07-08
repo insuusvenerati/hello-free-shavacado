@@ -10,6 +10,7 @@ datasource db {
 
 model Hellofresh {
   createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime? @updatedAt
   recipe    Json?
   id        String    @id @default(dbgenerated("fn_ksuid()"))
 
@@ -18,6 +19,7 @@ model Hellofresh {
 
 model Recipe {
   createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime? @updatedAt
   userId    String?   @map("user_id")
   name      String?
   imagePath String?   @map("image_path")
@@ -31,6 +33,7 @@ model Recipe {
 
 model Grocery {
   createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime? @updatedAt
   ingredient String
   amount     Float?
   unit       String?
@@ -47,13 +50,15 @@ model Grocery {
 }
 
 model ImportedRecipe {
-  id                      String   @id @default(dbgenerated("fn_ksuid()"))
+  createdAt               DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime? @updatedAt
+  id                      String    @id @default(dbgenerated("fn_ksuid()"))
   name                    String
   image                   String
   description             String
-  cookTime                String   @map("cook_time")
-  prepTime                String   @map("prep_time")
-  totalTime               String   @map("total_time")
+  cookTime                String    @map("cook_time")
+  prepTime                String    @map("prep_time")
+  totalTime               String    @map("total_time")
   recipeYield             String
   recipeIngredients       String[]
   recipeInstructions      String[]
@@ -61,9 +66,9 @@ model ImportedRecipe {
   recipeCuisines          String[]
   recipeTypes             String[]
   keywords                String[]
-  cookTimeOriginalFormat  String?  @map("cooktime_original_format")
-  prepTimeOriginalFormat  String?  @map("preptime_original_format")
-  totalTimeOriginalFormat String?  @map("totaltime_original_format")
+  cookTimeOriginalFormat  String?   @map("cooktime_original_format")
+  prepTimeOriginalFormat  String?   @map("preptime_original_format")
+  totalTimeOriginalFormat String?   @map("totaltime_original_format")
   url                     String
-  userId                  String   @map("user_id")
+  userId                  String    @map("user_id")
 }

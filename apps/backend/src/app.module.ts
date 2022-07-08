@@ -9,6 +9,7 @@ import { PlaceholderModule } from "./placeholder/placeholder.module";
 import { RecipeModule } from "./recipe/recipe.module";
 import { GroceriesModule } from "./groceries/groceries.module";
 import { ScrapeModule } from "./scrape/scrape.module";
+import { ScheduleModule } from "@nestjs/schedule";
 
 const ENV = process.env.NODE_ENV;
 
@@ -26,6 +27,7 @@ const ENV = process.env.NODE_ENV;
       // family: 6,
       password: process.env.REDISPASSWORD,
     }),
+    ScheduleModule.forRoot(),
     HellofreshModule,
     PlaceholderModule,
     RecipeModule,
