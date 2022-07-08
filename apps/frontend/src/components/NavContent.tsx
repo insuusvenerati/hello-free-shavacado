@@ -1,6 +1,5 @@
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { BookmarkIcon, CakeIcon, HomeIcon, LoginIcon } from "@heroicons/react/outline";
-import { Github } from "@icons-pack/react-simple-icons";
 import {
   ActionIcon,
   Center,
@@ -11,6 +10,7 @@ import {
 } from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
+import { Github } from "./Icons/Github";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
 

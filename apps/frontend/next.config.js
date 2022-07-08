@@ -9,7 +9,6 @@ const onVercel = process.env.VERCEL === "1";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  swcMinify: true,
   eslint: {
     dirs: ["pages", "components", "hooks"],
   },
