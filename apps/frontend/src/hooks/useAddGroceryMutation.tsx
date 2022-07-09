@@ -1,7 +1,7 @@
 import { useAuth, useClerk } from "@clerk/nextjs";
 import { showNotification } from "@mantine/notifications";
 import { useMutation, useQueryClient } from "react-query";
-import { AddGrocery, Grocery } from "../types/grocery";
+import { AddGrocery } from "../types/grocery";
 import { addGrocery } from "../util/addGrocery";
 
 type MutationError = {

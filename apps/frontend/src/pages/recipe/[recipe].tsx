@@ -236,7 +236,3 @@ const Recipe = () => {
 };
 
 export default Recipe;
-
-export const config = {
-  runtime: "experimental-edge",
-};

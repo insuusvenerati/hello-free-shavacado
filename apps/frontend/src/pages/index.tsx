@@ -18,7 +18,8 @@ import { useRecipesContext } from "../context/RecipesContext";
 import { getPopularRecipes } from "../util/getPopularRecipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+  res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
 

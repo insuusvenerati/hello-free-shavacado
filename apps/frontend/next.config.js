@@ -12,11 +12,7 @@ const nextConfig = {
   eslint: {
     dirs: ["pages", "components", "hooks"],
   },
-  // output: !onVercel ? "standalone" : null,
-  experimental: {
-    runtime: "experimental-edge",
-    serverComponents: true,
-  },
+  output: !onVercel ? "standalone" : null,
   pwa: {
     dest: "public",
     disable: process.env.NODE_ENV === "development",
