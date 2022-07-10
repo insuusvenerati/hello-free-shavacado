@@ -42,8 +42,10 @@ const LazyImage = dynamic(() => import("next/image"));
 interface Params extends ParsedUrlQuery {
   recipe: string;
 }
+const ONE_DAY = 1000 * 86400;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  ctx.res.setHeader("Cache-Control", `public, s-maxage=10, stale-while-revalidate=${ONE_DAY}`);
   const queryClient = new QueryClient();
   const { recipe } = ctx.params as Params;
 

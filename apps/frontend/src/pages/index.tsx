@@ -18,8 +18,10 @@ import { useRecipesContext } from "../context/RecipesContext";
 import { getPopularRecipes } from "../util/getPopularRecipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 
+const ONE_DAY = 1000 * 86400;
+
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
+  res.setHeader("Cache-Control", `public, s-maxage=10, stale-while-revalidate=${ONE_DAY}`);
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
   console.log("Prefetched popular recipes");
