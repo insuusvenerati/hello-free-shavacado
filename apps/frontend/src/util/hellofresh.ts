@@ -36,6 +36,8 @@ export const hellofreshSearchBySlug = async ({ slug }: { slug: string | string[]
   if (!slug || typeof slug !== "string") {
     return await Promise.reject(new Error("Invalid recipe slug was provided"));
   }
+  const response = await ky.get(`${HELLOFRESH_SEARCH_URL}/recipe?q=${slug}`);
+  const data = await response.json<RecipeQuery>();
 
-  return await ky.get(`${HELLOFRESH_SEARCH_URL}/recipe?q=${slug}`).json<RecipeQuery>();
+  return data;
 };

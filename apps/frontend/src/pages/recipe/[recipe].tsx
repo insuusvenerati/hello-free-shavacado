@@ -16,11 +16,13 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
+import type { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { Fragment, Suspense, SyntheticEvent } from "react";
+import { dehydrate, QueryClient } from "react-query";
 import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
 import { IngredientCard } from "../../components/IngredientsCard";
 import { useAddGroceryMutation } from "../../hooks/useAddGroceryMutation";
@@ -33,6 +35,7 @@ import {
   HF_STEP_IMAGE_URL,
   VERCEL_URL,
 } from "../../util/constants";
+import { hellofreshSearchBySlug } from "../../util/hellofresh";
 
 const LazyImage = dynamic(() => import("next/image"));
 
@@ -40,20 +43,22 @@ interface Params extends ParsedUrlQuery {
   recipe: string;
 }
 
-// export const getServerSideProps: GetServerSideProps = async (ctx) => {
-//   const queryClient = new QueryClient();
-//   const { recipe } = ctx.params as Params;
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const queryClient = new QueryClient();
+  const { recipe } = ctx.params as Params;
 
-//   await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], () =>
-//     hellofreshSearchBySlug({ slug: recipe }),
-//   );
+  await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], () =>
+    hellofreshSearchBySlug({ slug: recipe }),
+  );
 
-//   return {
-//     props: {
-//       dehydratedState: dehydrate(queryClient),
-//     },
-//   };
-// };
+  console.log("Prefetched individual recipe");
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};
 
 const Recipe = () => {
   const matches = useMediaQuery("(min-width: 900px)", true);

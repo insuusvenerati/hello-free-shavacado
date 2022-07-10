@@ -9,23 +9,27 @@ import {
   Text,
 } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
+import { GetServerSideProps } from "next";
 import { forwardRef, useCallback, useEffect, useState } from "react";
+import { QueryClient, dehydrate } from "react-query";
 import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
 import { LazyRecipeModal } from "../components/RecipeModal";
 import { useRecipesContext } from "../context/RecipesContext";
+import { getPopularRecipes } from "../util/getPopularRecipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 
-// export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-//   res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
-//   const queryClient = new QueryClient();
-//   await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
+export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+  res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
+  console.log("Prefetched popular recipes");
 
-//   return {
-//     props: {
-//       dehydratedState: dehydrate(queryClient),
-//     },
-//   };
-// };
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};
 
 interface ItemProps extends SelectItemProps {
   color: MantineColor;
