@@ -25,6 +25,7 @@ import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
 import { ImportedRecipeLink } from "./ImportedRecipeLink";
 import { MyHeader } from "./MyHeader";
+import { NavbarContent } from "./NavContent";
 import { RecipeLink } from "./RecipeLink";
 
 interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
@@ -135,7 +136,7 @@ export const MyAppShell = ({ children }: AppShellProps) => {
       header={<MyHeader opened={opened} setOpened={setOpened} />}
       navbar={
         <Navbar hidden={!opened} hiddenBreakpoint="sm" width={{ base: 300 }}>
-          {/* <NavbarContent /> */}
+          <NavbarContent />
 
           <Stack sx={{ padding: 5 }}>
             {ingredients && (

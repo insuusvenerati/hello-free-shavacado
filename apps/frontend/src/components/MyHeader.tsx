@@ -131,7 +131,6 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
     <Header mb={120} className={classes.header} height={56}>
       <div className={classes.inner}>
         <Group>
-          <Burger mr="md" onClick={handleDrawer} opened={opened} size="sm" />
           <Image alt="logo" src="/android-chrome-192x192.png" width={50} height={50} />
           <Title order={2}>Hellofresh Search</Title>
         </Group>
