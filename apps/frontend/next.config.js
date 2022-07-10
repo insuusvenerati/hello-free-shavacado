@@ -13,6 +13,9 @@ const nextConfig = {
     dirs: ["pages", "components", "hooks"],
   },
   output: !onVercel ? "standalone" : null,
+  experimental: {
+    runtime: "experimental-edge",
+  },
   pwa: {
     dest: "public",
     disable: process.env.NODE_ENV === "development",
