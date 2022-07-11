@@ -5,6 +5,7 @@ import {
   Center,
   Group,
   Indicator,
+  MantineStyleSystemProps,
   Text,
   ThemeIcon,
   useMantineColorScheme,
@@ -30,7 +31,7 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
   return <UserButton />;
 };
 
-export const NavbarContent = () => {
+export const NavbarContent = ({ marginTop = 0 }: { marginTop?: MantineStyleSystemProps["mt"] }) => {
   const { data } = useFavoriteRecipesQuery();
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -45,7 +46,7 @@ export const NavbarContent = () => {
         Hello Fresh Recipe Search
       </Text> */}
 
-      <Center mt="sm">
+      <Center mt={marginTop}>
         <Group>
           <ActionIcon
             color={dark ? "yellow" : "blue"}

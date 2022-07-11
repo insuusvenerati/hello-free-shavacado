@@ -136,7 +136,7 @@ export const MyAppShell = ({ children }: AppShellProps) => {
       header={<MyHeader opened={opened} setOpened={setOpened} />}
       navbar={
         <Navbar hidden={!opened} hiddenBreakpoint="sm" width={{ base: 300 }}>
-          <NavbarContent />
+          <NavbarContent marginTop="sm" />
 
           <Stack sx={{ padding: 5 }}>
             {ingredients && (

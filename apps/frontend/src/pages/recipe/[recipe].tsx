@@ -56,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   );
 
   const msElapsed = Date.now() - startTime;
-  log.info("Prefetched recipe", { recipe: recipe, duration: msElapsed });
+  log.info("Prefetched recipe", { recipe: recipe, duration: `${msElapsed}ms` });
 
   return {
     props: {
