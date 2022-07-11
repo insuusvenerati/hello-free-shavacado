@@ -17,6 +17,7 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
 import type { GetServerSideProps } from "next";
+import { log } from "next-axiom";
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -53,7 +54,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     hellofreshSearchBySlug({ slug: recipe }),
   );
 
-  console.log("Prefetched individual recipe");
+  log.info("Prefetched recipe", { recipe: recipe });
 
   return {
     props: {

@@ -1,6 +1,7 @@
 // @ts-check
 /* eslint-disable @typescript-eslint/no-var-requires */
 const withPWA = require("next-pwa");
+const { withAxiom } = require("next-axiom");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
@@ -32,4 +33,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withBundleAnalyzer(withPWA(nextConfig));
+module.exports = withBundleAnalyzerwithAxiom(withPWA(nextConfig));

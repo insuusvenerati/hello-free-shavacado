@@ -22,6 +22,7 @@
     "ky": "0.31.0",
     "ky-universal": "0.10.1",
     "next": "12.2.1",
+    "next-axiom": "^0.10.0",
     "next-pwa": "5.5.4",
     "next-seo": "5.4.0",
     "react": "18.2.0",
