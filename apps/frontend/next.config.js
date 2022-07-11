@@ -33,4 +33,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withBundleAnalyzerwithAxiom(withPWA(nextConfig));
+module.exports = withBundleAnalyzer(withAxiom(withPWA(nextConfig)));

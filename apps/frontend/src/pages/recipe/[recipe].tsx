@@ -46,6 +46,7 @@ interface Params extends ParsedUrlQuery {
 const ONE_DAY = 1000 * 86400;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const startTime = Date.now();
   ctx.res.setHeader("Cache-Control", `public, s-maxage=10, stale-while-revalidate=${ONE_DAY}`);
   const queryClient = new QueryClient();
   const { recipe } = ctx.params as Params;
@@ -54,7 +55,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     hellofreshSearchBySlug({ slug: recipe }),
   );
 
-  log.info("Prefetched recipe", { recipe: recipe });
+  const msElapsed = Date.now() - startTime;
+  log.info("Prefetched recipe", { recipe: recipe, duration: msElapsed });
 
   return {
     props: {
