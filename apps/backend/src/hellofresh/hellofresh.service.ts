@@ -5,17 +5,16 @@ import { RecipeQuery } from "src/recipes";
 
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 const CUISINE_URL = `https://gw.hellofresh.com/api/cuisines?country=us&locale=en-US&take=250`;
-const DELETE_ME_TOKEN = process.env.HF_TOKEN;
 
 @Injectable()
 export class HellofreshService {
   constructor(private prisma: PrismaService) {}
   private readonly logger = new Logger(HellofreshService.name);
 
-  async findAll(query: string, page: number) {
+  async findAll(query: string, page: number, token: string) {
     const skip = page !== 1 ? page * 20 : 0;
     const response = await axios.get(`${BASE_URL}take=20&q=${query}&skip=${skip}`, {
-      headers: { authorization: `Bearer ${DELETE_ME_TOKEN}` },
+      headers: { authorization: token },
     });
 
     response.data.items.map(async (item) => {
@@ -35,9 +34,9 @@ export class HellofreshService {
     return response.data;
   }
 
-  async findOne(q: string) {
+  async findOne(q: string, token: string) {
     const response = await axios.get(`${BASE_URL}take=1&q=${q}`, {
-      headers: { authorization: `Bearer ${DELETE_ME_TOKEN}` },
+      headers: { authorization: token },
     });
 
     if (response.status !== 200) {
@@ -47,19 +46,19 @@ export class HellofreshService {
     return response.data;
   }
 
-  async getAllCuisines() {
+  async getAllCuisines(token: string) {
     const response = await axios.get(CUISINE_URL, {
-      headers: { authorization: `Bearer ${DELETE_ME_TOKEN}` },
+      headers: { authorization: token },
     });
 
     return response.data;
   }
 
-  async getFavoriteRecipes() {
+  async getFavoriteRecipes(token: string) {
     const response = await axios.get<RecipeQuery>(
       `${BASE_URL}take=16&sort=-favorites&min-rating=3.3`,
       {
-        headers: { authorization: `Bearer ${DELETE_ME_TOKEN}` },
+        headers: { authorization: token },
       },
     );
 
