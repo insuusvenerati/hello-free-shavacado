@@ -60,7 +60,7 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const token = getCookie("token") as string;
+  const token = getCookie("hf-token") as string;
 
   const { selectedRecipe, recipesTotal, pageChangeHandler, page } = useRecipesContext();
 
@@ -72,7 +72,13 @@ const Home = () => {
   useEffect(() => {
     if (!token) {
       hellofreshGetToken()
-        .then((token) => setCookies("token", token.access_token))
+        .then((token) =>
+          setCookies("hf-token", token.access_token, {
+            secure: false,
+            sameSite: "lax",
+            maxAge: 2629743,
+          }),
+        )
         .catch((e) => console.error(e));
     }
   }, [token]);

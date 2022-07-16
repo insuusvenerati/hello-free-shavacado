@@ -32,6 +32,7 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
             staleTime: 1000 * 60 * 60,
             refetchOnMount: false,
             notifyOnChangeProps: ["data", "error"],
+            retry: 3,
           },
         },
       }),
