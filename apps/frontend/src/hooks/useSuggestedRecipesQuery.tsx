@@ -5,7 +5,7 @@ import { getSuggestedRecipes } from "../util/getSuggestedRecipes";
 import { useDebounce } from "./useDebounce";
 
 export const useSuggestedRecipesQuery = () => {
-  const token = getCookie("token") as string;
+  const token = getCookie("hf-token") as string;
   const [searchText, setSearchText] = useState("");
   const debouncedSearchText = useDebounce(searchText, 500);
 
