@@ -42,7 +42,7 @@
     "sharp": "0.30.7"
   },
   "devDependencies": {
-    "@nestjs/cli": "8.2.6",
+    "@nestjs/cli": "8.2.8",
     "@nestjs/schematics": "8.0.11",
     "@nestjs/testing": "8.4.7",
     "@prisma/client": "^4.0.0",
