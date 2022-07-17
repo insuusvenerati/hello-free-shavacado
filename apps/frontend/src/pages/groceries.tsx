@@ -16,6 +16,7 @@ import { NextSeo } from "next-seo";
 import { useMemo, useState } from "react";
 import { dehydrate, QueryClient } from "react-query";
 import { useGetGroceriesQuery } from "../hooks/useGetGroceriesQuery";
+import { Grocery } from "../types/grocery";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
 import { getGroceries } from "../util/getGroceries";
 
@@ -64,10 +65,28 @@ export const getServerSideProps: GetServerSideProps = withServerSideAuth(
   { loadUser: true },
 );
 
+const sortedGroceries = (
+  groceries: Grocery[],
+  sortMethod: "ingredient" | "amount",
+  isSuccess: boolean,
+) => {
+  if (!isSuccess) return;
+
+  if (sortMethod === "amount") {
+    return groceries.sort((a, b) => (a.amount! > b.amount! ? 1 : -1));
+  }
+
+  return groceries.sort((a, b) =>
+    a.ingredient.toLowerCase().localeCompare(b.ingredient.toLowerCase()),
+  );
+};
+
 const Groceries = () => {
   const [take, setTake] = useState("10");
   const { data: groceries, isSuccess } = useGetGroceriesQuery({ take });
   const { classes } = useStyles();
+  const [view, setView] = useState<"row" | "column">("column");
+  const [sort, setSort] = useState<"ingredient" | "amount">("ingredient");
 
   const segmentedControlData = useMemo<SegmentedControlItem[]>(
     () => [
@@ -87,6 +106,42 @@ const Groceries = () => {
     [],
   );
 
+  const viewSegmentedControlData = useMemo<SegmentedControlItem[]>(
+    () => [
+      {
+        label: "Row",
+        value: "row",
+      },
+      {
+        label: "Column",
+        value: "column",
+      },
+    ],
+    [],
+  );
+
+  const sortSegmentedControlData = useMemo<SegmentedControlItem[]>(
+    () => [
+      {
+        label: "Amount",
+        value: "amount",
+      },
+      {
+        label: "Ingredient",
+        value: "ingredient",
+      },
+    ],
+    [],
+  );
+
+  const handleViewChange = (value: "row" | "column") => {
+    setView(value);
+  };
+
+  const handleSortChange = (value: "ingredient" | "amount") => {
+    setSort(value);
+  };
+
   if (!isSuccess) {
     return <LoadingOverlay visible />;
   }
@@ -97,21 +152,35 @@ const Groceries = () => {
       <Container>
         <Group mb="lg" position="apart">
           <Title order={2}>Groceries</Title>
-          <SegmentedControl value={take} onChange={setTake} data={segmentedControlData} />
+          <Group>
+            <SegmentedControl value={take} onChange={setTake} data={segmentedControlData} />
+            <SegmentedControl
+              value={view}
+              onChange={handleViewChange}
+              data={viewSegmentedControlData}
+            />
+            <SegmentedControl
+              value={sort}
+              onChange={handleSortChange}
+              data={sortSegmentedControlData}
+            />
+          </Group>
         </Group>
-        {groceries.map((grocery) => (
-          <Box key={grocery.id} className={classes.item}>
-            {grocery.imagePath && (
-              <Avatar size="lg" mr="sm" src={`${HF_AVATAR_IMAGE_URL}${grocery.imagePath}`} />
-            )}
-            <div>
-              <Text> {grocery.ingredient} </Text>
-              <Text color="dimmed" size="sm">
-                Family: {grocery.family} ⦁ Amount: {grocery.amount} ⦁ Unit: {grocery.unit}
-              </Text>
-            </div>
-          </Box>
-        ))}
+        <Group direction={view}>
+          {sortedGroceries(groceries, sort, isSuccess)?.map((grocery) => (
+            <Box key={grocery.id} className={classes.item}>
+              {grocery.imagePath && (
+                <Avatar size="lg" mr="sm" src={`${HF_AVATAR_IMAGE_URL}${grocery.imagePath}`} />
+              )}
+              <Title mr="sm" order={1}>
+                {grocery.amount}
+              </Title>
+              <div>
+                <Text>{grocery.ingredient}</Text>
+              </div>
+            </Box>
+          ))}
+        </Group>
       </Container>
     </>
   );
