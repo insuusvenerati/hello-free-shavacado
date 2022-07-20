@@ -1,15 +1,21 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/unbound-method */
 import { ClerkProvider } from "@clerk/nextjs";
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
 import { DefaultSeo } from "next-seo";
 import { AppProps as NextAppProps } from "next/app";
+import NProgress from "nprogress";
 import Head from "next/head";
-import { useCallback, useState } from "react";
+import Router from "next/router";
+import { useCallback, useEffect, useState } from "react";
 import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import SEO from "../../next-seo.config";
 import { Layout } from "../components/Layout";
+import "nprogress/nprogress.css";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 
@@ -47,6 +53,17 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
     () => setColorScheme((current) => (current === "dark" ? "light" : "dark")),
     [setColorScheme],
   );
+
+  useEffect(() => {
+    Router.events.on("routeChangeStart", NProgress.start);
+    Router.events.on("routeChangeComplete", NProgress.done);
+    Router.events.on("routeChangeError", NProgress.done);
+    return () => {
+      Router.events.off("routeChangeStart", NProgress.start);
+      Router.events.off("routeChangeComplete", NProgress.done);
+      Router.events.off("routeChangeError", NProgress.done);
+    };
+  }, []);
 
   return (
     <>

@@ -20,3 +20,5 @@ export const getOgImageUrl = (url: string | undefined | null) => {
   }
   return `${HF_OG_IMAGE_URL}${url}`;
 };
+
+export const FIVE_MINUTES = 60 * 60 * 5;
