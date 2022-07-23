@@ -1,66 +1,56 @@
 {
   "name": "hello-free-shavacado",
-  "version": "1.4.0",
+  "version": "1.0.0",
+  "main": "index.js",
   "private": true,
+  "repository": "git@github.com:insuusvenerati/hello-free-shavacado.git",
+  "author": "Sean Norwood <norwood.sean@gmail.com>",
+  "license": "MIT",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "test": "vitest",
-    "prettier": "prettier --write src/",
-    "export": "next export",
-    "prepare": "husky install",
-    "semantic-release": "semantic-release"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "stop": "turbo run stop",
+    "start": "turbo run start",
+    "prisma:migrate": "yarn workspace @stiforr/backend prisma migrate",
+    "prisma:studio": "yarn workspace @stiforr/backend prisma studio",
+    "commit": "cz"
   },
-  "dependencies": {
-    "@clerk/nextjs": "3.6.5",
-    "@mantine/core": "4.2.2",
-    "@mantine/hooks": "4.2.5",
-    "@mantine/next": "4.2.2",
-    "@mantine/notifications": "4.2.5",
-    "@plaiceholder/next": "2.3.0",
-    "@sentry/nextjs": "6.19.7",
-    "@sentry/tracing": "6.19.7",
-    "@supabase/supabase-js": "^1.35.2",
-    "cookies-next": "2.0.4",
-    "ioredis": "5.0.4",
-    "ky": "0.30.0",
-    "ky-universal": "0.10.1",
-    "next": "12.1.5",
-    "next-pwa": "5.5.2",
-    "next-seo": "5.4.0",
-    "plaiceholder": "2.3.0",
-    "react": "18.1.0",
-    "react-dom": "18.1.0",
-    "react-query": "3.39.0",
-    "sharp": "0.30.4",
-    "tabler-icons-react": "1.48.0",
-    "typescript": "4.5.5"
+  "workspaces": {
+    "packages": [
+      "apps/*"
+    ],
+    "nohoist": [
+      "@stiforr/frontend/**",
+      "@stiforr/backend/**"
+    ]
   },
   "devDependencies": {
-    "@semantic-release/changelog": "6.0.1",
-    "@semantic-release/git": "10.0.1",
-    "@testing-library/react": "^13.2.0",
-    "@types/node": "17.0.24",
-    "@types/react": "18.0.9",
-    "@vitejs/plugin-react": "^1.3.2",
-    "eslint": "8.15.0",
-    "eslint-config-next": "12.1.5",
-    "eslint-plugin-unused-imports": "^2.0.0",
-    "husky": "7.0.4",
-    "jsdom": "^19.0.0",
-    "lint-staged": "12.4.1",
-    "prettier": "2.6.2",
-    "semantic-release": "19.0.2",
-    "vitest": "^0.10.4"
+    "commitizen": "4.2.4",
+    "cz-conventional-changelog": "3.3.0",
+    "dotenv": "16.0.1",
+    "eslint": "8.18.0",
+    "husky": "8.0.1",
+    "lint-staged": "13.0.3",
+    "nps": "5.10.0",
+    "nps-utils": "1.7.0",
+    "prettier": "2.7.1",
+    "rimraf": "3.0.2",
+    "turbo": "1.3.1"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "eslint --cache --fix",
+    "*.{ts,tsx}": "eslint",
     "*.{ts,tsx,css,md}": "prettier --write"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/insuusvenerati/hello-free-shavacado.git"
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "volta": {
+    "node": "16.16.0",
+    "yarn": "1.22.19",
+    "npm": "8.13.2"
   }
 }

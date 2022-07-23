@@ -1,0 +1,63 @@
+name: docker
+
+on:
+  push:
+    branches:
+      - "main"
+      - "develop"
+    tags:
+      - "**"
+
+jobs:
+  docker:
+    strategy:
+      matrix:
+        app: ["frontend", "backend"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        if: github.event_name != 'pull_request'
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        if: github.event_name != 'pull_request'
+        with:
+          images: |
+            ghcr.io/insuusvenerati/hello-free-shavacado-${{ matrix.app }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        if: github.event_name != 'pull_request'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        if: github.event_name != 'pull_request'
+        with:
+          context: .
+          file: apps/${{ matrix.app }}/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            NEXT_PUBLIC_CLERK_FRONTEND_API=${{ secrets.NEXT_PUBLIC_CLERK_FRONTEND_API }}
+            CLERK_API_KEY=${{ secrets.CLERK_API_KEY }}
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}

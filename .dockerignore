@@ -1,6 +1,6 @@
-.next/
+**/node_modules/
 .git/
-node_modules/
-.env.local
-.sentryclirc
-tmp/
+**/.env*
+**/Dockerfile
+**/.dockerignore
+docker-compose.yml

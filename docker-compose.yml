@@ -1,14 +1,69 @@
 version: "3"
 services:
-  redis:
-    image: bitnami/redis:latest
-    container_name: redis
-    ports:
-      - 6379:6379
-    volumes:
-      - data:/bitnami/redis/data
+  nextjs:
+    image: hello-free-shavacado-frontend
+    container_name: hello-free-shavacado-frontend
+    depends_on:
+      nestjs:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+      args:
+        - NEXT_PUBLIC_CLERK_FRONTEND_API=${NEXT_PUBLIC_CLERK_FRONTEND_API}
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - NEXT_PUBLIC_VERCEL_URL=${NEXT_PUBLIC_VERCEL_URL}
+        - CLERK_API_KEY=${CLERK_API_KEY}
+        - DATABASE_URL=${DATABASE_URL}
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+      - CLERK_API_KEY=${CLERK_API_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
-volumes:
-  data:
+  nestjs:
+    image: hello-free-shavacado-backend
+    container_name: hello-free-shavacado-backend
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    ports:
+      - 4000:4000
+    environment:
+      - REDISHOST=$REDISHOST
+      - REDISPORT=$REDISPORT
+      - REDISPASSWORD=$REDISPASSWORD
+      - DATABASE_URL=$DATABASE_URL
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  nginx:
+    container_name: hello-free-shavacado-proxy
+    image: hello-free-shavacado-proxy
+    build: docker/nginx
+    depends_on:
+      nextjs:
+        condition: service_healthy
+    ports:
+      - 8080:80
+
+  postgresql:
+    image: docker.io/bitnami/postgresql:14
+    environment:
+      - "ALLOW_EMPTY_PASSWORD=yes"
+
+  redis:
+    image: docker.io/bitnami/redis:6.2
+    restart: unless-stopped
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
