@@ -8745,10 +8745,10 @@ ky-universal@0.10.1:
     abort-controller "^3.0.0"
     node-fetch "^3.2.2"
 
-ky@0.31.0:
-  version "0.31.0"
-  resolved "https://registry.npmjs.org/ky/-/ky-0.31.0.tgz"
-  integrity sha512-C27vqDb3vuxy4mi/x1wt9P1ES0QxEJg3CbPz2t3lTaQ4AvR/hkwES06yPdqol+q3hH+DrZKb/PKD+pAQkharNg==
+ky@0.31.1:
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/ky/-/ky-0.31.1.tgz#7b789b4b2a02a94b8c8fe69f2e20f1f085ff7006"
+  integrity sha512-wha6TXwen/+4aeHGn8oyHWTQdukT/JZew4mmu2KiCFKn1NHCXiWpeBhGDVFiIX9FN7wsfSkV0C8yZ6YRKE/w4Q==
 
 language-subtag-registry@~0.3.2:
   version "0.3.22"

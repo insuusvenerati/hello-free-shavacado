@@ -22,7 +22,7 @@
     "@mantine/notifications": "5.0.0",
     "@mantine/nprogress": "^5.0.0",
     "cookies-next": "2.1.1",
-    "ky": "0.31.0",
+    "ky": "0.31.1",
     "ky-universal": "0.10.1",
     "next": "12.2.2",
     "next-axiom": "0.10.0",
