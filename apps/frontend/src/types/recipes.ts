@@ -36,8 +36,8 @@ export interface Item {
   utensils: Utensil[];
   tags: Tag[];
   cuisines: Category[];
-  wines: any[];
-  marketplaceItems: any[];
+  wines: string[];
+  marketplaceItems: string[];
   author: null | string;
   label: Label | null;
   yieldType: string;
@@ -186,7 +186,7 @@ export interface Step {
   instructions: string;
   timers: Timer[];
   images: Image[];
-  videos: any[];
+  videos: string[];
   ingredients: string[];
   utensils: string[];
 }

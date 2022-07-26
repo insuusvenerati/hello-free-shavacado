@@ -79,22 +79,14 @@ const ImportedRecipe = () => {
         <Card mt="md" mb="lg" p="lg" shadow="sm">
           <Card.Section p={20}>
             <Group position="apart">
-              <Group direction="column" grow={false} spacing={0}>
+              <Group style={{ flexDirection: "column" }} grow={false} spacing={0}>
                 <Title order={1}>{recipe?.name}</Title>
                 <Title order={6}> {recipe?.description} </Title>
-              </Group>
-              <Group position={matches ? "right" : "center"}>
-                {/* <AddToFavorites selectedRecipe={recipe} /> */}
-                {/* <form onSubmit={handleAddAllIngredients}>
-                    <Button loading={isLoading} type="submit">
-                      Add all ingredients to groceries
-                    </Button>
-                  </form> */}
               </Group>
             </Group>
             <Divider my="sm" />
             <Group position="apart">
-              <Group direction="column">
+              <Group style={{ flexDirection: "column" }}>
                 <Text sx={{ maxWidth: "750px" }}>{recipe?.description}</Text>
                 {recipe && recipe?.keywords?.length > 0 ? (
                   <Group>
@@ -119,7 +111,7 @@ const ImportedRecipe = () => {
                     ))} */}
                 </Group>
               </Group>
-              <Group direction="column">
+              <Group style={{ flexDirection: "column" }}>
                 <Text>Total Time {recipe?.totalTime}</Text>
                 {/* <Text>Difficulty {recipe?.difficulty}</Text> */}
               </Group>

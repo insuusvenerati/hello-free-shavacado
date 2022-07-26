@@ -17,13 +17,12 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
 import { GetServerSideProps } from "next";
-import { log } from "next-axiom";
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { Fragment, Suspense, SyntheticEvent } from "react";
-import { QueryClient, dehydrate } from "react-query";
+import { dehydrate, QueryClient } from "react-query";
 import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
 import { IngredientCard } from "../../components/IngredientsCard";
 import { useAddGroceryMutation } from "../../hooks/useAddGroceryMutation";
@@ -46,7 +45,6 @@ interface Params extends ParsedUrlQuery {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const startTime = Date.now();
   ctx.res.setHeader("Cache-Control", `public, s-maxage=60, stale-while-revalidate=${FIVE_MINUTES}`);
   const queryClient = new QueryClient();
   const { recipe } = ctx.params as Params;
@@ -54,9 +52,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], () =>
     hellofreshSearchBySlug({ slug: recipe }),
   );
-
-  const msElapsed = Date.now() - startTime;
-  log.info("Prefetched recipe", { recipe: recipe, duration: `${msElapsed}ms` });
 
   return {
     props: {

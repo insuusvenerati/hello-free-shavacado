@@ -20,7 +20,7 @@ type HelloFreshSearchOptions = {
   cuisine?: string;
 };
 
-const token = getCookie("hf-token") as string;
+const token = getCookie("hf-token") as string | undefined;
 
 export const hellofreshGetToken = async () => {
   const response = await ky.post(
@@ -34,6 +34,7 @@ export const hellofreshGetToken = async () => {
 
 export const hellofreshSearch = async (searchText: string, options?: HelloFreshSearchOptions) => {
   const { page = 1, tag, maxPrepTime, difficulty, take = 20 } = options || {};
+  if (!token) return await Promise.reject("No token provided");
 
   const response = await ky.get(`${HELLOFRESH_SEARCH_URL}?page=${page}&q=${searchText}`, {
     headers: {
@@ -46,8 +47,10 @@ export const hellofreshSearch = async (searchText: string, options?: HelloFreshS
 
 export const hellofreshSearchBySlug = async ({ slug }: { slug: string | string[] | undefined }) => {
   if (!slug || typeof slug !== "string") {
-    return await Promise.reject(new Error("Invalid recipe slug was provided"));
+    return await Promise.reject("Invalid recipe slug was provided");
   }
+  if (!token) return await Promise.reject("No token provided");
+
   const response = await ky.get(`${HELLOFRESH_SEARCH_URL}/recipe?q=${slug}`, {
     headers: { authorization: `Bearer ${token}` },
   });

@@ -1,7 +1,6 @@
 import { CacheModule, MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import * as redisStore from "cache-manager-ioredis";
-import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { HellofreshModule } from "./hellofresh/hellofresh.module";
 import { LoggerMiddleware } from "./logger.middleware";
@@ -9,6 +8,7 @@ import { PlaceholderModule } from "./placeholder/placeholder.module";
 import { RecipeModule } from "./recipe/recipe.module";
 import { GroceriesModule } from "./groceries/groceries.module";
 import { ScrapeModule } from "./scrape/scrape.module";
+import { AppController } from "./app.controller";
 
 const ENV = process.env.NODE_ENV;
 
@@ -19,7 +19,7 @@ const ENV = process.env.NODE_ENV;
     }),
     CacheModule.register({
       isGlobal: true,
-      ttl: ENV === "development" ? 30 : 60 * 60,
+      ttl: ENV === "production" ? 60 * 60 * 24 : 0,
       store: redisStore,
       host: process.env.REDISHOST,
       port: +process.env.REDISPORT || 6379,

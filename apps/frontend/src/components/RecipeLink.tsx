@@ -7,10 +7,10 @@ import { FavoritedRecipe } from "../types/favoriteRecipe";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
 
 export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedRecipe }) => {
-  const { data: recipe, isLoading } = useHellofreshBySlug(favoritedRecipe?.slug);
+  const { data: recipe, isSuccess } = useHellofreshBySlug(favoritedRecipe?.slug);
   const { mutate } = useDeleteFavoriteRecipe(favoritedRecipe.id);
 
-  if (isLoading) return null;
+  if (!isSuccess) return null;
 
   return (
     <Paper mb="md" shadow="xs" withBorder>
@@ -25,17 +25,18 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
         }
       >
         <Group noWrap>
-          <Tooltip
-            style={{
-              maxWidth: 100,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-            label={recipe?.items[0]?.name}
-            withArrow
-          >
-            <NextLink href={recipe?.items[0]?.websiteUrl} key={favoritedRecipe?.id} target="_blank">
+          <Tooltip label={recipe?.items[0]?.name} withArrow>
+            <NextLink
+              style={{
+                maxWidth: 100,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              href={recipe?.items[0]?.websiteUrl}
+              key={favoritedRecipe?.id}
+              target="_blank"
+            >
               <Text size="sm">{recipe?.items[0]?.name}</Text>
             </NextLink>
           </Tooltip>

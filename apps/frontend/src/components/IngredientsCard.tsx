@@ -18,83 +18,80 @@ export const IngredientCard = ({ recipe }: { recipe: Item }) => {
 
   return (
     <Card p="lg" shadow="sm">
-      <Accordion offsetIcon={false}>
-        <Accordion.Item
-          label={
-            <Text size="lg" weight="bold">
-              Ingredients
-            </Text>
-          }
-        >
-          <SimpleGrid
-            breakpoints={[
-              { minWidth: "sm", cols: 1 },
-              { minWidth: "lg", cols: 2 },
-            ]}
-          >
-            {recipe?.ingredients.map((ingredient) => {
-              const ingredientYield = yields.filter((y) => y.id === ingredient.id);
-              return (
-                <Group key={ingredient.id}>
-                  <form
-                    onSubmit={(event) => {
-                      event.preventDefault();
-                      if (userId) {
-                        addGroceryMutation({
-                          ingredient: ingredient.name,
-                          amount: ingredientYield[0].amount,
-                          unit: ingredientYield[0].unit,
-                          imagePath: ingredient.imagePath,
-                          userId: userId,
-                          slug: ingredient.slug,
-                          family: ingredient.family.name,
-                          uuid: ingredient.id,
-                          recipe: {
-                            connectOrCreate: {
-                              create: {
-                                imagePath: recipe.imagePath,
-                                name: recipe.name,
-                                userId: userId,
-                                slug: recipe.slug,
-                                uuid: recipe.id,
+      <Accordion>
+        <Accordion.Item value="Ingredients">
+          <Accordion.Control>Ingredients</Accordion.Control>
+          <Accordion.Panel>
+            <SimpleGrid
+              breakpoints={[
+                { minWidth: "sm", cols: 1 },
+                { minWidth: "lg", cols: 2 },
+              ]}
+            >
+              {recipe?.ingredients.map((ingredient) => {
+                const ingredientYield = yields.filter((y) => y.id === ingredient.id);
+                return (
+                  <Group key={ingredient.id}>
+                    <form
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        if (userId) {
+                          addGroceryMutation({
+                            ingredient: ingredient.name,
+                            amount: ingredientYield[0].amount,
+                            unit: ingredientYield[0].unit,
+                            imagePath: ingredient.imagePath,
+                            userId: userId,
+                            slug: ingredient.slug,
+                            family: ingredient.family.name,
+                            uuid: ingredient.id,
+                            recipe: {
+                              connectOrCreate: {
+                                create: {
+                                  imagePath: recipe.imagePath,
+                                  name: recipe.name,
+                                  userId: userId,
+                                  slug: recipe.slug,
+                                  uuid: recipe.id,
+                                },
+                                where: { uuid: recipe.id },
                               },
-                              where: { uuid: recipe.id },
                             },
-                          },
-                        });
-                      }
-                    }}
-                  >
-                    <ActionIcon
-                      loading={isLoading}
-                      type="submit"
-                      variant="light"
-                      color="green"
-                      disabled={isGroceryAdded(ingredient.id)}
+                          });
+                        }
+                      }}
                     >
-                      {isGroceryAdded(ingredient.id) ? (
-                        <CheckIcon width={16} />
-                      ) : (
-                        <PlusIcon width={16} />
-                      )}
-                    </ActionIcon>
-                  </form>
-                  <Image
-                    alt={ingredient.description}
-                    height={60}
-                    src={`${HF_AVATAR_IMAGE_URL}/${ingredient.imagePath}`}
-                    width={60}
-                  />
-                  <Group spacing={0} direction="column">
-                    <Text>
-                      {ingredientYield[0].amount} {ingredientYield[0].unit}
-                    </Text>
-                    <Text>{ingredient.name}</Text>
+                      <ActionIcon
+                        loading={isLoading}
+                        type="submit"
+                        variant="light"
+                        color="green"
+                        disabled={isGroceryAdded(ingredient.id)}
+                      >
+                        {isGroceryAdded(ingredient.id) ? (
+                          <CheckIcon width={16} />
+                        ) : (
+                          <PlusIcon width={16} />
+                        )}
+                      </ActionIcon>
+                    </form>
+                    <Image
+                      alt={ingredient.description}
+                      height={60}
+                      src={`${HF_AVATAR_IMAGE_URL}/${ingredient.imagePath}`}
+                      width={60}
+                    />
+                    <Group spacing={0} align="flex-start" style={{ flexDirection: "column" }}>
+                      <Text>
+                        {ingredientYield[0].amount} {ingredientYield[0].unit}
+                      </Text>
+                      <Text>{ingredient.name}</Text>
+                    </Group>
                   </Group>
-                </Group>
-              );
-            })}
-          </SimpleGrid>
+                );
+              })}
+            </SimpleGrid>
+          </Accordion.Panel>
         </Accordion.Item>
       </Accordion>
     </Card>
