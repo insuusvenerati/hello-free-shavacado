@@ -5,6 +5,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Post,
   Query,
   Req,
   UseInterceptors,
@@ -43,14 +44,27 @@ export class HellofreshController {
   }
 
   @Get("favorites")
+  @CacheTTL(0)
   async getFavoriteRecipes(@Req() request: Request) {
     const token = request.headers.authorization;
     return await this.hellofreshService.getFavoriteRecipes(token);
   }
 
-  @Get("scrapeIngredients")
+  @Post("scrapeIngredients")
   @CacheTTL(0)
   async scrapeIngredients() {
     return await this.hellofreshService.scrapeIngredients();
+  }
+
+  @Post("refreshFavoriteRecipes")
+  @CacheTTL(0)
+  async refreshFavoriteRecipes() {
+    return await this.hellofreshService.refreshFavoriteRecipes();
+  }
+
+  @Post("scrapeRecipes")
+  @CacheTTL(0)
+  async scrapeRecipes() {
+    return await this.hellofreshService.scrapeRecipes();
   }
 }

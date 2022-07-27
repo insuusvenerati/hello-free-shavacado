@@ -9,6 +9,7 @@ import { RecipeModule } from "./recipe/recipe.module";
 import { GroceriesModule } from "./groceries/groceries.module";
 import { ScrapeModule } from "./scrape/scrape.module";
 import { AppController } from "./app.controller";
+import { AuthModule } from "./auth/auth.module";
 
 const ENV = process.env.NODE_ENV;
 
@@ -31,6 +32,7 @@ const ENV = process.env.NODE_ENV;
     RecipeModule,
     GroceriesModule,
     ScrapeModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

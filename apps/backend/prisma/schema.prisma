@@ -40,6 +40,16 @@ model Hellofresh {
   @@map("hellofresh")
 }
 
+model PopularRecipe {
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime? @updatedAt
+  name      String?
+  recipe    Json?
+  id        String    @id @default(dbgenerated("fn_ksuid()"))
+
+  @@map("popular_recipe")
+}
+
 model Recipe {
   createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime? @updatedAt

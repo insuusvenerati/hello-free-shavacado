@@ -1,9 +1,17 @@
-import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
-import { Ingredient, Prisma } from "@prisma/client";
+import {
+  CACHE_MANAGER,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from "@nestjs/common";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import { Ingredient, PopularRecipe, Prisma } from "@prisma/client";
 import axios from "axios";
+import { Cache } from "cache-manager";
 import { PrismaService } from "src/prisma.service";
-import { RecipeQuery } from "src/types/recipes";
-import { flattenObject } from "src/util/flattenObject";
+import { Item, RecipeQuery } from "src/types/recipes";
 
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 const CUISINE_URL = `https://gw.hellofresh.com/api/cuisines?country=us&locale=en-US&take=250`;
@@ -12,17 +20,56 @@ type IngredientsResponse = {
   items: Ingredient[];
 };
 
-type RecipeQueryResponse = {
-  items: Prisma.InputJsonValue;
+type RecipeQueryResponse =
+  | ({
+      items: Item[];
+    } & Prisma.InputJsonValue)
+  | Prisma.NullableJsonNullValueInput;
+
+type Token = {
+  access_token: string;
+  expires_in: number;
+  issued_at: number;
+  token_type: string;
 };
+
+const TOKEN_URL =
+  "https://stiforr-cors-anywhere.fly.dev/https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials";
 
 @Injectable()
 export class HellofreshService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, @Inject(CACHE_MANAGER) private cacheManager: Cache) {}
   private readonly logger = new Logger(HellofreshService.name);
 
+  async scrapeRecipes() {
+    for (let skip = 0; skip <= 3750; skip += 250) {
+      console.log(skip);
+      const token = await this.cacheManager.get<Token>("hf-token");
+      const response = await axios.get(`${BASE_URL}take=250&skip=${skip}`, {
+        headers: { authorization: `Bearer ${token.access_token}` },
+      });
+
+      response.data.items.map(async (item) => {
+        await this.prisma.hellofresh.upsert({
+          where: { id: item.id },
+          create: {
+            name: item.name,
+            id: item.id,
+            recipe: item,
+          },
+          update: {
+            name: item.name,
+            id: item.id,
+            recipe: item,
+          },
+        });
+      });
+    }
+    return { response: "Recipes scraped successfully" };
+  }
+
   async scrapeIngredients() {
-    for (let skip = 0; skip < 1250; skip + 250) {
+    for (let skip = 0; skip <= 1250; skip += 250) {
       console.log(skip);
       const URL = `https://gw.hellofresh.com/api/ingredients?country=us&locale=en-US&take=250&skip=${skip}`;
       const response = await axios.get<IngredientsResponse>(URL, {
@@ -117,6 +164,21 @@ export class HellofreshService {
   }
 
   async getFavoriteRecipes(token: string) {
+    const count = await this.prisma.popularRecipe.count({
+      take: 16,
+    });
+
+    const total = await this.prisma.popularRecipe.count();
+
+    const popularRecipes = await this.prisma.popularRecipe.findMany({
+      take: 16,
+    });
+
+    const formattedResults = popularRecipes.map((value) => value.recipe);
+    const results = { take: 16, count, total, items: [...formattedResults] };
+
+    if (popularRecipes.length >= 16) return results;
+
     const response = await axios.get<RecipeQuery>(
       `${BASE_URL}take=16&sort=-favorites&min-rating=3.3`,
       {
@@ -125,5 +187,34 @@ export class HellofreshService {
     );
 
     return response.data;
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  async refreshFavoriteRecipes() {
+    const tokenResponse = await axios.post<Token>(
+      TOKEN_URL,
+      {},
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "X-Requested-With": "Stiforr",
+        },
+      },
+    );
+    await this.cacheManager.set("hf-token", tokenResponse.data, { ttl: 60 * 60 * 24 });
+    const token = await this.cacheManager.get<Token>("hf-token");
+    const response = await axios.get(`${BASE_URL}take=250&sort=-favorites&min-rating=3.3`, {
+      headers: { authorization: `Bearer ${token.access_token}` },
+    });
+
+    const popularRecipeScrapeResponse = response.data.items.map(async (item) => {
+      await this.prisma.popularRecipe.upsert({
+        create: { name: item.name, recipe: item, id: item.id },
+        update: { name: item.name, recipe: item, id: item.id },
+        where: { id: item.id },
+      });
+    }) as Prisma.Prisma__PopularRecipeClient<PopularRecipe>[];
+
+    return { response: `${popularRecipeScrapeResponse.length} popular recipes added` };
   }
 }
