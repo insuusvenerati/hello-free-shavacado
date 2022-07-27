@@ -31,7 +31,7 @@ export class HellofreshController {
 
   @Get("recipe")
   @UsePipes(new ValidationPipe({ transform: true }))
-  @CacheTTL(0)
+  @CacheTTL(60)
   findOne(@Query("q") q: string, @Req() request: Request) {
     const token = request.headers.authorization;
     return this.hellofreshService.findOne(q, token);
@@ -44,26 +44,23 @@ export class HellofreshController {
   }
 
   @Get("favorites")
-  @CacheTTL(0)
+  @CacheTTL(60 * 60 * 24)
   async getFavoriteRecipes(@Req() request: Request) {
     const token = request.headers.authorization;
     return await this.hellofreshService.getFavoriteRecipes(token);
   }
 
   @Post("scrapeIngredients")
-  @CacheTTL(0)
   async scrapeIngredients() {
     return await this.hellofreshService.scrapeIngredients();
   }
 
   @Post("refreshFavoriteRecipes")
-  @CacheTTL(0)
   async refreshFavoriteRecipes() {
     return await this.hellofreshService.refreshFavoriteRecipes();
   }
 
   @Post("scrapeRecipes")
-  @CacheTTL(0)
   async scrapeRecipes() {
     return await this.hellofreshService.scrapeRecipes();
   }

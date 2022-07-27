@@ -20,7 +20,7 @@ const ENV = process.env.NODE_ENV;
     }),
     CacheModule.register({
       isGlobal: true,
-      ttl: ENV === "production" ? 60 * 60 * 24 : 0,
+      ttl: ENV === "production" ? 60 : 1,
       store: redisStore,
       host: process.env.REDISHOST,
       port: +process.env.REDISPORT || 6379,

@@ -144,6 +144,14 @@ export class HellofreshService {
   }
 
   async findOne(q: string, token: string) {
+    const dbSearch = await this.prisma.hellofresh.findFirst({
+      where: {
+        name: {
+          search: q,
+        },
+      },
+    });
+    if (dbSearch) return dbSearch;
     const response = await axios.get(`${BASE_URL}take=1&q=${q}`, {
       headers: { authorization: token },
     });
