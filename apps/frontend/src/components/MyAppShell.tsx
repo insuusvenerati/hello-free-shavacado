@@ -1,11 +1,14 @@
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/forbid-component-props */
+import { useUser } from "@clerk/nextjs";
 import {
   AppShell,
   Aside,
   Avatar,
   Box,
+  createStyles,
   Divider,
+  Drawer,
   Group,
   List,
   LoadingOverlay,
@@ -37,6 +40,15 @@ type AppShellProps = {
   children: JSX.Element[] | JSX.Element;
 };
 
+const useStyles = createStyles((theme) => {
+  return {
+    title: {
+      textTransform: "uppercase",
+      letterSpacing: -0.25,
+    },
+  };
+});
+
 // eslint-disable-next-line react/display-name
 const MySelectItem = forwardRef<HTMLDivElement, ItemProps>(
   ({ image, label, ...others }: ItemProps, ref) => (
@@ -53,6 +65,8 @@ const MySelectItem = forwardRef<HTMLDivElement, ItemProps>(
 );
 
 export const MyAppShell = ({ children }: AppShellProps) => {
+  const { classes } = useStyles();
+  const { user } = useUser();
   const {
     ingredients,
     uniqueAllergens,
@@ -135,7 +149,11 @@ export const MyAppShell = ({ children }: AppShellProps) => {
       fixed
       header={<MyHeader opened={opened} setOpened={setOpened} />}
       navbar={
-        <Navbar hidden={!opened} hiddenBreakpoint="sm" width={{ base: 300 }}>
+        <Drawer opened={opened} onClose={() => setOpened(false)}>
+          {/* <Navbar hiddenBreakpoint="sm" width={{ base: 300 }}> */}
+          {/* <Navbar.Section> */}
+
+          {/* </Navbar.Section> */}
           <NavbarContent marginTop="sm" />
 
           <Stack sx={{ padding: 5 }}>
@@ -165,9 +183,9 @@ export const MyAppShell = ({ children }: AppShellProps) => {
               </>
             )}
           </Stack>
-        </Navbar>
+          {/* </Navbar> */}
+        </Drawer>
       }
-      navbarOffsetBreakpoint="sm"
     >
       {children}
     </AppShell>

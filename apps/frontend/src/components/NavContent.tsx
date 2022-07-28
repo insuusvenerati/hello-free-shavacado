@@ -3,18 +3,26 @@ import { BookmarkIcon, CakeIcon, HomeIcon, LoginIcon } from "@heroicons/react/ou
 import {
   ActionIcon,
   Center,
+  createStyles,
   Group,
-  Indicator,
   MantineStyleSystemProps,
   Text,
   ThemeIcon,
   useMantineColorScheme,
 } from "@mantine/core";
 import { NextLink } from "@mantine/next";
-import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { Github } from "./Icons/Github";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
+
+const useStyles = createStyles((theme) => {
+  return {
+    title: {
+      textTransform: "uppercase",
+      letterSpacing: -0.25,
+    },
+  };
+});
 
 const SignInOrUserProfile = ({ isSignedIn, dark }) => {
   if (!isSignedIn) {
@@ -32,20 +40,17 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
 };
 
 export const NavbarContent = ({ marginTop = 0 }: { marginTop?: MantineStyleSystemProps["mt"] }) => {
-  const { data } = useFavoriteRecipesQuery();
+  const { classes } = useStyles();
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
   const dark = colorScheme === "dark";
-
-  const numRecipes = data?.length;
 
   return (
     <>
-      {/* <Text mt="md" align="center" weight="bold">
-        Hello Fresh Recipe Search
-      </Text> */}
-
+      <Text weight={500} size="sm" className={classes.title} color="dimmed">
+        {user?.primaryEmailAddress?.emailAddress}
+      </Text>
       <Center mt={marginTop}>
         <Group>
           <ActionIcon
@@ -91,11 +96,11 @@ export const NavbarContent = ({ marginTop = 0 }: { marginTop?: MantineStyleSyste
                 size="lg"
                 title="My Recipes"
               >
-                <Indicator label={<Text size="xs">{numRecipes}</Text>} size={16}>
-                  <ThemeIcon variant="outline">
-                    <BookmarkIcon width={24} />
-                  </ThemeIcon>
-                </Indicator>
+                {/* <Indicator label={<Text size="xs">{numRecipes}</Text>} size={16}> */}
+                <ThemeIcon variant="outline">
+                  <BookmarkIcon width={24} />
+                </ThemeIcon>
+                {/* </Indicator> */}
               </ActionIcon>
               <ActionIcon size="lg" href="/groceries" component={NextLink}>
                 <ThemeIcon variant="outline">

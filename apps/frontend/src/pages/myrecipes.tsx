@@ -14,14 +14,13 @@ const RecipeList = () => {
   const { data: favoriteRecipes, isSuccess } = useFavoriteRecipesQuery();
 
   const recipeQueries = useQueries(
-    favoriteRecipes &&
-      favoriteRecipes?.map((recipe) => {
-        return {
-          queryKey: ["recipe", recipe.slug],
-          queryFn: () => hellofreshSearchBySlug({ slug: recipe.slug }),
-          enabled: !(typeof favoriteRecipes === "undefined"),
-        };
-      }),
+    favoriteRecipes?.map((recipe) => {
+      return {
+        queryKey: ["recipe", recipe.slug],
+        queryFn: () => hellofreshSearchBySlug({ slug: recipe.slug }),
+        enabled: !(typeof favoriteRecipes === "undefined"),
+      };
+    }),
   );
 
   const recipes = recipeQueries.map((query) => query.data);
@@ -49,9 +48,10 @@ const RecipeList = () => {
       <Grid justify="center">
         {recipes &&
           recipes?.map((items) => {
-            const recipe = items?.items[0];
+            if (!items) return;
+            const recipe = items.items[0];
             return (
-              <Grid.Col key={recipe?.id} lg={3} md={12}>
+              <Grid.Col key={recipe.id} lg={3} md={12}>
                 <RecipeCard
                   handler={modalHandler}
                   recipe={recipe}

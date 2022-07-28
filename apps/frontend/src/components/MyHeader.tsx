@@ -95,7 +95,7 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
             height: "100%",
           }}
         >
-          <Burger mr="md" onClick={handleDrawer} opened={opened} size="sm" />
+          <Burger mr="sm" onClick={handleDrawer} opened={opened} size="sm" />
           <Image alt="logo" src="/android-chrome-192x192.png" width={50} height={50} />
           <Grid justify="center">
             <Grid.Col lg={6} md={12}>
@@ -131,6 +131,7 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
     <Header mb={120} className={classes.header} height={56}>
       <div className={classes.inner}>
         <Group>
+          <Burger mr="sm" onClick={handleDrawer} opened={opened} size="sm" />
           <Image alt="logo" src="/android-chrome-192x192.png" width={50} height={50} />
           <Title order={2}>Hellofresh Search</Title>
         </Group>
