@@ -1,31 +1,29 @@
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/forbid-component-props */
-import { useUser } from "@clerk/nextjs";
 import {
   AppShell,
   Aside,
   Avatar,
   Box,
-  createStyles,
   Divider,
-  Drawer,
   Group,
   List,
   LoadingOverlay,
   MediaQuery,
   MultiSelect,
-  Navbar,
   ScrollArea,
   Stack,
   Text,
   TextInput,
   Title,
+  Transition,
 } from "@mantine/core";
 import { forwardRef, useState } from "react";
 import { useRecipesContext } from "../context/RecipesContext";
 import { useAddImportedRecipeMutation } from "../hooks/useAddImportedRecipeMutation";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
+import NavDrawer from "./Drawer";
 import { ImportedRecipeLink } from "./ImportedRecipeLink";
 import { MyHeader } from "./MyHeader";
 import { NavbarContent } from "./NavContent";
@@ -39,15 +37,6 @@ interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
 type AppShellProps = {
   children: JSX.Element[] | JSX.Element;
 };
-
-const useStyles = createStyles((theme) => {
-  return {
-    title: {
-      textTransform: "uppercase",
-      letterSpacing: -0.25,
-    },
-  };
-});
 
 // eslint-disable-next-line react/display-name
 const MySelectItem = forwardRef<HTMLDivElement, ItemProps>(
@@ -65,8 +54,6 @@ const MySelectItem = forwardRef<HTMLDivElement, ItemProps>(
 );
 
 export const MyAppShell = ({ children }: AppShellProps) => {
-  const { classes } = useStyles();
-  const { user } = useUser();
   const {
     ingredients,
     uniqueAllergens,
@@ -87,6 +74,7 @@ export const MyAppShell = ({ children }: AppShellProps) => {
 
   const { data: recipes, isLoading } = useFavoriteRecipesQuery();
   const [opened, setOpened] = useState(false);
+  const [section, setSection] = useState<"nav" | "filters">("nav");
 
   return (
     <AppShell
@@ -149,42 +137,52 @@ export const MyAppShell = ({ children }: AppShellProps) => {
       fixed
       header={<MyHeader opened={opened} setOpened={setOpened} />}
       navbar={
-        <Drawer opened={opened} onClose={() => setOpened(false)}>
-          {/* <Navbar hiddenBreakpoint="sm" width={{ base: 300 }}> */}
-          {/* <Navbar.Section> */}
+        <NavDrawer
+          title="Menu"
+          padding="sm"
+          size="lg"
+          opened={opened}
+          onClose={() => setOpened(false)}
+        >
+          <NavbarContent section={section} setSection={setSection} marginTop="sm" />
 
-          {/* </Navbar.Section> */}
-          <NavbarContent marginTop="sm" />
-
-          <Stack sx={{ padding: 5 }}>
-            {ingredients && (
-              <>
-                <MultiSelect
-                  clearable
-                  data={uniqueAllergens}
-                  itemComponent={MySelectItem}
-                  label="Filter allergens"
-                  nothingFound="Search for a recipe first"
-                  onChange={handleSetSelectedAllergens}
-                  placeholder="Select your allergens"
-                  searchable
-                  value={selectedAllergens}
-                />
-                <MultiSelect
-                  clearable
-                  data={ingredients}
-                  label="Filter ingredients"
-                  nothingFound="Search for a recipe first"
-                  onChange={handleSetSelectedIngredients}
-                  placeholder="Select your ingredients"
-                  searchable
-                  value={selectedIngredients}
-                />
-              </>
+          <Transition
+            mounted={section === "filters"}
+            transition="slide-right"
+            duration={200}
+            timingFunction="ease"
+          >
+            {(styles) => (
+              <Stack sx={{ padding: 5 }}>
+                {ingredients && (
+                  <div style={styles}>
+                    <MultiSelect
+                      clearable
+                      data={uniqueAllergens}
+                      itemComponent={MySelectItem}
+                      label="Filter allergens"
+                      nothingFound="Search for a recipe first"
+                      onChange={handleSetSelectedAllergens}
+                      placeholder="Select your allergens"
+                      searchable
+                      value={selectedAllergens}
+                    />
+                    <MultiSelect
+                      clearable
+                      data={ingredients}
+                      label="Filter ingredients"
+                      nothingFound="Search for a recipe first"
+                      onChange={handleSetSelectedIngredients}
+                      placeholder="Select your ingredients"
+                      searchable
+                      value={selectedIngredients}
+                    />
+                  </div>
+                )}
+              </Stack>
             )}
-          </Stack>
-          {/* </Navbar> */}
-        </Drawer>
+          </Transition>
+        </NavDrawer>
       }
     >
       {children}

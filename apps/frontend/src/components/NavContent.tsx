@@ -6,16 +6,20 @@ import {
   createStyles,
   Group,
   MantineStyleSystemProps,
+  SegmentedControl,
+  SegmentedControlItem,
   Text,
   ThemeIcon,
   useMantineColorScheme,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
+import { useMemo } from "react";
 import { Github } from "./Icons/Github";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
 
-const useStyles = createStyles((theme) => {
+const useStyles = createStyles(() => {
   return {
     title: {
       textTransform: "uppercase",
@@ -39,18 +43,53 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
   return <UserButton />;
 };
 
-export const NavbarContent = ({ marginTop = 0 }: { marginTop?: MantineStyleSystemProps["mt"] }) => {
+type NavbarContentProps = {
+  marginTop?: MantineStyleSystemProps["mt"];
+  section: "nav" | "filters";
+  setSection: (value: "nav" | "filters") => void;
+};
+
+export const NavbarContent = ({ marginTop = 0, section, setSection }: NavbarContentProps) => {
   const { classes } = useStyles();
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { isSignedIn, user } = useUser();
+  const matches = useMediaQuery("(min-width: 900px)");
   const dark = colorScheme === "dark";
+
+  const sectionControlData: SegmentedControlItem[] = useMemo(
+    () => [
+      {
+        label: "Navigation",
+        value: "nav",
+      },
+      {
+        label: "Filters",
+        value: "filters",
+      },
+    ],
+    [],
+  );
+
+  const handleSectionChange = (value: "nav" | "filters") => {
+    setSection(value);
+  };
 
   return (
     <>
-      <Text weight={500} size="sm" className={classes.title} color="dimmed">
-        {user?.primaryEmailAddress?.emailAddress}
-      </Text>
+      <Center>
+        <Text weight={500} size="sm" className={classes.title} color="dimmed">
+          {user?.primaryEmailAddress?.emailAddress}
+        </Text>
+      </Center>
+      {!matches && (
+        <SegmentedControl
+          fullWidth={true}
+          value={section}
+          onChange={handleSectionChange}
+          data={sectionControlData}
+        />
+      )}
       <Center mt={marginTop}>
         <Group>
           <ActionIcon
