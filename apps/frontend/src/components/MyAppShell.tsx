@@ -144,7 +144,12 @@ export const MyAppShell = ({ children }: AppShellProps) => {
           opened={opened}
           onClose={() => setOpened(false)}
         >
-          <NavbarContent section={section} setSection={setSection} marginTop="sm" />
+          <NavbarContent
+            showSegmentedControl
+            section={section}
+            setSection={setSection}
+            marginTop="sm"
+          />
 
           <Transition
             mounted={section === "filters"}

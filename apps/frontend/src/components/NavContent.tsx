@@ -12,7 +12,6 @@ import {
   ThemeIcon,
   useMantineColorScheme,
 } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
 import { useMemo } from "react";
 import { Github } from "./Icons/Github";
@@ -45,16 +44,21 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
 
 type NavbarContentProps = {
   marginTop?: MantineStyleSystemProps["mt"];
-  section: "nav" | "filters";
-  setSection: (value: "nav" | "filters") => void;
+  section?: "nav" | "filters";
+  setSection?: (value: "nav" | "filters") => void;
+  showSegmentedControl?: boolean;
 };
 
-export const NavbarContent = ({ marginTop = 0, section, setSection }: NavbarContentProps) => {
+export const NavbarContent = ({
+  marginTop = 0,
+  section,
+  setSection,
+  showSegmentedControl = false,
+}: NavbarContentProps) => {
   const { classes } = useStyles();
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { isSignedIn, user } = useUser();
-  const matches = useMediaQuery("(min-width: 900px)");
   const dark = colorScheme === "dark";
 
   const sectionControlData: SegmentedControlItem[] = useMemo(
@@ -72,7 +76,9 @@ export const NavbarContent = ({ marginTop = 0, section, setSection }: NavbarCont
   );
 
   const handleSectionChange = (value: "nav" | "filters") => {
-    setSection(value);
+    if (setSection) {
+      setSection(value);
+    }
   };
 
   return (
@@ -82,7 +88,8 @@ export const NavbarContent = ({ marginTop = 0, section, setSection }: NavbarCont
           {user?.primaryEmailAddress?.emailAddress}
         </Text>
       </Center>
-      {!matches && (
+
+      {showSegmentedControl && (
         <SegmentedControl
           fullWidth={true}
           value={section}
