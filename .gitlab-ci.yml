@@ -2,7 +2,7 @@ include:
   - template: Auto-DevOps.gitlab-ci.yml
 
 variables:
-  # KUBE_CONTEXT variable is set under Settings / CI/CD as an environment variables to allow targeting different environments.
+  KUBE_CONTEXT: stiforr-projects/home-lab # variable is set under Settings / CI/CD as an environment variables to allow targeting different environments.
   # KUBE_INGRESS_BASE_DOMAIN is the application deployment domain and should be set as a variable at the group or project level.
   KUBE_INGRESS_BASE_DOMAIN: home.stiforr.tech
   KUBE_NAMESPACE: "default"
