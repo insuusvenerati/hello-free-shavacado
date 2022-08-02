@@ -35,9 +35,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: REDISHOST
-              value: {{ include "backend.fullname" . }}-redis-headless
+              value: hello-free-shavacado-redis-headless
             - name: DATABASE_URL
-              value: postgres://postgres:{{ .Values.postgresql.global.postgresql.auth.postgresPassword }}@{{ include "backend.fullname" . }}-postgresql-hl
+              value: postgres://postgres:{{ .Values.postgresql.global.postgresql.auth.postgresPassword }}@hello-free-shavacado-postgresql-hl
           ports:
             - name: http
               containerPort: 4000
