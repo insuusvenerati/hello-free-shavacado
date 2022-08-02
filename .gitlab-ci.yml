@@ -1,5 +1,7 @@
 include:
-  - template: Auto-DevOps.gitlab-ci.yml
+  # - template: Auto-DevOps.gitlab-ci.yml
+  - template: Jobs/Build.gitlab-ci.yml
+  - template: Jobs/Deploy.gitlab-ci.yml # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/Deploy.gitlab-ci.yml
   #- template: Security/SAST-IaC.latest.gitlab-ci.yml
 
 variables:
