@@ -30,6 +30,7 @@ jobs:
           body: ${{ steps.tag_version.outputs.changelog }}
 
   docker:
+    needs: release
     strategy:
       matrix:
         app: ["frontend", "backend"]
