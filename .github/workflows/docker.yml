@@ -9,27 +9,6 @@ on:
       - "**"
 
 jobs:
-  release:
-    if: github.ref == 'refs/heads/main' || 'refs/heads/develop'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.0
-        with:
-          github_token: ${{ secrets.GH_TOKEN}}
-          release_branches: "main"
-          pre_release_branches: "develop"
-
-      - name: Create a GitHub release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
-
   docker:
     needs: release
     strategy:
