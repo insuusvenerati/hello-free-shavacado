@@ -10,7 +10,6 @@ on:
 
 jobs:
   docker:
-    needs: release
     strategy:
       matrix:
         app: ["frontend", "backend"]
