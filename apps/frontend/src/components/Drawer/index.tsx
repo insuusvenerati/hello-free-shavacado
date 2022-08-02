@@ -1,4 +1,4 @@
-import { createStyles, Drawer, DrawerProps } from "@mantine/core";
+import { createStyles, Drawer, DrawerProps, useMantineTheme } from "@mantine/core";
 import { FC } from "react";
 
 type Props = {
@@ -21,8 +21,15 @@ const useStyles = createStyles((theme) => ({
 
 const NavDrawer: FC<Props> = ({ ...props }) => {
   const { classes } = useStyles();
+  const theme = useMantineTheme();
   return (
-    <Drawer classNames={{ closeButton: classes.closeButton }} {...props}>
+    <Drawer
+      overlayColor={theme.colorScheme === "dark" ? theme.colors.dark[9] : theme.colors.gray[2]}
+      overlayOpacity={0.55}
+      overlayBlur={3}
+      classNames={{ closeButton: classes.closeButton }}
+      {...props}
+    >
       {props.children}
     </Drawer>
   );

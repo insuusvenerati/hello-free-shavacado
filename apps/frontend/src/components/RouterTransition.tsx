@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import {
   startNavigationProgress,
@@ -9,10 +9,12 @@ import {
 export function RouterTransition() {
   const router = useRouter();
 
+  const handleStart = useCallback(
+    (url: string) => url !== router.asPath && startNavigationProgress(),
+    [router.asPath],
+  );
+  const handleComplete = () => resetNavigationProgress();
   useEffect(() => {
-    const handleStart = (url: string) => url !== router.asPath && startNavigationProgress();
-    const handleComplete = () => resetNavigationProgress();
-
     router.events.on("routeChangeStart", handleStart);
     router.events.on("routeChangeComplete", handleComplete);
     router.events.on("routeChangeError", handleComplete);
@@ -22,7 +24,7 @@ export function RouterTransition() {
       router.events.off("routeChangeComplete", handleComplete);
       router.events.off("routeChangeError", handleComplete);
     };
-  }, [router.asPath, router.events]);
+  }, [handleStart, router.asPath, router.events]);
 
   return <NavigationProgress />;
 }
