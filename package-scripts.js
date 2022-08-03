@@ -6,11 +6,11 @@ require("dotenv").config();
 const backendVersion = backendPackage.version;
 const frontendVersion = frontendPackage.version;
 
+// Only build time env vars are needed here
 const envArray = new Array(
   "NEXT_PUBLIC_CLERK_FRONTEND_API",
   "NEXT_PUBLIC_API_URL",
   "CLERK_API_KEY",
-  "DATABASE_URL",
 );
 
 const buildArgs = envArray.map((env) => `--build-arg ${env} `).join("");
@@ -33,7 +33,7 @@ module.exports = {
         build: `docker build -f apps/backend/Dockerfile -t stiforr/hfs-backend:${backendVersion} -t stiforr/hfs-backend:latest .`,
       },
       frontend: {
-        build: `docker build -f apps/frontend/Dockerfile ${buildArgs} -t stiforr/hfs-frontend:${frontendVersion} .`,
+        build: `docker build -f apps/frontend/Dockerfile ${buildArgs} -t stiforr/hfs-frontend:${frontendVersion} -t stiforr/hfs-frontend:latest .`,
       },
       nginx: {
         build: `docker build -f docker/nginx/Dockerfile -t stiforr/hfs-proxy docker/nginx/.`,

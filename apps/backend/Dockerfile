@@ -43,6 +43,7 @@ ENV DATABASE_URL=${DATABASE_URL}
 COPY --from=builder --chown=node:node /app/apps/backend/package.json ./
 COPY --from=builder --chown=node:node /app/apps/backend/dist ./dist
 COPY --from=builder --chown=node:node /app/apps/backend/node_modules/ ./node_modules/
+COPY --from=builder --chown=node:node /app/apps/backend/prisma ./prisma
 # COPY --from=builder --chown=node:node /app/packages/prisma/node_modules/.prisma ./node_modules/.prisma
 
 CMD ["pm2-runtime", "dist/main.js"]
