@@ -111,19 +111,19 @@ const Recipe = () => {
     <>
       <NextSeo
         openGraph={{
-          title: recipe?.name,
-          description: recipe?.description,
+          title: recipe.name,
+          description: recipe.description,
           url: `${VERCEL_URL}${router.asPath}`,
           images: [
             {
-              url: getOgImageUrl(recipe?.imagePath),
-              alt: recipe?.name,
+              url: getOgImageUrl(recipe.imagePath),
+              alt: recipe.name,
               type: "image/jpeg",
             },
           ],
         }}
-        title={recipe?.name}
-        description={recipe?.description}
+        title={recipe.name}
+        description={recipe.description}
       />
       <Suspense fallback={<Loader />}>
         <Affix position={{ bottom: 20, left: 20 }}>
