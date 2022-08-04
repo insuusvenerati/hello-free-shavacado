@@ -2,18 +2,21 @@ import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { BookmarkIcon, CakeIcon, HomeIcon, LoginIcon } from "@heroicons/react/outline";
 import {
   ActionIcon,
-  Box,
   Center,
   createStyles,
+  Group,
   MantineStyleSystemProps,
   SegmentedControl,
   SegmentedControlItem,
   Text,
+  ThemeIcon,
   useMantineColorScheme,
 } from "@mantine/core";
 import { NextLink } from "@mantine/next";
-import { forwardRef, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Github } from "./Icons/Github";
+import { MoonIcon } from "./Icons/MoonIcon";
+import { SunIcon } from "./Icons/SunIcon";
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef("icon");
@@ -173,50 +176,46 @@ export const NavbarContent = ({
           data={sectionControlData}
         />
       )}
-      <Box mt="sm">{links}</Box>
-      {/* <Group> */}
-      {/* <NextLink color={dark ? "yellow" : "blue"} href="/" title="Home">
-            <ThemeIcon variant="outline">
-              <HomeIcon width={24} />
-            </ThemeIcon>
-          </NextLink>
-          <ActionIcon
-            color={dark ? "yellow" : "blue"}
-            // eslint-disable-next-line react/jsx-no-bind
-            onClick={() => toggleColorScheme()}
-            title="Toggle color scheme"
-          >
-            <ThemeIcon variant="outline">
-              {dark ? <SunIcon size={24} /> : <MoonIcon size={24} />}
-            </ThemeIcon>
-          </ActionIcon>
-          <NextLink
-            color={dark ? "yellow" : "blue"}
-            href="https://github.com/insuusvenerati/hello-free-shavacado"
-            target="_blank"
-            title="Github"
-          >
-            <ThemeIcon variant="outline">
-              <Github width={22} />
-            </ThemeIcon>
-          </NextLink> */}
-      {isSignedIn && (
-        <>
-          <NextLink color={dark ? "yellow" : "blue"} href="/myrecipes" title="My Recipes">
-            {/* <Indicator label={<Text size="xs">{numRecipes}</Text>} size={16}> */}
+      {/* <Box mt="sm">{links}</Box> */}
+      <Group mt="sm">
+        <NextLink color={dark ? "yellow" : "blue"} href="/" title="Home">
+          <ThemeIcon variant="outline">
+            <HomeIcon width={24} />
+          </ThemeIcon>
+        </NextLink>
+        <ActionIcon
+          color={dark ? "yellow" : "blue"}
+          // eslint-disable-next-line react/jsx-no-bind
+          onClick={() => toggleColorScheme()}
+          title="Toggle color scheme"
+        >
+          <ThemeIcon variant="outline">
+            {dark ? <SunIcon size={24} /> : <MoonIcon size={24} />}
+          </ThemeIcon>
+        </ActionIcon>
+        <NextLink
+          color={dark ? "yellow" : "blue"}
+          href="https://github.com/insuusvenerati/hello-free-shavacado"
+          target="_blank"
+          title="Github"
+        >
+          <ThemeIcon variant="outline">
+            <Github width={22} />
+          </ThemeIcon>
+        </NextLink>
+        {isSignedIn && (
+          <>
+            <NextLink color={dark ? "yellow" : "blue"} href="/myrecipes" title="My Recipes">
+              <BookmarkIcon className={classes.linkIcon} width={24} />
+            </NextLink>
+            <NextLink href="/groceries">
+              <CakeIcon className={classes.linkIcon} width={24} />
+            </NextLink>
+          </>
+        )}
 
-            <BookmarkIcon className={classes.linkIcon} width={24} />
-
-            {/* </Indicator> */}
-          </NextLink>
-          <NextLink href="/groceries">
-            <CakeIcon className={classes.linkIcon} width={24} />
-          </NextLink>
-        </>
-      )}
-
-      <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
-      {/* </Group> */}
+        <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
+      </Group>
     </>
   );
 };

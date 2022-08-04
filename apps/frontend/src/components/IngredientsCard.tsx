@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 import { useAuth } from "@clerk/nextjs";
 import { CheckIcon, PlusIcon } from "@heroicons/react/outline";
-import { Accordion, ActionIcon, Card, Group, SimpleGrid, Text } from "@mantine/core";
+import { Accordion, ActionIcon, Box, Group, SimpleGrid, Text } from "@mantine/core";
 import Image from "next/image";
 import { useAddGroceryMutation } from "../hooks/useAddGroceryMutation";
 import { useGetGroceriesQuery } from "../hooks/useGetGroceriesQuery";
@@ -17,10 +17,10 @@ export const IngredientCard = ({ recipe }: { recipe: Item }) => {
   const yields = recipe?.yields?.map((y) => y.ingredients).flat();
 
   return (
-    <Card p="lg" shadow="sm">
+    <Box>
       <Accordion>
         <Accordion.Item value="Ingredients">
-          <Accordion.Control>Ingredients</Accordion.Control>
+          <Accordion.Control>Show</Accordion.Control>
           <Accordion.Panel>
             <SimpleGrid
               breakpoints={[
@@ -94,6 +94,6 @@ export const IngredientCard = ({ recipe }: { recipe: Item }) => {
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>
-    </Card>
+    </Box>
   );
 };

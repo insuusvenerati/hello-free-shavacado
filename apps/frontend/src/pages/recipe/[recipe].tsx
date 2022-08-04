@@ -3,6 +3,7 @@ import { useAuth } from "@clerk/nextjs";
 import { ArrowLeftIcon, DocumentIcon } from "@heroicons/react/outline";
 import {
   Affix,
+  Box,
   Button,
   Card,
   Container,
@@ -19,9 +20,10 @@ import { NextLink } from "@mantine/next";
 import { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
-import { Fragment, Suspense, SyntheticEvent } from "react";
+import { Fragment, SyntheticEvent } from "react";
 import { dehydrate, QueryClient } from "react-query";
 import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
 import { IngredientCard } from "../../components/IngredientsCard";
@@ -125,114 +127,116 @@ const Recipe = () => {
         title={recipe.name}
         description={recipe.description}
       />
-      <Suspense fallback={<Loader />}>
-        <Affix position={{ bottom: 20, left: 20 }}>
-          <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
-            Go back
-          </Button>
-        </Affix>
 
-        {recipe?.imagePath ? (
-          <LazyImage
-            alt={recipe?.name}
-            blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
-            height={matches ? 700 : 350}
-            objectFit="cover"
-            placeholder="blur"
-            src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_500,q_auto,w_2400/hellofresh_s3${recipe?.imagePath}`}
-            width={matches ? 2500 : 600}
-          />
-        ) : (
-          <Loader />
-        )}
+      <Affix position={{ bottom: 20, left: 20 }}>
+        <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
+          Go back
+        </Button>
+      </Affix>
 
-        <Container size="lg">
-          <Card mt="md" mb="lg" p="lg" shadow="sm">
-            <Card.Section p={20}>
-              <Group position="apart">
-                <Group direction="column" grow={false} spacing={0}>
-                  <Title order={1}>{recipe?.name}</Title>
-                  <Title order={6}> {recipe?.headline} </Title>
-                </Group>
-                <Group position={matches ? "right" : "center"}>
-                  <AddToFavorites selectedRecipe={recipe} />
-                  {recipe?.cardLink && (
-                    <NextLink href={recipe?.cardLink} target="_blank">
-                      <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
-                    </NextLink>
-                  )}
-                  <form onSubmit={handleAddAllIngredients}>
-                    <Button loading={isLoading} type="submit">
-                      Add all ingredients to groceries
-                    </Button>
-                  </form>
-                </Group>
+      {recipe?.imagePath ? (
+        <Image
+          alt={recipe?.name}
+          blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
+          height={matches ? 700 : 350}
+          objectFit="cover"
+          placeholder="blur"
+          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_500,q_auto,w_2400/hellofresh_s3${recipe?.imagePath}`}
+          width={matches ? 2500 : 600}
+        />
+      ) : (
+        <Loader />
+      )}
+
+      <Container size="xl">
+        <Box mt="md" mb="lg">
+          <Card.Section p={20}>
+            <Group position="apart">
+              <Group grow={false} spacing={0}>
+                <Title order={1}>{recipe?.name}</Title>
+                <Title order={6}> {recipe?.headline} </Title>
               </Group>
-              <Divider my="sm" />
-              <Group position="apart">
-                <Group direction="column">
-                  <Text sx={{ maxWidth: "750px" }}>{recipe?.description}</Text>
-                  {recipe && recipe?.tags.length > 0 ? (
-                    <Group>
-                      <Text weight="bolder">Tags:</Text>
-                      {recipe?.tags.map((tag) => (
-                        <Text key={tag.id}>{tag.name}</Text>
-                      ))}
-                    </Group>
-                  ) : null}
+              <Group position={matches ? "right" : "center"}>
+                <AddToFavorites selectedRecipe={recipe} />
+                {recipe?.cardLink && (
+                  <NextLink href={recipe?.cardLink} target="_blank">
+                    <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
+                  </NextLink>
+                )}
+                <form onSubmit={handleAddAllIngredients}>
+                  <Button loading={isLoading} type="submit">
+                    Add all ingredients to groceries
+                  </Button>
+                </form>
+              </Group>
+            </Group>
+            <Divider my="sm" />
+            <Group position="apart">
+              <Group>
+                <Text sx={{ maxWidth: "750px" }}>{recipe?.description}</Text>
+                {recipe && recipe?.tags.length > 0 ? (
                   <Group>
-                    <Text weight="bolder">Allergens:</Text>
-                    {recipe?.allergens.map((allergen) => (
-                      <Group key={allergen.id}>
-                        <LazyImage
-                          alt={allergen.id}
-                          height={32}
-                          src={`${HF_ICON_IMAGE_URL}/${allergen.iconPath}`}
-                          width={32}
-                        />
-                        <Text>{allergen.name}</Text>
-                      </Group>
+                    <Text weight="bolder">Tags:</Text>
+                    {recipe?.tags.map((tag) => (
+                      <Text key={tag.id}>{tag.name}</Text>
                     ))}
                   </Group>
-                </Group>
-                <Group direction="column">
-                  <Text>Total Time {recipe?.totalTime}</Text>
-                  <Text>Difficulty {recipe?.difficulty}</Text>
+                ) : null}
+                <Group>
+                  <Text weight="bolder">Allergens:</Text>
+                  {recipe?.allergens.map((allergen) => (
+                    <Group key={allergen.id}>
+                      <LazyImage
+                        alt={allergen.id}
+                        height={32}
+                        src={`${HF_ICON_IMAGE_URL}/${allergen.iconPath}`}
+                        width={32}
+                      />
+                      <Text>{allergen.name}</Text>
+                    </Group>
+                  ))}
                 </Group>
               </Group>
-            </Card.Section>
-          </Card>
-
-          <IngredientCard recipe={recipe} />
-
-          <Card mt="xs" shadow="sm" withBorder>
-            <Group>
-              <Title order={2}>Instructions</Title>
-              <List listStyleType="none" size="xl">
-                {recipe?.steps?.map((step) => (
-                  <Fragment key={step.index}>
-                    <Group mb={24}>
-                      {step.images.map((image) => (
-                        <LazyImage
-                          alt={image.caption}
-                          blurDataURL={`${HF_PLACEHOLDERURL}/${image.path}`}
-                          height={230}
-                          key={image.path}
-                          placeholder="blur"
-                          src={`${HF_STEP_IMAGE_URL}/${image.path}`}
-                          width={340}
-                        />
-                      ))}
-                      <List.Item sx={{ maxWidth: 600 }}>{step?.instructions}</List.Item>
-                    </Group>
-                    <Divider my="sm" />
-                  </Fragment>
-                ))}
-              </List>
+              <Group>
+                <Text>Total Time {recipe?.totalTime}</Text>
+                <Text>Difficulty {recipe?.difficulty}</Text>
+              </Group>
             </Group>
-          </Card>
-        </Container>
-      </Suspense>
+          </Card.Section>
+        </Box>
+
+        <Title mt="xl" order={2}>
+          Ingredients
+        </Title>
+        <IngredientCard recipe={recipe} />
+
+        <Box mt="xl">
+          {/* <Group> */}
+          <Title order={2}>Instructions</Title>
+          <List listStyleType="none" size="xl">
+            {recipe?.steps?.map((step) => (
+              <Fragment key={step.index}>
+                <Group mb={24}>
+                  {step.images.map((image) => (
+                    <LazyImage
+                      alt={image.caption}
+                      blurDataURL={`${HF_PLACEHOLDERURL}/${image.path}`}
+                      height={230}
+                      key={image.path}
+                      placeholder="blur"
+                      src={`${HF_STEP_IMAGE_URL}/${image.path}`}
+                      width={340}
+                    />
+                  ))}
+                  <List.Item sx={{ maxWidth: 600 }}>{step?.instructions}</List.Item>
+                </Group>
+                <Divider my="sm" />
+              </Fragment>
+            ))}
+          </List>
+          {/* </Group> */}
+        </Box>
+      </Container>
     </>
   );
 };
