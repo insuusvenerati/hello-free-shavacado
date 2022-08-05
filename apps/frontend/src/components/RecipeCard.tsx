@@ -1,11 +1,9 @@
-import { Badge, Card, Container, Loader, LoadingOverlay, MantineShadow, Text } from "@mantine/core";
+import { Badge, Card, Container, LoadingOverlay, MantineShadow, Text } from "@mantine/core";
 import { NextLink } from "@mantine/next";
-import dynamic from "next/dynamic";
-import { Dispatch, SetStateAction, Suspense, useState } from "react";
+import Image from "next/image";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Item } from "../types/recipes";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
-
-const LazyImage = dynamic(() => import("next/image"));
 
 type Props = {
   recipe: Item | undefined;
@@ -35,20 +33,16 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
 
   return (
     <Card onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler} shadow={shadow}>
-      <Card.Section
-        onClick={handler}
-        sx={{ width: 456.25, height: 258.5, marginBottom: 5, cursor: "pointer" }}
-      >
-        <Suspense fallback={<Loader />}>
-          <LazyImage
-            alt={recipe?.name}
-            blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
-            height={340}
-            placeholder="blur"
-            src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
-            width={600}
-          />
-        </Suspense>
+      <Card.Section onClick={handler} sx={{ marginBottom: 5, cursor: "pointer" }}>
+        <Image
+          alt={recipe?.name}
+          blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
+          height={2120}
+          placeholder="blur"
+          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
+          width={3181}
+          layout="responsive"
+        />
       </Card.Section>
 
       <NextLink href={`/recipe/${recipe?.slug}`}>
