@@ -137,9 +137,9 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
         </Group>
 
         <Group>
-          <Group ml={50} spacing={5} className={classes.links}>
+          {/* <Group ml={50} spacing={5} className={classes.links}>
             <NavbarContent />
-          </Group>
+          </Group> */}
           <Search />
         </Group>
       </div>

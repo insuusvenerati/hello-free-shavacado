@@ -11,6 +11,7 @@ import {
   LoadingOverlay,
   MediaQuery,
   MultiSelect,
+  Navbar,
   ScrollArea,
   Stack,
   Text,
@@ -137,19 +138,16 @@ export const MyAppShell = ({ children }: AppShellProps) => {
       fixed
       header={<MyHeader opened={opened} setOpened={setOpened} />}
       navbar={
-        <NavDrawer
-          title="Menu"
-          padding="sm"
-          size="lg"
-          opened={opened}
-          onClose={() => setOpened(false)}
+        <Navbar
+          sx={{
+            overflow: "hidden",
+            transition: "width 250ms ease, min-width 250ms ease",
+            width: opened ? 300 : 0,
+          }}
+          // width={opened ? 300 : 0}
+          p={opened ? "sm" : 0}
         >
-          <NavbarContent
-            showSegmentedControl
-            section={section}
-            setSection={setSection}
-            marginTop="sm"
-          />
+          <NavbarContent showSegmentedControl section={section} setSection={setSection} />
 
           <Transition
             mounted={section === "filters"}
@@ -187,7 +185,7 @@ export const MyAppShell = ({ children }: AppShellProps) => {
               </Stack>
             )}
           </Transition>
-        </NavDrawer>
+        </Navbar>
       }
     >
       {children}

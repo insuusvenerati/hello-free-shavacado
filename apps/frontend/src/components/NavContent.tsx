@@ -2,10 +2,13 @@ import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { BookmarkIcon, CakeIcon, HomeIcon, LoginIcon } from "@heroicons/react/outline";
 import {
   ActionIcon,
+  Box,
   Center,
   createStyles,
   Group,
   MantineStyleSystemProps,
+  Navbar,
+  NavLink,
   SegmentedControl,
   SegmentedControlItem,
   Text,
@@ -13,6 +16,8 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 import { NextLink } from "@mantine/next";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { Github } from "./Icons/Github";
 import { MoonIcon } from "./Icons/MoonIcon";
@@ -25,10 +30,18 @@ const useStyles = createStyles((theme, _params, getRef) => {
     navbar: {
       backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
     },
+    header: {
+      paddingBottom: theme.spacing.md,
+      marginBottom: theme.spacing.md * 1.5,
+      borderBottom: `1px solid ${
+        theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]
+      }`,
+    },
 
     title: {
       textTransform: "uppercase",
       letterSpacing: -0.25,
+      whiteSpace: "nowrap",
     },
 
     link: {
@@ -70,6 +83,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
     },
 
     footer: {
+      marginTop: theme.spacing.md,
       borderTop: `1px solid ${
         theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
       }`,
@@ -93,7 +107,6 @@ const SignInOrUserProfile = ({ isSignedIn, dark }) => {
 };
 
 type NavbarContentProps = {
-  marginTop?: MantineStyleSystemProps["mt"];
   section?: "nav" | "filters";
   setSection?: (value: "nav" | "filters") => void;
   showSegmentedControl?: boolean;
@@ -102,22 +115,16 @@ type NavbarContentProps = {
 const navLinks = [
   { href: "/", label: "Home", icon: HomeIcon },
   { href: "/myrecipes", label: "My Recipes", icon: BookmarkIcon },
-  // { href: "/groceries", label: "Groceries", icon: CakeIcon },
-  {
-    href: "https://github.com/insuusvenerati/hello-free-shavacado",
-    label: "Github",
-    icon: Github,
-  },
+  { href: "/groceries", label: "Groceries", icon: CakeIcon },
 ];
 
 export const NavbarContent = ({
-  marginTop = 0,
   section,
   setSection,
   showSegmentedControl = false,
 }: NavbarContentProps) => {
-  const { classes, cx } = useStyles();
-  const [active, setActive] = useState("Home");
+  const { classes } = useStyles();
+  const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { isSignedIn, user } = useUser();
@@ -137,21 +144,21 @@ export const NavbarContent = ({
     [],
   );
 
-  const links = navLinks.map((link) => (
-    <NextLink
-      passHref
-      href={link.href}
-      key={link.label}
-      // onClick={(event) => {
-      //   event.preventDefault();
-      //   setActive(link.label);
-      // }}
-      className={cx(classes.link, { [classes.linkActive]: link.label === active })}
-    >
-      <link.icon className={classes.linkIcon} />
-      <span> {link.label} </span>
-    </NextLink>
-  ));
+  const links = useMemo(
+    () =>
+      navLinks.map((link) => (
+        <Link key={link.label} href={link.href} passHref>
+          <NavLink
+            sx={{ whiteSpace: "nowrap" }}
+            label={link.label}
+            icon={<link.icon width={16} />}
+            component="a"
+            active={router.pathname === link.href}
+          />
+        </Link>
+      )),
+    [router.pathname],
+  );
 
   const handleSectionChange = (value: "nav" | "filters") => {
     if (setSection) {
@@ -161,23 +168,24 @@ export const NavbarContent = ({
 
   return (
     <>
-      <Center>
-        <Text weight={500} size="sm" className={classes.title} color="dimmed">
-          {user?.primaryEmailAddress?.emailAddress}
-        </Text>
-      </Center>
+      <Navbar.Section>
+        {showSegmentedControl && (
+          <SegmentedControl
+            fullWidth={true}
+            value={section}
+            onChange={handleSectionChange}
+            data={sectionControlData}
+          />
+        )}
+      </Navbar.Section>
+      <Navbar.Section className={classes.header}>
+        <Box mt="sm">{links}</Box>
+      </Navbar.Section>
+      <Navbar.Section className={classes.footer}>
+        <Text className={classes.title}>{user?.primaryEmailAddress?.emailAddress}</Text>
+      </Navbar.Section>
 
-      {showSegmentedControl && (
-        <SegmentedControl
-          mt="sm"
-          fullWidth={true}
-          value={section}
-          onChange={handleSectionChange}
-          data={sectionControlData}
-        />
-      )}
-      {/* <Box mt="sm">{links}</Box> */}
-      <Group mt="sm">
+      {/* <Group mt="sm">
         <NextLink color={dark ? "yellow" : "blue"} href="/" title="Home">
           <ThemeIcon variant="outline">
             <HomeIcon width={24} />
@@ -215,7 +223,7 @@ export const NavbarContent = ({
         )}
 
         <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
-      </Group>
+      </Group> */}
     </>
   );
 };
