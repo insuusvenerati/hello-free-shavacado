@@ -31,12 +31,15 @@ model Ingredient {
 }
 
 model Hellofresh {
-  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime? @updatedAt
-  name      String?
-  recipe    Json?
-  id        String    @id @default(dbgenerated("fn_ksuid()"))
+  createdAt   DateTime?                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime?                @updatedAt
+  textSearch  Unsupported("TSVECTOR")?
+  name        String?
+  description String?
+  recipe      Json?
+  id          String                   @id @default(dbgenerated("fn_ksuid()"))
 
+  @@index([textSearch])
   @@map("hellofresh")
 }
 

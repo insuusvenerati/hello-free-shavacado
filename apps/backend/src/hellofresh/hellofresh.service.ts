@@ -11,7 +11,7 @@ import { Ingredient, PopularRecipe, Prisma } from "@prisma/client";
 import axios from "axios";
 import { Cache } from "cache-manager";
 import { PrismaService } from "src/prisma.service";
-import { Item, RecipeQuery } from "src/types/recipes";
+import { RecipeQuery } from "src/types/recipes";
 
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 const CUISINE_URL = `https://gw.hellofresh.com/api/cuisines?country=us&locale=en-US&take=250`;
@@ -19,12 +19,6 @@ const CUISINE_URL = `https://gw.hellofresh.com/api/cuisines?country=us&locale=en
 type IngredientsResponse = {
   items: Ingredient[];
 };
-
-type RecipeQueryResponse =
-  | ({
-      items: Item[];
-    } & Prisma.InputJsonValue)
-  | Prisma.NullableJsonNullValueInput;
 
 type Token = {
   access_token: string;
@@ -56,11 +50,13 @@ export class HellofreshService {
             name: item.name,
             id: item.id,
             recipe: item,
+            description: item.description,
           },
           update: {
             name: item.name,
             id: item.id,
             recipe: item,
+            description: item.description,
           },
         });
       });
@@ -97,6 +93,11 @@ export class HellofreshService {
   }
 
   async findAll(query: string, page: number, token: string) {
+    const tsquerySpecialChars = /[()|&:*!]/g;
+    const getQueryFromSearchPhrase = (searchPhrase: string) =>
+      searchPhrase.replace(tsquerySpecialChars, " ").trim().split(/\s+/).join(" | ");
+    const tsquery = getQueryFromSearchPhrase(query);
+
     const skip = page !== 1 ? page * 20 : 0;
 
     const count = await this.prisma.hellofresh.count({
@@ -105,17 +106,24 @@ export class HellofreshService {
     });
 
     const total = await this.prisma.hellofresh.count();
+    const dbSearch: any = await this.prisma.$queryRaw`
+      SELECT recipe FROM "hellofresh"
+      WHERE
+        "textSearch" @@ to_tsquery('english', ${tsquery})
+      ORDER BY ts_rank("textSearch", to_tsquery('english', ${tsquery})) DESC
+      LIMIT 20 OFFSET ${skip};
+    `;
 
-    const dbSearch = await this.prisma.hellofresh.findMany({
-      where: {
-        name: {
-          search: query,
-        },
-      },
-      skip: skip,
-      take: 20,
-      select: { recipe: true },
-    });
+    // const dbSearch = await this.prisma.hellofresh.findMany({
+    //   where: {
+    //     name: {
+    //       search: getQueryFromSearchPhrase(query),
+    //     },
+    //   },
+    //   skip: skip,
+    //   take: 20,
+    //   select: { recipe: true },
+    // });
     const formattedResults = dbSearch.map((value) => value.recipe);
     const results = { take: 20, skip, count, total, items: [...formattedResults] };
     if (dbSearch.length >= 20) return results;
