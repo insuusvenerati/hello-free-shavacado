@@ -1,4 +1,3 @@
-import { withServerSideAuth } from "@clerk/nextjs/ssr";
 import {
   Card,
   Container,
@@ -7,19 +6,17 @@ import {
   Image,
   List,
   LoadingOverlay,
+  Stack,
   Text,
   Title,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { Fragment } from "react";
-import { dehydrate, QueryClient } from "react-query";
 import { useGetOneImportedRecipeQuery } from "../../hooks/useGetImportedRecipesQuery";
 import { VERCEL_URL } from "../../util/constants";
-import { getOneImportedRecipe } from "../../util/getImportedRecipes";
 
 interface Params extends ParsedUrlQuery {
   recipe: string;
@@ -82,14 +79,14 @@ const ImportedRecipe = () => {
         <Card mt="md" mb="lg" p="lg" shadow="sm">
           <Card.Section p={20}>
             <Group position="apart">
-              <Group style={{ flexDirection: "column" }} grow={false} spacing={0}>
+              <Stack>
                 <Title order={1}>{recipe?.name}</Title>
                 <Title order={6}> {recipe?.description} </Title>
-              </Group>
+              </Stack>
             </Group>
             <Divider my="sm" />
             <Group position="apart">
-              <Group style={{ flexDirection: "column" }}>
+              <Stack>
                 <Text sx={{ maxWidth: "750px" }}>{recipe?.description}</Text>
                 {recipe && recipe?.keywords?.length > 0 ? (
                   <Group>
@@ -113,11 +110,11 @@ const ImportedRecipe = () => {
                       </Group>
                     ))} */}
                 </Group>
-              </Group>
-              <Group style={{ flexDirection: "column" }}>
+              </Stack>
+              <Stack>
                 <Text>Total Time {recipe?.totalTime}</Text>
                 {/* <Text>Difficulty {recipe?.difficulty}</Text> */}
-              </Group>
+              </Stack>
             </Group>
           </Card.Section>
         </Card>

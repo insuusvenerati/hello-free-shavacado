@@ -1,4 +1,3 @@
-import { withServerSideAuth } from "@clerk/nextjs/ssr";
 import {
   Avatar,
   Box,
@@ -8,17 +7,15 @@ import {
   LoadingOverlay,
   SegmentedControl,
   SegmentedControlItem,
+  Stack,
   Text,
   Title,
 } from "@mantine/core";
-import { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
-import { useMemo, useState } from "react";
-import { dehydrate, QueryClient } from "react-query";
+import { FC, useMemo, useState } from "react";
 import { useGetGroceriesQuery } from "../hooks/useGetGroceriesQuery";
 import { Grocery } from "../types/grocery";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
-import { getGroceries } from "../util/getGroceries";
 
 const useStyles = createStyles((theme) => ({
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -46,25 +43,6 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export const getServerSideProps: GetServerSideProps = withServerSideAuth(
-  async ({ req }) => {
-    const user = req?.user?.id;
-    const queryClient = new QueryClient();
-
-    user &&
-      (await queryClient.prefetchQuery(["groceries", user], () =>
-        getGroceries({ userId: user, take: "10" }),
-      ));
-
-    return {
-      props: {
-        dehydratedState: dehydrate(queryClient),
-      },
-    };
-  },
-  { loadUser: true },
-);
-
 const sortedGroceries = (
   groceries: Grocery[],
   sortMethod: "ingredient" | "amount",
@@ -79,6 +57,16 @@ const sortedGroceries = (
   return groceries.sort((a, b) =>
     a.ingredient.toLowerCase().localeCompare(b.ingredient.toLowerCase()),
   );
+};
+
+type GroceryGridProps = {
+  view: "row" | "column";
+  children?: JSX.Element | JSX.Element[];
+};
+
+const GroceryGrid: FC<GroceryGridProps> = ({ view, children }) => {
+  if (view === "row") return <Group> {children} </Group>;
+  return <Stack> {children} </Stack>;
 };
 
 const Groceries = () => {
@@ -166,7 +154,7 @@ const Groceries = () => {
             />
           </Group>
         </Group>
-        <Group direction={view}>
+        <GroceryGrid view={view}>
           {sortedGroceries(groceries, sort, isSuccess)?.map((grocery) => (
             <Box key={grocery.id} className={classes.item}>
               {grocery.imagePath && (
@@ -180,7 +168,7 @@ const Groceries = () => {
               </div>
             </Box>
           ))}
-        </Group>
+        </GroceryGrid>
       </Container>
     </>
   );

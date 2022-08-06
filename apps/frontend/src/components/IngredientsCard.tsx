@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 import { useAuth } from "@clerk/nextjs";
 import { CheckIcon, PlusIcon } from "@heroicons/react/outline";
-import { Accordion, ActionIcon, Box, Group, SimpleGrid, Text } from "@mantine/core";
+import { Accordion, ActionIcon, Box, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import Image from "next/image";
 import { useAddGroceryMutation } from "../hooks/useAddGroceryMutation";
 import { useGetGroceriesQuery } from "../hooks/useGetGroceriesQuery";
@@ -81,12 +81,12 @@ export const IngredientCard = ({ recipe }: { recipe: Item }) => {
                       src={`${HF_AVATAR_IMAGE_URL}/${ingredient.imagePath}`}
                       width={60}
                     />
-                    <Group spacing={0} align="flex-start" style={{ flexDirection: "column" }}>
+                    <Stack spacing={0} align="flex-start">
                       <Text>
                         {ingredientYield[0].amount} {ingredientYield[0].unit}
                       </Text>
                       <Text>{ingredient.name}</Text>
-                    </Group>
+                    </Stack>
                   </Group>
                 );
               })}
