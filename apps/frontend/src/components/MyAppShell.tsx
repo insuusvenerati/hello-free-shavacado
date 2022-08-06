@@ -24,7 +24,6 @@ import { useRecipesContext } from "../context/RecipesContext";
 import { useAddImportedRecipeMutation } from "../hooks/useAddImportedRecipeMutation";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
-import NavDrawer from "./Drawer";
 import { ImportedRecipeLink } from "./ImportedRecipeLink";
 import { MyHeader } from "./MyHeader";
 import { NavbarContent } from "./NavContent";

@@ -1,25 +1,20 @@
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
-import { BookmarkIcon, CakeIcon, HomeIcon, LoginIcon } from "@heroicons/react/outline";
+import { BookmarkIcon, CakeIcon, CogIcon, HomeIcon, LoginIcon } from "@heroicons/react/outline";
 import {
-  ActionIcon,
   Box,
-  Center,
+  Button,
   createStyles,
-  Group,
-  MantineStyleSystemProps,
+  MantineGradient,
   Navbar,
   NavLink,
   SegmentedControl,
   SegmentedControlItem,
   Text,
-  ThemeIcon,
   useMantineColorScheme,
 } from "@mantine/core";
-import { NextLink } from "@mantine/next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
-import { Github } from "./Icons/Github";
+import { useMemo } from "react";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
 
@@ -92,18 +87,43 @@ const useStyles = createStyles((theme, _params, getRef) => {
   };
 });
 
-const SignInOrUserProfile = ({ isSignedIn, dark }) => {
-  const { classes } = useStyles();
+const SignInOrUserProfile = ({
+  isSignedIn,
+  dark,
+}: {
+  isSignedIn: boolean | undefined;
+  dark: boolean;
+}) => {
   if (!isSignedIn) {
     return (
-      <SignInButton mode="modal">
-        <ActionIcon color={dark ? "yellow" : "blue"}>
-          <LoginIcon className={classes.linkIcon} width={24} />
-        </ActionIcon>
-      </SignInButton>
+      <NavLink
+        sx={{ whiteSpace: "nowrap" }}
+        icon={<LoginIcon color={dark ? "yellow" : "black"} width={16} />}
+        label="Account"
+      >
+        <SignInButton mode="modal">
+          <Button
+            leftIcon={<LoginIcon width={16} />}
+            variant="gradient"
+            gradient={{ from: "indigo", to: "cyan" }}
+            fullWidth
+            mt="sm"
+          >
+            Sign In
+          </Button>
+        </SignInButton>
+      </NavLink>
     );
   }
-  return <UserButton />;
+  return (
+    <NavLink
+      sx={{ whiteSpace: "nowrap" }}
+      icon={<LoginIcon color={dark ? "yellow" : "black"} width={16} />}
+      label="Account"
+    >
+      <UserButton showName />
+    </NavLink>
+  );
 };
 
 type NavbarContentProps = {
@@ -129,6 +149,10 @@ export const NavbarContent = ({
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { isSignedIn, user } = useUser();
   const dark = colorScheme === "dark";
+  const buttonGradient: MantineGradient = {
+    from: dark ? "orange" : "indigo",
+    to: dark ? "red" : "cyan",
+  };
 
   const sectionControlData: SegmentedControlItem[] = useMemo(
     () => [
@@ -179,51 +203,26 @@ export const NavbarContent = ({
         )}
       </Navbar.Section>
       <Navbar.Section className={classes.header}>
-        <Box mt="sm">{links}</Box>
+        <Box mt="sm">
+          {links}
+          <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
+          <NavLink icon={<CogIcon width={16} />} label="Settings">
+            <Button
+              mt="sm"
+              leftIcon={dark ? <MoonIcon /> : <SunIcon />}
+              variant="gradient"
+              gradient={buttonGradient}
+              fullWidth
+              onClick={() => toggleColorScheme()}
+            >
+              Theme
+            </Button>
+          </NavLink>
+        </Box>
       </Navbar.Section>
       <Navbar.Section className={classes.footer}>
         <Text className={classes.title}>{user?.primaryEmailAddress?.emailAddress}</Text>
       </Navbar.Section>
-
-      {/* <Group mt="sm">
-        <NextLink color={dark ? "yellow" : "blue"} href="/" title="Home">
-          <ThemeIcon variant="outline">
-            <HomeIcon width={24} />
-          </ThemeIcon>
-        </NextLink>
-        <ActionIcon
-          color={dark ? "yellow" : "blue"}
-          // eslint-disable-next-line react/jsx-no-bind
-          onClick={() => toggleColorScheme()}
-          title="Toggle color scheme"
-        >
-          <ThemeIcon variant="outline">
-            {dark ? <SunIcon size={24} /> : <MoonIcon size={24} />}
-          </ThemeIcon>
-        </ActionIcon>
-        <NextLink
-          color={dark ? "yellow" : "blue"}
-          href="https://github.com/insuusvenerati/hello-free-shavacado"
-          target="_blank"
-          title="Github"
-        >
-          <ThemeIcon variant="outline">
-            <Github width={22} />
-          </ThemeIcon>
-        </NextLink>
-        {isSignedIn && (
-          <>
-            <NextLink color={dark ? "yellow" : "blue"} href="/myrecipes" title="My Recipes">
-              <BookmarkIcon className={classes.linkIcon} width={24} />
-            </NextLink>
-            <NextLink href="/groceries">
-              <CakeIcon className={classes.linkIcon} width={24} />
-            </NextLink>
-          </>
-        )}
-
-        <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
-      </Group> */}
     </>
   );
 };

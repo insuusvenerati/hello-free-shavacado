@@ -19,23 +19,26 @@ import { Fragment } from "react";
 import { dehydrate, QueryClient } from "react-query";
 import { useGetOneImportedRecipeQuery } from "../../hooks/useGetImportedRecipesQuery";
 import { VERCEL_URL } from "../../util/constants";
+import { getOneImportedRecipe } from "../../util/getImportedRecipes";
 
 interface Params extends ParsedUrlQuery {
   recipe: string;
 }
 
-export const getServerSideProps: GetServerSideProps = withServerSideAuth(
-  async ({ req, params }) => {
-    const { userId } = req.auth;
-    const { recipe } = params as Params;
-    const queryClient = new QueryClient();
-    await queryClient.prefetchQuery(["importedRecipe", userId, recipe]);
+// export const getServerSideProps: GetServerSideProps = withServerSideAuth(
+//   async ({ req, params }) => {
+//     const { userId } = req.auth;
+//     const { recipe } = params as Params;
+//     const queryClient = new QueryClient();
+//     await queryClient.prefetchQuery(["importedRecipe", userId, recipe], () =>
+//       getOneImportedRecipe({ id: recipe, userId }),
+//     );
 
-    return {
-      props: { dehydratedState: dehydrate(queryClient) },
-    };
-  },
-);
+//     return {
+//       props: { dehydratedState: dehydrate(queryClient) },
+//     };
+//   },
+// );
 
 const ImportedRecipe = () => {
   const matches = useMediaQuery("(min-width: 900px)", true);
