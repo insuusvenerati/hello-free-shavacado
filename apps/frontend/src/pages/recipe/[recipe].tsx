@@ -138,11 +138,11 @@ const Recipe = () => {
         <Image
           alt={recipe?.name}
           blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
-          height={matches ? 700 : 350}
+          height={matches ? 800 : 350}
           objectFit="cover"
           placeholder="blur"
-          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_500,q_auto,w_2400/hellofresh_s3${recipe?.imagePath}`}
-          width={matches ? 2500 : 600}
+          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,q_auto/hellofresh_s3${recipe?.imagePath}`}
+          width={matches ? 3176 : 600}
         />
       ) : (
         <Loader />
