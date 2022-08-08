@@ -76,12 +76,6 @@ export class HellofreshService {
       response.data.items.map(async (item) => {
         if (item.family === null) {
           return;
-          // const updatedItem = { ...item, family: undefined };
-          // await this.prisma.ingredient.upsert({
-          //   create: updatedItem,
-          //   update: updatedItem,
-          //   where: { id: item.id },
-          // });
         }
         await this.prisma.ingredient.upsert({
           create: item,
@@ -108,22 +102,11 @@ export class HellofreshService {
     const total = await this.prisma.hellofresh.count();
     const dbSearch: any = await this.prisma.$queryRaw`
       SELECT recipe FROM "hellofresh"
-      WHERE
-        "textSearch" @@ to_tsquery('english', ${tsquery})
+      WHERE "textSearch" @@ to_tsquery('english', ${tsquery})
       ORDER BY ts_rank("textSearch", to_tsquery('english', ${tsquery})) DESC
       LIMIT 20 OFFSET ${skip};
     `;
 
-    // const dbSearch = await this.prisma.hellofresh.findMany({
-    //   where: {
-    //     name: {
-    //       search: getQueryFromSearchPhrase(query),
-    //     },
-    //   },
-    //   skip: skip,
-    //   take: 20,
-    //   select: { recipe: true },
-    // });
     const formattedResults = dbSearch.map((value) => value.recipe);
     const results = { take: 20, skip, count, total, items: [...formattedResults] };
     if (dbSearch.length >= 20) return results;

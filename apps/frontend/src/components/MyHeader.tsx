@@ -1,4 +1,4 @@
-import { XIcon } from "@heroicons/react/outline";
+import { SearchIcon, XIcon } from "@heroicons/react/outline";
 import {
   ActionIcon,
   Burger,
@@ -16,7 +16,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import Image from "next/image";
 import { useCallback } from "react";
 import { useRecipesContext } from "../context/RecipesContext";
-import { NavbarContent } from "./NavContent";
+import { ButtonToggle } from "./Buttons/ColorSchemeToggle";
 import { Search } from "./Search";
 
 type Props = {
@@ -106,6 +106,7 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
                   aria-label="Search"
                   onChange={onChangeHandler}
                   placeholder="Search"
+                  icon={<SearchIcon width={16} />}
                   rightSection={
                     isLoading || isFetching ? (
                       <Loader size="sm" />
@@ -137,9 +138,9 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
         </Group>
 
         <Group>
-          {/* <Group ml={50} spacing={5} className={classes.links}>
-            <NavbarContent />
-          </Group> */}
+          <Group ml={50} spacing={5} className={classes.links}>
+            <ButtonToggle />
+          </Group>
           <Search />
         </Group>
       </div>

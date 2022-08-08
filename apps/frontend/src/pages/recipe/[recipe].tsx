@@ -33,6 +33,7 @@ import { AddGrocery } from "../../types/grocery";
 import {
   FIVE_MINUTES,
   getOgImageUrl,
+  HF_COVER_IMAGE_URL,
   HF_ICON_IMAGE_URL,
   HF_PLACEHOLDERURL,
   HF_STEP_IMAGE_URL,
@@ -137,12 +138,12 @@ const Recipe = () => {
       {recipe?.imagePath ? (
         <Image
           alt={recipe?.name}
-          blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
+          blurDataURL={`${HF_PLACEHOLDERURL}${recipe?.imagePath}`}
           height={matches ? 800 : 350}
           objectFit="cover"
           placeholder="blur"
-          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,q_auto/hellofresh_s3${recipe?.imagePath}`}
-          width={matches ? 3176 : 600}
+          src={`${HF_COVER_IMAGE_URL}${recipe?.imagePath}`}
+          width={matches ? 2400 : 600}
         />
       ) : (
         <Loader />

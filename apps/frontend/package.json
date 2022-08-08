@@ -6,7 +6,9 @@
     "lint": "eslint --cache --cache-location .next/cache/eslint/ --fix",
     "test": "vitest",
     "prettier": "prettier --write src/",
-    "export": "next export"
+    "export": "next export",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "name": "@stiforr/frontend",
   "version": "1.5.0-develop.2",
@@ -28,6 +30,7 @@
     "next-axiom": "0.11.1",
     "next-pwa": "5.5.4",
     "next-seo": "^4",
+    "next-transpile-modules": "^9.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-query": "3.39.2",
@@ -35,7 +38,16 @@
     "typescript": "4.7.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.18.10",
     "@next/bundle-analyzer": "12.2.4",
+    "@storybook/addon-actions": "^6.5.10",
+    "@storybook/addon-essentials": "^6.5.10",
+    "@storybook/addon-interactions": "^6.5.10",
+    "@storybook/addon-links": "^6.5.10",
+    "@storybook/builder-webpack5": "^6.5.10",
+    "@storybook/manager-webpack5": "^6.5.10",
+    "@storybook/react": "^6.5.10",
+    "@storybook/testing-library": "^0.0.13",
     "@testing-library/react": "13.3.0",
     "@types/node": "18.0.2",
     "@types/nprogress": "0.2.0",
@@ -46,9 +58,12 @@
     "@typescript-eslint/eslint-plugin": "5.32.0",
     "@typescript-eslint/parser": "5.32.0",
     "@vitejs/plugin-react": "2.0.0",
+    "babel-loader": "^8.2.5",
     "eslint": "8.21.0",
     "eslint-config-next": "12.2.4",
+    "eslint-plugin-storybook": "^0.6.3",
     "jsdom": "20.0.0",
+    "storybook-addon-mantine": "^1.1.1",
     "vitest": "0.20.3"
   },
   "lint-staged": {
@@ -58,5 +73,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/insuusvenerati/hello-free-shavacado.git"
+  },
+  "volta": {
+    "node": "16.16.0"
   }
 }

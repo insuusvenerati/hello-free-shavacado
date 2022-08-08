@@ -25,20 +25,21 @@ export const addRecipe = async ({
     return await Promise.reject(new Error("No user ID. Please sign in"));
   }
 
-  const data = await ky
-    .post(`${API_URL}/recipe`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        slug: recipeSlug,
-        name: recipeName,
-        userId: userId,
-        imagePath,
-        uuid,
-      }),
-    })
-    .json<FavoritedRecipe>();
+  const response = await fetch(`${API_URL}/recipe`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({
+      slug: recipeSlug,
+      name: recipeName,
+      userId: userId,
+      imagePath,
+      uuid,
+    }),
+  });
+
+  const data = response.json() as Promise<FavoritedRecipe>;
 
   return { data };
 };

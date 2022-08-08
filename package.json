@@ -13,6 +13,7 @@
     "lint": "turbo run lint",
     "stop": "turbo run stop",
     "start": "turbo run start",
+    "storybook": "turbo run storybook",
     "prisma:migrate": "yarn workspace @stiforr/backend prisma migrate",
     "prisma:studio": "yarn workspace @stiforr/backend prisma studio",
     "commit": "cz"
