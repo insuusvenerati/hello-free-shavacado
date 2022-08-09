@@ -1,16 +1,18 @@
 import { Grid, Title } from "@mantine/core";
 import { memo } from "react";
+import { RecipeQuery } from "types/recipes";
 import { useRecipesContext } from "../context/RecipesContext";
 import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
 import { RecipeCard } from "./RecipeCard";
 
 type Props = {
   modalHandler: () => void;
+  staticRecipes: RecipeQuery;
 };
 
-export const FilteredOrPopularRecipesList = ({ modalHandler }: Props) => {
+export const FilteredOrPopularRecipesList = ({ modalHandler, staticRecipes }: Props) => {
   const { filteredRecipes, setSelectedRecipe, isLoading } = useRecipesContext();
-  const { data: popularRecipes } = usePopularRecipesQuery();
+  const { data: popularRecipes } = usePopularRecipesQuery(staticRecipes);
 
   if (filteredRecipes) {
     return (

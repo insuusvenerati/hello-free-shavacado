@@ -9,25 +9,32 @@ import {
   Text,
 } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import { forwardRef, useCallback, useEffect, useState } from "react";
-import { dehydrate, QueryClient } from "react-query";
+import { RecipeQuery } from "types/recipes";
 import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
 import { LazyRecipeModal } from "../components/RecipeModal";
 import { useRecipesContext } from "../context/RecipesContext";
-import { FIVE_MINUTES } from "../util/constants";
 import { getPopularRecipes } from "../util/getPopularRecipes";
 import { hellofreshGetToken } from "../util/hellofresh";
 
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  res.setHeader("Cache-Control", `public, s-maxage=60, stale-while-revalidate=${FIVE_MINUTES}`);
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
+// export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+//   res.setHeader("Cache-Control", `public, s-maxage=60, stale-while-revalidate=${FIVE_MINUTES}`);
+//   const queryClient = new QueryClient();
+//   await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
+
+//   return {
+//     props: {
+//       dehydratedState: dehydrate(queryClient),
+//     },
+//   };
+// };
+
+export const getStaticProps: GetStaticProps = async () => {
+  const popularRecipes = await getPopularRecipes();
 
   return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
+    props: { popularRecipes },
   };
 };
 
@@ -56,7 +63,11 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
   },
 );
 
-const Home = () => {
+type Props = {
+  popularRecipes: RecipeQuery;
+};
+
+const Home = ({ popularRecipes }: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const token = getCookie("hf-token") as string;
 
@@ -93,7 +104,7 @@ const Home = () => {
           </Grid.Col>
         </Grid>
       </Center>
-      <FilteredOrPopularRecipesList modalHandler={modalHandler} />
+      <FilteredOrPopularRecipesList staticRecipes={popularRecipes} modalHandler={modalHandler} />
     </>
   );
 };
