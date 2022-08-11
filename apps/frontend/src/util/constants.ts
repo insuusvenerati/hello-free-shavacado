@@ -25,3 +25,6 @@ export const getOgImageUrl = (url: string | undefined | null) => {
 };
 
 export const FIVE_MINUTES = 60 * 60 * 5;
+
+export const MEILISEARCH_HOST = process.env.NEXT_PUBLIC_MEILISEARCH_HOST || "http://localhost:7700"
+export const MEILISEARCH_KEY = process.env.NEXT_PUBLIC_MEILISEARCH_KEY

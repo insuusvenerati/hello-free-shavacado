@@ -15,6 +15,8 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import Image from "next/image";
 import { useCallback } from "react";
+import { InstantSearch, SearchBox } from "react-instantsearch-hooks-web";
+import { searchClient } from "util/meilisearch";
 import { useRecipesContext } from "../context/RecipesContext";
 import { ButtonToggle } from "./Buttons/ColorSchemeToggle";
 import { Search } from "./Search";
@@ -99,30 +101,7 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
           <Image alt="logo" src="/android-chrome-192x192.png" width={50} height={50} />
           <Grid justify="center">
             <Grid.Col lg={6} md={12}>
-              <form onSubmit={onSubmitHandler}>
-                <TextInput
-                  value={searchText}
-                  error={isError && error?.message}
-                  aria-label="Search"
-                  onChange={onChangeHandler}
-                  placeholder="Search"
-                  icon={<SearchIcon width={16} />}
-                  rightSection={
-                    isLoading || isFetching ? (
-                      <Loader size="sm" />
-                    ) : filteredRecipes ? (
-                      <ActionIcon onClick={clearSearchHandler} mr="xs">
-                        <ThemeIcon variant="outline">
-                          <XIcon width={16} />
-                        </ThemeIcon>
-                      </ActionIcon>
-                    ) : undefined
-                  }
-                  disabled={isLoading}
-                  size="md"
-                  type="search"
-                />
-              </form>
+              <SearchBox />
             </Grid.Col>
           </Grid>
         </div>
@@ -141,7 +120,10 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
           <Group ml={50} spacing={5} className={classes.links}>
             <ButtonToggle />
           </Group>
-          <Search />
+
+          <SearchBox />
+
+          {/* <Search /> */}
         </Group>
       </div>
     </Header>

@@ -76,10 +76,19 @@ export class HellofreshService {
             description: item.description,
           },
         });
-        await client.index<any>("hellofresh").addDocuments(item);
       });
     }
-    await client.index("hellofresh").updateSearchableAttributes(["name", "description"]);
+
+    const allRecipesQuery = await this.prisma.hellofresh.findMany();
+
+    await client.index("hellofresh").addDocuments(allRecipesQuery);
+
+    await client
+      .index("hellofresh")
+      .updateSearchableAttributes(["recipe.name", "recipe.description"]);
+    await client
+      .index("hellofresh")
+      .updateFilterableAttributes(["recipe.ingredients.name", "recipe.tags.name"]);
     return { response: "Recipes scraped successfully" };
   }
 
@@ -102,10 +111,9 @@ export class HellofreshService {
           where: { id: item.id },
         });
       });
-      response.data.items.map(async (item) => {
-        await client.index<any>("ingredients").addDocuments(item as any);
-      });
     }
+    const prismaResponse = await this.prisma.ingredient.findMany();
+    await client.index<any>("ingredients").addDocuments(prismaResponse);
   }
 
   async findAll(query: string, page: number, token: string) {

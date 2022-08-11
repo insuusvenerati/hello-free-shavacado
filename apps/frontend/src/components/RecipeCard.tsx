@@ -32,18 +32,17 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
   };
 
   return (
-    <Card onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler} shadow={shadow}>
-      <Card.Section onClick={handler} sx={{ marginBottom: 5, cursor: "pointer" }}>
-        <Image
-          alt={recipe?.name}
-          blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
-          height={2120}
-          placeholder="blur"
-          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
-          width={3181}
-          layout="responsive"
-        />
-      </Card.Section>
+    <>
+      <Image
+        alt={recipe?.name}
+        blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
+        height={340}
+        placeholder="blur"
+        src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
+        width={600}
+        layout="responsive"
+        style={{ marginBottom: 5 }}
+      />
 
       <NextLink href={`/recipe/${recipe?.slug}`}>
         <Text weight="bold">{recipe?.name}</Text>
@@ -61,6 +60,6 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
         sx={{ marginTop: "14px" }}
         variant="light"
       />
-    </Card>
+    </>
   );
 };

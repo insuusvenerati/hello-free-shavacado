@@ -1,3 +1,4 @@
+import { RecipeCard } from "@components/RecipeCard";
 import {
   Avatar,
   Center,
@@ -11,8 +12,8 @@ import {
 import { getCookie, setCookies } from "cookies-next";
 import { GetStaticProps } from "next";
 import { forwardRef, useCallback, useEffect, useState } from "react";
-import { RecipeQuery } from "types/recipes";
-import { FilteredOrPopularRecipesList } from "../components/PopularFilteredRecipesList";
+import { Hits } from "react-instantsearch-hooks-web";
+import { RecipeQuery } from "types/recipeDatabaseQuery";
 import { LazyRecipeModal } from "../components/RecipeModal";
 import { useRecipesContext } from "../context/RecipesContext";
 import { getPopularRecipes } from "../util/getPopularRecipes";
@@ -67,6 +68,11 @@ type Props = {
   popularRecipes: RecipeQuery;
 };
 
+const HitComponent = ({ hit }) => {
+  const { setSelectedRecipe } = useRecipesContext();
+  return <RecipeCard setSelectedRecipe={setSelectedRecipe} recipe={hit.recipe} />;
+};
+
 const Home = ({ popularRecipes }: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const token = getCookie("hf-token") as string;
@@ -104,7 +110,12 @@ const Home = ({ popularRecipes }: Props) => {
           </Grid.Col>
         </Grid>
       </Center>
-      <FilteredOrPopularRecipesList staticRecipes={popularRecipes} modalHandler={modalHandler} />
+
+      {/* <Grid columns={4} justify="center"> */}
+      <Hits hitComponent={HitComponent} />
+      {/* </Grid> */}
+
+      {/* <FilteredOrPopularRecipesList staticRecipes={popularRecipes} modalHandler={modalHandler} /> */}
     </>
   );
 };

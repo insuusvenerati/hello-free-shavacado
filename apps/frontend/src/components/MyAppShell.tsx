@@ -20,6 +20,8 @@ import {
   Transition,
 } from "@mantine/core";
 import { forwardRef, useState } from "react";
+import { InstantSearch, RefinementList } from "react-instantsearch-hooks-web";
+import { searchClient } from "util/meilisearch";
 import { useRecipesContext } from "../context/RecipesContext";
 import { useAddImportedRecipeMutation } from "../hooks/useAddImportedRecipeMutation";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
@@ -155,33 +157,41 @@ export const MyAppShell = ({ children }: AppShellProps) => {
             timingFunction="ease"
           >
             {(styles) => (
-              <Stack sx={{ padding: 5 }}>
-                {ingredients && (
-                  <div style={styles}>
-                    <MultiSelect
-                      clearable
-                      data={uniqueAllergens}
-                      itemComponent={MySelectItem}
-                      label="Filter allergens"
-                      nothingFound="Search for a recipe first"
-                      onChange={handleSetSelectedAllergens}
-                      placeholder="Select your allergens"
-                      searchable
-                      value={selectedAllergens}
-                    />
-                    <MultiSelect
-                      clearable
-                      data={ingredients}
-                      label="Filter ingredients"
-                      nothingFound="Search for a recipe first"
-                      onChange={handleSetSelectedIngredients}
-                      placeholder="Select your ingredients"
-                      searchable
-                      value={selectedIngredients}
-                    />
-                  </div>
-                )}
-              </Stack>
+              <>
+                <Title order={4}>Ingredients</Title>
+                <RefinementList style={styles} attribute="recipe.ingredients.name" />
+
+                <Title order={4}>Tags</Title>
+                <RefinementList style={styles} attribute="recipe.tags.name" />
+              </>
+
+              // <Stack sx={{ padding: 5 }}>
+              //   {ingredients && (
+              //     <div style={styles}>
+              //       <MultiSelect
+              //         clearable
+              //         data={uniqueAllergens}
+              //         itemComponent={MySelectItem}
+              //         label="Filter allergens"
+              //         nothingFound="Search for a recipe first"
+              //         onChange={handleSetSelectedAllergens}
+              //         placeholder="Select your allergens"
+              //         searchable
+              //         value={selectedAllergens}
+              //       />
+              //       <MultiSelect
+              //         clearable
+              //         data={ingredients}
+              //         label="Filter ingredients"
+              //         nothingFound="Search for a recipe first"
+              //         onChange={handleSetSelectedIngredients}
+              //         placeholder="Select your ingredients"
+              //         searchable
+              //         value={selectedIngredients}
+              //       />
+              //     </div>
+              //   )}
+              // </Stack>
             )}
           </Transition>
         </Navbar>
