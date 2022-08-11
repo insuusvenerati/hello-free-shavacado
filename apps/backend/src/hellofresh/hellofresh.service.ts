@@ -12,6 +12,7 @@ import axios from "axios";
 import { Cache } from "cache-manager";
 import { PrismaService } from "src/prisma.service";
 import { RecipeQuery } from "src/types/recipes";
+import MeiliSearch from "meilisearch";
 
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 const CUISINE_URL = `https://gw.hellofresh.com/api/cuisines?country=us&locale=en-US&take=250`;
@@ -30,12 +31,28 @@ type Token = {
 const TOKEN_URL =
   "https://stiforr-cors-anywhere.fly.dev/https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials";
 
+const client = new MeiliSearch({
+  host: process.env.MEILISEARCH_HOST || "http://localhost:7700",
+  apiKey: process.env.MEILISEARCH_KEY || "MASTER_KEY",
+});
+
 @Injectable()
 export class HellofreshService {
   constructor(private prisma: PrismaService, @Inject(CACHE_MANAGER) private cacheManager: Cache) {}
   private readonly logger = new Logger(HellofreshService.name);
 
   async scrapeRecipes() {
+    const tokenResponse = await axios.post<Token>(
+      TOKEN_URL,
+      {},
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "X-Requested-With": "Stiforr",
+        },
+      },
+    );
+    await this.cacheManager.set("hf-token", tokenResponse.data, { ttl: 60 * 60 * 24 });
     for (let skip = 0; skip <= 3750; skip += 250) {
       console.log(skip);
       const token = await this.cacheManager.get<Token>("hf-token");
@@ -59,8 +76,10 @@ export class HellofreshService {
             description: item.description,
           },
         });
+        await client.index<any>("hellofresh").addDocuments(item);
       });
     }
+    await client.index("hellofresh").updateSearchableAttributes(["name", "description"]);
     return { response: "Recipes scraped successfully" };
   }
 
@@ -82,6 +101,9 @@ export class HellofreshService {
           update: item,
           where: { id: item.id },
         });
+      });
+      response.data.items.map(async (item) => {
+        await client.index<any>("ingredients").addDocuments(item as any);
       });
     }
   }
