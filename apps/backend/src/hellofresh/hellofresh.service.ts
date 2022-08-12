@@ -81,14 +81,28 @@ export class HellofreshService {
 
     const allRecipesQuery = await this.prisma.hellofresh.findMany();
 
-    await client.index("hellofresh").addDocuments(allRecipesQuery);
+    const hellofreshDocuments = allRecipesQuery.map((recipe: any) => {
+      return {
+        name: recipe.name,
+        description: recipe.description,
+        id: recipe.id,
+        ingredients: recipe.recipe.ingredients,
+        tags: recipe.recipe.tags,
+        slug: recipe.recipe.slug,
+        imagePath: recipe.recipe.imagePath,
+        allergens: recipe.recipe.allergens,
+        averageRating: recipe.recipe.averageRating,
+      };
+    });
 
+    await client.index("hellofresh").addDocuments(hellofreshDocuments);
+
+    await client.index("hellofresh").updateSearchableAttributes(["name", "description"]);
     await client
       .index("hellofresh")
-      .updateSearchableAttributes(["recipe.name", "recipe.description"]);
-    await client
-      .index("hellofresh")
-      .updateFilterableAttributes(["recipe.ingredients.name", "recipe.tags.name"]);
+      .updateFilterableAttributes(["ingredients.name", "tags.name", "allergens.name"]);
+
+    await client.index("hellofresh").updateSortableAttributes(["name", "averageRating"]);
     return { response: "Recipes scraped successfully" };
   }
 
