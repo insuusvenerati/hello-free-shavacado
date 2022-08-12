@@ -1,22 +1,9 @@
 import { RecipeCard } from "@components/RecipeCard";
-import {
-  Avatar,
-  Center,
-  Grid,
-  Group,
-  MantineColor,
-  Pagination,
-  SelectItemProps,
-  Text,
-} from "@mantine/core";
+import { Avatar, Center, Grid, Group, MantineColor, SelectItemProps, Text } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
-import { GetStaticProps } from "next";
-import { forwardRef, useCallback, useEffect, useState } from "react";
-import { Hits } from "react-instantsearch-hooks-web";
-import { RecipeQuery } from "types/recipeDatabaseQuery";
-import { LazyRecipeModal } from "../components/RecipeModal";
-import { useRecipesContext } from "../context/RecipesContext";
-import { getPopularRecipes } from "../util/getPopularRecipes";
+import { forwardRef, useEffect } from "react";
+import { Hits, Pagination } from "react-instantsearch-hooks-web";
+import { RecipeHit } from "types/recipeSearchQuery";
 import { hellofreshGetToken } from "../util/hellofresh";
 
 // export const getServerSideProps: GetServerSideProps = async ({ res }) => {
@@ -31,13 +18,13 @@ import { hellofreshGetToken } from "../util/hellofresh";
 //   };
 // };
 
-export const getStaticProps: GetStaticProps = async () => {
-  const popularRecipes = await getPopularRecipes();
+// export const getStaticProps: GetStaticProps = async () => {
+//   const popularRecipes = await getPopularRecipes();
 
-  return {
-    props: { popularRecipes },
-  };
-};
+//   return {
+//     props: { popularRecipes },
+//   };
+// };
 
 interface ItemProps extends SelectItemProps {
   color: MantineColor;
@@ -64,24 +51,12 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
   },
 );
 
-type Props = {
-  popularRecipes: RecipeQuery;
+const HitComponent = ({ hit }: { hit: RecipeHit }) => {
+  return <RecipeCard recipe={hit} />;
 };
 
-const HitComponent = ({ hit }) => {
-  const { setSelectedRecipe } = useRecipesContext();
-  return <RecipeCard setSelectedRecipe={setSelectedRecipe} recipe={hit.recipe} />;
-};
-
-const Home = ({ popularRecipes }: Props) => {
-  const [modalVisible, setModalVisible] = useState(false);
+const Home = () => {
   const token = getCookie("hf-token") as string;
-
-  const { selectedRecipe, recipesTotal, pageChangeHandler, page } = useRecipesContext();
-
-  const modalHandler = useCallback(() => {
-    setModalVisible(!modalVisible);
-  }, [modalVisible]);
 
   // Get token
   useEffect(() => {
@@ -100,13 +75,13 @@ const Home = ({ popularRecipes }: Props) => {
 
   return (
     <>
-      <LazyRecipeModal onClose={modalHandler} opened={modalVisible} recipe={selectedRecipe} />
       <Center mb={5} mt={5}>
         <Grid columns={1} justify="center">
           <Grid.Col span={1}>
-            {recipesTotal && recipesTotal > 0 && (
+            <Pagination />
+            {/* {recipesTotal && recipesTotal > 0 && (
               <Pagination onChange={pageChangeHandler} page={page} total={recipesTotal} />
-            )}
+            )} */}
           </Grid.Col>
         </Grid>
       </Center>

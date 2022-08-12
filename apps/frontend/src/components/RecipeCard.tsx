@@ -1,19 +1,14 @@
-import { Badge, Card, Container, LoadingOverlay, MantineShadow, Text } from "@mantine/core";
+import { Badge, Container, LoadingOverlay, Text } from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useState } from "react";
-import { Item } from "../types/recipes";
+import { RecipeHit } from "types/recipeSearchQuery";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
 
 type Props = {
-  recipe: Item | undefined;
-  handler: () => void;
-  setSelectedRecipe: Dispatch<SetStateAction<Item>>;
+  recipe: RecipeHit | undefined;
 };
 
-export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
-  const [shadow, setShadow] = useState<MantineShadow>("sm");
-
+export const RecipeCard = ({ recipe }: Props) => {
   if (!recipe) {
     return (
       <Container>
@@ -21,15 +16,6 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
       </Container>
     );
   }
-
-  const onMouseEnterHandler = () => {
-    setShadow("md");
-    setSelectedRecipe(recipe);
-  };
-
-  const onMouseLeaveHandler = () => {
-    setShadow("sm");
-  };
 
   return (
     <>

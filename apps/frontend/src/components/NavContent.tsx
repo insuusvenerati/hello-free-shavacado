@@ -10,6 +10,7 @@ import {
   SegmentedControl,
   SegmentedControlItem,
   Text,
+  Transition,
   useMantineColorScheme,
 } from "@mantine/core";
 import Link from "next/link";
@@ -199,30 +200,43 @@ export const NavbarContent = ({
             value={section}
             onChange={handleSectionChange}
             data={sectionControlData}
+            mt="sm"
+            mb="sm"
           />
         )}
       </Navbar.Section>
-      <Navbar.Section className={classes.header}>
-        <Box mt="sm">
-          {links}
-          <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
-          <NavLink icon={<CogIcon width={16} />} label="Settings">
-            <Button
-              mt="sm"
-              leftIcon={dark ? <MoonIcon /> : <SunIcon />}
-              variant="gradient"
-              gradient={buttonGradient}
-              fullWidth
-              onClick={() => toggleColorScheme()}
-            >
-              Theme
-            </Button>
-          </NavLink>
-        </Box>
-      </Navbar.Section>
-      <Navbar.Section className={classes.footer}>
-        <Text className={classes.title}>{user?.primaryEmailAddress?.emailAddress}</Text>
-      </Navbar.Section>
+      <Transition
+        mounted={section === "nav"}
+        transition="slide-right"
+        duration={200}
+        timingFunction="ease"
+      >
+        {(styles) => (
+          <>
+            <Navbar.Section style={styles} className={classes.header}>
+              <Box mt="sm">
+                {links}
+                <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
+                <NavLink icon={<CogIcon width={16} />} label="Settings">
+                  <Button
+                    mt="sm"
+                    leftIcon={dark ? <MoonIcon /> : <SunIcon />}
+                    variant="gradient"
+                    gradient={buttonGradient}
+                    fullWidth
+                    onClick={() => toggleColorScheme()}
+                  >
+                    Theme
+                  </Button>
+                </NavLink>
+              </Box>
+            </Navbar.Section>
+            <Navbar.Section className={classes.footer}>
+              <Text className={classes.title}>{user?.primaryEmailAddress?.emailAddress}</Text>
+            </Navbar.Section>
+          </>
+        )}
+      </Transition>
     </>
   );
 };
