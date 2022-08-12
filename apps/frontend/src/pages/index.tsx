@@ -1,9 +1,8 @@
-import { RecipeCard } from "@components/RecipeCard";
+import { Hits } from "@components/Hits";
 import { Avatar, Center, Grid, Group, MantineColor, SelectItemProps, Text } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
 import { forwardRef, useEffect } from "react";
-import { Hits, Pagination } from "react-instantsearch-hooks-web";
-import { RecipeHit } from "types/recipeSearchQuery";
+import { Pagination } from "react-instantsearch-hooks-web";
 import { hellofreshGetToken } from "../util/hellofresh";
 
 // export const getServerSideProps: GetServerSideProps = async ({ res }) => {
@@ -51,10 +50,6 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
   },
 );
 
-const HitComponent = ({ hit }: { hit: RecipeHit }) => {
-  return <RecipeCard recipe={hit} />;
-};
-
 const Home = () => {
   const token = getCookie("hf-token") as string;
 
@@ -86,9 +81,9 @@ const Home = () => {
         </Grid>
       </Center>
 
-      {/* <Grid columns={4} justify="center"> */}
-      <Hits hitComponent={HitComponent} />
-      {/* </Grid> */}
+      <Grid columns={4} justify="center">
+        <Hits />
+      </Grid>
 
       {/* <FilteredOrPopularRecipesList staticRecipes={popularRecipes} modalHandler={modalHandler} /> */}
     </>

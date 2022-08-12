@@ -1,11 +1,11 @@
-import { Badge, Container, LoadingOverlay, Text } from "@mantine/core";
+import { Badge, Card, Container, LoadingOverlay, Text } from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import Image from "next/image";
 import { RecipeHit } from "types/recipeSearchQuery";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
 
 type Props = {
-  recipe: RecipeHit | undefined;
+  recipe: RecipeHit;
 };
 
 export const RecipeCard = ({ recipe }: Props) => {
@@ -18,17 +18,18 @@ export const RecipeCard = ({ recipe }: Props) => {
   }
 
   return (
-    <>
-      <Image
-        alt={recipe?.name}
-        blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
-        height={340}
-        placeholder="blur"
-        src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
-        width={600}
-        layout="responsive"
-        style={{ marginBottom: 5 }}
-      />
+    <Card shadow="sm">
+      <Card.Section mb="sm">
+        <Image
+          alt={recipe?.name}
+          blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
+          height={340}
+          placeholder="blur"
+          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
+          width={600}
+          layout="responsive"
+        />
+      </Card.Section>
 
       <NextLink href={`/recipe/${recipe?.slug}`}>
         <Text weight="bold">{recipe?.name}</Text>
@@ -46,6 +47,6 @@ export const RecipeCard = ({ recipe }: Props) => {
         sx={{ marginTop: "14px" }}
         variant="light"
       />
-    </>
+    </Card>
   );
 };

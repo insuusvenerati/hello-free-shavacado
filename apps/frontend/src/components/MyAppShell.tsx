@@ -5,6 +5,7 @@ import {
   Aside,
   Box,
   Divider,
+  Group,
   List,
   LoadingOverlay,
   MediaQuery,
@@ -16,14 +17,15 @@ import {
   Transition,
 } from "@mantine/core";
 import { useState } from "react";
-import { RefinementList, SortBy } from "react-instantsearch-hooks-web";
 import { useAddImportedRecipeMutation } from "../hooks/useAddImportedRecipeMutation";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
+import { ClearRefinements } from "./ClearRefinements";
 import { ImportedRecipeLink } from "./ImportedRecipeLink";
 import { MyHeader } from "./MyHeader";
 import { NavbarContent } from "./NavContent";
 import { RecipeLink } from "./RecipeLink";
+import { RefinementList } from "./RefinementList";
 
 type AppShellProps = {
   children: JSX.Element[] | JSX.Element;
@@ -122,25 +124,26 @@ export const MyAppShell = ({ children }: AppShellProps) => {
           >
             {(styles) => (
               <>
-                {/* <SortBy
-                  items={[
-                    { label: "Name", value: "name" },
-                    { label: "Average Rating", value: "averageRating" },
-                  ]}
-                /> */}
-                <Title mb="sm" order={4}>
-                  Ingredients
-                </Title>
-                <RefinementList limit={5} showMore style={styles} attribute="ingredients.name" />
+                <Group style={styles}>
+                  <ClearRefinements />
 
-                <Title mb="sm" order={4}>
-                  Tags
-                </Title>
-                <RefinementList limit={5} showMore style={styles} attribute="tags.name" />
-                <Title mb="sm" order={4}>
-                  Allergens
-                </Title>
-                <RefinementList limit={5} showMore style={styles} attribute="allergens.name" />
+                  {/* <CurrentRefinements /> */}
+
+                  <Group>
+                    <Title order={4}>Ingredients</Title>
+                    <RefinementList limit={5} showMore attribute="ingredients.name" />
+                  </Group>
+
+                  <Group>
+                    <Title order={4}>Tags</Title>
+                    <RefinementList limit={5} showMore attribute="tags.name" />
+                  </Group>
+
+                  <Group>
+                    <Title order={4}>Allergens</Title>
+                    <RefinementList limit={5} showMore attribute="allergens.name" />
+                  </Group>
+                </Group>
               </>
             )}
           </Transition>
