@@ -76,10 +76,33 @@ export class HellofreshService {
             description: item.description,
           },
         });
-        await client.index<any>("hellofresh").addDocuments(item);
       });
     }
+
+    const allRecipesQuery = await this.prisma.hellofresh.findMany();
+
+    const hellofreshDocuments = allRecipesQuery.map((recipe: any) => {
+      return {
+        name: recipe.name,
+        description: recipe.description,
+        id: recipe.id,
+        ingredients: recipe.recipe.ingredients,
+        tags: recipe.recipe.tags,
+        slug: recipe.recipe.slug,
+        imagePath: recipe.recipe.imagePath,
+        allergens: recipe.recipe.allergens,
+        averageRating: recipe.recipe.averageRating,
+      };
+    });
+
+    await client.index("hellofresh").addDocuments(hellofreshDocuments);
+
     await client.index("hellofresh").updateSearchableAttributes(["name", "description"]);
+    await client
+      .index("hellofresh")
+      .updateFilterableAttributes(["ingredients.name", "tags.name", "allergens.name"]);
+
+    await client.index("hellofresh").updateSortableAttributes(["name", "averageRating"]);
     return { response: "Recipes scraped successfully" };
   }
 
@@ -102,10 +125,9 @@ export class HellofreshService {
           where: { id: item.id },
         });
       });
-      response.data.items.map(async (item) => {
-        await client.index<any>("ingredients").addDocuments(item as any);
-      });
     }
+    const prismaResponse = await this.prisma.ingredient.findMany();
+    await client.index<any>("ingredients").addDocuments(prismaResponse);
   }
 
   async findAll(query: string, page: number, token: string) {

@@ -3,65 +3,35 @@
 import {
   AppShell,
   Aside,
-  Avatar,
   Box,
   Divider,
   Group,
   List,
   LoadingOverlay,
   MediaQuery,
-  MultiSelect,
   Navbar,
   ScrollArea,
-  Stack,
   Text,
   TextInput,
   Title,
   Transition,
 } from "@mantine/core";
-import { forwardRef, useState } from "react";
-import { useRecipesContext } from "../context/RecipesContext";
+import { useState } from "react";
 import { useAddImportedRecipeMutation } from "../hooks/useAddImportedRecipeMutation";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
+import { ClearRefinements } from "./ClearRefinements";
 import { ImportedRecipeLink } from "./ImportedRecipeLink";
 import { MyHeader } from "./MyHeader";
 import { NavbarContent } from "./NavContent";
 import { RecipeLink } from "./RecipeLink";
-
-interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
-  image: string;
-  label: string;
-}
+import { RefinementList } from "./RefinementList";
 
 type AppShellProps = {
   children: JSX.Element[] | JSX.Element;
 };
 
-// eslint-disable-next-line react/display-name
-const MySelectItem = forwardRef<HTMLDivElement, ItemProps>(
-  ({ image, label, ...others }: ItemProps, ref) => (
-    <div ref={ref} {...others}>
-      <Group noWrap>
-        <Avatar src={image} />
-
-        <div>
-          <Text>{label}</Text>
-        </div>
-      </Group>
-    </div>
-  ),
-);
-
 export const MyAppShell = ({ children }: AppShellProps) => {
-  const {
-    ingredients,
-    uniqueAllergens,
-    handleSetSelectedAllergens,
-    selectedAllergens,
-    handleSetSelectedIngredients,
-    selectedIngredients,
-  } = useRecipesContext();
   const {
     onSubmitHandler,
     error: addImportedRecipeError,
@@ -71,7 +41,6 @@ export const MyAppShell = ({ children }: AppShellProps) => {
     url,
   } = useAddImportedRecipeMutation();
   const { data: importedRecipes } = useGetImportedRecipesQuery();
-
   const { data: recipes, isLoading } = useFavoriteRecipesQuery();
   const [opened, setOpened] = useState(false);
   const [section, setSection] = useState<"nav" | "filters">("nav");
@@ -147,7 +116,6 @@ export const MyAppShell = ({ children }: AppShellProps) => {
           p={opened ? "sm" : 0}
         >
           <NavbarContent showSegmentedControl section={section} setSection={setSection} />
-
           <Transition
             mounted={section === "filters"}
             transition="slide-right"
@@ -155,33 +123,28 @@ export const MyAppShell = ({ children }: AppShellProps) => {
             timingFunction="ease"
           >
             {(styles) => (
-              <Stack sx={{ padding: 5 }}>
-                {ingredients && (
-                  <div style={styles}>
-                    <MultiSelect
-                      clearable
-                      data={uniqueAllergens}
-                      itemComponent={MySelectItem}
-                      label="Filter allergens"
-                      nothingFound="Search for a recipe first"
-                      onChange={handleSetSelectedAllergens}
-                      placeholder="Select your allergens"
-                      searchable
-                      value={selectedAllergens}
-                    />
-                    <MultiSelect
-                      clearable
-                      data={ingredients}
-                      label="Filter ingredients"
-                      nothingFound="Search for a recipe first"
-                      onChange={handleSetSelectedIngredients}
-                      placeholder="Select your ingredients"
-                      searchable
-                      value={selectedIngredients}
-                    />
-                  </div>
-                )}
-              </Stack>
+              <>
+                <Group style={styles}>
+                  <ClearRefinements />
+
+                  {/* <CurrentRefinements /> */}
+
+                  <Group>
+                    <Title order={4}>Ingredients</Title>
+                    <RefinementList limit={5} showMore attribute="ingredients.name" />
+                  </Group>
+
+                  <Group>
+                    <Title order={4}>Tags</Title>
+                    <RefinementList limit={5} showMore attribute="tags.name" />
+                  </Group>
+
+                  <Group>
+                    <Title order={4}>Allergens</Title>
+                    <RefinementList limit={5} showMore attribute="allergens.name" />
+                  </Group>
+                </Group>
+              </>
             )}
           </Transition>
         </Navbar>

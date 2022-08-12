@@ -1,19 +1,14 @@
-import { Badge, Card, Container, LoadingOverlay, MantineShadow, Text } from "@mantine/core";
+import { Badge, Card, Container, LoadingOverlay, Text } from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useState } from "react";
-import { Item } from "../types/recipes";
+import { RecipeHit } from "types/recipeSearchQuery";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
 
 type Props = {
-  recipe: Item | undefined;
-  handler: () => void;
-  setSelectedRecipe: Dispatch<SetStateAction<Item>>;
+  recipe: RecipeHit;
 };
 
-export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
-  const [shadow, setShadow] = useState<MantineShadow>("sm");
-
+export const RecipeCard = ({ recipe }: Props) => {
   if (!recipe) {
     return (
       <Container>
@@ -22,25 +17,16 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
     );
   }
 
-  const onMouseEnterHandler = () => {
-    setShadow("md");
-    setSelectedRecipe(recipe);
-  };
-
-  const onMouseLeaveHandler = () => {
-    setShadow("sm");
-  };
-
   return (
-    <Card onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler} shadow={shadow}>
-      <Card.Section onClick={handler} sx={{ marginBottom: 5, cursor: "pointer" }}>
+    <Card shadow="sm">
+      <Card.Section mb="sm">
         <Image
           alt={recipe?.name}
           blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
-          height={2120}
+          height={340}
           placeholder="blur"
           src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
-          width={3181}
+          width={600}
           layout="responsive"
         />
       </Card.Section>

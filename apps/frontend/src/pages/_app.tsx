@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
+import "instantsearch.css/themes/algolia-min.css";
 import { DefaultSeo } from "next-seo";
 import { AppProps as NextAppProps } from "next/app";
 import Head from "next/head";
