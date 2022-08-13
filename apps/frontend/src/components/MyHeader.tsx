@@ -1,25 +1,9 @@
-import { SearchIcon, XIcon } from "@heroicons/react/outline";
-import {
-  ActionIcon,
-  Burger,
-  createStyles,
-  Grid,
-  Group,
-  Header,
-  Loader,
-  MediaQuery,
-  TextInput,
-  ThemeIcon,
-  Title,
-} from "@mantine/core";
+import { Burger, createStyles, Grid, Group, Header, MediaQuery, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import Image from "next/image";
 import { useCallback } from "react";
-import { InstantSearch, SearchBox } from "react-instantsearch-hooks-web";
-import { searchClient } from "util/meilisearch";
-import { useRecipesContext } from "../context/RecipesContext";
+import { SearchBox } from "react-instantsearch-hooks-web";
 import { ButtonToggle } from "./Buttons/ColorSchemeToggle";
-import { Search } from "./Search";
 
 type Props = {
   opened: boolean;
@@ -70,18 +54,6 @@ const useStyles = createStyles((theme) => ({
 export const MyHeader = ({ opened, setOpened }: Props) => {
   const matches = useMediaQuery("(min-width: 900px)", true);
   const { classes } = useStyles();
-
-  const {
-    isLoading,
-    isError,
-    error,
-    filteredRecipes,
-    onChangeHandler,
-    clearSearchHandler,
-    searchText,
-    onSubmitHandler,
-    isFetching,
-  } = useRecipesContext();
 
   const handleDrawer = useCallback(() => {
     setOpened(!opened);

@@ -206,7 +206,19 @@ export class HellofreshService {
     return response.data;
   }
 
-  async getFavoriteRecipes(token: string) {
+  async getFavoriteRecipes() {
+    const tokenResponse = await axios.post<Token>(
+      TOKEN_URL,
+      {},
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "X-Requested-With": "Stiforr",
+        },
+      },
+    );
+    await this.cacheManager.set("hf-token", tokenResponse.data, { ttl: 60 * 60 * 24 });
+    const token = await this.cacheManager.get<Token>("hf-token");
     const count = await this.prisma.popularRecipe.count({
       take: 16,
     });
@@ -225,7 +237,7 @@ export class HellofreshService {
     const response = await axios.get<RecipeQuery>(
       `${BASE_URL}take=16&sort=-favorites&min-rating=3.3`,
       {
-        headers: { authorization: token },
+        headers: { authorization: token.access_token },
       },
     );
 
