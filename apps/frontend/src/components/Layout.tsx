@@ -1,4 +1,5 @@
 import { Affix, Loader, Transition } from "@mantine/core";
+import { Suspense } from "react";
 import { InstantSearch } from "react-instantsearch-hooks-web";
 import { useIsFetching } from "react-query";
 import { algoliaSearch } from "util/algolia";
@@ -14,8 +15,10 @@ export const Layout = ({ children }) => {
           {(transitionStyles) => <Loader styles={transitionStyles} />}
         </Transition>
       </Affix>
-      <InstantSearch routing indexName="hellofresh" searchClient={algoliaSearch}>
-        <MyAppShell>{children}</MyAppShell>
+      <InstantSearch routing indexName="hellofresh" searchClient={searchClient}>
+        <MyAppShell>
+          <Suspense>{children}</Suspense>
+        </MyAppShell>
       </InstantSearch>
     </RecipesProvider>
   );

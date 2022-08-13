@@ -45,9 +45,8 @@ export class HellofreshController {
 
   @Get("favorites")
   @CacheTTL(60 * 60 * 24)
-  async getFavoriteRecipes(@Req() request: Request) {
-    const token = request.headers.authorization;
-    return await this.hellofreshService.getFavoriteRecipes(token);
+  async getFavoriteRecipes() {
+    return await this.hellofreshService.getFavoriteRecipes();
   }
 
   @Post("scrapeIngredients")

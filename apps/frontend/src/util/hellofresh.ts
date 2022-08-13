@@ -3,7 +3,7 @@ import ky from "ky";
 import { RecipeQuery } from "../types/recipes";
 import { HELLOFRESH_SEARCH_URL } from "./constants";
 
-type Token = {
+export type Token = {
   access_token: string;
   expires_in: number;
   issued_at: number;
@@ -18,6 +18,7 @@ type HelloFreshSearchOptions = {
   take?: number;
   order?: string;
   cuisine?: string;
+  token?: string;
 };
 
 const token = getCookie("hf-token") as string | undefined;
@@ -33,7 +34,7 @@ export const hellofreshGetToken = async () => {
 };
 
 export const hellofreshSearch = async (searchText: string, options?: HelloFreshSearchOptions) => {
-  const { page = 1, tag, maxPrepTime, difficulty, take = 20 } = options || {};
+  const { page = 1, tag, maxPrepTime, difficulty, take = 20, token } = options || {};
   if (!token) return await Promise.reject("No token provided");
 
   const response = await ky.get(`${HELLOFRESH_SEARCH_URL}?page=${page}&q=${searchText}`, {
@@ -45,7 +46,13 @@ export const hellofreshSearch = async (searchText: string, options?: HelloFreshS
   return data;
 };
 
-export const hellofreshSearchBySlug = async ({ slug }: { slug: string | string[] | undefined }) => {
+export const hellofreshSearchBySlug = async ({
+  slug,
+  token,
+}: {
+  slug: string | string[] | undefined;
+  token?: string;
+}) => {
   if (!slug || typeof slug !== "string") {
     return await Promise.reject("Invalid recipe slug was provided");
   }
