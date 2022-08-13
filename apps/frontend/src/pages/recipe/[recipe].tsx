@@ -11,27 +11,26 @@ import {
   Group,
   List,
   Loader,
-  LoadingOverlay,
   Text,
   Title,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
-import { GetServerSideProps } from "next";
+import ky from "ky";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { Fragment, SyntheticEvent } from "react";
-import { dehydrate, QueryClient } from "react-query";
+import { RecipeQuery } from "types/recipes";
+import { getPopularRecipes } from "util/getPopularRecipes";
 import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
 import { IngredientCard } from "../../components/IngredientsCard";
 import { useAddGroceryMutation } from "../../hooks/useAddGroceryMutation";
-import { useHellofreshBySlug } from "../../hooks/useHellofreshBySlug";
 import { AddGrocery } from "../../types/grocery";
 import {
-  FIVE_MINUTES,
   getOgImageUrl,
   HF_COVER_IMAGE_URL,
   HF_ICON_IMAGE_URL,
@@ -39,7 +38,7 @@ import {
   HF_STEP_IMAGE_URL,
   VERCEL_URL,
 } from "../../util/constants";
-import { hellofreshSearchBySlug } from "../../util/hellofresh";
+import { hellofreshSearchBySlug, Token } from "../../util/hellofresh";
 
 const LazyImage = dynamic(() => import("next/image"));
 
@@ -47,32 +46,61 @@ interface Params extends ParsedUrlQuery {
   recipe: string;
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  ctx.res.setHeader("Cache-Control", `public, s-maxage=60, stale-while-revalidate=${FIVE_MINUTES}`);
-  const queryClient = new QueryClient();
-  const { recipe } = ctx.params as Params;
+const token = ky
+  .post(
+    "https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials&scope=public&locale=en-US&country=us",
+  )
+  .json<Token>();
 
-  await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], () =>
-    hellofreshSearchBySlug({ slug: recipe }),
-  );
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const { access_token } = await token;
+  const slug = params?.recipe;
+  if (typeof slug !== "string") throw new Error("Invalid slug type in getStaticProps");
+
+  const recipes = await hellofreshSearchBySlug({ slug, token: access_token });
 
   return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
+    props: { recipes },
   };
 };
 
-const Recipe = () => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  const popularRecipes = await getPopularRecipes();
+  const slugs = popularRecipes.items.map((item) => item.slug);
+  const paths = slugs.map((slug) => ({ params: { recipe: slug } }));
+
+  return {
+    paths: paths,
+    fallback: "blocking",
+  };
+};
+
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+//   ctx.res.setHeader("Cache-Control", `public, s-maxage=60, stale-while-revalidate=${FIVE_MINUTES}`);
+//   const queryClient = new QueryClient();
+//   const { recipe } = ctx.params as Params;
+
+//   await queryClient.prefetchQuery(["hellofresh-by-slug", recipe], () =>
+//     hellofreshSearchBySlug({ slug: recipe }),
+//   );
+
+//   return {
+//     props: {
+//       dehydratedState: dehydrate(queryClient),
+//     },
+//   };
+// };
+
+const Recipe = ({ recipes }: { recipes: RecipeQuery }) => {
   const matches = useMediaQuery("(min-width: 900px)", true);
   const { userId } = useAuth();
   const router = useRouter();
-  const { data: recipes, isSuccess } = useHellofreshBySlug(router.query.recipe);
+  // const { data: recipes, isSuccess } = useHellofreshBySlug(router.query.recipe);
   const { mutate: addGroceryMutation, isLoading } = useAddGroceryMutation();
 
-  if (!isSuccess) {
-    return <LoadingOverlay visible />;
-  }
+  // if (!isSuccess) {
+  //   return <LoadingOverlay visible />;
+  // }
   const recipe = recipes?.items[0];
   const yields = recipe?.yields?.map((y) => y.ingredients).flat();
 
