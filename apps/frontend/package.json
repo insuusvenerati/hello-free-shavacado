@@ -22,7 +22,7 @@
     "@mantine/hooks": "5.0.2",
     "@mantine/next": "5.0.2",
     "@mantine/notifications": "5.0.2",
-    "@mantine/nprogress": "5.0.2",
+    "@mantine/nprogress": "5.1.6",
     "@meilisearch/instant-meilisearch": "0.8.1",
     "algoliasearch": "4.14.2",
     "cookies-next": "2.1.1",
