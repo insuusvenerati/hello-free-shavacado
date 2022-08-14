@@ -10,9 +10,10 @@ import { Cron, CronExpression } from "@nestjs/schedule";
 import { Ingredient, PopularRecipe, Prisma } from "@prisma/client";
 import axios from "axios";
 import { Cache } from "cache-manager";
+import MeiliSearch from "meilisearch";
 import { PrismaService } from "src/prisma.service";
 import { RecipeQuery } from "src/types/recipes";
-import MeiliSearch from "meilisearch";
+import { hellofreshIndex } from "src/util/algolia";
 
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 const CUISINE_URL = `https://gw.hellofresh.com/api/cuisines?country=us&locale=en-US&take=250`;
@@ -54,7 +55,7 @@ export class HellofreshService {
     );
     await this.cacheManager.set("hf-token", tokenResponse.data, { ttl: 60 * 60 * 24 });
     for (let skip = 0; skip <= 3750; skip += 250) {
-      console.log(skip);
+      this.logger.log(`Skip: ${skip}`);
       const token = await this.cacheManager.get<Token>("hf-token");
       const response = await axios.get(`${BASE_URL}take=250&skip=${skip}`, {
         headers: { authorization: `Bearer ${token.access_token}` },
@@ -82,28 +83,38 @@ export class HellofreshService {
     const allRecipesQuery = await this.prisma.hellofresh.findMany();
 
     const hellofreshDocuments = allRecipesQuery.map((recipe: any) => {
+      const ingredients = recipe.recipe.ingredients.map((ing) => ({ name: ing.name }));
+      const tags = recipe.recipe.tags.map((tag) => ({ name: tag.name }));
       return {
         name: recipe.name,
         description: recipe.description,
         id: recipe.id,
-        ingredients: recipe.recipe.ingredients,
-        tags: recipe.recipe.tags,
+        ingredients: ingredients,
+        tags: tags,
         slug: recipe.recipe.slug,
         imagePath: recipe.recipe.imagePath,
-        allergens: recipe.recipe.allergens,
-        averageRating: recipe.recipe.averageRating,
       };
     });
+    const algoliaIndexResponse = await hellofreshIndex
+      .saveObjects(hellofreshDocuments, { autoGenerateObjectIDIfNotExist: true })
+      .wait();
 
-    await client.index("hellofresh").addDocuments(hellofreshDocuments);
-
-    await client.index("hellofresh").updateSearchableAttributes(["name", "description"]);
-    await client
+    const meiliAddDocumentsResponse = await client
       .index("hellofresh")
-      .updateFilterableAttributes(["ingredients.name", "tags.name", "allergens.name"]);
+      .addDocuments(hellofreshDocuments);
 
-    await client.index("hellofresh").updateSortableAttributes(["name", "averageRating"]);
-    return { response: "Recipes scraped successfully" };
+    const meiliUpdateSettingsResponse = await client.index("hellofresh").updateSettings({
+      searchableAttributes: ["name", "description"],
+      filterableAttributes: ["ingredients.name", "tags.name", "allergens.name"],
+      sortableAttributes: ["name", "averageRating"],
+    });
+
+    return {
+      message: "Recipes scraped successfully",
+      algoliaIndexResponse,
+      meiliAddDocumentsResponse,
+      meiliUpdateSettingsResponse,
+    };
   }
 
   async scrapeIngredients() {
