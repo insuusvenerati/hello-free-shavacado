@@ -1,13 +1,13 @@
 import { LinkIcon, TrashIcon } from "@heroicons/react/outline";
 import { ActionIcon, Avatar, Group, List, Paper, Text, Tooltip } from "@mantine/core";
 import { NextLink } from "@mantine/next";
+import { useGetRecipeById } from "hooks/useGetRecipeById";
 import { useDeleteFavoriteRecipe } from "../hooks/useDeleteFavoriteRecipe";
-import { useHellofreshBySlug } from "../hooks/useHellofreshBySlug";
 import { FavoritedRecipe } from "../types/favoriteRecipe";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
 
 export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedRecipe }) => {
-  const { data: recipe, isSuccess } = useHellofreshBySlug(favoritedRecipe?.slug);
+  const { data: recipe, isSuccess } = useGetRecipeById(favoritedRecipe?.uuid);
   const { mutate } = useDeleteFavoriteRecipe(favoritedRecipe.id);
 
   if (!isSuccess) return null;
@@ -25,7 +25,7 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
         }
       >
         <Group noWrap>
-          <Tooltip label={recipe?.items[0]?.name} withArrow>
+          <Tooltip label={recipe.name} withArrow>
             <NextLink
               style={{
                 maxWidth: 100,
@@ -33,11 +33,11 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
                 overflow: "hidden",
                 textOverflow: "ellipsis",
               }}
-              href={recipe?.items[0]?.websiteUrl}
+              href={recipe.websiteUrl}
               key={favoritedRecipe?.id}
               target="_blank"
             >
-              <Text size="sm">{recipe?.items[0]?.name}</Text>
+              <Text size="sm">{recipe.name}</Text>
             </NextLink>
           </Tooltip>
           <Tooltip label="Delete favorite" withArrow>
@@ -46,7 +46,7 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
             </ActionIcon>
           </Tooltip>
           <Tooltip label="View Instructions">
-            <NextLink href={`/recipe/${favoritedRecipe?.slug}`}>
+            <NextLink href={`/recipe/${favoritedRecipe?.uuid}`}>
               <ActionIcon mr="xs">
                 <LinkIcon />
               </ActionIcon>

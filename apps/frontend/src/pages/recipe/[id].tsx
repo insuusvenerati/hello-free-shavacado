@@ -78,7 +78,7 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
       imagePath: ingredient.imagePath,
       userId: userId,
       slug: ingredient.slug,
-      family: ingredient.family.name,
+      // family: ingredient.family.name,
       uuid: ingredient.id,
       recipe: {
         connectOrCreate: {

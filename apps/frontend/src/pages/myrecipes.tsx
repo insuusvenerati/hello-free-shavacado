@@ -2,12 +2,12 @@ import { Container, Grid, LoadingOverlay, Title } from "@mantine/core";
 import { NextSeo } from "next-seo";
 import { useCallback, useState } from "react";
 import { useQueries } from "react-query";
+import { getRecipeById } from "util/getRecipeById";
 import { ImportedRecipeLink } from "../components/ImportedRecipeLink";
 import { RecipeCard } from "../components/RecipeCard";
 import { useRecipesContext } from "../context/RecipesContext";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
-import { hellofreshSearchBySlug } from "../util/hellofresh";
 
 const RecipeList = () => {
   // const [recipes, setRecipes] = useState<RecipeQuery[]>();
@@ -19,8 +19,8 @@ const RecipeList = () => {
   const recipeQueries = useQueries(
     favoriteRecipes?.map((recipe) => {
       return {
-        queryKey: ["recipe", recipe.slug],
-        queryFn: () => hellofreshSearchBySlug({ slug: recipe.slug }),
+        queryKey: ["recipe", recipe.uuid],
+        queryFn: () => getRecipeById({ id: recipe.uuid }),
         enabled: !(typeof favoriteRecipes === "undefined"),
       };
     }),
@@ -59,14 +59,14 @@ const RecipeList = () => {
 
       <Grid justify="center">
         {recipes &&
-          recipes?.map((items) => {
-            if (!items) return;
-            const recipe = items.items[0];
+          recipes?.map((item) => {
+            if (!item) return;
+            console.log(item);
             return (
-              <Grid.Col key={recipe.id} lg={3} md={12}>
+              <Grid.Col key={item.id} lg={3} md={12}>
                 <RecipeCard
                   handler={modalHandler}
-                  recipe={recipe}
+                  recipe={item}
                   setSelectedRecipe={setSelectedRecipe}
                 />
               </Grid.Col>

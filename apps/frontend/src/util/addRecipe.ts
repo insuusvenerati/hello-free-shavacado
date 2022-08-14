@@ -1,5 +1,4 @@
 import { SignInProps } from "@clerk/types";
-import ky from "ky";
 import { FavoritedRecipe } from "../types/favoriteRecipe";
 import { API_URL } from "./constants";
 
