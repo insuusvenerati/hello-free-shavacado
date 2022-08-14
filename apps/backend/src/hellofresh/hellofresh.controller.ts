@@ -5,6 +5,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   Query,
   Req,
@@ -29,12 +30,19 @@ export class HellofreshController {
     return this.hellofreshService.findAll(q, page, token);
   }
 
-  @Get("recipe")
+  // @Get("recipe")
+  // @UsePipes(new ValidationPipe({ transform: true }))
+  // @CacheTTL(60)
+  // findOne(@Query("q") q: string, @Req() request: Request) {
+  //   const token = request.headers.authorization;
+  //   return this.hellofreshService.findOne(q, token);
+  // }
+
+  @Get("recipe/:id")
   @UsePipes(new ValidationPipe({ transform: true }))
-  @CacheTTL(60)
-  findOne(@Query("q") q: string, @Req() request: Request) {
-    const token = request.headers.authorization;
-    return this.hellofreshService.findOne(q, token);
+  @CacheTTL(0)
+  findOneById(@Param("id") id: string) {
+    return this.hellofreshService.findOneById(id);
   }
 
   @Get("cuisines")

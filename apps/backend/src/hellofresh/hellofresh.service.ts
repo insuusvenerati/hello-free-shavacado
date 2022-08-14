@@ -214,6 +214,16 @@ export class HellofreshService {
     return response.data;
   }
 
+  async findOneById(id: string) {
+    const { recipe } = await this.prisma.hellofresh.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    return recipe;
+  }
+
   async getAllCuisines(token: string) {
     const response = await axios.get(CUISINE_URL, {
       headers: { authorization: token },

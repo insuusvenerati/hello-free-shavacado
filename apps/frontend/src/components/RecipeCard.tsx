@@ -31,7 +31,7 @@ export const RecipeCard = ({ recipe }: Props) => {
         />
       </Card.Section>
 
-      <NextLink href={`/recipe/${recipe?.slug}`}>
+      <NextLink href={`/recipe/${recipe?.id}`}>
         <Text weight="bold">{recipe?.name}</Text>
       </NextLink>
 
