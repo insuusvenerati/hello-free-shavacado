@@ -15,7 +15,7 @@ export const Layout = ({ children }) => {
           {(transitionStyles) => <Loader styles={transitionStyles} />}
         </Transition>
       </Affix>
-      <InstantSearch routing indexName="hellofresh" searchClient={searchClient}>
+      <InstantSearch routing indexName="hellofresh" searchClient={algoliaSearch}>
         <MyAppShell>
           <Suspense>{children}</Suspense>
         </MyAppShell>
