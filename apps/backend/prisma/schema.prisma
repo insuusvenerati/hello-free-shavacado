@@ -24,22 +24,22 @@ model Ingredient {
   hasDuplicatedName Boolean?
   uuid              String?
   name              String?
-  family            Json?
   allergens         Json[]
+  family            Json?
 
   @@map("ingredient")
 }
 
 model Hellofresh {
   createdAt   DateTime?                @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime?                @updatedAt
-  textSearch  Unsupported("TSVECTOR")?
-  name        String?
-  description String?
   recipe      Json?
   id          String                   @id @default(dbgenerated("fn_ksuid()"))
+  updatedAt   DateTime?                @updatedAt
+  name        String?
+  description String?
+  textSearch  Unsupported("tsvector")? @default(dbgenerated("(setweight(to_tsvector('english'::regconfig, COALESCE(name, ''::text)), 'A'::\"char\") || setweight(to_tsvector('english'::regconfig, COALESCE(description, ''::text)), 'B'::\"char\"))"))
 
-  @@index([textSearch])
+  @@index([textSearch], type: Gin)
   @@map("hellofresh")
 }
 
@@ -55,13 +55,13 @@ model PopularRecipe {
 
 model Recipe {
   createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime? @updatedAt
   userId    String?   @map("user_id")
   name      String?
   imagePath String?   @map("image_path")
   id        String    @id @default(dbgenerated("fn_ksuid()"))
   slug      String    @unique
   uuid      String    @unique
+  updatedAt DateTime? @updatedAt
   groceries Grocery[]
 
   @@map("recipe")
@@ -69,7 +69,6 @@ model Recipe {
 
 model Grocery {
   createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt  DateTime? @updatedAt
   ingredient String
   amount     Float?
   unit       String?
@@ -80,14 +79,13 @@ model Grocery {
   slug       String
   uuid       String
   recipeId   String    @map("recipe_id")
+  updatedAt  DateTime? @updatedAt
   recipe     Recipe    @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@map("grocery")
 }
 
 model ImportedRecipe {
-  updatedAt               DateTime? @updatedAt
-  createdAt               DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   id                      String    @id @default(dbgenerated("fn_ksuid()"))
   name                    String
   image                   String
@@ -95,16 +93,18 @@ model ImportedRecipe {
   cookTime                String    @map("cook_time")
   prepTime                String    @map("prep_time")
   totalTime               String    @map("total_time")
-  recipeYield             String
-  recipeIngredients       String[]
-  recipeInstructions      String[]
+  keywords                String[]
   recipeCategories        String[]
   recipeCuisines          String[]
+  recipeIngredients       String[]
+  recipeInstructions      String[]
   recipeTypes             String[]
-  keywords                String[]
+  recipeYield             String
   cookTimeOriginalFormat  String?   @map("cooktime_original_format")
   prepTimeOriginalFormat  String?   @map("preptime_original_format")
   totalTimeOriginalFormat String?   @map("totaltime_original_format")
   url                     String
   userId                  String    @map("user_id")
+  createdAt               DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime? @updatedAt
 }
