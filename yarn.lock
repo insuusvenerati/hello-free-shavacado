@@ -2723,12 +2723,22 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@clerk/backend-core@^1.14.1":
-  version "1.14.1"
-  resolved "https://registry.yarnpkg.com/@clerk/backend-core/-/backend-core-1.14.1.tgz#20dd5c2f45a9683cc579d0a85ffd7be897ae804b"
-  integrity sha512-6iQRD1FgPISAHK0VJ3gIXzodBL2vwq9RXjpZI0qYyCB8upzSqMmYRijb08igKm2yyCOUjV0OACuCg4rgxQW/iA==
+"@clerk/backend-core@^1.14.2":
+  version "1.14.2"
+  resolved "https://registry.yarnpkg.com/@clerk/backend-core/-/backend-core-1.14.2.tgz#8da6c7deb18c39e9f8854140e5b3443eff1d69d0"
+  integrity sha512-wJ09ydaVZewYRYKPHM0+3O3ZprWfPzzINc/Rwr9N70kwFc+KcHT2iR7K5ocAw1+DyKUPisEQ1NZuTsDzhK/wDw==
   dependencies:
     "@clerk/types" "^2.21.0"
+    query-string "^7.0.1"
+    snakecase-keys "^5.1.2"
+    tslib "^2.3.1"
+
+"@clerk/backend-core@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@clerk/backend-core/-/backend-core-2.0.2.tgz#b770b4c96ab92e2991d07b420f359e886bbc6aa7"
+  integrity sha512-N0Rct5AofdfNA3KXAzQXFJj/cg9C7cyJS3EnBjHdOhdNEOhMW9b/eWwak7ATV9hupVxZdxfsDjpppkSx4p0EnA==
+  dependencies:
+    "@clerk/types" "^3.1.0"
     query-string "^7.0.1"
     snakecase-keys "^5.1.2"
     tslib "^2.3.1"
@@ -2742,12 +2752,12 @@
     swr "^1.3.0"
     tslib "^2.3.1"
 
-"@clerk/clerk-sdk-node@^3.9.1":
-  version "3.9.1"
-  resolved "https://registry.yarnpkg.com/@clerk/clerk-sdk-node/-/clerk-sdk-node-3.9.1.tgz#5e4be91a5739a9d1dc2ff30677064e1708b9aaa9"
-  integrity sha512-T9z9WXTybaUNpksAyXIuvC3OiLig5UPV5RGm8CsUH0nWhXZvSXCtzHfBoD2aBwqy2s2rff/nNv2HnGIijMQ8CA==
+"@clerk/clerk-sdk-node@^3.9.2":
+  version "3.9.2"
+  resolved "https://registry.yarnpkg.com/@clerk/clerk-sdk-node/-/clerk-sdk-node-3.9.2.tgz#e9e643eaca84b92e849e3ec15cb7410b6c704f39"
+  integrity sha512-76EH7znciBaF0G2n9tpuoUWl6KFjQwdsEC0attvoLTqaLhA2Kf73qk7CgOJFJpzpFWpaFoMyX6irrsPeh5auTA==
   dependencies:
-    "@clerk/backend-core" "^1.14.1"
+    "@clerk/backend-core" "^1.14.2"
     "@clerk/types" "^2.21.0"
     "@peculiar/webcrypto" "^1.2.3"
     camelcase-keys "^6.2.2"
@@ -2759,24 +2769,24 @@
     snakecase-keys "^3.2.1"
     tslib "^2.3.1"
 
-"@clerk/edge@^1.7.1":
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/@clerk/edge/-/edge-1.7.1.tgz#074625fbb97e31eee908053999ca0006beb40ee8"
-  integrity sha512-ZYyNaL8pHSWiXb9z9ZbebqkyA1UsjSw00/FlEnrGFEI1/3TNZNsyWNojnpv+UO6lOui90r+Fd6XWoIOnconU9A==
+"@clerk/edge@^1.7.2":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@clerk/edge/-/edge-1.7.5.tgz#1f2fb7ed4576e8617649c13c99d7254e01c11357"
+  integrity sha512-PTKWufY6Ji6s9fGqbZkMyYAIgPTq644hxsM5WWLGNZqmPOeLzLy8eP3gD7PN8vZJUuYO/y/XJVuvBXeM907sNw==
   dependencies:
-    "@clerk/backend-core" "^1.14.1"
-    "@clerk/types" "^2.21.0"
+    "@clerk/backend-core" "^2.0.2"
+    "@clerk/types" "^3.1.0"
     "@peculiar/webcrypto" "^1.2.3"
     next "^12.2.0"
 
-"@clerk/nextjs@3.8.2":
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/@clerk/nextjs/-/nextjs-3.8.2.tgz#f6a442291dece1ad766c35ed18d42d777e4ea4d6"
-  integrity sha512-F90/BUoJqm24dOX+ypAfckLz3BfzdsfhxT0fA630c75wzwJ9Qkoc6qoJcBQ/fhJAAwqAGmiDWk41u8oODjsrjQ==
+"@clerk/nextjs@3.8.3":
+  version "3.8.3"
+  resolved "https://registry.yarnpkg.com/@clerk/nextjs/-/nextjs-3.8.3.tgz#6b5e0cd8baa48a07f3cad678125f0e89f4cad034"
+  integrity sha512-1gUmiPd8vIdjmE5S3eO66lZkAxrksH+5U+/YOXlwrEzdsVn0E7Dti21vTaBwhAM6+N/OZR3Mtd8V0d+nfMmV0Q==
   dependencies:
     "@clerk/clerk-react" "^3.5.1"
-    "@clerk/clerk-sdk-node" "^3.9.1"
-    "@clerk/edge" "^1.7.1"
+    "@clerk/clerk-sdk-node" "^3.9.2"
+    "@clerk/edge" "^1.7.2"
     "@clerk/types" "^2.21.0"
     tslib "^2.3.1"
 
@@ -2784,6 +2794,11 @@
   version "2.21.0"
   resolved "https://registry.yarnpkg.com/@clerk/types/-/types-2.21.0.tgz#a64b07a9686d2835bdda5da9b72011534b86218d"
   integrity sha512-SZ0Lapx5ddQ8aVuKbhdxqyTyBi0ijr8lCEmfxj7nQ5Bp5Fex2oeAPLkXx+lMfXjD8+/zw9unJhgxg8JpUCgDDA==
+
+"@clerk/types@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@clerk/types/-/types-3.1.0.tgz#f363a966c4f043eadfede9daba749642b03f9dda"
+  integrity sha512-PNJoyNhjRzZ+jpmN+J5GWeZK0e/SJXMz+K4wtv2PLxuTuQ3MWxRPhCV8cXhmo7eDfOU0IfwhdER+bGhCALck/w==
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
