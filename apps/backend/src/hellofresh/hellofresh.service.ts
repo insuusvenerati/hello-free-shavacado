@@ -189,7 +189,9 @@ export class HellofreshService {
     return response.data;
   }
 
-  async findOne(q: string, token: string) {
+  async findOne(q: string, tokenFromReq: string) {
+    const token = await this.cacheManager.get<Token>("hf-token");
+
     const dbSearch = await this.prisma.hellofresh.findFirst({
       where: {
         name: {
@@ -197,9 +199,12 @@ export class HellofreshService {
         },
       },
     });
+
     if (dbSearch) return dbSearch;
     const response = await axios.get(`${BASE_URL}take=1&q=${q}`, {
-      headers: { authorization: token },
+      headers: {
+        authorization: `Bearer ${token.access_token ? token.access_token : tokenFromReq}`,
+      },
     });
 
     if (response.status !== 200) {
@@ -248,7 +253,7 @@ export class HellofreshService {
     const response = await axios.get<RecipeQuery>(
       `${BASE_URL}take=16&sort=-favorites&min-rating=3.3`,
       {
-        headers: { authorization: token.access_token },
+        headers: { authorization: `Bearer ${token.access_token}` },
       },
     );
 
