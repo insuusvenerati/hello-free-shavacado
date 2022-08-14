@@ -236,19 +236,19 @@ export class HellofreshService {
     await this.cacheManager.set("hf-token", tokenResponse.data, { ttl: 60 * 60 * 24 });
     const token = await this.cacheManager.get<Token>("hf-token");
     const count = await this.prisma.popularRecipe.count({
-      take: 16,
+      take: 250,
     });
 
     const total = await this.prisma.popularRecipe.count();
 
     const popularRecipes = await this.prisma.popularRecipe.findMany({
-      take: 16,
+      take: 250,
     });
 
     const formattedResults = popularRecipes.map((value) => value.recipe);
-    const results = { take: 16, count, total, items: [...formattedResults] };
+    const results = { take: 250, count, total, items: [...formattedResults] };
 
-    if (popularRecipes.length >= 16) return results;
+    if (popularRecipes.length >= 249) return results;
 
     const response = await axios.get<RecipeQuery>(
       `${BASE_URL}take=16&sort=-favorites&min-rating=3.3`,
