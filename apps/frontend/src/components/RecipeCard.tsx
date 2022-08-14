@@ -6,14 +6,48 @@ import { AddToFavorites } from "./Buttons/AddToFavorites";
 
 type Props = {
   recipe: RecipeHit;
+  imported: boolean;
 };
 
-export const RecipeCard = ({ recipe }: Props) => {
+export const RecipeCard = ({ recipe, imported }: Props) => {
   if (!recipe) {
     return (
       <Container>
         <LoadingOverlay visible />
       </Container>
+    );
+  }
+
+  if (imported) {
+    return (
+      <Card shadow="sm">
+        <Card.Section mb="sm">
+          <Image
+            alt={recipe?.name}
+            height={800}
+            src={recipe.image}
+            width={960}
+            layout="responsive"
+          />
+        </Card.Section>
+
+        <NextLink href={`/imported-recipe/${recipe?.id}`}>
+          <Text weight="bold">{recipe?.name}</Text>
+        </NextLink>
+
+        {recipe?.tags?.length > 0 &&
+          recipe?.tags?.map((tag) => (
+            <Badge key={`${recipe?.id}-${tag?.id}-${Math.random()}`} size="xs">
+              {tag.name}
+            </Badge>
+          ))}
+        <AddToFavorites
+          fullWidth
+          selectedRecipe={recipe}
+          sx={{ marginTop: "14px" }}
+          variant="light"
+        />
+      </Card>
     );
   }
 
