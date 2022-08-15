@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import { useAuth } from "@clerk/nextjs";
+import { CustomNextLink } from "@components/CustomNextLink";
 import { ArrowLeftIcon, DocumentIcon } from "@heroicons/react/outline";
 import {
   Affix,
@@ -16,7 +17,6 @@ import {
   Title,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { NextLink } from "@mantine/next";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
@@ -155,9 +155,9 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
               <Group position={matches ? "right" : "center"}>
                 <AddToFavorites selectedRecipe={recipe} />
                 {recipe?.cardLink && (
-                  <NextLink href={recipe?.cardLink} target="_blank">
+                  <CustomNextLink href={recipe?.cardLink} target="_blank">
                     <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
-                  </NextLink>
+                  </CustomNextLink>
                 )}
                 <form onSubmit={handleAddAllIngredients}>
                   <Button loading={isLoading} type="submit">

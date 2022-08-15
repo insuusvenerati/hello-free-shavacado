@@ -1,10 +1,10 @@
 import { LinkIcon, TrashIcon } from "@heroicons/react/outline";
 import { ActionIcon, Avatar, Group, List, Paper, Text, Tooltip } from "@mantine/core";
-import { NextLink } from "@mantine/next";
 import { useGetRecipeById } from "hooks/useGetRecipeById";
 import { useDeleteFavoriteRecipe } from "../hooks/useDeleteFavoriteRecipe";
 import { FavoritedRecipe } from "../types/favoriteRecipe";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
+import { CustomNextLink } from "./CustomNextLink";
 
 export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedRecipe }) => {
   const { data: recipe, isSuccess } = useGetRecipeById(favoritedRecipe?.uuid);
@@ -26,7 +26,7 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
       >
         <Group noWrap>
           <Tooltip label={recipe.name} withArrow>
-            <NextLink
+            <CustomNextLink
               style={{
                 maxWidth: 100,
                 whiteSpace: "nowrap",
@@ -38,7 +38,7 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
               target="_blank"
             >
               <Text size="sm">{recipe.name}</Text>
-            </NextLink>
+            </CustomNextLink>
           </Tooltip>
           <Tooltip label="Delete favorite" withArrow>
             <ActionIcon color="red" onClick={mutate}>
@@ -46,11 +46,11 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
             </ActionIcon>
           </Tooltip>
           <Tooltip label="View Instructions">
-            <NextLink href={`/recipe/${favoritedRecipe?.uuid}`}>
+            <CustomNextLink href={`/recipe/${favoritedRecipe?.uuid}`}>
               <ActionIcon mr="xs">
                 <LinkIcon />
               </ActionIcon>
-            </NextLink>
+            </CustomNextLink>
           </Tooltip>
         </Group>
       </List.Item>

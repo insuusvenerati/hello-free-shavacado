@@ -1,8 +1,8 @@
 import { Badge, Card, Container, LoadingOverlay, Text } from "@mantine/core";
-import { NextLink } from "@mantine/next";
 import Image from "next/image";
 import { RecipeHit } from "types/recipeSearchQuery";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
+import { CustomNextLink } from "./CustomNextLink";
 
 type Props = {
   recipe: RecipeHit;
@@ -31,9 +31,9 @@ export const RecipeCard = ({ recipe, imported }: Props) => {
           />
         </Card.Section>
 
-        <NextLink href={`/imported-recipe/${recipe?.id}`}>
+        <CustomNextLink href={`/imported-recipe/${recipe?.id}`}>
           <Text weight="bold">{recipe?.name}</Text>
-        </NextLink>
+        </CustomNextLink>
 
         {recipe?.tags?.length > 0 &&
           recipe?.tags?.map((tag) => (
@@ -65,9 +65,9 @@ export const RecipeCard = ({ recipe, imported }: Props) => {
         />
       </Card.Section>
 
-      <NextLink href={`/recipe/${recipe?.id}`}>
+      <CustomNextLink href={`/recipe/${recipe?.id}`}>
         <Text weight="bold">{recipe?.name}</Text>
-      </NextLink>
+      </CustomNextLink>
 
       {recipe?.tags?.length > 0 &&
         recipe?.tags?.map((tag) => (

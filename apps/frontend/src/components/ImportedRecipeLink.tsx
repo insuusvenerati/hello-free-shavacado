@@ -1,8 +1,8 @@
 import { LinkIcon, TrashIcon } from "@heroicons/react/outline";
 import { ActionIcon, Avatar, Group, List, Paper, Text, Tooltip } from "@mantine/core";
-import { NextLink } from "@mantine/next";
 import { useDeleteImportedRecipeMutation } from "../hooks/useDeleteImportedRecipeMutation";
 import { ImportedRecipe } from "../types/importedRecipe";
+import { CustomNextLink } from "./CustomNextLink";
 
 export const ImportedRecipeLink = ({ recipe }: { recipe: ImportedRecipe }) => {
   const { mutate } = useDeleteImportedRecipeMutation();
@@ -11,7 +11,7 @@ export const ImportedRecipeLink = ({ recipe }: { recipe: ImportedRecipe }) => {
       <List.Item icon={<Avatar alt={recipe?.name} radius={0} size="lg" src={recipe?.image} />}>
         <Group noWrap>
           <Tooltip label={recipe?.name} withArrow>
-            <NextLink href={recipe?.url} key={recipe?.id} target="_blank">
+            <CustomNextLink href={recipe?.url} key={recipe?.id} target="_blank">
               <Text
                 style={{
                   maxWidth: 100,
@@ -23,7 +23,7 @@ export const ImportedRecipeLink = ({ recipe }: { recipe: ImportedRecipe }) => {
               >
                 {recipe?.name}
               </Text>
-            </NextLink>
+            </CustomNextLink>
           </Tooltip>
           <Tooltip label="Delete favorite" withArrow>
             <ActionIcon onClick={() => mutate(recipe?.id)} color="red">
@@ -31,11 +31,11 @@ export const ImportedRecipeLink = ({ recipe }: { recipe: ImportedRecipe }) => {
             </ActionIcon>
           </Tooltip>
           <Tooltip label="View Instructions">
-            <NextLink href={`/imported-recipe/${recipe?.id}`}>
+            <CustomNextLink href={`/imported-recipe/${recipe?.id}`}>
               <ActionIcon mr="xs">
                 <LinkIcon />
               </ActionIcon>
-            </NextLink>
+            </CustomNextLink>
           </Tooltip>
         </Group>
       </List.Item>
