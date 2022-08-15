@@ -22,25 +22,25 @@ export const ImportedRecipeLink = ({ recipe }: { recipe: ImportedRecipe }) => {
     <Paper mb="md" shadow="xs" withBorder>
       <List.Item icon={<Avatar alt={recipe?.name} radius={0} size="lg" src={recipe?.image} />}>
         <Group noWrap>
-          <Tooltip label={recipe?.name} withArrow>
-            <CustomNextLink href={recipe?.url} key={recipe?.id} target="_blank">
+          <CustomNextLink href={recipe?.url} key={recipe?.id} target="_blank">
+            <Tooltip label={recipe?.name} withArrow>
               <Text className={classes.linkText} size="sm">
                 {recipe?.name}
               </Text>
-            </CustomNextLink>
-          </Tooltip>
+            </Tooltip>
+          </CustomNextLink>
           <Tooltip label="Delete favorite" withArrow>
             <ActionIcon onClick={() => mutate(recipe?.id)} color="red">
               <TrashIcon />
             </ActionIcon>
           </Tooltip>
-          <Tooltip label="View Instructions">
-            <CustomNextLink href={`/imported-recipe/${recipe?.id}`}>
+          <CustomNextLink href={`/imported-recipe/${recipe?.id}`}>
+            <Tooltip label="View Instructions">
               <ActionIcon mr="xs">
                 <LinkIcon />
               </ActionIcon>
-            </CustomNextLink>
-          </Tooltip>
+            </Tooltip>
+          </CustomNextLink>
         </Group>
       </List.Item>
     </Paper>

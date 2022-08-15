@@ -17,6 +17,7 @@ import {
   Transition,
 } from "@mantine/core";
 import { useState } from "react";
+import { CurrentRefinements } from "react-instantsearch-hooks-web";
 import { useAddImportedRecipeMutation } from "../hooks/useAddImportedRecipeMutation";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
@@ -127,7 +128,7 @@ export const MyAppShell = ({ children }: AppShellProps) => {
                 <Group style={styles}>
                   <ClearRefinements />
 
-                  {/* <CurrentRefinements /> */}
+                  <CurrentRefinements style={{ maxWidth: 300 }} />
 
                   <Group>
                     <Title order={4}>Ingredients</Title>
@@ -139,10 +140,10 @@ export const MyAppShell = ({ children }: AppShellProps) => {
                     <RefinementList limit={5} showMore attribute="tags.name" />
                   </Group>
 
-                  <Group>
+                  {/* <Group>
                     <Title order={4}>Allergens</Title>
                     <RefinementList limit={5} showMore attribute="allergens.name" />
-                  </Group>
+                  </Group> */}
                 </Group>
               </>
             )}

@@ -1,8 +1,8 @@
 import { Hits } from "@components/Hits";
-import { Avatar, Center, Grid, Group, MantineColor, SelectItemProps, Text } from "@mantine/core";
+import { Avatar, Container, Grid, Group, MantineColor, SelectItemProps, Text } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
 import { forwardRef, useEffect } from "react";
-import { Pagination } from "react-instantsearch-hooks-web";
+import { Pagination, SortBy } from "react-instantsearch-hooks-web";
 import { hellofreshGetToken } from "../util/hellofresh";
 
 // export const getServerSideProps: GetServerSideProps = async ({ res }) => {
@@ -70,16 +70,22 @@ const Home = () => {
 
   return (
     <>
-      <Center mb={5} mt={5}>
-        <Grid columns={1} justify="center">
-          <Grid.Col span={1}>
+      <Container>
+        <Grid columns={6} justify="center">
+          <Grid.Col md={3}>
             <Pagination />
-            {/* {recipesTotal && recipesTotal > 0 && (
-              <Pagination onChange={pageChangeHandler} page={page} total={recipesTotal} />
-            )} */}
+          </Grid.Col>
+          <Grid.Col md={1}>
+            <SortBy
+              items={[
+                { label: "Rating Desc", value: "hellofresh_rating_desc" },
+                { label: "Rating Asc", value: "hellofresh_rating_asc" },
+                { label: "Featured", value: "hellofresh" },
+              ]}
+            />
           </Grid.Col>
         </Grid>
-      </Center>
+      </Container>
 
       <Grid columns={4} justify="center">
         <Hits />

@@ -93,6 +93,7 @@ export class HellofreshService {
         tags: tags,
         slug: recipe.recipe.slug,
         imagePath: recipe.recipe.imagePath,
+        rating: recipe.recipe.averageRating,
       };
     });
     const algoliaIndexResponse = await hellofreshIndex
