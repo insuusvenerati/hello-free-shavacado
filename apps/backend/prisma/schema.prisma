@@ -70,7 +70,7 @@ model Recipe {
 model Grocery {
   createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   ingredient String
-  amount     Float?
+  amount     Float?    @default(1)
   unit       String?
   imagePath  String?   @map("image_path")
   id         String    @id @default(dbgenerated("fn_ksuid()"))
