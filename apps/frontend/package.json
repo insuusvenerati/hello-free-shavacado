@@ -30,7 +30,7 @@
     "ky": "0.31.1",
     "ky-universal": "0.10.1",
     "next": "12.2.5",
-    "next-axiom": "0.12.1",
+    "next-axiom": "0.13.0",
     "next-compose-plugins": "^2.2.1",
     "next-pwa": "5.5.5",
     "next-seo": "4.29.0",
