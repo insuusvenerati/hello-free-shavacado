@@ -2766,12 +2766,12 @@
     "@mantine/utils" "5.1.6"
     react-transition-group "4.4.2"
 
-"@mantine/nprogress@5.1.6":
-  version "5.1.6"
-  resolved "https://registry.yarnpkg.com/@mantine/nprogress/-/nprogress-5.1.6.tgz#e6b9df5f3d4bce47f002a4461145c48e0178cb4e"
-  integrity sha512-kxxZLJiTYGm5RJIHWf7wfCzTFGRGG5Z0aVD11AfDUcqQ16jmGpRkOCD4GnTGsyaGU6C8crtDvYYer1JAshARRg==
+"@mantine/nprogress@5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@mantine/nprogress/-/nprogress-5.2.0.tgz#b68fe284decfda1f7f646f02d10fa7be4e33cf53"
+  integrity sha512-/dgFBqtXGT42WlHJfY1PGfDSJ8m/hx/3LOlN7knedQdShjZLdHJvSJETJ5ElEdktBM5Us/6wqNymqyF50fvrcQ==
   dependencies:
-    "@mantine/utils" "5.1.6"
+    "@mantine/utils" "5.2.0"
 
 "@mantine/ssr@5.1.6":
   version "5.1.6"
@@ -2793,6 +2793,11 @@
   version "5.1.6"
   resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.1.6.tgz#992cd1e8850467533aa88dc5fd933650674abf5e"
   integrity sha512-y7va2keQ+TPwn2j668r889NhQWO0OhSvaxT5P8n2iBaTyPg+Xp5Jm2IE5UjI+OrZErrgmQq1sxbfg6v5vdK+0A==
+
+"@mantine/utils@5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.2.0.tgz#7b0488a96198bd06bfdf16ce088b61b3afd2bd9b"
+  integrity sha512-wDJKbW5EYboTSNkWhIXKdyDgBVxGLmdkGL4O94iNtZbRy5zoouGaEP3sW88GgIhyFmeVlnu+Mdzzsd76IsX/NA==
 
 "@meilisearch/instant-meilisearch@0.8.1":
   version "0.8.1"
