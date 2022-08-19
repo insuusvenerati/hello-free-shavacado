@@ -18,7 +18,7 @@
     "@emotion/react": "11.10.0",
     "@emotion/server": "11.10.0",
     "@heroicons/react": "1.0.6",
-    "@mantine/core": "5.1.6",
+    "@mantine/core": "5.2.0",
     "@mantine/hooks": "5.1.6",
     "@mantine/next": "5.1.6",
     "@mantine/notifications": "5.1.6",
