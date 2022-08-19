@@ -20,7 +20,7 @@
     "@heroicons/react": "1.0.6",
     "@mantine/core": "5.1.6",
     "@mantine/hooks": "5.1.6",
-    "@mantine/next": "5.1.6",
+    "@mantine/next": "5.2.0",
     "@mantine/notifications": "5.1.6",
     "@mantine/nprogress": "5.1.6",
     "@meilisearch/instant-meilisearch": "0.8.1",
