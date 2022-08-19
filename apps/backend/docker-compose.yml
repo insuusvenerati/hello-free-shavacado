@@ -2,7 +2,7 @@ version: "2"
 
 services:
   redis:
-    image: docker.io/bitnami/redis:6.2
+    image: docker.io/bitnami/redis:6.2.7
     restart: unless-stopped
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
@@ -35,3 +35,11 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - 8080:80
+
+  meilisearch:
+    image: getmeili/meilisearch:v0.28
+    ports:
+      - 7700:7700
+    environment:
+      - MEILI_MASTER_KEY=MASTER_KEY
+      - MEILI_ENV=development

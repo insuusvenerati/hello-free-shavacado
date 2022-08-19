@@ -1,18 +1,172 @@
-import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
+import {
+  CACHE_MANAGER,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from "@nestjs/common";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import { Ingredient, PopularRecipe, Prisma } from "@prisma/client";
 import axios from "axios";
+import { Cache } from "cache-manager";
+import MeiliSearch from "meilisearch";
 import { PrismaService } from "src/prisma.service";
-import { RecipeQuery } from "src/recipes";
+import { RecipeQuery } from "src/types/recipes";
+import { hellofreshIndex } from "src/util/algolia";
 
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 const CUISINE_URL = `https://gw.hellofresh.com/api/cuisines?country=us&locale=en-US&take=250`;
 
+type IngredientsResponse = {
+  items: Ingredient[];
+};
+
+type Token = {
+  access_token: string;
+  expires_in: number;
+  issued_at: number;
+  token_type: string;
+};
+
+const TOKEN_URL =
+  "https://stiforr-cors-anywhere.fly.dev/https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials";
+
+const client = new MeiliSearch({
+  host: process.env.MEILISEARCH_HOST || "http://localhost:7700",
+  apiKey: process.env.MEILISEARCH_KEY || "MASTER_KEY",
+});
+
 @Injectable()
 export class HellofreshService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, @Inject(CACHE_MANAGER) private cacheManager: Cache) {}
   private readonly logger = new Logger(HellofreshService.name);
 
+  async scrapeRecipes() {
+    const tokenResponse = await axios.post<Token>(
+      TOKEN_URL,
+      {},
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "X-Requested-With": "Stiforr",
+        },
+      },
+    );
+    await this.cacheManager.set("hf-token", tokenResponse.data, { ttl: 60 * 60 * 24 });
+    for (let skip = 0; skip <= 3750; skip += 250) {
+      this.logger.log(`Skip: ${skip}`);
+      const token = await this.cacheManager.get<Token>("hf-token");
+      const response = await axios.get(`${BASE_URL}take=250&skip=${skip}`, {
+        headers: { authorization: `Bearer ${token.access_token}` },
+      });
+
+      response.data.items.map(async (item) => {
+        await this.prisma.hellofresh.upsert({
+          where: { id: item.id },
+          create: {
+            name: item.name,
+            id: item.id,
+            recipe: item,
+            description: item.description,
+          },
+          update: {
+            name: item.name,
+            id: item.id,
+            recipe: item,
+            description: item.description,
+          },
+        });
+      });
+    }
+
+    const allRecipesQuery = await this.prisma.hellofresh.findMany();
+
+    const hellofreshDocuments = allRecipesQuery.map((recipe: any) => {
+      const ingredients = recipe.recipe.ingredients.map((ing) => ({ name: ing.name }));
+      const tags = recipe.recipe.tags.map((tag) => ({ name: tag.name }));
+      return {
+        name: recipe.name,
+        description: recipe.description,
+        id: recipe.id,
+        ingredients: ingredients,
+        tags: tags,
+        slug: recipe.recipe.slug,
+        imagePath: recipe.recipe.imagePath,
+        rating: recipe.recipe.averageRating,
+      };
+    });
+    const algoliaIndexResponse = await hellofreshIndex
+      .saveObjects(hellofreshDocuments, { autoGenerateObjectIDIfNotExist: true })
+      .wait();
+
+    const meiliAddDocumentsResponse = await client
+      .index("hellofresh")
+      .addDocuments(hellofreshDocuments);
+
+    const meiliUpdateSettingsResponse = await client.index("hellofresh").updateSettings({
+      searchableAttributes: ["name", "description"],
+      filterableAttributes: ["ingredients.name", "tags.name", "allergens.name"],
+      sortableAttributes: ["name", "averageRating"],
+    });
+
+    return {
+      message: "Recipes scraped successfully",
+      algoliaIndexResponse,
+      meiliAddDocumentsResponse,
+      meiliUpdateSettingsResponse,
+    };
+  }
+
+  async scrapeIngredients() {
+    for (let skip = 0; skip <= 1250; skip += 250) {
+      console.log(skip);
+      const URL = `https://gw.hellofresh.com/api/ingredients?country=us&locale=en-US&take=250&skip=${skip}`;
+      const response = await axios.get<IngredientsResponse>(URL, {
+        headers: {
+          authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjEyNjQzNjksImlhdCI6MTY1ODYzNDYyNiwiaXNzIjoic2VuZiIsImp0aSI6IjhkN2FkMjIwLTdkOTctNDQ3ZS05YjcyLThmNDA0YWE2NDk3ZiJ9.2eNOXzBTEERKHKc5d-6e5_hNGd-GCi24OShZ3qEnauE`,
+        },
+      });
+      response.data.items.map(async (item) => {
+        if (item.family === null) {
+          return;
+        }
+        await this.prisma.ingredient.upsert({
+          create: item,
+          update: item,
+          where: { id: item.id },
+        });
+      });
+    }
+    const prismaResponse = await this.prisma.ingredient.findMany();
+    await client.index<any>("ingredients").addDocuments(prismaResponse);
+  }
+
   async findAll(query: string, page: number, token: string) {
+    const tsquerySpecialChars = /[()|&:*!]/g;
+    const getQueryFromSearchPhrase = (searchPhrase: string) =>
+      searchPhrase.replace(tsquerySpecialChars, " ").trim().split(/\s+/).join(" | ");
+    const tsquery = getQueryFromSearchPhrase(query);
+
     const skip = page !== 1 ? page * 20 : 0;
+
+    const count = await this.prisma.hellofresh.count({
+      skip,
+      take: 20,
+    });
+
+    const total = await this.prisma.hellofresh.count();
+    const dbSearch: any = await this.prisma.$queryRaw`
+      SELECT recipe FROM "hellofresh"
+      WHERE "textSearch" @@ to_tsquery('english', ${tsquery})
+      ORDER BY ts_rank("textSearch", to_tsquery('english', ${tsquery})) DESC
+      LIMIT 20 OFFSET ${skip};
+    `;
+
+    const formattedResults = dbSearch.map((value) => value.recipe);
+    const results = { take: 20, skip, count, total, items: [...formattedResults] };
+    if (dbSearch.length >= 20) return results;
+
     const response = await axios.get(`${BASE_URL}take=20&q=${query}&skip=${skip}`, {
       headers: { authorization: token },
     });
@@ -21,10 +175,12 @@ export class HellofreshService {
       await this.prisma.hellofresh.upsert({
         where: { id: item.id },
         create: {
+          name: item.name,
           id: item.id,
           recipe: item,
         },
         update: {
+          name: item.name,
           id: item.id,
           recipe: item,
         },
@@ -34,9 +190,22 @@ export class HellofreshService {
     return response.data;
   }
 
-  async findOne(q: string, token: string) {
+  async findOne(q: string, tokenFromReq: string) {
+    const token = await this.cacheManager.get<Token>("hf-token");
+
+    const dbSearch = await this.prisma.hellofresh.findFirst({
+      where: {
+        name: {
+          search: q,
+        },
+      },
+    });
+
+    if (dbSearch) return dbSearch;
     const response = await axios.get(`${BASE_URL}take=1&q=${q}`, {
-      headers: { authorization: token },
+      headers: {
+        authorization: `Bearer ${token.access_token ? token.access_token : tokenFromReq}`,
+      },
     });
 
     if (response.status !== 200) {
@@ -44,6 +213,16 @@ export class HellofreshService {
     }
 
     return response.data;
+  }
+
+  async findOneById(id: string) {
+    const { recipe } = await this.prisma.hellofresh.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    return recipe;
   }
 
   async getAllCuisines(token: string) {
@@ -54,14 +233,70 @@ export class HellofreshService {
     return response.data;
   }
 
-  async getFavoriteRecipes(token: string) {
+  async getFavoriteRecipes() {
+    const tokenResponse = await axios.post<Token>(
+      TOKEN_URL,
+      {},
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "X-Requested-With": "Stiforr",
+        },
+      },
+    );
+    await this.cacheManager.set("hf-token", tokenResponse.data, { ttl: 60 * 60 * 24 });
+    const token = await this.cacheManager.get<Token>("hf-token");
+    const count = await this.prisma.popularRecipe.count({
+      take: 250,
+    });
+
+    const total = await this.prisma.popularRecipe.count();
+
+    const popularRecipes = await this.prisma.popularRecipe.findMany({
+      take: 250,
+    });
+
+    const formattedResults = popularRecipes.map((value) => value.recipe);
+    const results = { take: 250, count, total, items: [...formattedResults] };
+
+    if (popularRecipes.length >= 249) return results;
+
     const response = await axios.get<RecipeQuery>(
       `${BASE_URL}take=16&sort=-favorites&min-rating=3.3`,
       {
-        headers: { authorization: token },
+        headers: { authorization: `Bearer ${token.access_token}` },
       },
     );
 
     return response.data;
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  async refreshFavoriteRecipes() {
+    const tokenResponse = await axios.post<Token>(
+      TOKEN_URL,
+      {},
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "X-Requested-With": "Stiforr",
+        },
+      },
+    );
+    await this.cacheManager.set("hf-token", tokenResponse.data, { ttl: 60 * 60 * 24 });
+    const token = await this.cacheManager.get<Token>("hf-token");
+    const response = await axios.get(`${BASE_URL}take=250&sort=-favorites&min-rating=3.3`, {
+      headers: { authorization: `Bearer ${token.access_token}` },
+    });
+
+    const popularRecipeScrapeResponse = response.data.items.map(async (item) => {
+      await this.prisma.popularRecipe.upsert({
+        create: { name: item.name, recipe: item, id: item.id },
+        update: { name: item.name, recipe: item, id: item.id },
+        where: { id: item.id },
+      });
+    }) as Prisma.Prisma__PopularRecipeClient<PopularRecipe>[];
+
+    return { response: `${popularRecipeScrapeResponse.length} popular recipes added` };
   }
 }

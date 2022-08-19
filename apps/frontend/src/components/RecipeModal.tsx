@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-no-bind */
 import { CheckCircleIcon, DocumentIcon } from "@heroicons/react/outline";
 import { Badge, Button, Card, Group, List, Modal, Text, ThemeIcon } from "@mantine/core";
-import { NextLink } from "@mantine/next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useCallback } from "react";
 import { Item } from "../types/recipes";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
+import { CustomNextLink } from "./CustomNextLink";
 import { IngredientCard } from "./IngredientsCard";
 
 type Props = {
@@ -52,9 +52,9 @@ const RecipeModal = ({ recipe, opened, onClose }: Props) => {
           <Text>{recipe?.descriptionMarkdown}</Text>
           <AddToFavorites selectedRecipe={recipe} />
           {recipe.cardLink && (
-            <NextLink href={`${recipe?.cardLink}`} target="_blank">
+            <CustomNextLink href={`${recipe?.cardLink}`} target="_blank">
               <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
-            </NextLink>
+            </CustomNextLink>
           )}
         </Group>
       </Card>

@@ -1,4 +1,3 @@
-import { withServerSideAuth } from "@clerk/nextjs/ssr";
 import {
   Card,
   Container,
@@ -7,16 +6,15 @@ import {
   Image,
   List,
   LoadingOverlay,
+  Stack,
   Text,
   Title,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { Fragment } from "react";
-import { dehydrate, QueryClient } from "react-query";
 import { useGetOneImportedRecipeQuery } from "../../hooks/useGetImportedRecipesQuery";
 import { VERCEL_URL } from "../../util/constants";
 
@@ -24,18 +22,20 @@ interface Params extends ParsedUrlQuery {
   recipe: string;
 }
 
-export const getServerSideProps: GetServerSideProps = withServerSideAuth(
-  async ({ req, params }) => {
-    const { userId } = req.auth;
-    const { recipe } = params as Params;
-    const queryClient = new QueryClient();
-    await queryClient.prefetchQuery(["importedRecipe", userId, recipe]);
+// export const getServerSideProps: GetServerSideProps = withServerSideAuth(
+//   async ({ req, params }) => {
+//     const { userId } = req.auth;
+//     const { recipe } = params as Params;
+//     const queryClient = new QueryClient();
+//     await queryClient.prefetchQuery(["importedRecipe", userId, recipe], () =>
+//       getOneImportedRecipe({ id: recipe, userId }),
+//     );
 
-    return {
-      props: { dehydratedState: dehydrate(queryClient) },
-    };
-  },
-);
+//     return {
+//       props: { dehydratedState: dehydrate(queryClient) },
+//     };
+//   },
+// );
 
 const ImportedRecipe = () => {
   const matches = useMediaQuery("(min-width: 900px)", true);
@@ -79,22 +79,14 @@ const ImportedRecipe = () => {
         <Card mt="md" mb="lg" p="lg" shadow="sm">
           <Card.Section p={20}>
             <Group position="apart">
-              <Group direction="column" grow={false} spacing={0}>
+              <Stack>
                 <Title order={1}>{recipe?.name}</Title>
                 <Title order={6}> {recipe?.description} </Title>
-              </Group>
-              <Group position={matches ? "right" : "center"}>
-                {/* <AddToFavorites selectedRecipe={recipe} /> */}
-                {/* <form onSubmit={handleAddAllIngredients}>
-                    <Button loading={isLoading} type="submit">
-                      Add all ingredients to groceries
-                    </Button>
-                  </form> */}
-              </Group>
+              </Stack>
             </Group>
             <Divider my="sm" />
             <Group position="apart">
-              <Group direction="column">
+              <Stack>
                 <Text sx={{ maxWidth: "750px" }}>{recipe?.description}</Text>
                 {recipe && recipe?.keywords?.length > 0 ? (
                   <Group>
@@ -118,11 +110,11 @@ const ImportedRecipe = () => {
                       </Group>
                     ))} */}
                 </Group>
-              </Group>
-              <Group direction="column">
+              </Stack>
+              <Stack>
                 <Text>Total Time {recipe?.totalTime}</Text>
                 {/* <Text>Difficulty {recipe?.difficulty}</Text> */}
-              </Group>
+              </Stack>
             </Group>
           </Card.Section>
         </Card>

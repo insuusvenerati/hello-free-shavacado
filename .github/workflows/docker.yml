@@ -61,3 +61,7 @@ jobs:
             NEXT_PUBLIC_CLERK_FRONTEND_API=${{ secrets.NEXT_PUBLIC_CLERK_FRONTEND_API }}
             CLERK_API_KEY=${{ secrets.CLERK_API_KEY }}
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_ALGOLIA_APP=${{ secrets.NEXT_PUBLIC_ALGOLIA_APP }}
+            NEXT_PUBLIC_ALGOLIA_KEY=${{ secrets.NEXT_PUBLIC_ALGOLIA_KEY }}
+            ALGOLIA_APP=${{ secrets.ALGOLIA_APP }}
+            ALGOLIA_KEY=${{ secrets.ALGOLIA_KEY }}

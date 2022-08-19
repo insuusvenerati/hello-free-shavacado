@@ -1,5 +1,5 @@
-// @ts-check
-/* eslint-disable @typescript-eslint/no-var-requires */
+const withPlugins = require("next-compose-plugins");
+const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require("next/constants");
 const withPWA = require("next-pwa");
 const { withAxiom } = require("next-axiom");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
@@ -7,6 +7,13 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 });
 
 const onVercel = process.env.VERCEL === "1";
+
+const pwaConfig = {
+  pwa: {
+    dest: "public",
+    disable: process.env.NODE_ENV === "development",
+  },
+};
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -17,13 +24,6 @@ const nextConfig = {
   experimental: {
     runtime: "experimental-edge",
   },
-  pwa: {
-    dest: "public",
-    disable: process.env.NODE_ENV === "development",
-    // register: true,
-    // scope: '/app',
-    // sw: 'service-worker.js',
-  },
   images: {
     domains: ["img.hellofresh.com", "imagesvc.meredithcorp.io"],
   },
@@ -33,4 +33,8 @@ const nextConfig = {
   },
 };
 
-module.exports = withBundleAnalyzer(withAxiom(withPWA(nextConfig)));
+// module.exports = withBundleAnalyzer(withAxiom(withPWA(nextConfig)));
+module.exports = withPlugins(
+  [[withPWA, { pwaConfig }, [PHASE_PRODUCTION_BUILD]], withAxiom, withBundleAnalyzer],
+  nextConfig,
+);

@@ -1,21 +1,15 @@
-import { Badge, Card, Container, Loader, LoadingOverlay, MantineShadow, Text } from "@mantine/core";
-import { NextLink } from "@mantine/next";
-import dynamic from "next/dynamic";
-import { Dispatch, SetStateAction, Suspense, useState } from "react";
-import { Item } from "../types/recipes";
+import { Badge, Card, Container, LoadingOverlay, Text } from "@mantine/core";
+import Image from "next/image";
+import { RecipeHit } from "types/recipeSearchQuery";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
-
-const LazyImage = dynamic(() => import("next/image"));
+import { CustomNextLink } from "./CustomNextLink";
 
 type Props = {
-  recipe: Item | undefined;
-  handler: () => void;
-  setSelectedRecipe: Dispatch<SetStateAction<Item>>;
+  recipe: RecipeHit;
+  imported: boolean;
 };
 
-export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
-  const [shadow, setShadow] = useState<MantineShadow>("sm");
-
+export const RecipeCard = ({ recipe, imported }: Props) => {
   if (!recipe) {
     return (
       <Container>
@@ -24,36 +18,56 @@ export const RecipeCard = ({ recipe, handler, setSelectedRecipe }: Props) => {
     );
   }
 
-  const onMouseEnterHandler = () => {
-    setShadow("md");
-    setSelectedRecipe(recipe);
-  };
+  if (imported) {
+    return (
+      <Card shadow="sm">
+        <Card.Section mb="sm">
+          <Image
+            alt={recipe?.name}
+            height={800}
+            src={recipe.image}
+            width={960}
+            layout="responsive"
+          />
+        </Card.Section>
 
-  const onMouseLeaveHandler = () => {
-    setShadow("sm");
-  };
+        <CustomNextLink href={`/imported-recipe/${recipe?.id}`}>
+          <Text weight="bold">{recipe?.name}</Text>
+        </CustomNextLink>
+
+        {recipe?.tags?.length > 0 &&
+          recipe?.tags?.map((tag) => (
+            <Badge key={`${recipe?.id}-${tag?.id}-${Math.random()}`} size="xs">
+              {tag.name}
+            </Badge>
+          ))}
+        <AddToFavorites
+          fullWidth
+          selectedRecipe={recipe}
+          sx={{ marginTop: "14px" }}
+          variant="light"
+        />
+      </Card>
+    );
+  }
 
   return (
-    <Card onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler} shadow={shadow}>
-      <Card.Section
-        onClick={handler}
-        sx={{ width: 456.25, height: 258.5, marginBottom: 5, cursor: "pointer" }}
-      >
-        <Suspense fallback={<Loader />}>
-          <LazyImage
-            alt={recipe?.name}
-            blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
-            height={340}
-            placeholder="blur"
-            src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
-            width={600}
-          />
-        </Suspense>
+    <Card shadow="sm">
+      <Card.Section mb="sm">
+        <Image
+          alt={recipe?.name}
+          blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
+          height={340}
+          placeholder="blur"
+          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
+          width={600}
+          layout="responsive"
+        />
       </Card.Section>
 
-      <NextLink href={`/recipe/${recipe?.slug}`}>
+      <CustomNextLink href={`/recipe/${recipe?.id}`}>
         <Text weight="bold">{recipe?.name}</Text>
-      </NextLink>
+      </CustomNextLink>
 
       {recipe?.tags?.length > 0 &&
         recipe?.tags?.map((tag) => (

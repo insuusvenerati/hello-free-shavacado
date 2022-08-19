@@ -3,64 +3,36 @@
 import {
   AppShell,
   Aside,
-  Avatar,
   Box,
   Divider,
   Group,
   List,
   LoadingOverlay,
   MediaQuery,
-  MultiSelect,
   Navbar,
   ScrollArea,
-  Stack,
   Text,
   TextInput,
   Title,
+  Transition,
 } from "@mantine/core";
-import { forwardRef, useState } from "react";
-import { useRecipesContext } from "../context/RecipesContext";
+import { useState } from "react";
+import { CurrentRefinements } from "react-instantsearch-hooks-web";
 import { useAddImportedRecipeMutation } from "../hooks/useAddImportedRecipeMutation";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
+import { ClearRefinements } from "./ClearRefinements";
 import { ImportedRecipeLink } from "./ImportedRecipeLink";
 import { MyHeader } from "./MyHeader";
 import { NavbarContent } from "./NavContent";
 import { RecipeLink } from "./RecipeLink";
-
-interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
-  image: string;
-  label: string;
-}
+import { RefinementList } from "./RefinementList";
 
 type AppShellProps = {
   children: JSX.Element[] | JSX.Element;
 };
 
-// eslint-disable-next-line react/display-name
-const MySelectItem = forwardRef<HTMLDivElement, ItemProps>(
-  ({ image, label, ...others }: ItemProps, ref) => (
-    <div ref={ref} {...others}>
-      <Group noWrap>
-        <Avatar src={image} />
-
-        <div>
-          <Text>{label}</Text>
-        </div>
-      </Group>
-    </div>
-  ),
-);
-
 export const MyAppShell = ({ children }: AppShellProps) => {
-  const {
-    ingredients,
-    uniqueAllergens,
-    handleSetSelectedAllergens,
-    selectedAllergens,
-    handleSetSelectedIngredients,
-    selectedIngredients,
-  } = useRecipesContext();
   const {
     onSubmitHandler,
     error: addImportedRecipeError,
@@ -70,9 +42,9 @@ export const MyAppShell = ({ children }: AppShellProps) => {
     url,
   } = useAddImportedRecipeMutation();
   const { data: importedRecipes } = useGetImportedRecipesQuery();
-
   const { data: recipes, isLoading } = useFavoriteRecipesQuery();
   const [opened, setOpened] = useState(false);
+  const [section, setSection] = useState<"nav" | "filters">("nav");
 
   return (
     <AppShell
@@ -135,39 +107,49 @@ export const MyAppShell = ({ children }: AppShellProps) => {
       fixed
       header={<MyHeader opened={opened} setOpened={setOpened} />}
       navbar={
-        <Navbar hidden={!opened} hiddenBreakpoint="sm" width={{ base: 300 }}>
-          <NavbarContent marginTop="sm" />
-
-          <Stack sx={{ padding: 5 }}>
-            {ingredients && (
+        <Navbar
+          sx={{
+            overflow: "hidden",
+            transition: "width 250ms ease, min-width 250ms ease",
+            width: opened ? 300 : 0,
+          }}
+          // width={opened ? 300 : 0}
+          p={opened ? "sm" : 0}
+        >
+          <NavbarContent showSegmentedControl section={section} setSection={setSection} />
+          <Transition
+            mounted={section === "filters"}
+            transition="slide-right"
+            duration={200}
+            timingFunction="ease"
+          >
+            {(styles) => (
               <>
-                <MultiSelect
-                  clearable
-                  data={uniqueAllergens}
-                  itemComponent={MySelectItem}
-                  label="Filter allergens"
-                  nothingFound="Search for a recipe first"
-                  onChange={handleSetSelectedAllergens}
-                  placeholder="Select your allergens"
-                  searchable
-                  value={selectedAllergens}
-                />
-                <MultiSelect
-                  clearable
-                  data={ingredients}
-                  label="Filter ingredients"
-                  nothingFound="Search for a recipe first"
-                  onChange={handleSetSelectedIngredients}
-                  placeholder="Select your ingredients"
-                  searchable
-                  value={selectedIngredients}
-                />
+                <Group style={styles}>
+                  <ClearRefinements />
+
+                  <CurrentRefinements style={{ maxWidth: 300 }} />
+
+                  <Group>
+                    <Title order={4}>Ingredients</Title>
+                    <RefinementList limit={5} showMore attribute="ingredients.name" />
+                  </Group>
+
+                  <Group>
+                    <Title order={4}>Tags</Title>
+                    <RefinementList limit={5} showMore attribute="tags.name" />
+                  </Group>
+
+                  {/* <Group>
+                    <Title order={4}>Allergens</Title>
+                    <RefinementList limit={5} showMore attribute="allergens.name" />
+                  </Group> */}
+                </Group>
               </>
             )}
-          </Stack>
+          </Transition>
         </Navbar>
       }
-      navbarOffsetBreakpoint="sm"
     >
       {children}
     </AppShell>

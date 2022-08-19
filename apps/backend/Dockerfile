@@ -38,11 +38,14 @@ WORKDIR /app
 ENV REDISHOST=${REDISPORT}
 ENV REDISPORT=${REDISPORT}
 ENV PORT=${PORT}
-ENV DATABASE_URL=${DATABASE_URL}
+ENV POSTGRES_URL=${POSTGRES_URL}
+ENV ALGOLIA_APP=${ALGOLIA_APP}
+ENV ALGOLIA_KEY=${ALGOLIA_KEY}
 
 COPY --from=builder --chown=node:node /app/apps/backend/package.json ./
 COPY --from=builder --chown=node:node /app/apps/backend/dist ./dist
 COPY --from=builder --chown=node:node /app/apps/backend/node_modules/ ./node_modules/
+COPY --from=builder --chown=node:node /app/apps/backend/prisma ./prisma
 # COPY --from=builder --chown=node:node /app/packages/prisma/node_modules/.prisma ./node_modules/.prisma
 
 CMD ["pm2-runtime", "dist/main.js"]

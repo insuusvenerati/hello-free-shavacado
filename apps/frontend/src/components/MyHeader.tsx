@@ -1,23 +1,9 @@
-import { XIcon } from "@heroicons/react/outline";
-import {
-  ActionIcon,
-  Burger,
-  createStyles,
-  Grid,
-  Group,
-  Header,
-  Loader,
-  MediaQuery,
-  TextInput,
-  ThemeIcon,
-  Title,
-} from "@mantine/core";
+import { Burger, createStyles, Grid, Group, Header, MediaQuery, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import Image from "next/image";
 import { useCallback } from "react";
-import { useRecipesContext } from "../context/RecipesContext";
-import { NavbarContent } from "./NavContent";
-import { Search } from "./Search";
+import { SearchBox } from "react-instantsearch-hooks-web";
+import { ButtonToggle } from "./Buttons/ColorSchemeToggle";
 
 type Props = {
   opened: boolean;
@@ -69,18 +55,6 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
   const matches = useMediaQuery("(min-width: 900px)", true);
   const { classes } = useStyles();
 
-  const {
-    isLoading,
-    isError,
-    error,
-    filteredRecipes,
-    onChangeHandler,
-    clearSearchHandler,
-    searchText,
-    onSubmitHandler,
-    isFetching,
-  } = useRecipesContext();
-
   const handleDrawer = useCallback(() => {
     setOpened(!opened);
   }, [opened, setOpened]);
@@ -95,33 +69,11 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
             height: "100%",
           }}
         >
-          <Burger mr="md" onClick={handleDrawer} opened={opened} size="sm" />
+          <Burger mr="sm" onClick={handleDrawer} opened={opened} size="md" />
           <Image alt="logo" src="/android-chrome-192x192.png" width={50} height={50} />
           <Grid justify="center">
             <Grid.Col lg={6} md={12}>
-              <form onSubmit={onSubmitHandler}>
-                <TextInput
-                  value={searchText}
-                  error={isError && error?.message}
-                  aria-label="Search"
-                  onChange={onChangeHandler}
-                  placeholder="Search"
-                  rightSection={
-                    isLoading || isFetching ? (
-                      <Loader size="sm" />
-                    ) : filteredRecipes ? (
-                      <ActionIcon onClick={clearSearchHandler} mr="xs">
-                        <ThemeIcon variant="outline">
-                          <XIcon width={16} />
-                        </ThemeIcon>
-                      </ActionIcon>
-                    ) : undefined
-                  }
-                  disabled={isLoading}
-                  size="md"
-                  type="search"
-                />
-              </form>
+              <SearchBox />
             </Grid.Col>
           </Grid>
         </div>
@@ -131,15 +83,19 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
     <Header mb={120} className={classes.header} height={56}>
       <div className={classes.inner}>
         <Group>
+          <Burger mr="sm" onClick={handleDrawer} opened={opened} size="md" />
           <Image alt="logo" src="/android-chrome-192x192.png" width={50} height={50} />
           <Title order={2}>Hellofresh Search</Title>
         </Group>
 
         <Group>
           <Group ml={50} spacing={5} className={classes.links}>
-            <NavbarContent />
+            <ButtonToggle />
           </Group>
-          <Search />
+
+          <SearchBox />
+
+          {/* <Search /> */}
         </Group>
       </div>
     </Header>

@@ -1,14 +1,14 @@
 import { useAuth, useClerk } from "@clerk/nextjs";
 import { StarIcon } from "@heroicons/react/outline";
-import { Button, SharedButtonProps } from "@mantine/core";
+import { Button, ButtonProps } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { FormEvent } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { RecipeHit } from "types/recipeSearchQuery";
 import { useFavoriteRecipesQuery } from "../../hooks/useFavoriteRecipesQuery";
-import { Item } from "../../types/recipes";
 import { addRecipe } from "../../util/addRecipe";
 
-type Props = { selectedRecipe: Item } & SharedButtonProps;
+type Props = { selectedRecipe: RecipeHit } & ButtonProps;
 
 type MutateError = {
   code: string;
