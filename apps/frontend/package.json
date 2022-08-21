@@ -63,6 +63,6 @@
     "url": "https://github.com/insuusvenerati/hello-free-shavacado.git"
   },
   "volta": {
-    "node": "16.16.0"
+    "node": "16.17.0"
   }
 }
