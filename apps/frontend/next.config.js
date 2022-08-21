@@ -21,9 +21,6 @@ const nextConfig = {
     dirs: ["pages", "components", "hooks"],
   },
   output: !onVercel ? "standalone" : null,
-  experimental: {
-    runtime: "experimental-edge",
-  },
   images: {
     domains: ["img.hellofresh.com", "imagesvc.meredithcorp.io"],
   },
