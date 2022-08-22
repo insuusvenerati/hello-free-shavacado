@@ -28,18 +28,19 @@ services:
 
   pgadmin:
     container_name: pgadmin4_container
+    network_mode: host
     image: dpage/pgadmin4
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - 8080:80
+    # ports:
+    #   - 8080:80
 
-  meilisearch:
-    image: getmeili/meilisearch:v0.28
-    ports:
-      - 7700:7700
-    environment:
-      - MEILI_MASTER_KEY=MASTER_KEY
-      - MEILI_ENV=development
+  # meilisearch:
+  #   image: getmeili/meilisearch:v0.28
+  #   ports:
+  #     - 7700:7700
+  #   environment:
+  #     - MEILI_MASTER_KEY=MASTER_KEY
+  #     - MEILI_ENV=development
