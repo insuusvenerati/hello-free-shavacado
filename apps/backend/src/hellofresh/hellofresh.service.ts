@@ -10,7 +10,6 @@ import { Cron, CronExpression } from "@nestjs/schedule";
 import { Ingredient, PopularRecipe, Prisma } from "@prisma/client";
 import axios from "axios";
 import { Cache } from "cache-manager";
-import MeiliSearch from "meilisearch";
 import { PrismaService } from "src/prisma.service";
 import { RecipeQuery } from "src/types/recipes";
 import { hellofreshIndex } from "src/util/algolia";
@@ -31,11 +30,6 @@ type Token = {
 
 const TOKEN_URL =
   "https://stiforr-cors-anywhere.fly.dev/https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials";
-
-const client = new MeiliSearch({
-  host: process.env.MEILISEARCH_HOST || "http://localhost:7700",
-  apiKey: process.env.MEILISEARCH_KEY || "MASTER_KEY",
-});
 
 @Injectable()
 export class HellofreshService {
@@ -84,7 +78,7 @@ export class HellofreshService {
 
     const hellofreshDocuments = allRecipesQuery.map((recipe: any) => {
       const ingredients = recipe.recipe.ingredients.map((ing) => ({ name: ing.name }));
-      const tags = recipe.recipe.tags.map((tag) => ({ name: tag.name }));
+      const tags = recipe.recipe.tags.map((tag) => ({ name: tag.name, id: tag.id }));
       return {
         name: recipe.name,
         description: recipe.description,
@@ -100,21 +94,9 @@ export class HellofreshService {
       .saveObjects(hellofreshDocuments, { autoGenerateObjectIDIfNotExist: true })
       .wait();
 
-    const meiliAddDocumentsResponse = await client
-      .index("hellofresh")
-      .addDocuments(hellofreshDocuments);
-
-    const meiliUpdateSettingsResponse = await client.index("hellofresh").updateSettings({
-      searchableAttributes: ["name", "description"],
-      filterableAttributes: ["ingredients.name", "tags.name", "allergens.name"],
-      sortableAttributes: ["name", "averageRating"],
-    });
-
     return {
       message: "Recipes scraped successfully",
       algoliaIndexResponse,
-      meiliAddDocumentsResponse,
-      meiliUpdateSettingsResponse,
     };
   }
 
@@ -139,7 +121,6 @@ export class HellofreshService {
       });
     }
     const prismaResponse = await this.prisma.ingredient.findMany();
-    await client.index<any>("ingredients").addDocuments(prismaResponse);
   }
 
   async findAll(query: string, page: number, token: string) {
