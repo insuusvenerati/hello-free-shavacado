@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
-import { CheckCircleIcon, DocumentIcon } from "@heroicons/react/outline";
+import { CheckCircleIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import { Badge, Button, Card, Group, List, Modal, Text, ThemeIcon } from "@mantine/core";
 import dynamic from "next/dynamic";
 import Image from "next/image";

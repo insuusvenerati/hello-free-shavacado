@@ -1,4 +1,4 @@
-import { LinkIcon, TrashIcon } from "@heroicons/react/outline";
+import { LinkIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { ActionIcon, Avatar, createStyles, Group, List, Paper, Text, Tooltip } from "@mantine/core";
 import { useGetRecipeById } from "hooks/useGetRecipeById";
 import { useDeleteFavoriteRecipe } from "../hooks/useDeleteFavoriteRecipe";

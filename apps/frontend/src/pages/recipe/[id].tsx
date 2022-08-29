@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 import { useAuth } from "@clerk/nextjs";
 import { CustomNextLink } from "@components/CustomNextLink";
-import { ArrowLeftIcon, DocumentIcon } from "@heroicons/react/outline";
+import { ArrowLeftIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import {
   Affix,
   Box,

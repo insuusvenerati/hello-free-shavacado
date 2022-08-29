@@ -1,15 +1,16 @@
 import { Badge, Card, Container, LoadingOverlay, Text } from "@mantine/core";
+import { Hit } from "instantsearch.js";
 import Image from "next/image";
+import { ImportedRecipe, isImportedRecipe } from "types/importedRecipe";
 import { RecipeHit } from "types/recipeSearchQuery";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
 import { CustomNextLink } from "./CustomNextLink";
 
 type Props = {
-  recipe: RecipeHit;
-  imported: boolean;
+  recipe: Hit<RecipeHit> | ImportedRecipe;
 };
 
-export const RecipeCard = ({ recipe, imported }: Props) => {
+export const RecipeCard = ({ recipe }: Props) => {
   if (!recipe) {
     return (
       <Container>
@@ -18,7 +19,7 @@ export const RecipeCard = ({ recipe, imported }: Props) => {
     );
   }
 
-  if (imported) {
+  if (isImportedRecipe(recipe)) {
     return (
       <Card shadow="sm">
         <Card.Section mb="sm">
@@ -34,19 +35,6 @@ export const RecipeCard = ({ recipe, imported }: Props) => {
         <CustomNextLink href={`/imported-recipe/${recipe?.id}`}>
           <Text weight="bold">{recipe?.name}</Text>
         </CustomNextLink>
-
-        {recipe?.tags?.length > 0 &&
-          recipe?.tags?.map((tag) => (
-            <Badge key={`${recipe?.id}-${tag?.id}-${Math.random()}`} size="xs">
-              {tag.name}
-            </Badge>
-          ))}
-        <AddToFavorites
-          fullWidth
-          selectedRecipe={recipe}
-          sx={{ marginTop: "14px" }}
-          variant="light"
-        />
       </Card>
     );
   }
@@ -71,7 +59,7 @@ export const RecipeCard = ({ recipe, imported }: Props) => {
 
       {recipe?.tags?.length > 0 &&
         recipe?.tags?.map((tag) => (
-          <Badge key={`${recipe?.id}-${tag?.id}-${Math.random()}`} size="xs">
+          <Badge key={`${recipe?.id}-${tag?.id}}`} size="xs">
             {tag.name}
           </Badge>
         ))}

@@ -1,4 +1,4 @@
-import { XCircleIcon } from "@heroicons/react/outline";
+import { XCircleIcon } from "@heroicons/react/24/outline";
 import { Button } from "@mantine/core";
 import { ClearRefinementsProps, useClearRefinements } from "react-instantsearch-hooks-web";
 
