@@ -24,6 +24,13 @@ const nextConfig = {
   experimental: {
     images: {
       allowFutureImage: true,
+      remotePatterns: [
+        {
+          protocol: "https",
+          hostname: "*",
+          port: "",
+        },
+      ],
     },
   },
   images: {

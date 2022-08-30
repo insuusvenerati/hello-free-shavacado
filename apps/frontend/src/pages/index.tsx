@@ -1,4 +1,4 @@
-import { Hits } from "@components/Hits";
+import { Hits } from "components/Hits";
 import { Avatar, Container, Grid, Group, MantineColor, SelectItemProps, Text } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
 import { forwardRef, useEffect } from "react";

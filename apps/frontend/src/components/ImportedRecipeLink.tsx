@@ -34,7 +34,7 @@ export const ImportedRecipeLink = ({ recipe }: { recipe: ImportedRecipe }) => {
               <TrashIcon />
             </ActionIcon>
           </Tooltip>
-          <CustomNextLink href={`/imported-recipe/${recipe?.id}`}>
+          <CustomNextLink href={`/imported-recipe/${recipe.id}`}>
             <Tooltip label="View Instructions">
               <ActionIcon mr="xs">
                 <LinkIcon />

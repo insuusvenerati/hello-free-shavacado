@@ -2,7 +2,7 @@ import { Badge, Card, Container, LoadingOverlay, Text } from "@mantine/core";
 import { Hit } from "instantsearch.js";
 import Image from "next/future/image";
 import { ImportedRecipe, isImportedRecipe } from "types/importedRecipe";
-import { Item } from "types/recipes";
+import { Item, Tag } from "types/recipes";
 import { RecipeHit } from "types/recipeSearchQuery";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
 import { CustomNextLink } from "./CustomNextLink";
@@ -55,7 +55,7 @@ export const RecipeCard = ({ recipe }: Props) => {
       </CustomNextLink>
 
       {recipe?.tags?.length > 0 &&
-        recipe?.tags?.map((tag) => (
+        recipe?.tags?.map((tag: Tag) => (
           <Badge key={`${recipe?.id}-${tag?.id}}`} size="xs">
             {tag.name}
           </Badge>

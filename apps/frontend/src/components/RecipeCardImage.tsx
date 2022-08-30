@@ -17,7 +17,9 @@ export const RecipeCardImage = ({ height, width, src, alt, ...props }: Props) =>
       {...props}
       placeholder="blur"
       blurDataURL={`${HF_PLACEHOLDERURL}${src}`}
-      sizes="100vw"
+      sizes="(min-width: 75em) 33vw,
+      (min-width: 48em) 50vw,
+      100vw"
       style={imageCSS}
       loader={hellofreshRecipeLoader}
       height={height}

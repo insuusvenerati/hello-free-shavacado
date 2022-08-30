@@ -65,9 +65,9 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
   const router = useRouter();
   const { mutate: addGroceryMutation, isLoading } = useAddGroceryMutation();
 
-  const yields = recipe?.yields?.map((y) => y.ingredients).flat();
+  const yields = recipe.yields?.map((y) => y.ingredients).flat();
 
-  const addGroceriesIngredients = recipe?.ingredients?.map((ingredient) => {
+  const addGroceriesIngredients = recipe.ingredients?.map((ingredient) => {
     const ingredientYield = yields?.filter((y) => y.id === ingredient.id);
     return {
       ingredient: ingredient.name,
@@ -107,19 +107,19 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
     <>
       <NextSeo
         openGraph={{
-          title: recipe?.name,
-          description: recipe?.description,
+          title: recipe.name,
+          description: recipe.description,
           url: `${VERCEL_URL}${router.asPath}`,
           images: [
             {
-              url: getOgImageUrl(recipe?.imagePath),
+              url: getOgImageUrl(recipe.imagePath),
               alt: recipe.name,
               type: "image/jpeg",
             },
           ],
         }}
-        title={recipe?.name}
-        description={recipe?.description}
+        title={recipe.name}
+        description={recipe.description}
       />
 
       <Affix position={{ bottom: 20, left: 20 }}>
@@ -129,11 +129,11 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
       </Affix>
 
       <Image
-        alt={recipe?.name}
-        blurDataURL={`${HF_PLACEHOLDERURL}${recipe?.imagePath}`}
+        alt={recipe.name}
+        blurDataURL={`${HF_PLACEHOLDERURL}${recipe.imagePath}`}
         height={800}
         placeholder="blur"
-        src={`${HF_COVER_IMAGE_URL}${recipe?.imagePath}`}
+        src={`${HF_COVER_IMAGE_URL}${recipe.imagePath}`}
         width={2400}
         sizes="100vw"
         style={imageCSS}
@@ -144,13 +144,13 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
           <Card.Section p={20}>
             <Group position="apart">
               <Group grow={false} spacing={0}>
-                <Title order={1}>{recipe?.name}</Title>
-                <Title order={6}> {recipe?.headline} </Title>
+                <Title order={1}>{recipe.name}</Title>
+                <Title order={6}> {recipe.headline} </Title>
               </Group>
               <Group position={matches ? "right" : "center"}>
                 <AddToFavorites selectedRecipe={recipe} />
-                {recipe?.cardLink && (
-                  <CustomNextLink href={recipe?.cardLink} target="_blank">
+                {recipe.cardLink && (
+                  <CustomNextLink href={recipe.cardLink} target="_blank">
                     <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
                   </CustomNextLink>
                 )}
@@ -164,18 +164,18 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
             <Divider my="sm" />
             <Group position="apart">
               <Group>
-                <Text sx={{ maxWidth: "750px" }}>{recipe?.description}</Text>
-                {recipe && recipe?.tags.length > 0 ? (
+                <Text sx={{ maxWidth: "750px" }}>{recipe.description}</Text>
+                {recipe && recipe.tags.length > 0 ? (
                   <Group>
                     <Text weight="bolder">Tags:</Text>
-                    {recipe?.tags.map((tag) => (
+                    {recipe.tags.map((tag) => (
                       <Text key={tag.id}>{tag.name}</Text>
                     ))}
                   </Group>
                 ) : null}
                 <Group>
                   <Text weight="bolder">Allergens:</Text>
-                  {recipe?.allergens.map((allergen) => (
+                  {recipe.allergens.map((allergen) => (
                     <Group key={allergen.id}>
                       <Image
                         alt={allergen.id}
@@ -189,8 +189,8 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
                 </Group>
               </Group>
               <Group>
-                <Text>Total Time {recipe?.totalTime}</Text>
-                <Text>Difficulty {recipe?.difficulty}</Text>
+                <Text>Total Time {recipe.totalTime}</Text>
+                <Text>Difficulty {recipe.difficulty}</Text>
               </Group>
             </Group>
           </Card.Section>
@@ -205,7 +205,7 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
           {/* <Group> */}
           <Title order={2}>Instructions</Title>
           <List listStyleType="none" size="xl">
-            {recipe?.steps?.map((step) => (
+            {recipe.steps?.map((step) => (
               <Fragment key={step.index}>
                 <Group mb={24}>
                   {step.images.map((image) => (
