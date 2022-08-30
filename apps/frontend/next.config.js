@@ -21,6 +21,11 @@ const nextConfig = {
     dirs: ["pages", "components", "hooks"],
   },
   output: !onVercel ? "standalone" : null,
+  experimental: {
+    images: {
+      allowFutureImage: true,
+    },
+  },
   images: {
     domains: ["img.hellofresh.com", "imagesvc.meredithcorp.io"],
   },

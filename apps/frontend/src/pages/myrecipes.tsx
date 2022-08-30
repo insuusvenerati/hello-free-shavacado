@@ -1,17 +1,13 @@
 import { Container, Grid, LoadingOverlay, Title } from "@mantine/core";
 import { NextSeo } from "next-seo";
-import { useCallback, useState } from "react";
 import { useQueries } from "react-query";
 import { getRecipeById } from "util/getRecipeById";
 import { RecipeCard } from "../components/RecipeCard";
-import { useRecipesContext } from "../context/RecipesContext";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
 
 const RecipeList = () => {
   // const [recipes, setRecipes] = useState<RecipeQuery[]>();
-  const [modalVisible, setModalVisible] = useState(false);
-  const { setSelectedRecipe } = useRecipesContext();
   const { data: favoriteRecipes, isSuccess } = useFavoriteRecipesQuery();
   const { data: importedRecipes } = useGetImportedRecipesQuery();
 
@@ -22,16 +18,10 @@ const RecipeList = () => {
         queryFn: () => getRecipeById({ id: recipe.uuid }),
         enabled: !(typeof favoriteRecipes === "undefined"),
       };
-    }),
+    }) ?? [], // https://stackoverflow.com/a/68169883/5562803
   );
 
-  console.log(importedRecipes);
-
   const recipes = recipeQueries.map((query) => query.data);
-
-  const modalHandler = useCallback(() => {
-    setModalVisible(!modalVisible);
-  }, [modalVisible]);
 
   if (!isSuccess) {
     return (
@@ -52,7 +42,7 @@ const RecipeList = () => {
         {importedRecipes &&
           importedRecipes.map((recipe) => (
             <Grid.Col lg={3} md={12} key={recipe.id}>
-              <RecipeCard imported recipe={recipe} />
+              <RecipeCard recipe={recipe} />
             </Grid.Col>
           ))}
       </Grid>
@@ -66,11 +56,7 @@ const RecipeList = () => {
             if (!item) return;
             return (
               <Grid.Col key={item.id} lg={3} md={12}>
-                <RecipeCard
-                  handler={modalHandler}
-                  recipe={item}
-                  setSelectedRecipe={setSelectedRecipe}
-                />
+                <RecipeCard recipe={item} />
               </Grid.Col>
             );
           })}

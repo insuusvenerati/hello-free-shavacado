@@ -3,42 +3,22 @@ import {
   Container,
   Divider,
   Group,
-  Image,
   List,
   LoadingOverlay,
   Stack,
   Text,
   Title,
 } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
 import { NextSeo } from "next-seo";
+import Image from "next/future/image";
 import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
 import { Fragment } from "react";
 import { useGetOneImportedRecipeQuery } from "../../hooks/useGetImportedRecipesQuery";
 import { VERCEL_URL } from "../../util/constants";
 
-interface Params extends ParsedUrlQuery {
-  recipe: string;
-}
-
-// export const getServerSideProps: GetServerSideProps = withServerSideAuth(
-//   async ({ req, params }) => {
-//     const { userId } = req.auth;
-//     const { recipe } = params as Params;
-//     const queryClient = new QueryClient();
-//     await queryClient.prefetchQuery(["importedRecipe", userId, recipe], () =>
-//       getOneImportedRecipe({ id: recipe, userId }),
-//     );
-
-//     return {
-//       props: { dehydratedState: dehydrate(queryClient) },
-//     };
-//   },
-// );
+const imageCSS = { width: "100%", height: "auto" };
 
 const ImportedRecipe = () => {
-  const matches = useMediaQuery("(min-width: 900px)", true);
   const { query, asPath } = useRouter();
   const { data: recipe, isSuccess } = useGetOneImportedRecipeQuery({ id: query.recipe as string });
 
@@ -70,10 +50,11 @@ const ImportedRecipe = () => {
       />
       <Image
         alt={recipe?.name}
-        height={matches ? 700 : 350}
-        fit="cover"
+        height={800}
         src={recipe?.image}
-        width={matches ? 2500 : 600}
+        width={2400}
+        style={imageCSS}
+        sizes="100vw"
       />
       <Container size="lg">
         <Card mt="md" mb="lg" p="lg" shadow="sm">

@@ -6,6 +6,7 @@
 
 import { RecipeHit } from "./recipeSearchQuery";
 import { Hit } from "instantsearch.js";
+import { Item } from "./recipes";
 
 export interface ImportedRecipe {
   id: string;
@@ -32,7 +33,7 @@ export interface ImportedRecipe {
 }
 
 export const isImportedRecipe = (
-  recipe: ImportedRecipe | Hit<RecipeHit>,
+  recipe: ImportedRecipe | Hit<RecipeHit> | Item,
 ): recipe is ImportedRecipe => {
   return (recipe as ImportedRecipe).cookTime !== undefined;
 };

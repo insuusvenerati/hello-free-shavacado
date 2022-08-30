@@ -1,14 +1,18 @@
 import { Badge, Card, Container, LoadingOverlay, Text } from "@mantine/core";
 import { Hit } from "instantsearch.js";
-import Image from "next/image";
+import Image from "next/future/image";
 import { ImportedRecipe, isImportedRecipe } from "types/importedRecipe";
+import { Item } from "types/recipes";
 import { RecipeHit } from "types/recipeSearchQuery";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
 import { CustomNextLink } from "./CustomNextLink";
+import { RecipeCardImage } from "./RecipeCardImage";
 
 type Props = {
-  recipe: Hit<RecipeHit> | ImportedRecipe;
+  recipe: Hit<RecipeHit> | ImportedRecipe | Item;
 };
+
+const imageCSS = { width: "100%", height: "auto" };
 
 export const RecipeCard = ({ recipe }: Props) => {
   if (!recipe) {
@@ -24,11 +28,12 @@ export const RecipeCard = ({ recipe }: Props) => {
       <Card shadow="sm">
         <Card.Section mb="sm">
           <Image
+            style={imageCSS}
+            sizes="100vw"
             alt={recipe?.name}
             height={800}
             src={recipe.image}
             width={960}
-            layout="responsive"
           />
         </Card.Section>
 
@@ -42,15 +47,7 @@ export const RecipeCard = ({ recipe }: Props) => {
   return (
     <Card shadow="sm">
       <Card.Section mb="sm">
-        <Image
-          alt={recipe?.name}
-          blurDataURL={`https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3${recipe?.imagePath}`}
-          height={340}
-          placeholder="blur"
-          src={`https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_340,q_auto,w_600/hellofresh_s3${recipe?.imagePath}`}
-          width={600}
-          layout="responsive"
-        />
+        <RecipeCardImage alt={recipe?.name} height={340} src={recipe?.imagePath} width={600} />
       </Card.Section>
 
       <CustomNextLink href={`/recipe/${recipe?.id}`}>

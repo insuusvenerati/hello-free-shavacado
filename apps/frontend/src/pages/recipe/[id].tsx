@@ -11,7 +11,6 @@ import {
   Divider,
   Group,
   List,
-  Loader,
   LoadingOverlay,
   Text,
   Title,
@@ -19,8 +18,7 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
-import dynamic from "next/dynamic";
-import Image from "next/image";
+import Image from "next/future/image";
 import { useRouter } from "next/router";
 import { Fragment, SyntheticEvent } from "react";
 import { Item } from "types/recipes";
@@ -38,8 +36,6 @@ import {
   HF_STEP_IMAGE_URL,
   VERCEL_URL,
 } from "../../util/constants";
-
-const LazyImage = dynamic(() => import("next/image"));
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const id = params?.id as string;
@@ -60,6 +56,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
     fallback: "blocking",
   };
 };
+
+const imageCSS = { width: "100%", height: "auto" };
 
 const Recipe = ({ recipe }: { recipe: Item }) => {
   const matches = useMediaQuery("(min-width: 900px)", true);
@@ -130,19 +128,16 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
         </Button>
       </Affix>
 
-      {recipe?.imagePath ? (
-        <Image
-          alt={recipe?.name}
-          blurDataURL={`${HF_PLACEHOLDERURL}${recipe?.imagePath}`}
-          height={matches ? 800 : 350}
-          objectFit="cover"
-          placeholder="blur"
-          src={`${HF_COVER_IMAGE_URL}${recipe?.imagePath}`}
-          width={matches ? 2400 : 600}
-        />
-      ) : (
-        <Loader />
-      )}
+      <Image
+        alt={recipe?.name}
+        blurDataURL={`${HF_PLACEHOLDERURL}${recipe?.imagePath}`}
+        height={800}
+        placeholder="blur"
+        src={`${HF_COVER_IMAGE_URL}${recipe?.imagePath}`}
+        width={2400}
+        sizes="100vw"
+        style={imageCSS}
+      />
 
       <Container size="xl">
         <Box mt="md" mb="lg">
@@ -182,7 +177,7 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
                   <Text weight="bolder">Allergens:</Text>
                   {recipe?.allergens.map((allergen) => (
                     <Group key={allergen.id}>
-                      <LazyImage
+                      <Image
                         alt={allergen.id}
                         height={32}
                         src={`${HF_ICON_IMAGE_URL}/${allergen.iconPath}`}
@@ -214,7 +209,7 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
               <Fragment key={step.index}>
                 <Group mb={24}>
                   {step.images.map((image) => (
-                    <LazyImage
+                    <Image
                       alt={image.caption}
                       blurDataURL={`${HF_PLACEHOLDERURL}/${image.path}`}
                       height={230}
