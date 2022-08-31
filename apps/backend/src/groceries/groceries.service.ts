@@ -1,4 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
+import { InjectSentry, SentryService } from "@ntegral/nestjs-sentry";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "src/prisma.service";
 
@@ -6,7 +7,10 @@ import { PrismaService } from "src/prisma.service";
 export class GroceriesService {
   private readonly logger = new Logger(GroceriesService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @InjectSentry() private readonly sentryClient: SentryService,
+  ) {}
 
   async create(createGroceryDto: Prisma.GroceryCreateInput) {
     return await this.prisma.grocery.create({
@@ -24,14 +28,14 @@ export class GroceriesService {
     this.logger.debug(orderBy);
 
     if (isNaN(skip)) {
-      return this.prisma.grocery.findMany({
+      return await this.prisma.grocery.findMany({
         where: { userId: user },
         take,
         orderBy,
       });
     }
 
-    return this.prisma.grocery.findMany({
+    return await this.prisma.grocery.findMany({
       where: { userId: user },
       skip,
       take,

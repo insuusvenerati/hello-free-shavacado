@@ -2,6 +2,7 @@ const withPlugins = require("next-compose-plugins");
 const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require("next/constants");
 const withPWA = require("next-pwa");
 const { withAxiom } = require("next-axiom");
+const { withSentryConfig } = require("@sentry/nextjs");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
@@ -44,6 +45,11 @@ const nextConfig = {
 
 // module.exports = withBundleAnalyzer(withAxiom(withPWA(nextConfig)));
 module.exports = withPlugins(
-  [[withPWA, { pwaConfig }, [PHASE_PRODUCTION_BUILD]], withAxiom, withBundleAnalyzer],
+  [
+    [withPWA, { pwaConfig }, [PHASE_PRODUCTION_BUILD]],
+    withAxiom,
+    withBundleAnalyzer,
+    [withSentryConfig, { silent: true }, [PHASE_PRODUCTION_BUILD]],
+  ],
   nextConfig,
 );
