@@ -49,7 +49,7 @@ module.exports = withPlugins(
     [withPWA, { pwaConfig }, [PHASE_PRODUCTION_BUILD]],
     withAxiom,
     withBundleAnalyzer,
-    [withSentryConfig, { silent: true }, [PHASE_PRODUCTION_BUILD]],
+    [withSentryConfig, { silent: false }, [PHASE_PRODUCTION_BUILD]],
   ],
   nextConfig,
 );
