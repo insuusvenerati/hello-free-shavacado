@@ -66,6 +66,6 @@ jobs:
             NEXT_PUBLIC_ALGOLIA_KEY=${{ secrets.NEXT_PUBLIC_ALGOLIA_KEY }}
             ALGOLIA_APP=${{ secrets.ALGOLIA_APP }}
             ALGOLIA_KEY=${{ secrets.ALGOLIA_KEY }}
-            SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-            SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-            SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+            SENTRY_ORG=${{ secrets.SENTRY_ORG }}
+            SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
