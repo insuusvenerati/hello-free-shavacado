@@ -41,6 +41,8 @@ ENV PORT=${PORT}
 ENV POSTGRES_URL=${POSTGRES_URL}
 ENV ALGOLIA_APP=${ALGOLIA_APP}
 ENV ALGOLIA_KEY=${ALGOLIA_KEY}
+ENV SENTRY_TOKEN=${SENTRY_TOKEN}
+ENV SENTRY_DSN=${SENTRY_DSN}
 
 COPY --from=builder --chown=node:node /app/apps/backend/package.json ./
 COPY --from=builder --chown=node:node /app/apps/backend/dist ./dist
