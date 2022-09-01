@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
 import { useAuth } from "@clerk/nextjs";
-import { CustomNextLink } from "components/CustomNextLink";
 import { ArrowLeftIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import {
   Affix,
@@ -16,18 +15,16 @@ import {
   Title,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import { AddToFavorites } from "components/Buttons/AddToFavorites";
+import { CustomNextLink } from "components/CustomNextLink";
+import { IngredientCard } from "components/IngredientsCard";
+import { useAddGroceryMutation } from "hooks/useAddGroceryMutation";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import Image from "next/future/image";
 import { useRouter } from "next/router";
 import { Fragment, SyntheticEvent } from "react";
 import { Item } from "types/recipes";
-import { getPopularRecipes } from "util/getPopularRecipes";
-import { getRecipeById } from "util/getRecipeById";
-import { AddToFavorites } from "components/Buttons/AddToFavorites";
-import { IngredientCard } from "components/IngredientsCard";
-import { useAddGroceryMutation } from "hooks/useAddGroceryMutation";
-import { AddGrocery } from "../../types/grocery";
 import {
   getOgImageUrl,
   HF_COVER_IMAGE_URL,
@@ -35,8 +32,10 @@ import {
   HF_PLACEHOLDERURL,
   HF_STEP_IMAGE_URL,
   HOST,
-  VERCEL_URL,
 } from "util/constants";
+import { getPopularRecipes } from "util/getPopularRecipes";
+import { getRecipeById } from "util/getRecipeById";
+import { AddGrocery } from "../../types/grocery";
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const id = params?.id as string;
@@ -109,12 +108,15 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
       <NextSeo
         openGraph={{
           title: recipe.name,
+          type: "website",
           description: recipe.description,
           url: `${HOST}${router.asPath}`,
           images: [
             {
               url: getOgImageUrl(recipe.imagePath),
               alt: recipe.name,
+              height: 630,
+              width: 1200,
               type: "image/jpeg",
             },
           ],
