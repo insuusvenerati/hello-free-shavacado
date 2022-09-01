@@ -34,6 +34,7 @@ import {
   HF_ICON_IMAGE_URL,
   HF_PLACEHOLDERURL,
   HF_STEP_IMAGE_URL,
+  HOST,
   VERCEL_URL,
 } from "util/constants";
 
@@ -109,7 +110,7 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
         openGraph={{
           title: recipe.name,
           description: recipe.description,
-          url: `${VERCEL_URL}${router.asPath}`,
+          url: `${HOST}${router.asPath}`,
           images: [
             {
               url: getOgImageUrl(recipe.imagePath),

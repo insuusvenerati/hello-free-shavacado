@@ -19,7 +19,8 @@ export const HF_CARD_IMAGE_URL =
 
 export const HF_IMPORTED_RECIPE_URL = `${API_URL}/scrape`;
 export const HF_SUGGESTED_RECIPE_URL = `https://www.hellofresh.com/gw/api/recipes/search/suggestions?country=US&locale=en-US&take=5&`;
-export const VERCEL_URL = process.env.NEXT_PUBLIC_VERCEL_URL || "";
+export const HOST =
+  process.env.NEXT_PUBLIC_HOST || process.env.NEXT_PUBLIC_VERCEL_URL || "localhost:3000";
 
 export const getOgImageUrl = (url: string | undefined | null) => {
   if (typeof url !== "string") {
