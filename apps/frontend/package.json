@@ -24,7 +24,7 @@
     "@mantine/notifications": "5.2.4",
     "@mantine/nprogress": "5.2.4",
     "@meilisearch/instant-meilisearch": "0.8.1",
-    "@sentry/nextjs": "^7.11.1",
+    "@sentry/nextjs": "7.12.1",
     "algoliasearch": "4.14.2",
     "cookies-next": "2.1.1",
     "instantsearch.css": "7.4.5",
