@@ -1,4 +1,4 @@
-import { SearchIcon, XIcon } from "@heroicons/react/outline";
+import { MagnifyingGlassCircleIcon, XIcon } from "@heroicons/react/24/outline";
 import { ActionIcon, Loader, TextInput, ThemeIcon } from "@mantine/core";
 import { useRecipesContext } from "../context/RecipesContext";
 
@@ -23,7 +23,7 @@ export const Search = () => {
         aria-label="Search"
         onChange={onChangeHandler}
         placeholder="Search"
-        icon={<SearchIcon width={16} />}
+        icon={<MagnifyingGlassCircleIcon width={16} />}
         rightSection={
           isLoading || isFetching ? (
             <Loader size="sm" />

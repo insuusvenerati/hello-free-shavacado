@@ -1,5 +1,5 @@
-import { MoonIcon } from "@components/Icons/MoonIcon";
-import { SunIcon } from "@components/Icons/SunIcon";
+import { MoonIcon } from "components/Icons/MoonIcon";
+import { SunIcon } from "components/Icons/SunIcon";
 import {
   createStyles,
   UnstyledButton,

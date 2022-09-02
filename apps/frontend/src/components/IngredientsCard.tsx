@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import { useAuth } from "@clerk/nextjs";
-import { CheckIcon, PlusIcon } from "@heroicons/react/outline";
+import { CheckIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Accordion, ActionIcon, Box, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import Image from "next/image";
 import { useAddGroceryMutation } from "../hooks/useAddGroceryMutation";

@@ -6,13 +6,11 @@ import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core
 import { useLocalStorage } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
 import "instantsearch.css/themes/algolia-min.css";
-import { DefaultSeo } from "next-seo";
 import { AppProps as NextAppProps } from "next/app";
 import Head from "next/head";
 import { useCallback, useState } from "react";
-import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from "react-query";
+import { DehydratedState, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import SEO from "../../next-seo.config";
 import { Layout } from "../components/Layout";
 import { RouterTransition } from "../components/RouterTransition";
 
@@ -196,7 +194,7 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
           href="splash_screens/4__iPhone_SE__iPod_touch_5th_generation_and_later_portrait.png"
         />
       </Head>
-      <DefaultSeo {...SEO} />
+      {/* <DefaultSeo {...SEO} /> */}
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
@@ -204,11 +202,11 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
             <ClerkProvider frontendApi={CLERK_FRONTEND_KEY} {...pageProps}>
               <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen={false} />
-                <Hydrate state={pageProps.dehydratedState}>
-                  <Layout>
-                    <Component {...pageProps} />
-                  </Layout>
-                </Hydrate>
+                {/* <Hydrate state={pageProps.dehydratedState}> */}
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+                {/* </Hydrate> */}
               </QueryClientProvider>
             </ClerkProvider>
           </NotificationsProvider>

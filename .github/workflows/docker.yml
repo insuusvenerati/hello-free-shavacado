@@ -59,9 +59,13 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             NEXT_PUBLIC_CLERK_FRONTEND_API=${{ secrets.NEXT_PUBLIC_CLERK_FRONTEND_API }}
+            NEXT_PUBLIC_AXIOM_INGEST_ENDPOINT=${{ secrets.NEXT_PUBLIC_AXIOM_INGEST_ENDPOINT }}
             CLERK_API_KEY=${{ secrets.CLERK_API_KEY }}
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
             NEXT_PUBLIC_ALGOLIA_APP=${{ secrets.NEXT_PUBLIC_ALGOLIA_APP }}
             NEXT_PUBLIC_ALGOLIA_KEY=${{ secrets.NEXT_PUBLIC_ALGOLIA_KEY }}
             ALGOLIA_APP=${{ secrets.ALGOLIA_APP }}
             ALGOLIA_KEY=${{ secrets.ALGOLIA_KEY }}
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+            SENTRY_ORG=${{ secrets.SENTRY_ORG }}
+            SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}

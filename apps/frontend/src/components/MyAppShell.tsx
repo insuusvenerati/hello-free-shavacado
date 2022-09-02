@@ -21,12 +21,12 @@ import { CurrentRefinements } from "react-instantsearch-hooks-web";
 import { useAddImportedRecipeMutation } from "../hooks/useAddImportedRecipeMutation";
 import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
-import { ClearRefinements } from "./ClearRefinements";
+import { ClearRefinements } from "./Search/ClearRefinements";
 import { ImportedRecipeLink } from "./ImportedRecipeLink";
 import { MyHeader } from "./MyHeader";
 import { NavbarContent } from "./NavContent";
 import { RecipeLink } from "./RecipeLink";
-import { RefinementList } from "./RefinementList";
+import { RefinementList } from "./Search/RefinementList";
 
 type AppShellProps = {
   children: JSX.Element[] | JSX.Element;

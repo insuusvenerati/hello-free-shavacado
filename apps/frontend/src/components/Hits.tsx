@@ -1,10 +1,9 @@
 import { Grid } from "@mantine/core";
-import { HitsProvided } from "react-instantsearch-core";
 import { useHits, UseHitsProps } from "react-instantsearch-hooks-web";
 import { RecipeHit } from "types/recipeSearchQuery";
 import { RecipeCard } from "./RecipeCard";
 
-export const Hits = (props: UseHitsProps) => {
+export const Hits = (props: UseHitsProps<RecipeHit>) => {
   const { hits } = useHits(props);
 
   return (

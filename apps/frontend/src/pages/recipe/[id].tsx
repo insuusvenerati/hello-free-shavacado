@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import { useAuth } from "@clerk/nextjs";
-import { CustomNextLink } from "@components/CustomNextLink";
-import { ArrowLeftIcon, DocumentIcon } from "@heroicons/react/outline";
+import { ArrowLeftIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import {
   Affix,
   Box,
@@ -11,35 +10,32 @@ import {
   Divider,
   Group,
   List,
-  Loader,
   LoadingOverlay,
   Text,
   Title,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import { AddToFavorites } from "components/Buttons/AddToFavorites";
+import { CustomNextLink } from "components/CustomNextLink";
+import { IngredientCard } from "components/IngredientsCard";
+import { useAddGroceryMutation } from "hooks/useAddGroceryMutation";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
-import dynamic from "next/dynamic";
-import Image from "next/image";
+import Image from "next/future/image";
 import { useRouter } from "next/router";
 import { Fragment, SyntheticEvent } from "react";
 import { Item } from "types/recipes";
-import { getPopularRecipes } from "util/getPopularRecipes";
-import { getRecipeById } from "util/getRecipeById";
-import { AddToFavorites } from "../../components/Buttons/AddToFavorites";
-import { IngredientCard } from "../../components/IngredientsCard";
-import { useAddGroceryMutation } from "../../hooks/useAddGroceryMutation";
-import { AddGrocery } from "../../types/grocery";
 import {
   getOgImageUrl,
   HF_COVER_IMAGE_URL,
   HF_ICON_IMAGE_URL,
   HF_PLACEHOLDERURL,
   HF_STEP_IMAGE_URL,
-  VERCEL_URL,
-} from "../../util/constants";
-
-const LazyImage = dynamic(() => import("next/image"));
+  HOST,
+} from "util/constants";
+import { getPopularRecipes } from "util/getPopularRecipes";
+import { getRecipeById } from "util/getRecipeById";
+import { AddGrocery } from "../../types/grocery";
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const id = params?.id as string;
@@ -61,15 +57,17 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
+const imageCSS = { width: "100%", height: "auto" };
+
 const Recipe = ({ recipe }: { recipe: Item }) => {
   const matches = useMediaQuery("(min-width: 900px)", true);
   const { userId } = useAuth();
   const router = useRouter();
   const { mutate: addGroceryMutation, isLoading } = useAddGroceryMutation();
 
-  const yields = recipe?.yields?.map((y) => y.ingredients).flat();
+  const yields = recipe.yields?.map((y) => y.ingredients).flat();
 
-  const addGroceriesIngredients = recipe?.ingredients?.map((ingredient) => {
+  const addGroceriesIngredients = recipe.ingredients?.map((ingredient) => {
     const ingredientYield = yields?.filter((y) => y.id === ingredient.id);
     return {
       ingredient: ingredient.name,
@@ -109,19 +107,22 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
     <>
       <NextSeo
         openGraph={{
-          title: recipe?.name,
-          description: recipe?.description,
-          url: `${VERCEL_URL}${router.asPath}`,
+          title: recipe.name,
+          type: "website",
+          description: recipe.description,
+          url: `${HOST}${router.asPath}`,
           images: [
             {
-              url: getOgImageUrl(recipe?.imagePath),
+              url: getOgImageUrl(recipe.imagePath),
               alt: recipe.name,
+              height: 630,
+              width: 1200,
               type: "image/jpeg",
             },
           ],
         }}
-        title={recipe?.name}
-        description={recipe?.description}
+        title={recipe.name}
+        description={recipe.description}
       />
 
       <Affix position={{ bottom: 20, left: 20 }}>
@@ -130,32 +131,29 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
         </Button>
       </Affix>
 
-      {recipe?.imagePath ? (
-        <Image
-          alt={recipe?.name}
-          blurDataURL={`${HF_PLACEHOLDERURL}${recipe?.imagePath}`}
-          height={matches ? 800 : 350}
-          objectFit="cover"
-          placeholder="blur"
-          src={`${HF_COVER_IMAGE_URL}${recipe?.imagePath}`}
-          width={matches ? 2400 : 600}
-        />
-      ) : (
-        <Loader />
-      )}
+      <Image
+        alt={recipe.name}
+        blurDataURL={`${HF_PLACEHOLDERURL}${recipe.imagePath}`}
+        height={800}
+        placeholder="blur"
+        src={`${HF_COVER_IMAGE_URL}${recipe.imagePath}`}
+        width={2400}
+        sizes="100vw"
+        style={imageCSS}
+      />
 
       <Container size="xl">
         <Box mt="md" mb="lg">
           <Card.Section p={20}>
             <Group position="apart">
               <Group grow={false} spacing={0}>
-                <Title order={1}>{recipe?.name}</Title>
-                <Title order={6}> {recipe?.headline} </Title>
+                <Title order={1}>{recipe.name}</Title>
+                <Title order={6}> {recipe.headline} </Title>
               </Group>
               <Group position={matches ? "right" : "center"}>
                 <AddToFavorites selectedRecipe={recipe} />
-                {recipe?.cardLink && (
-                  <CustomNextLink href={recipe?.cardLink} target="_blank">
+                {recipe.cardLink && (
+                  <CustomNextLink href={recipe.cardLink} target="_blank">
                     <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
                   </CustomNextLink>
                 )}
@@ -169,20 +167,20 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
             <Divider my="sm" />
             <Group position="apart">
               <Group>
-                <Text sx={{ maxWidth: "750px" }}>{recipe?.description}</Text>
-                {recipe && recipe?.tags.length > 0 ? (
+                <Text sx={{ maxWidth: "750px" }}>{recipe.description}</Text>
+                {recipe && recipe.tags.length > 0 ? (
                   <Group>
                     <Text weight="bolder">Tags:</Text>
-                    {recipe?.tags.map((tag) => (
+                    {recipe.tags.map((tag) => (
                       <Text key={tag.id}>{tag.name}</Text>
                     ))}
                   </Group>
                 ) : null}
                 <Group>
                   <Text weight="bolder">Allergens:</Text>
-                  {recipe?.allergens.map((allergen) => (
+                  {recipe.allergens.map((allergen) => (
                     <Group key={allergen.id}>
-                      <LazyImage
+                      <Image
                         alt={allergen.id}
                         height={32}
                         src={`${HF_ICON_IMAGE_URL}/${allergen.iconPath}`}
@@ -194,8 +192,8 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
                 </Group>
               </Group>
               <Group>
-                <Text>Total Time {recipe?.totalTime}</Text>
-                <Text>Difficulty {recipe?.difficulty}</Text>
+                <Text>Total Time {recipe.totalTime}</Text>
+                <Text>Difficulty {recipe.difficulty}</Text>
               </Group>
             </Group>
           </Card.Section>
@@ -210,11 +208,11 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
           {/* <Group> */}
           <Title order={2}>Instructions</Title>
           <List listStyleType="none" size="xl">
-            {recipe?.steps?.map((step) => (
+            {recipe.steps?.map((step) => (
               <Fragment key={step.index}>
                 <Group mb={24}>
                   {step.images.map((image) => (
-                    <LazyImage
+                    <Image
                       alt={image.caption}
                       blurDataURL={`${HF_PLACEHOLDERURL}/${image.path}`}
                       height={230}

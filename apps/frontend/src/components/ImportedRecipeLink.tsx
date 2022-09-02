@@ -1,4 +1,4 @@
-import { LinkIcon, TrashIcon } from "@heroicons/react/outline";
+import { LinkIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { ActionIcon, Avatar, createStyles, Group, List, Paper, Text, Tooltip } from "@mantine/core";
 import { useDeleteImportedRecipeMutation } from "../hooks/useDeleteImportedRecipeMutation";
 import { ImportedRecipe } from "../types/importedRecipe";
@@ -34,7 +34,7 @@ export const ImportedRecipeLink = ({ recipe }: { recipe: ImportedRecipe }) => {
               <TrashIcon />
             </ActionIcon>
           </Tooltip>
-          <CustomNextLink href={`/imported-recipe/${recipe?.id}`}>
+          <CustomNextLink href={`/imported-recipe/${recipe.id}`}>
             <Tooltip label="View Instructions">
               <ActionIcon mr="xs">
                 <LinkIcon />

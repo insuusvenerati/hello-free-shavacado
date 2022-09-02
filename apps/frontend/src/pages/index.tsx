@@ -1,9 +1,11 @@
-import { Hits } from "@components/Hits";
+import { Hits } from "components/Hits";
 import { Avatar, Container, Grid, Group, MantineColor, SelectItemProps, Text } from "@mantine/core";
 import { getCookie, setCookies } from "cookies-next";
 import { forwardRef, useEffect } from "react";
 import { Pagination, SortBy } from "react-instantsearch-hooks-web";
 import { hellofreshGetToken } from "../util/hellofresh";
+import { NextSeo } from "next-seo";
+import defaultSEO from "../../next-seo.config";
 
 // export const getServerSideProps: GetServerSideProps = async ({ res }) => {
 //   res.setHeader("Cache-Control", `public, s-maxage=60, stale-while-revalidate=${FIVE_MINUTES}`);
@@ -70,6 +72,7 @@ const Home = () => {
 
   return (
     <>
+      <NextSeo {...defaultSEO} />
       <Container>
         <Grid columns={6} justify="center">
           <Grid.Col md={3}>

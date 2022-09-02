@@ -1,6 +1,6 @@
-import type { NestMiddleware } from '@nestjs/common';
-import { Injectable, Logger } from '@nestjs/common';
-import type { Request, Response, NextFunction } from 'express';
+import type { NestMiddleware } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
+import type { Request, Response, NextFunction } from "express";
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
@@ -31,8 +31,7 @@ export class LoggerMiddleware implements NestMiddleware {
     const notHealthCheck = !originalUrl.includes(`/health`);
     const shouldLogHealthCheck =
       originalUrl.includes(`/health`) &&
-      this.healthCheckLoggingInterval <
-        process.hrtime(this.lastLoggedPositiveHealthCheck)[0];
+      this.healthCheckLoggingInterval < process.hrtime(this.lastLoggedPositiveHealthCheck)[0];
     if (shouldLogHealthCheck) {
       this.lastLoggedPositiveHealthCheck = process.hrtime();
     }

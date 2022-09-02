@@ -1,5 +1,11 @@
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
-import { BookmarkIcon, CakeIcon, CogIcon, HomeIcon, LoginIcon } from "@heroicons/react/outline";
+import {
+  BookmarkIcon,
+  CakeIcon,
+  CogIcon,
+  HomeIcon,
+  ArrowLeftOnRectangleIcon,
+} from "@heroicons/react/24/outline";
 import {
   Box,
   Button,
@@ -99,12 +105,12 @@ const SignInOrUserProfile = ({
     return (
       <NavLink
         sx={{ whiteSpace: "nowrap" }}
-        icon={<LoginIcon color={dark ? "yellow" : "black"} width={16} />}
+        icon={<ArrowLeftOnRectangleIcon color={dark ? "yellow" : "black"} width={16} />}
         label="Account"
       >
         <SignInButton mode="modal">
           <Button
-            leftIcon={<LoginIcon width={16} />}
+            leftIcon={<ArrowLeftOnRectangleIcon width={16} />}
             variant="gradient"
             gradient={{ from: "indigo", to: "cyan" }}
             fullWidth
@@ -119,7 +125,7 @@ const SignInOrUserProfile = ({
   return (
     <NavLink
       sx={{ whiteSpace: "nowrap" }}
-      icon={<LoginIcon color={dark ? "yellow" : "black"} width={16} />}
+      icon={<ArrowLeftOnRectangleIcon color={dark ? "yellow" : "black"} width={16} />}
       label="Account"
     >
       <UserButton showName />
