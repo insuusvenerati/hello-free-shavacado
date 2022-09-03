@@ -12,7 +12,27 @@ COPY turbo.json turbo.json
 RUN yarn install --frozen-lockfile \
   && yarn workspace @stiforr/frontend add sharp
 
-RUN --mount=type=secret,id=mysecret,dst=/app/apps/frontend/.env.production.local yarn build --filter=@stiforr/frontend...
+ARG NEXT_PUBLIC_CLERK_FRONTEND_API
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_VERCEL_URL
+ARG NEXT_PUBLIC_ALGOLIA_APP
+ARG NEXT_PUBLIC_ALGOLIA_KEY
+
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+ENV NEXT_PUBLIC_CLERK_FRONTEND_API=${NEXT_PUBLIC_CLERK_FRONTEND_API}
+ENV NEXT_PUBLIC_VERCEL_URL=${NEXT_PUBLIC_VERCEL_URL}
+ENV NEXT_PUBLIC_ALGOLIA_APP=${NEXT_PUBLIC_ALGOLIA_APP}
+ENV NEXT_PUBLIC_ALGOLIA_KEY=${NEXT_PUBLIC_ALGOLIA_KEY}
+
+RUN --mount=type=secret,id=CLERK_API_KEY \
+    && --mount=type=secret,id=SENTRY_AUTH_TOKEN \
+    && --mount=type=secret,id=SENTRY_ORG \
+    && --mount=type=secret,id=SENTRY_PROJECT \
+    && export SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN) \
+    && export SENTRY_ORG=$(cat /run/secrets/SENTRY_ORG) \
+    && export SENTRY_PROJECT=$(cat /run/secrets/SENTRY_PROJECT) \
+    && export CLERK_API_KEY=$(cat /run/secrets/CLERK_API_KEY) \
+    && yarn build --filter=@stiforr/frontend...
 
 # ---
 
