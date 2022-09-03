@@ -14,7 +14,7 @@ import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 import { useGetOneImportedRecipeQuery } from "../../hooks/useGetImportedRecipesQuery";
-import { VERCEL_URL } from "../../util/constants";
+import { HOST } from "../../util/constants";
 
 // const imageCSS = { width: "100%", height: "auto" };
 
@@ -36,7 +36,7 @@ const ImportedRecipe = () => {
         openGraph={{
           title: recipe.name,
           description: recipe.description,
-          url: `${VERCEL_URL}${asPath}`,
+          url: `${HOST}${asPath}`,
           images: [
             {
               url: recipe.image,
