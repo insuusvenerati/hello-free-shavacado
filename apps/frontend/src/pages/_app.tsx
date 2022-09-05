@@ -205,7 +205,7 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
               <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen={false} />
                 {/* <Hydrate state={pageProps.dehydratedState}> */}
-                <DefaultSeo {...NextSeoConfig} />
+                {/*<DefaultSeo {...NextSeoConfig} />*/}
                 <Layout>
                   <Component {...pageProps} />
                 </Layout>
