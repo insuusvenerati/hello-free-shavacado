@@ -1,4 +1,4 @@
-import { Badge, Card, Container, LoadingOverlay, Text } from "@mantine/core";
+import { Badge, Card, CardProps, Container, LoadingOverlay, Text } from "@mantine/core";
 import { Hit } from "instantsearch.js";
 import Image from "next/future/image";
 import { ImportedRecipe, isImportedRecipe } from "types/importedRecipe";
@@ -10,11 +10,11 @@ import { RecipeCardImage } from "./RecipeCardImage";
 
 type Props = {
   recipe: Hit<RecipeHit> | ImportedRecipe | Item;
-};
+} & Omit<CardProps, "children">;
 
 const imageCSS = { width: "100%", height: "auto" };
 
-export const RecipeCard = ({ recipe }: Props) => {
+export const RecipeCard = ({ recipe, ...props }: Props) => {
   if (!recipe) {
     return (
       <Container>
@@ -25,7 +25,7 @@ export const RecipeCard = ({ recipe }: Props) => {
 
   if (isImportedRecipe(recipe)) {
     return (
-      <Card shadow="sm">
+      <Card {...props} shadow="sm">
         <Card.Section mb="sm">
           <Image
             style={imageCSS}
@@ -45,7 +45,7 @@ export const RecipeCard = ({ recipe }: Props) => {
   }
 
   return (
-    <Card shadow="sm">
+    <Card shadow="md" {...props}>
       <Card.Section mb="sm">
         <RecipeCardImage alt={recipe?.name} height={340} src={recipe?.imagePath} width={600} />
       </Card.Section>

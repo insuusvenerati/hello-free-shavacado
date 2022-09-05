@@ -27,6 +27,7 @@
     "@sentry/nextjs": "7.12.1",
     "algoliasearch": "4.14.2",
     "cookies-next": "2.1.1",
+    "framer-motion": "^7.2.1",
     "instantsearch.css": "7.4.5",
     "ky": "0.31.1",
     "ky-universal": "0.10.1",
@@ -40,7 +41,7 @@
     "react-instantsearch-hooks-web": "6.32.1",
     "react-query": "3.39.2",
     "sharp": "0.30.7",
-    "typescript": "4.8.2"
+    "typescript": "4.7.4"
   },
   "devDependencies": {
     "@babel/core": "7.18.13",
@@ -51,7 +52,7 @@
     "@typescript-eslint/eslint-plugin": "5.36.0",
     "@typescript-eslint/parser": "5.36.0",
     "babel-loader": "8.2.5",
-    "eslint": "8.23.0",
+    "eslint": "8.22.0",
     "eslint-config-next": "12.2.5",
     "jsdom": "20.0.0"
   },

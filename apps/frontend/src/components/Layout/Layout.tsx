@@ -3,7 +3,8 @@ import { Suspense } from "react";
 import { InstantSearch } from "react-instantsearch-hooks-web";
 import { useIsFetching } from "react-query";
 import { algoliaSearch } from "util/algolia";
-import { MyAppShell } from "./MyAppShell";
+import { MyAppShell } from "../MyAppShell";
+import { Transition as FramerTransition } from "components/Transition";
 
 export const Layout = ({ children }) => {
   const isFetching = useIsFetching();
@@ -16,7 +17,9 @@ export const Layout = ({ children }) => {
       </Affix>
       <InstantSearch indexName="hellofresh" searchClient={algoliaSearch}>
         <MyAppShell>
-          <Suspense>{children}</Suspense>
+          <Suspense>
+            <FramerTransition>{children}</FramerTransition>
+          </Suspense>
         </MyAppShell>
       </InstantSearch>
     </>
