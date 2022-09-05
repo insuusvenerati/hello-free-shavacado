@@ -11,8 +11,8 @@ import Head from "next/head";
 import { useCallback, useState } from "react";
 import { DehydratedState, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { Layout } from "../components/Layout";
-import { RouterTransition } from "../components/RouterTransition";
+import { Layout } from "components/Layout/Layout";
+import { RouterTransition } from "components/RouterTransition";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 

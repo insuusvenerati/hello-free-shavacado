@@ -6,7 +6,7 @@ import { FormEvent } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Item } from "types/recipes";
 import { RecipeHit } from "types/recipeSearchQuery";
-import { useFavoriteRecipesQuery } from "../../hooks/useFavoriteRecipesQuery";
+import { useFavoriteRecipesQuery } from "hooks/useFavoriteRecipesQuery";
 import { addRecipe } from "../../util/addRecipe";
 
 type Props = { selectedRecipe: RecipeHit | Item } & ButtonProps;
