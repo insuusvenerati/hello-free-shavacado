@@ -35,6 +35,7 @@ import {
 import { getPopularRecipes } from "util/getPopularRecipes";
 import { getRecipeById } from "util/getRecipeById";
 import { AddGrocery } from "../../types/grocery";
+import Head from "next/head";
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const id = params?.id as string;
@@ -105,25 +106,32 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
 
   return (
     <>
-      <NextSeo
-        openGraph={{
-          title: recipe.name,
-          type: "website",
-          description: recipe.description,
-          url: `${HOST}${router.asPath}`,
-          images: [
-            {
-              url: ogImageUrl,
-              alt: recipe.name,
-              height: 630,
-              width: 1200,
-              type: "image/jpeg",
-            },
-          ],
-        }}
-        title={recipe.name}
-        description={recipe.description}
-      />
+      <Head>
+        <title> {recipe.name} </title>
+
+        <meta property="og:image" content={ogImageUrl} key={ogImageUrl} />
+        <meta property="og:title" content={recipe.name} key={recipe.name} />
+        <meta property="og:description" content={recipe.description} key={recipe.description} />
+      </Head>
+      {/*<NextSeo*/}
+      {/*  openGraph={{*/}
+      {/*    title: recipe.name,*/}
+      {/*    type: "website",*/}
+      {/*    description: recipe.description,*/}
+      {/*    url: `${HOST}${router.asPath}`,*/}
+      {/*    images: [*/}
+      {/*      {*/}
+      {/*        url: ogImageUrl,*/}
+      {/*        alt: recipe.name,*/}
+      {/*        height: 630,*/}
+      {/*        width: 1200,*/}
+      {/*        type: "image/jpeg",*/}
+      {/*      },*/}
+      {/*    ],*/}
+      {/*  }}*/}
+      {/*  title={recipe.name}*/}
+      {/*  description={recipe.description}*/}
+      {/*/>*/}
 
       <Affix position={{ bottom: 20, left: 20 }}>
         <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
