@@ -13,6 +13,8 @@ import { DehydratedState, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Layout } from "components/Layout/Layout";
 import { RouterTransition } from "components/RouterTransition";
+import { DefaultSeo } from "next-seo";
+import NextSeoConfig from "../../next-seo.config";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 
@@ -194,7 +196,7 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
           href="splash_screens/4__iPhone_SE__iPod_touch_5th_generation_and_later_portrait.png"
         />
       </Head>
-      {/* <DefaultSeo {...SEO} /> */}
+
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
@@ -203,6 +205,7 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
               <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen={false} />
                 {/* <Hydrate state={pageProps.dehydratedState}> */}
+                <DefaultSeo {...NextSeoConfig} />
                 <Layout>
                   <Component {...pageProps} />
                 </Layout>

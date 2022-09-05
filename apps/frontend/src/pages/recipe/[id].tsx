@@ -10,7 +10,6 @@ import {
   Divider,
   Group,
   List,
-  LoadingOverlay,
   Text,
   Title,
 } from "@mantine/core";
@@ -64,6 +63,7 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
   const { userId } = useAuth();
   const router = useRouter();
   const { mutate: addGroceryMutation, isLoading } = useAddGroceryMutation();
+  const ogImageUrl = getOgImageUrl(recipe.imagePath);
 
   const yields = recipe.yields?.map((y) => y.ingredients).flat();
 
@@ -101,7 +101,7 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
     });
   };
 
-  if (!recipe) return <LoadingOverlay visible />;
+  // if (!recipe) return <LoadingOverlay visible />;
 
   return (
     <>
@@ -113,7 +113,7 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
           url: `${HOST}${router.asPath}`,
           images: [
             {
-              url: getOgImageUrl(recipe.imagePath),
+              url: ogImageUrl,
               alt: recipe.name,
               height: 630,
               width: 1200,
