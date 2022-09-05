@@ -11,10 +11,40 @@
     {
       "name": "Favorite Recipes",
       "url": "/myrecipes",
-      "description": "Display a list of your favorited recipes"
+      "description": "Display a list of your favorited recipes",
+      "icons": [
+        {
+          "src": "/icons/96x96-icon.png"
+        }
+      ]
+    },
+    {
+      "name": "Groceries",
+      "url": "/groceries",
+      "description": "Display a list of your groceries",
+      "icons": [
+        {
+          "src": "/icons/96x96-icon.png",
+          "type": "image/svg",
+          "sizes": "any",
+          "purpose": "any maskable"
+        }
+      ]
     }
   ],
   "icons": [
+    {
+      "src": "/icons/maskable_icon.png",
+      "type": "image/png",
+      "purpose": "maskable",
+      "sizes": "1024x1024"
+    },
+    {
+      "src": "/OrangeSlice2.svg",
+      "purpose": "any maskable",
+      "sizes": "any",
+      "type": "image/svg"
+    },
     {
       "src": "/icons/71x71-icon.png",
       "type": "image/png",
