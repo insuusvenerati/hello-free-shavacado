@@ -15,7 +15,7 @@ import { Layout } from "components/Layout/Layout";
 import { RouterTransition } from "components/RouterTransition";
 import { Item } from "../types/recipes";
 import { HeadMeta } from "components/HeadMeta";
-import { RecipeJsonLd, RecipeJsonLdProps } from "next-seo";
+import { RecipeJsonLdProps } from "next-seo";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 
@@ -31,7 +31,8 @@ type CustomPageProps = {
 };
 
 const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
-  const { openGraphData = [], jsonLdData } = pageProps;
+  const { openGraphData = [] } = pageProps;
+
   // eslint-disable-next-line react/hook-use-state
   const [queryClient] = useState(
     () =>
@@ -66,7 +67,7 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
           <meta key={i} {...og} />
         ))}
       </Head>
-      <RecipeJsonLd {...jsonLdData} />
+      {/*<RecipeJsonLd {...jsonLdData} />*/}
 
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>

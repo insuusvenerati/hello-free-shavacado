@@ -34,6 +34,7 @@ import { getRecipeById } from "util/getRecipeById";
 import { AddGrocery } from "../../types/grocery";
 import { createMetaTagsFromRecipe } from "../../util/createMetaTagsFromRecipe";
 import { createJsonLdDataFromRecipe } from "../../util/createJsonLdDataFromRecipe";
+import { RecipeJsonLd, RecipeJsonLdProps } from "next-seo";
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const id = params?.id as string;
@@ -59,7 +60,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 const imageCSS = { width: "100%", height: "auto" };
 
-const Recipe = ({ recipe }: { recipe: Item }) => {
+const Recipe = ({ recipe, jsonLdData }: { recipe: Item; jsonLdData: RecipeJsonLdProps }) => {
   const matches = useMediaQuery("(min-width: 900px)", true);
   const { userId } = useAuth();
   const router = useRouter();
@@ -106,6 +107,7 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
 
   return (
     <>
+      <RecipeJsonLd {...jsonLdData} />
       <Affix position={{ bottom: 20, left: 20 }}>
         <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
           Go back
