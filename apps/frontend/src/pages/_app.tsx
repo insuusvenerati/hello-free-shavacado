@@ -9,12 +9,11 @@ import "instantsearch.css/themes/algolia-min.css";
 import { AppProps as NextAppProps } from "next/app";
 import Head from "next/head";
 import { useCallback, useState } from "react";
-import { DehydratedState, QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Layout } from "components/Layout/Layout";
 import { RouterTransition } from "components/RouterTransition";
-import { DefaultSeo } from "next-seo";
-import NextSeoConfig from "../../next-seo.config";
+import { Item } from "../types/recipes";
 import { HeadMeta } from "components/HeadMeta";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
@@ -26,6 +25,7 @@ type AppProps<P = unknown> = {
 type CustomPageProps = {
   // dehydratedState: DehydratedState;
   openGraphData: Array<Record<string, any>>;
+  recipe: Item;
 };
 
 const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
@@ -59,10 +59,11 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
   return (
     <>
       <Head>
+        <HeadMeta />
+        <title> {pageProps.recipe.name} </title>
         {openGraphData.map((og, i) => (
           <meta key={i} {...og} />
         ))}
-        <HeadMeta />
       </Head>
 
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
