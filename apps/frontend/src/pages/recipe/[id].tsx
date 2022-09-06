@@ -24,26 +24,25 @@ import { useRouter } from "next/router";
 import { Fragment, SyntheticEvent } from "react";
 import { Item } from "types/recipes";
 import {
-  getOgImageUrl,
   HF_COVER_IMAGE_URL,
   HF_ICON_IMAGE_URL,
   HF_PLACEHOLDERURL,
   HF_STEP_IMAGE_URL,
-  HOST,
 } from "util/constants";
 import { getPopularRecipes } from "util/getPopularRecipes";
 import { getRecipeById } from "util/getRecipeById";
 import { AddGrocery } from "../../types/grocery";
-import { NextSeo } from "next-seo";
 import { createMetaTagsFromRecipe } from "../../util/createMetaTagsFromRecipe";
+import { createJsonLdDataFromRecipe } from "../../util/createJsonLdDataFromRecipe";
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const id = params?.id as string;
   const recipe = await getRecipeById({ id });
   const { openGraphData } = createMetaTagsFromRecipe(recipe);
+  const jsonLdData = createJsonLdDataFromRecipe(recipe);
 
   return {
-    props: { recipe, openGraphData },
+    props: { recipe, openGraphData, jsonLdData },
   };
 };
 
@@ -65,7 +64,6 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
   const { userId } = useAuth();
   const router = useRouter();
   const { mutate: addGroceryMutation, isLoading } = useAddGroceryMutation();
-  const ogImageUrl = getOgImageUrl(recipe.imagePath);
 
   const yields = recipe.yields?.map((y) => y.ingredients).flat();
 
@@ -108,26 +106,6 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
 
   return (
     <>
-      {/*<NextSeo*/}
-      {/*  openGraph={{*/}
-      {/*    title: recipe.name,*/}
-      {/*    type: "website",*/}
-      {/*    description: recipe.description,*/}
-      {/*    url: `${HOST}${router.asPath}`,*/}
-      {/*    images: [*/}
-      {/*      {*/}
-      {/*        url: ogImageUrl,*/}
-      {/*        alt: recipe.name,*/}
-      {/*        height: 630,*/}
-      {/*        width: 1200,*/}
-      {/*        type: "image/jpeg",*/}
-      {/*      },*/}
-      {/*    ],*/}
-      {/*  }}*/}
-      {/*  title={recipe.name}*/}
-      {/*  description={recipe.description}*/}
-      {/*/>*/}
-
       <Affix position={{ bottom: 20, left: 20 }}>
         <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
           Go back

@@ -13,7 +13,7 @@ import { NextSeo } from "next-seo";
 // import Image from "next/future/image";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
-import { useGetOneImportedRecipeQuery } from "../../hooks/useGetImportedRecipesQuery";
+import { useGetOneImportedRecipeQuery } from "hooks/useGetImportedRecipesQuery";
 import { HOST } from "../../util/constants";
 
 // const imageCSS = { width: "100%", height: "auto" };
