@@ -60,7 +60,6 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
     <>
       <Head>
         <HeadMeta />
-        <title> {pageProps.recipe.name} </title>
         {openGraphData.map((og, i) => (
           <meta key={i} {...og} />
         ))}
