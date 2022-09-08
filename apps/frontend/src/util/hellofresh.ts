@@ -1,5 +1,4 @@
 import { getCookie } from "cookies-next";
-import ky from "ky";
 import { RecipeQuery } from "../types/recipes";
 import { HELLOFRESH_SEARCH_URL } from "./constants";
 
@@ -24,26 +23,24 @@ type HelloFreshSearchOptions = {
 const token = getCookie("hf-token") as string | undefined;
 
 export const hellofreshGetToken = async () => {
-  const response = await ky.post(
+  const response = await fetch(
     "https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials&scope=public&locale=en-US&country=us",
+    { method: "POST" },
   );
 
-  const token = response.json<Token>();
-
-  return token;
+  return (await response.json()) as Token;
 };
 
 export const hellofreshSearch = async (searchText: string, options?: HelloFreshSearchOptions) => {
   const { page = 1, tag, maxPrepTime, difficulty, take = 20, token } = options || {};
-  if (!token) return await Promise.reject("No token provided");
+  if (!token) throw "No token provided";
 
-  const response = await ky.get(`${HELLOFRESH_SEARCH_URL}?page=${page}&q=${searchText}`, {
+  const response = await fetch(`${HELLOFRESH_SEARCH_URL}?page=${page}&q=${searchText}`, {
     headers: {
       authorization: `Bearer ${token}`,
     },
   });
-  const data = await response.json<RecipeQuery>();
-  return data;
+  return (await response.json()) as RecipeQuery;
 };
 
 export const hellofreshSearchBySlug = async ({
@@ -54,14 +51,12 @@ export const hellofreshSearchBySlug = async ({
   token?: string;
 }) => {
   if (!slug || typeof slug !== "string") {
-    return await Promise.reject("Invalid recipe slug was provided");
+    throw "Invalid recipe slug was provided";
   }
-  if (!token) return await Promise.reject("No token provided");
+  if (!token) throw "No token provided";
 
-  const response = await ky.get(`${HELLOFRESH_SEARCH_URL}/recipe?q=${slug}`, {
+  const response = await fetch(`${HELLOFRESH_SEARCH_URL}/recipe?q=${slug}`, {
     headers: { authorization: `Bearer ${token}` },
   });
-  const data = await response.json<RecipeQuery>();
-
-  return data;
+  return (await response.json()) as RecipeQuery;
 };

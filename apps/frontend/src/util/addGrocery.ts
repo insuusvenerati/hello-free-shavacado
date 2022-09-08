@@ -1,5 +1,4 @@
 import { SignInProps } from "@clerk/types";
-import ky from "ky-universal";
 import { AddGrocery, Grocery } from "../types/grocery";
 import { API_URL } from "./constants";
 
@@ -8,16 +7,17 @@ export const addGrocery = async (
   grocery: AddGrocery,
   openSignIn: (signInProps?: SignInProps) => void,
 ) => {
-  if (!userId) {
+  if (typeof userId !== "string") {
     openSignIn({});
+    throw new Error("Not signed in");
   }
 
-  return await ky
-    .post(`${API_URL}/groceries?user=${userId}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(grocery),
-    })
-    .json<Grocery>();
+  const response = await fetch(`${API_URL}/groceries?user=${userId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(grocery),
+  });
+  return (await response.json()) as Grocery;
 };
