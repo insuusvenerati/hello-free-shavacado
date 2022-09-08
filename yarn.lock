@@ -2315,7 +2315,7 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@ntegral/nestjs-sentry@^3.0.7":
+"@ntegral/nestjs-sentry@3.0.7":
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/@ntegral/nestjs-sentry/-/nestjs-sentry-3.0.7.tgz#0abffc10e80eb55dc320954bab57209a0ab7b409"
   integrity sha512-D319UQyX+Xcn68D8lvV0vla++RFM9pe+EnunWZLaay+SG1Myl9PDh1DcehZKjM3WaPgGDWBZZKh/J062Yycsmw==
@@ -6072,7 +6072,7 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
-framer-motion@^7.2.1:
+framer-motion@7.2.1:
   version "7.2.1"
   resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-7.2.1.tgz#0db5992ece791cb58357787ef9c29dd76281720d"
   integrity sha512-bt2ZqqGpPsW6UojYUa5poWQJu3sDr4Dp3IZsdVBYdKUJ8p+9PxOk1fYRAT8lTGGmaC5HFoKrbDXQeKWGAKZz9g==
@@ -8667,6 +8667,32 @@ next-seo@5.5.0:
   resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-5.5.0.tgz#12bdfce60a6ae098f49617357a166c2d44dbc29e"
   integrity sha512-5ouBHFtx8YrSDW44lj0qIEQ+oMcz6stgoITB+SqHUZbhgizoJsyLmq73gJ0lxtEKpcN8vG2QgRIJfdb8OAPChw==
 
+next@12.2.6-canary.10:
+  version "12.2.6-canary.10"
+  resolved "https://registry.yarnpkg.com/next/-/next-12.2.6-canary.10.tgz#aec2c7c15ef7c7e60c4ef3d7a243fe9120918af5"
+  integrity sha512-fQ21keXDyDrwZQIRLt+0M7eszM31SE9poRHY87HApqeSQzCvKBB1YDEcQUU3e3N/MQlvg1V6Ra5xXb1InpKIvw==
+  dependencies:
+    "@next/env" "12.2.6-canary.10"
+    "@swc/helpers" "0.4.11"
+    caniuse-lite "^1.0.30001332"
+    postcss "8.4.14"
+    styled-jsx "5.0.6"
+    use-sync-external-store "1.2.0"
+  optionalDependencies:
+    "@next/swc-android-arm-eabi" "12.2.6-canary.10"
+    "@next/swc-android-arm64" "12.2.6-canary.10"
+    "@next/swc-darwin-arm64" "12.2.6-canary.10"
+    "@next/swc-darwin-x64" "12.2.6-canary.10"
+    "@next/swc-freebsd-x64" "12.2.6-canary.10"
+    "@next/swc-linux-arm-gnueabihf" "12.2.6-canary.10"
+    "@next/swc-linux-arm64-gnu" "12.2.6-canary.10"
+    "@next/swc-linux-arm64-musl" "12.2.6-canary.10"
+    "@next/swc-linux-x64-gnu" "12.2.6-canary.10"
+    "@next/swc-linux-x64-musl" "12.2.6-canary.10"
+    "@next/swc-win32-arm64-msvc" "12.2.6-canary.10"
+    "@next/swc-win32-ia32-msvc" "12.2.6-canary.10"
+    "@next/swc-win32-x64-msvc" "12.2.6-canary.10"
+
 next@^12.2.0:
   version "12.2.5"
   resolved "https://registry.yarnpkg.com/next/-/next-12.2.5.tgz#14fb5975e8841fad09553b8ef41fe1393602b717"
@@ -8692,32 +8718,6 @@ next@^12.2.0:
     "@next/swc-win32-arm64-msvc" "12.2.5"
     "@next/swc-win32-ia32-msvc" "12.2.5"
     "@next/swc-win32-x64-msvc" "12.2.5"
-
-next@^12.2.6-canary.10:
-  version "12.2.6-canary.10"
-  resolved "https://registry.yarnpkg.com/next/-/next-12.2.6-canary.10.tgz#aec2c7c15ef7c7e60c4ef3d7a243fe9120918af5"
-  integrity sha512-fQ21keXDyDrwZQIRLt+0M7eszM31SE9poRHY87HApqeSQzCvKBB1YDEcQUU3e3N/MQlvg1V6Ra5xXb1InpKIvw==
-  dependencies:
-    "@next/env" "12.2.6-canary.10"
-    "@swc/helpers" "0.4.11"
-    caniuse-lite "^1.0.30001332"
-    postcss "8.4.14"
-    styled-jsx "5.0.6"
-    use-sync-external-store "1.2.0"
-  optionalDependencies:
-    "@next/swc-android-arm-eabi" "12.2.6-canary.10"
-    "@next/swc-android-arm64" "12.2.6-canary.10"
-    "@next/swc-darwin-arm64" "12.2.6-canary.10"
-    "@next/swc-darwin-x64" "12.2.6-canary.10"
-    "@next/swc-freebsd-x64" "12.2.6-canary.10"
-    "@next/swc-linux-arm-gnueabihf" "12.2.6-canary.10"
-    "@next/swc-linux-arm64-gnu" "12.2.6-canary.10"
-    "@next/swc-linux-arm64-musl" "12.2.6-canary.10"
-    "@next/swc-linux-x64-gnu" "12.2.6-canary.10"
-    "@next/swc-linux-x64-musl" "12.2.6-canary.10"
-    "@next/swc-win32-arm64-msvc" "12.2.6-canary.10"
-    "@next/swc-win32-ia32-msvc" "12.2.6-canary.10"
-    "@next/swc-win32-x64-msvc" "12.2.6-canary.10"
 
 no-case@^3.0.4:
   version "3.0.4"
