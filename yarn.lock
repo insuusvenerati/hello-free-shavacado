@@ -1892,12 +1892,12 @@
     "@mantine/ssr" "5.2.7"
     "@mantine/styles" "5.2.7"
 
-"@mantine/notifications@5.2.7":
-  version "5.2.7"
-  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-5.2.7.tgz#6509613bf111659349be6089d69ed4e5f1a4a61c"
-  integrity sha512-DwnBey4Trwgun0rx0/izT7hdbbh7CJ2ykzflW0PZSPkt5A9cpyCxfAZCC7mvbWRckgneI/OCdfj+/LKrNokt5Q==
+"@mantine/notifications@5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-5.3.0.tgz#b6a8fab175aae35e74044783319dd4bec88c060b"
+  integrity sha512-QwMNeKElnFwZT5Uga3dPXKHREgnG70NJQjYML0mDsl95jT3ez5IOXJGtb/vleTLpYWCfG48BOmFsTX4abkENJw==
   dependencies:
-    "@mantine/utils" "5.2.7"
+    "@mantine/utils" "5.3.0"
     react-transition-group "4.4.2"
 
 "@mantine/nprogress@5.2.7":
