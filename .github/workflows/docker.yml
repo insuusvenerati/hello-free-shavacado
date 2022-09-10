@@ -24,6 +24,7 @@ jobs:
           start: yarn start --filter=frontend
           wait-on: 'http://localhost:3000'
           command: yarn e2e:run
+          working-directory: apps/frontend
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
