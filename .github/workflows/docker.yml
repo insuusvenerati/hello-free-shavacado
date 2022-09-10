@@ -20,8 +20,8 @@ jobs:
         with:
           browser: chrome
           record: true
-          build: yarn build --filter=frontend
-          start: yarn start --filter=frontend
+          build: yarn build
+          start: yarn start
           wait-on: 'http://localhost:3000'
           command: yarn e2e:run
           working-directory: apps/frontend
