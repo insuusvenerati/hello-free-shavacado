@@ -4,11 +4,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --cache --cache-location .next/cache/eslint/ --fix",
-    "test": "vitest",
     "prettier": "prettier --write src/",
-    "export": "next export",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "e2e:open": "cypress open",
+    "e2e:run": "cypress run --record --key f6ac5325-2e5f-4f57-898d-5828151e0ff5"
   },
   "name": "@stiforr/frontend",
   "version": "1.5.0-develop.2",
@@ -44,19 +42,23 @@
   "devDependencies": {
     "@babel/core": "7.18.13",
     "@next/bundle-analyzer": "12.3.0",
+    "@cypress/code-coverage": "^3.10.0",
     "@types/node": "18.7.14",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
     "@typescript-eslint/eslint-plugin": "5.36.2",
     "@typescript-eslint/parser": "5.36.2",
     "babel-loader": "8.2.5",
+    "cypress": "^10.7.0",
     "eslint": "8.22.0",
     "eslint-config-next": "12.3.0",
     "jsdom": "20.0.0"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "eslint --cache --cache-location .next/cache/eslint/ --fix",
-    "*.{ts,tsx,css,md}": "prettier --write"
+    "*.{ts,tsx}": [
+      "eslint --cache --cache-location .next/cache/eslint/ --fix",
+      "prettier --write"
+    ]
   },
   "repository": {
     "type": "git",

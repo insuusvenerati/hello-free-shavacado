@@ -44,6 +44,8 @@ public/workbox-*
 
 tmp/
 
-.eslintcache 
-# Sentry
-.sentryclirc
+.eslintcache
+.nyc_output
+.turbo
+/cypress/videos/
+/cypress/screenshots/

@@ -19,7 +19,7 @@ export const Hits = (props: UseHitsProps<RecipeHit>) => {
       {(styles) => (
         <>
           {hits.map((hit) => (
-            <Grid.Col key={hit.objectID} md={1} sm={2}>
+            <Grid.Col data-test-id="recipe-card" key={hit.objectID} md={1} sm={2}>
               <RecipeCard style={{ ...styles }} recipe={hit} />
             </Grid.Col>
           ))}
