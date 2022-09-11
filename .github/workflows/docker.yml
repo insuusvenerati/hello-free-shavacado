@@ -39,7 +39,7 @@ jobs:
 
   release:
     if: ${{ !startsWith(github.event.ref, 'refs/tags/') }}
-    needs: [tests]
+    needs: [ tests ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -71,7 +71,7 @@ jobs:
           environment: production
 
   docker:
-    needs: [release]
+    needs: [ tests ]
     strategy:
       matrix:
         app: [ "frontend", "backend" ]
