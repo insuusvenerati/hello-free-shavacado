@@ -1,22 +1,20 @@
-import {
-  Container,
-  Divider,
-  Group,
-  Image,
-  List,
-  LoadingOverlay,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Container, Divider, Group, List, LoadingOverlay, Stack, Text, Title } from "@mantine/core";
 import { NextSeo } from "next-seo";
-// import Image from "next/future/image";
+import Image from "next/future/image";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 import { useGetOneImportedRecipeQuery } from "hooks/useGetImportedRecipesQuery";
 import { HOST } from "../../util/constants";
 
-// const imageCSS = { width: "100%", height: "auto" };
+// TODO: get imported recipe meta tags
+// export const getStaticProps: GetStaticProps = async (params) => {
+//   const { recipe } = params as string;
+//   const recipe = await getOneImportedRecipe({ id: recipe });
+//
+//   return {
+//     props: {},
+//   };
+// };
 
 const ImportedRecipe = () => {
   const { query, asPath } = useRouter();
@@ -53,11 +51,11 @@ const ImportedRecipe = () => {
         height={600}
         src={recipe.image}
         width={2200}
-        withPlaceholder
         style={{
-          objectFit: "cover",
           width: "100%",
+          height: "auto",
         }}
+        sizes="100vw"
       />
       <Container size="lg">
         {/* <Card mt="md" mb="lg" p="lg" shadow="sm">
