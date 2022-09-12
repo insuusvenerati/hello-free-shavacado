@@ -1,10 +1,8 @@
-import { Burger, createStyles, Grid, Group, Header, MediaQuery, Title } from "@mantine/core";
+import { Burger, createStyles, Group, Header, Image, MediaQuery, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { Image } from "@mantine/core";
 import { useCallback } from "react";
 import { SearchBox } from "react-instantsearch-hooks-web";
 import { ButtonToggle } from "./Buttons/ColorSchemeToggle";
-import Link from "next/link";
 import { NextLink } from "@mantine/next";
 
 type Props = {
@@ -54,23 +52,13 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
   return !matches ? (
     <MediaQuery largerThan="sm" styles={{ display: "none" }}>
       <Header height={70} p="md">
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            height: "100%",
-          }}
-        >
+        <Group>
           <Burger mr="sm" onClick={handleDrawer} opened={opened} size="md" />
           <NextLink href="/">
             <Image alt="logo" src="/OrangeSlice2.svg" width={50} height={50} />
           </NextLink>
-          <Grid justify="center">
-            <Grid.Col lg={6} md={12}>
-              <SearchBox />
-            </Grid.Col>
-          </Grid>
-        </div>
+          <SearchBox />
+        </Group>
       </Header>
     </MediaQuery>
   ) : (

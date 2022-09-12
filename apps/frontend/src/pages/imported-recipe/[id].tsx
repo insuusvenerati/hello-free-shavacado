@@ -5,6 +5,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { getAllImportedRecipes, getOneImportedRecipeAnon } from "../../util/getImportedRecipes";
 import { createMetaTagsFromRecipe } from "../../util/createMetaTagsFromRecipe";
 import { ImportedRecipe } from "../../types/importedRecipe";
+import { ShareButton } from "components/Buttons/ShareButton";
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const id = params?.id as string;
@@ -44,6 +45,9 @@ const ImportedRecipe = ({ recipe }: { recipe: ImportedRecipe }) => {
             <Title order={1}>{recipe.name}</Title>
             <Title order={6}> {recipe.description} </Title>
           </Stack>
+        </Group>
+        <Group>
+          <ShareButton image={recipe.image} />
         </Group>
         <Divider my="sm" />
         <Group position="apart">

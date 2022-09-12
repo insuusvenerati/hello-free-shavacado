@@ -10,16 +10,6 @@ export const createMetaTagsFromRecipe = (recipe: Item | ImportedRecipe) => {
         content: isImportedRecipe(recipe) ? recipe.image : getOgImageUrl(recipe.imagePath),
         key: "ogimage",
       },
-      // {
-      //   property: "og:image:height",
-      //   content: "700",
-      //   key: "ogimageheight",
-      // },
-      // {
-      //   property: "og:image:width",
-      //   content: "1200",
-      //   key: "ogimagewidth",
-      // },
       {
         property: "og:title",
         content: recipe.name,
