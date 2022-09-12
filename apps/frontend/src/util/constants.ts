@@ -9,7 +9,7 @@ export const HF_STEP_IMAGE_URL =
   "https://img.hellofresh.com/c_fill,f_auto,fl_lossy,q_auto,w_500/hellofresh_s3";
 export const HF_PLACEHOLDERURL = "https://img.hellofresh.com/w_16,e_vectorize:5/hellofresh_s3";
 export const HF_OG_IMAGE_URL =
-  "https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_1200,q_75,w_630/hellofresh_s3";
+  "https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_630,q_75,w_1200/hellofresh_s3";
 
 export const HF_COVER_IMAGE_URL =
   "https://img.hellofresh.com/c_fill,f_auto,fl_lossy,h_800,q_auto,w_2400/hellofresh_s3";
