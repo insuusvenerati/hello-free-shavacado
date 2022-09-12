@@ -24,11 +24,11 @@ export const createMetaTagsFromRecipe = (recipe: Item) => {
         content: recipe.name,
         key: "ogtitle",
       },
-      {
-        property: "og:description",
-        content: recipe.description.substring(0, 15),
-        key: "ogdescription",
-      },
+      // {
+      //   property: "og:description",
+      //   content: recipe.description.substring(0, 15),
+      //   key: "ogdescription",
+      // },
       {
         property: "og:type",
         content: "website",
