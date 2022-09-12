@@ -4,7 +4,7 @@ import { PrismaService } from "src/prisma.service";
 
 @Injectable()
 export class ScrapeService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
   async create({ url, user }: { url: string; user: string }) {
     try {
@@ -18,7 +18,11 @@ export class ScrapeService {
     }
   }
 
-  async findAll(user: string) {
+  async findAll() {
+    return await this.prisma.importedRecipe.findMany();
+  }
+
+  async findAllByUser(user: string) {
     if (!user) {
       throw new HttpException("Forbidden", HttpStatus.FORBIDDEN);
     }
@@ -27,7 +31,15 @@ export class ScrapeService {
     });
   }
 
-  async findOne(id: string, user: string) {
+  async findOne(id: string) {
+    return await this.prisma.importedRecipe.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async findOneByUser(id: string, user: string) {
     if (!user) throw new HttpException("Forbidden", HttpStatus.FORBIDDEN);
     return await this.prisma.importedRecipe.findUnique({
       where: { id: id },
