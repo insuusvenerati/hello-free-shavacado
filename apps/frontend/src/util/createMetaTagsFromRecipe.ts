@@ -9,16 +9,16 @@ export const createMetaTagsFromRecipe = (recipe: Item) => {
         content: getOgImageUrl(recipe.imagePath),
         key: "ogimage",
       },
-      {
-        property: "og:image:height",
-        content: "700",
-        key: "ogimageheight",
-      },
-      {
-        property: "og:image:width",
-        content: "1200",
-        key: "ogimagewidth",
-      },
+      // {
+      //   property: "og:image:height",
+      //   content: "700",
+      //   key: "ogimageheight",
+      // },
+      // {
+      //   property: "og:image:width",
+      //   content: "1200",
+      //   key: "ogimagewidth",
+      // },
       {
         property: "og:title",
         content: recipe.name,
@@ -33,6 +33,18 @@ export const createMetaTagsFromRecipe = (recipe: Item) => {
         property: "og:type",
         content: "website",
         key: "website",
+      },
+      {
+        name: "twitter:card",
+        content: "summary_large_image",
+      },
+      {
+        name: "twitter:title",
+        content: recipe.name,
+      },
+      {
+        name: "twitter:description",
+        content: recipe.description,
       },
     ],
   };
