@@ -11,7 +11,7 @@ export const createMetaTagsFromRecipe = (recipe: Item) => {
       },
       {
         property: "og:image:height",
-        content: "630",
+        content: "700",
         key: "ogimageheight",
       },
       {
