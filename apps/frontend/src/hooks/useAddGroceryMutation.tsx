@@ -1,7 +1,7 @@
 import { useAuth, useClerk } from "@clerk/nextjs";
 import { showNotification } from "@mantine/notifications";
 import { useMutation, useQueryClient } from "react-query";
-import { AddGrocery } from "../types/grocery";
+import { AddGrocery, Grocery } from "../types/grocery";
 import { addGrocery } from "../util/addGrocery";
 
 type MutationError = {
@@ -13,7 +13,7 @@ export const useAddGroceryMutation = () => {
   const { userId } = useAuth();
   const queryClient = useQueryClient();
   const { openSignIn } = useClerk();
-  return useMutation<AddGrocery, MutationError, AddGrocery>(
+  return useMutation<Grocery, MutationError, AddGrocery, unknown>(
     (grocery) => {
       return addGrocery(userId, grocery, openSignIn);
     },

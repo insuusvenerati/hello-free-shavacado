@@ -1,6 +1,6 @@
 import { Badge, Card, CardProps, Container, LoadingOverlay, Text } from "@mantine/core";
 import { Hit } from "instantsearch.js";
-import Image from "next/future/image";
+import Image from "next/image";
 import { ImportedRecipe, isImportedRecipe } from "types/importedRecipe";
 import { Item, Tag } from "types/recipes";
 import { RecipeHit } from "types/recipeSearchQuery";
@@ -28,8 +28,8 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
       <Card {...props} shadow="sm">
         <Card.Section mb="sm">
           <Image
-            style={imageCSS}
-            sizes="100vw"
+            objectFit="cover"
+            layout="responsive"
             alt={recipe?.name}
             height={800}
             src={recipe.image}

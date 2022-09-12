@@ -19,7 +19,7 @@ import { CustomNextLink } from "components/CustomNextLink";
 import { IngredientCard } from "components/IngredientsCard";
 import { useAddGroceryMutation } from "hooks/useAddGroceryMutation";
 import { GetStaticPaths, GetStaticProps } from "next";
-import Image from "next/future/image";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment, SyntheticEvent } from "react";
 import { Item } from "types/recipes";
@@ -121,8 +121,7 @@ const Recipe = ({ recipe, jsonLdData }: { recipe: Item; jsonLdData: RecipeJsonLd
         placeholder="blur"
         src={`${HF_COVER_IMAGE_URL}${recipe.imagePath}`}
         width={2400}
-        sizes="100vw"
-        style={imageCSS}
+        layout="responsive"
       />
 
       <Container size="xl">

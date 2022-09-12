@@ -3,8 +3,8 @@ import { useAuth } from "@clerk/nextjs";
 import { CheckIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Accordion, ActionIcon, Box, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import Image from "next/image";
-import { useAddGroceryMutation } from "../hooks/useAddGroceryMutation";
-import { useGetGroceriesQuery } from "../hooks/useGetGroceriesQuery";
+import { useAddGroceryMutation } from "hooks/useAddGroceryMutation";
+import { useGetGroceriesQuery } from "hooks/useGetGroceriesQuery";
 import { Item } from "../types/recipes";
 import { HF_AVATAR_IMAGE_URL } from "../util/constants";
 

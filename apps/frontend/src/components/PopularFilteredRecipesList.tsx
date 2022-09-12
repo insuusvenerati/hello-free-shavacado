@@ -2,7 +2,7 @@ import { Grid, Title } from "@mantine/core";
 import { memo } from "react";
 import { RecipeQuery } from "types/recipes";
 import { useRecipesContext } from "../context/RecipesContext";
-import { usePopularRecipesQuery } from "../hooks/usePopularRecipesQuery";
+import { usePopularRecipesQuery } from "hooks/usePopularRecipesQuery";
 import { RecipeCard } from "./RecipeCard";
 
 type Props = {
@@ -10,8 +10,8 @@ type Props = {
   staticRecipes: RecipeQuery;
 };
 
-export const FilteredOrPopularRecipesList = ({ modalHandler, staticRecipes }: Props) => {
-  const { filteredRecipes, setSelectedRecipe, isLoading } = useRecipesContext();
+export const FilteredOrPopularRecipesList = ({ staticRecipes }: Props) => {
+  const { filteredRecipes, isLoading } = useRecipesContext();
   const { data: popularRecipes } = usePopularRecipesQuery(staticRecipes);
 
   if (filteredRecipes) {
@@ -20,11 +20,7 @@ export const FilteredOrPopularRecipesList = ({ modalHandler, staticRecipes }: Pr
         {filteredRecipes?.map((recipe) => {
           return (
             <Grid.Col key={recipe.id} md={1} sm={2}>
-              <RecipeCard
-                handler={modalHandler}
-                recipe={recipe}
-                setSelectedRecipe={setSelectedRecipe}
-              />
+              <RecipeCard recipe={recipe} />
             </Grid.Col>
           );
         })}
@@ -44,11 +40,7 @@ export const FilteredOrPopularRecipesList = ({ modalHandler, staticRecipes }: Pr
             popularRecipes?.items.map((recipe) => {
               return (
                 <Grid.Col key={recipe.id} md={1} sm={2}>
-                  <RecipeCard
-                    handler={modalHandler}
-                    recipe={recipe}
-                    setSelectedRecipe={setSelectedRecipe}
-                  />
+                  <RecipeCard recipe={recipe} />
                 </Grid.Col>
               );
             })}
