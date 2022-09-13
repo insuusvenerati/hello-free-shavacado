@@ -22,20 +22,15 @@ const nextConfig = {
     dirs: ["pages", "components", "hooks"],
   },
   output: !onVercel ? "standalone" : null,
-  experimental: {
-    images: {
-      allowFutureImage: true,
-      remotePatterns: [
-        {
-          protocol: "https",
-          hostname: "*",
-          port: "",
-        },
-      ],
-    },
-  },
   images: {
     domains: ["img.hellofresh.com", "imagesvc.meredithcorp.io"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*",
+        port: "",
+      },
+    ],
   },
   reactStrictMode: true,
   typescript: {
@@ -49,7 +44,7 @@ module.exports = withPlugins(
     [withPWA, { pwaConfig }, [PHASE_PRODUCTION_BUILD]],
     withAxiom,
     withBundleAnalyzer,
-    [withSentryConfig, { silent: false }],
+    [withSentryConfig, { silent: false }, [PHASE_PRODUCTION_BUILD]],
   ],
   nextConfig,
 );
