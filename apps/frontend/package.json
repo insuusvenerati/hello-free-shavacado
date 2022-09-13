@@ -20,7 +20,7 @@
     "@mantine/hooks": "5.3.0",
     "@mantine/next": "5.2.7",
     "@mantine/notifications": "5.3.0",
-    "@mantine/nprogress": "5.2.7",
+    "@mantine/nprogress": "5.3.0",
     "@meilisearch/instant-meilisearch": "0.8.1",
     "@sentry/nextjs": "7.12.1",
     "algoliasearch": "4.14.2",
