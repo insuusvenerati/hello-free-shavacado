@@ -9,7 +9,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "test": "turbo run test",
+    "test": "yarn workspace @stiforr/frontend test --watch",
     "lint": "turbo run lint",
     "stop": "turbo run stop",
     "start": "turbo run start",
@@ -18,8 +18,8 @@
     "prisma:studio": "yarn workspace @stiforr/backend prisma studio",
     "prisma:generate": "yarn workspace @stiforr/backend prisma generate",
     "commit": "cz",
-    "e2e:open": "turbo run e2e:open",
-    "e2e:run": "turbo run e2e:run"
+    "e2e:open": "NODE_ENV=test turbo run e2e:open",
+    "e2e:run": "NODE_ENV=test turbo run e2e:run"
   },
   "workspaces": {
     "packages": [
