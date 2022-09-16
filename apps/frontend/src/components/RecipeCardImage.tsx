@@ -1,8 +1,4 @@
 import Image, { ImageProps } from "next/image";
-import { HF_PLACEHOLDERURL } from "util/constants";
-import { hellofreshRecipeLoader } from "util/util";
-
-const imageCSS = { width: "100%", height: "auto" };
 
 type Props = {
   src: string;
@@ -16,10 +12,8 @@ export const RecipeCardImage = ({ height, width, src, alt, ...props }: Props) =>
     <Image
       {...props}
       placeholder="blur"
-      blurDataURL={`${HF_PLACEHOLDERURL}${src}`}
       objectFit="cover"
       layout="responsive"
-      loader={hellofreshRecipeLoader}
       height={height}
       width={width}
       src={src}

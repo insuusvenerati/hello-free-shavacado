@@ -7,12 +7,11 @@ import { RecipeHit } from "types/recipeSearchQuery";
 import { AddToFavorites } from "./Buttons/AddToFavorites";
 import { CustomNextLink } from "./CustomNextLink";
 import { RecipeCardImage } from "./RecipeCardImage";
+import { HF_CARD_IMAGE_URL, HF_PLACEHOLDERURL } from "../util/constants";
 
 type Props = {
   recipe: Hit<RecipeHit> | ImportedRecipe | Item;
 } & Omit<CardProps, "children">;
-
-const imageCSS = { width: "100%", height: "auto" };
 
 export const RecipeCard = ({ recipe, ...props }: Props) => {
   if (!recipe) {
@@ -47,7 +46,13 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
   return (
     <Card shadow="md" {...props}>
       <Card.Section mb="sm">
-        <RecipeCardImage alt={recipe?.name} height={340} src={recipe?.imagePath} width={600} />
+        <RecipeCardImage
+          alt={recipe?.name}
+          height={340}
+          src={`${HF_CARD_IMAGE_URL}${recipe?.imagePath}`}
+          width={600}
+          blurDataURL={`${HF_PLACEHOLDERURL}${recipe.imagePath}`}
+        />
       </Card.Section>
 
       <CustomNextLink href={`/recipe/${recipe?.id}`}>
