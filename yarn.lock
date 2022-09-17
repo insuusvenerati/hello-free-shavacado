@@ -2207,12 +2207,12 @@
     "@mantine/utils" "5.3.2"
     react-transition-group "4.4.2"
 
-"@mantine/nprogress@5.3.0":
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@mantine/nprogress/-/nprogress-5.3.0.tgz#84bafd3811ee3435b0b7772b094e8fa3189395c4"
-  integrity sha512-Fcf6qtGferjBqp0R1s6I+xBmr22VamrxRqz/zl19nWIoi6+VVpJOp2Exn/elS7E2bUp4O7JoCReTACNx0qVK6g==
+"@mantine/nprogress@5.3.3":
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/@mantine/nprogress/-/nprogress-5.3.3.tgz#487d68d102ae404b21adf803985972484e8638a3"
+  integrity sha512-B3DVt+DYMbB/g+Ls/2CZbGYN0naUNYjtqD45GHIJ/JqPOrncXd/aCGxzWq/RLkeQD7xDluZIe3R4tSN8GJ/KGg==
   dependencies:
-    "@mantine/utils" "5.3.0"
+    "@mantine/utils" "5.3.3"
 
 "@mantine/ssr@5.3.0":
   version "5.3.0"
@@ -2239,6 +2239,11 @@
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.3.2.tgz#c42d71260e2cfb631aa004b3e61ce787813196df"
   integrity sha512-D8+IyPjeOFC8hPIPxd7qJewamrRIBbBv7Z03o3ZHkgUaCKArNwtSlmUpzitgT5jHoERdwylagqoQMfzpQj/KqA==
+
+"@mantine/utils@5.3.3":
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.3.3.tgz#0006bd3aef7dc5f955517d02da611cb499c7e07c"
+  integrity sha512-UoIBNjsXI2j1Sv4oslhOhGORE0pkbwpJ42+55dVQjTXRzDsloYNssyad1xO+kS8icF0y3HV3i+nz3B8b04W00A==
 
 "@motionone/animation@^10.13.1":
   version "10.14.0"
