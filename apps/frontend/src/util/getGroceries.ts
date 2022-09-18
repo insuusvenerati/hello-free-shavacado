@@ -1,4 +1,3 @@
-import ky from "ky";
 import { Grocery } from "../types/grocery";
 import { API_URL } from "./constants";
 
@@ -10,12 +9,12 @@ type Props = {
 
 export const getGroceries = async ({ userId, take, skip }: Props) => {
   if (!userId) {
-    return await Promise.reject(new Error("Missing User ID"));
+    throw new Error("Missing User ID");
   }
   if (!skip) {
-    return await ky.get(`${API_URL}/groceries?user=${userId}&take=${take}`).json<Grocery[]>();
+    const response = await fetch(`${API_URL}/groceries?user=${userId}&take=${take}`);
+    return (await response.json()) as Grocery[];
   }
-  return await ky
-    .get(`${API_URL}/groceries?user=${userId}&take=${take}&skip=${skip}`)
-    .json<Grocery[]>();
+  const response = await fetch(`${API_URL}/groceries?user=${userId}&take=${take}&skip=${skip}`);
+  return (await response.json()) as Grocery[];
 };

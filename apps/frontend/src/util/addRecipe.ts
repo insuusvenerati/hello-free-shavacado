@@ -21,7 +21,7 @@ export const addRecipe = async ({
 }: Args) => {
   if (!userId) {
     openSignIn({});
-    return await Promise.reject(new Error("No user ID. Please sign in"));
+    throw new Error("No user ID. Please sign in");
   }
 
   const response = await fetch(`${API_URL}/recipe`, {
@@ -38,7 +38,7 @@ export const addRecipe = async ({
     }),
   });
 
-  const data = response.json() as Promise<FavoritedRecipe>;
+  const data = (await response.json()) as Promise<FavoritedRecipe>;
 
   return { data };
 };

@@ -5,12 +5,11 @@ import {
   Affix,
   Box,
   Button,
-  Card,
   Container,
   Divider,
   Group,
   List,
-  LoadingOverlay,
+  Stack,
   Text,
   Title,
 } from "@mantine/core";
@@ -20,29 +19,33 @@ import { CustomNextLink } from "components/CustomNextLink";
 import { IngredientCard } from "components/IngredientsCard";
 import { useAddGroceryMutation } from "hooks/useAddGroceryMutation";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { NextSeo } from "next-seo";
-import Image from "next/future/image";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment, SyntheticEvent } from "react";
 import { Item } from "types/recipes";
 import {
-  getOgImageUrl,
+  HF_CARD_IMAGE_URL,
   HF_COVER_IMAGE_URL,
   HF_ICON_IMAGE_URL,
   HF_PLACEHOLDERURL,
   HF_STEP_IMAGE_URL,
-  HOST,
 } from "util/constants";
 import { getPopularRecipes } from "util/getPopularRecipes";
 import { getRecipeById } from "util/getRecipeById";
 import { AddGrocery } from "../../types/grocery";
+import { createMetaTagsFromRecipe } from "../../util/createMetaTagsFromRecipe";
+import { createJsonLdDataFromRecipe } from "../../util/createJsonLdDataFromRecipe";
+import { RecipeJsonLd, RecipeJsonLdProps } from "next-seo";
+import { ShareButton } from "components/Buttons/ShareButton";
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const id = params?.id as string;
   const recipe = await getRecipeById({ id });
+  const { openGraphData } = createMetaTagsFromRecipe(recipe);
+  const jsonLdData = createJsonLdDataFromRecipe(recipe);
 
   return {
-    props: { recipe },
+    props: { recipe, openGraphData, jsonLdData },
   };
 };
 
@@ -57,9 +60,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-const imageCSS = { width: "100%", height: "auto" };
-
-const Recipe = ({ recipe }: { recipe: Item }) => {
+const Recipe = ({ recipe, jsonLdData }: { recipe: Item; jsonLdData: RecipeJsonLdProps }) => {
   const matches = useMediaQuery("(min-width: 900px)", true);
   const { userId } = useAuth();
   const router = useRouter();
@@ -101,30 +102,12 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
     });
   };
 
-  if (!recipe) return <LoadingOverlay visible />;
+  // if (!recipe) return <LoadingOverlay visible />;
+  // console.log(recipe);
 
   return (
     <>
-      <NextSeo
-        openGraph={{
-          title: recipe.name,
-          type: "website",
-          description: recipe.description,
-          url: `${HOST}${router.asPath}`,
-          images: [
-            {
-              url: getOgImageUrl(recipe.imagePath),
-              alt: recipe.name,
-              height: 630,
-              width: 1200,
-              type: "image/jpeg",
-            },
-          ],
-        }}
-        title={recipe.name}
-        description={recipe.description}
-      />
-
+      <RecipeJsonLd {...jsonLdData} />
       <Affix position={{ bottom: 20, left: 20 }}>
         <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
           Go back
@@ -138,65 +121,63 @@ const Recipe = ({ recipe }: { recipe: Item }) => {
         placeholder="blur"
         src={`${HF_COVER_IMAGE_URL}${recipe.imagePath}`}
         width={2400}
-        sizes="100vw"
-        style={imageCSS}
+        layout="responsive"
       />
 
       <Container size="xl">
         <Box mt="md" mb="lg">
-          <Card.Section p={20}>
-            <Group position="apart">
-              <Group grow={false} spacing={0}>
-                <Title order={1}>{recipe.name}</Title>
-                <Title order={6}> {recipe.headline} </Title>
-              </Group>
-              <Group position={matches ? "right" : "center"}>
-                <AddToFavorites selectedRecipe={recipe} />
-                {recipe.cardLink && (
-                  <CustomNextLink href={recipe.cardLink} target="_blank">
-                    <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
-                  </CustomNextLink>
-                )}
-                <form onSubmit={handleAddAllIngredients}>
-                  <Button loading={isLoading} type="submit">
-                    Add all ingredients to groceries
-                  </Button>
-                </form>
-              </Group>
+          <Group position="apart">
+            <Stack>
+              <Title order={1}>{recipe.name}</Title>
+              <Title order={6}> {recipe.headline} </Title>
+            </Stack>
+            <Group position={matches ? "right" : "left"}>
+              <AddToFavorites selectedRecipe={recipe} />
+              {recipe.cardLink && (
+                <CustomNextLink href={recipe.cardLink} target="_blank">
+                  <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
+                </CustomNextLink>
+              )}
+              <form onSubmit={handleAddAllIngredients}>
+                <Button loading={isLoading} type="submit">
+                  Add all ingredients to groceries
+                </Button>
+              </form>
+              <ShareButton image={`${HF_CARD_IMAGE_URL}${recipe.imagePath}`} />
             </Group>
-            <Divider my="sm" />
-            <Group position="apart">
-              <Group>
-                <Text sx={{ maxWidth: "750px" }}>{recipe.description}</Text>
-                {recipe && recipe.tags.length > 0 ? (
-                  <Group>
-                    <Text weight="bolder">Tags:</Text>
-                    {recipe.tags.map((tag) => (
-                      <Text key={tag.id}>{tag.name}</Text>
-                    ))}
-                  </Group>
-                ) : null}
+          </Group>
+          <Divider my="sm" />
+          <Group position="apart">
+            <Group>
+              <Text sx={{ maxWidth: "750px" }}>{recipe.description}</Text>
+              {recipe && recipe.tags.length > 0 ? (
                 <Group>
-                  <Text weight="bolder">Allergens:</Text>
-                  {recipe.allergens.map((allergen) => (
-                    <Group key={allergen.id}>
-                      <Image
-                        alt={allergen.id}
-                        height={32}
-                        src={`${HF_ICON_IMAGE_URL}/${allergen.iconPath}`}
-                        width={32}
-                      />
-                      <Text>{allergen.name}</Text>
-                    </Group>
+                  <Text weight="bolder">Tags:</Text>
+                  {recipe.tags.map((tag) => (
+                    <Text key={tag.id}>{tag.name}</Text>
                   ))}
                 </Group>
-              </Group>
+              ) : null}
               <Group>
-                <Text>Total Time {recipe.totalTime}</Text>
-                <Text>Difficulty {recipe.difficulty}</Text>
+                <Text weight="bolder">Allergens:</Text>
+                {recipe.allergens.map((allergen) => (
+                  <Group key={allergen.id}>
+                    <Image
+                      alt={allergen.id}
+                      height={32}
+                      src={`${HF_ICON_IMAGE_URL}/${allergen.iconPath}`}
+                      width={32}
+                    />
+                    <Text>{allergen.name}</Text>
+                  </Group>
+                ))}
               </Group>
             </Group>
-          </Card.Section>
+            <Group>
+              <Text>Total Time {recipe.totalTime}</Text>
+              <Text>Difficulty {recipe.difficulty}</Text>
+            </Group>
+          </Group>
         </Box>
 
         <Title mt="xl" order={2}>

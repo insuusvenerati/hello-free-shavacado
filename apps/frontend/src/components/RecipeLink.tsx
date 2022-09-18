@@ -1,5 +1,15 @@
 import { LinkIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { ActionIcon, Avatar, createStyles, Group, List, Paper, Text, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Avatar,
+  createStyles,
+  Group,
+  List,
+  Paper,
+  Skeleton,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { useGetRecipeById } from "hooks/useGetRecipeById";
 import { useDeleteFavoriteRecipe } from "../hooks/useDeleteFavoriteRecipe";
 import { FavoritedRecipe } from "../types/favoriteRecipe";
@@ -21,7 +31,7 @@ export const RecipeLink = ({ favoritedRecipe }: { favoritedRecipe: FavoritedReci
   const { mutate } = useDeleteFavoriteRecipe(favoritedRecipe.id);
   const { classes } = useStyles();
 
-  if (!isSuccess) return null;
+  if (!isSuccess) return <Skeleton mb="md" height={55} />;
 
   return (
     <Paper mb="md" shadow="xs" withBorder>

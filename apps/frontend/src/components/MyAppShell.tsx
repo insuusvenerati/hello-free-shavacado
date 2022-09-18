@@ -18,15 +18,16 @@ import {
 } from "@mantine/core";
 import { useState } from "react";
 import { CurrentRefinements } from "react-instantsearch-hooks-web";
-import { useAddImportedRecipeMutation } from "../hooks/useAddImportedRecipeMutation";
-import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
-import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
+import { useAddImportedRecipeMutation } from "hooks/useAddImportedRecipeMutation";
+import { useFavoriteRecipesQuery } from "hooks/useFavoriteRecipesQuery";
+import { useGetImportedRecipesQuery } from "hooks/useGetImportedRecipesQuery";
 import { ClearRefinements } from "./Search/ClearRefinements";
 import { ImportedRecipeLink } from "./ImportedRecipeLink";
 import { MyHeader } from "./MyHeader";
 import { NavbarContent } from "./NavContent";
 import { RecipeLink } from "./RecipeLink";
 import { RefinementList } from "./Search/RefinementList";
+import { useClickOutside } from "@mantine/hooks";
 
 type AppShellProps = {
   children: JSX.Element[] | JSX.Element;
@@ -44,6 +45,7 @@ export const MyAppShell = ({ children }: AppShellProps) => {
   const { data: importedRecipes } = useGetImportedRecipesQuery();
   const { data: recipes, isLoading } = useFavoriteRecipesQuery();
   const [opened, setOpened] = useState(false);
+  const ref = useClickOutside(() => setOpened(false));
   const [section, setSection] = useState<"nav" | "filters">("nav");
 
   return (
@@ -115,6 +117,7 @@ export const MyAppShell = ({ children }: AppShellProps) => {
           }}
           // width={opened ? 300 : 0}
           p={opened ? "sm" : 0}
+          ref={ref}
         >
           <NavbarContent showSegmentedControl section={section} setSection={setSection} />
           <Transition

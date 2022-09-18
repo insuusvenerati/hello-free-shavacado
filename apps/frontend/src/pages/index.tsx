@@ -1,31 +1,9 @@
 import { Hits } from "components/Hits";
 import { Avatar, Container, Grid, Group, MantineColor, SelectItemProps, Text } from "@mantine/core";
-import { getCookie, setCookies } from "cookies-next";
-import { forwardRef, useEffect } from "react";
+import { forwardRef } from "react";
 import { Pagination, SortBy } from "react-instantsearch-hooks-web";
-import { hellofreshGetToken } from "../util/hellofresh";
 import { NextSeo } from "next-seo";
 import defaultSEO from "../../next-seo.config";
-
-// export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-//   res.setHeader("Cache-Control", `public, s-maxage=60, stale-while-revalidate=${FIVE_MINUTES}`);
-//   const queryClient = new QueryClient();
-//   await queryClient.prefetchQuery(["popularRecipes"], getPopularRecipes);
-
-//   return {
-//     props: {
-//       dehydratedState: dehydrate(queryClient),
-//     },
-//   };
-// };
-
-// export const getStaticProps: GetStaticProps = async () => {
-//   const popularRecipes = await getPopularRecipes();
-
-//   return {
-//     props: { popularRecipes },
-//   };
-// };
 
 interface ItemProps extends SelectItemProps {
   color: MantineColor;
@@ -53,23 +31,6 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 );
 
 const Home = () => {
-  const token = getCookie("hf-token") as string;
-
-  // Get token
-  useEffect(() => {
-    if (!token) {
-      hellofreshGetToken()
-        .then((token) =>
-          setCookies("hf-token", token.access_token, {
-            secure: false,
-            sameSite: "lax",
-            maxAge: 2629743,
-          }),
-        )
-        .catch((e) => console.error(e));
-    }
-  }, [token]);
-
   return (
     <>
       <NextSeo {...defaultSEO} />

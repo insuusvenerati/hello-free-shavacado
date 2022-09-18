@@ -5,16 +5,25 @@
       "cache": false
     },
     "build": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "@stiforr/frontend#build": {
-      "dependsOn": ["$NEXT_PUBLIC_CLERK_FRONTEND_API", "$NEXT_PUBLIC_API_URL"]
+      "dependsOn": [
+        "$NEXT_PUBLIC_CLERK_FRONTEND_API",
+        "$NEXT_PUBLIC_API_URL"
+      ]
     },
     "@stiforr/backend#build": {
-      "dependsOn": ["$DATABASE_URL"]
+      "dependsOn": [
+        "$DATABASE_URL"
+      ]
     },
     "test": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": []
     },
     "lint": {
@@ -26,8 +35,11 @@
     "start": {
       "cache": false
     },
-    "storybook": {
+    "e2e:open": {
       "cache": false
+    },
+    "e2e:run": {
+      "dependsOn": ["build"]
     }
   }
 }

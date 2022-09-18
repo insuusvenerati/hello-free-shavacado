@@ -35,7 +35,7 @@ export interface Item {
   allergens: Allergen[];
   utensils: Utensil[];
   tags: Tag[];
-  cuisines: Category[];
+  cuisines: Category[] | [];
   wines: string[];
   marketplaceItems: string[];
   author: null | string;

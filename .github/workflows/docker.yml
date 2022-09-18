@@ -9,15 +9,75 @@ on:
       - "**"
 
 jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v4.2.0
+        with:
+          browser: chrome
+          record: true
+          build: yarn build
+          start: yarn start
+          wait-on: 'http://localhost:3000'
+          command: yarn e2e:run
+          working-directory: apps/frontend
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CYPRESS_PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_ALGOLIA_APP: ${{ secrets.NEXT_PUBLIC_ALGOLIA_APP }}
+          NEXT_PUBLIC_ALGOLIA_KEY: ${{ secrets.NEXT_PUBLIC_ALGOLIA_KEY }}
+          NEXT_PUBLIC_CLERK_FRONTEND_API: ${{ secrets.NEXT_PUBLIC_CLERK_FRONTEND_API }}
+
+  release:
+    if: ${{ !startsWith(github.event.ref, 'refs/tags/') }}
+    needs: [ tests ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GH_TOKEN}}
+          release_branches: "main"
+          pre_release_branches: "develop"
+
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+
+      - uses: actions/checkout@v3
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          # SENTRY_URL: https://sentry.io/
+        with:
+          environment: production
+
   docker:
+    needs: [ tests ]
     strategy:
       matrix:
-        app: ["frontend", "backend"]
+        app: [ "frontend", "backend" ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        if: github.event_name != 'pull_request'
 
       - name: Docker meta
         id: meta

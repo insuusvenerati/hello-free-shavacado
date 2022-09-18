@@ -1,9 +1,9 @@
-import { Burger, createStyles, Grid, Group, Header, MediaQuery, Title } from "@mantine/core";
+import { Burger, createStyles, Group, Header, Image, MediaQuery, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import Image from "next/image";
 import { useCallback } from "react";
 import { SearchBox } from "react-instantsearch-hooks-web";
 import { ButtonToggle } from "./Buttons/ColorSchemeToggle";
+import { NextLink } from "@mantine/next";
 
 type Props = {
   opened: boolean;
@@ -23,22 +23,12 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
   },
 
-  links: {
-    [theme.fn.smallerThan("md")]: {
-      display: "none",
-    },
-  },
-
-  search: {
-    [theme.fn.smallerThan("xs")]: {
-      display: "none",
-    },
-  },
-
   link: {
-    display: "block",
+    display: "flex",
+    gap: 10,
+    alignItems: "center",
     lineHeight: 1,
-    padding: "8px 12px",
+    padding: "4px 6px",
     borderRadius: theme.radius.sm,
     textDecoration: "none",
     color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.colors.gray[7],
@@ -62,21 +52,13 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
   return !matches ? (
     <MediaQuery largerThan="sm" styles={{ display: "none" }}>
       <Header height={70} p="md">
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            height: "100%",
-          }}
-        >
+        <Group>
           <Burger mr="sm" onClick={handleDrawer} opened={opened} size="md" />
-          <Image alt="logo" src="/android-chrome-192x192.png" width={50} height={50} />
-          <Grid justify="center">
-            <Grid.Col lg={6} md={12}>
-              <SearchBox />
-            </Grid.Col>
-          </Grid>
-        </div>
+          <NextLink href="/">
+            <Image alt="logo" src="/OrangeSlice2.svg" width={50} height={50} />
+          </NextLink>
+          <SearchBox />
+        </Group>
       </Header>
     </MediaQuery>
   ) : (
@@ -84,12 +66,14 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
       <div className={classes.inner}>
         <Group>
           <Burger mr="sm" onClick={handleDrawer} opened={opened} size="md" />
-          <Image alt="logo" src="/android-chrome-192x192.png" width={50} height={50} />
-          <Title order={2}>Hellofresh Search</Title>
+          <NextLink className={classes.link} href="/">
+            <Image alt="logo" src="/OrangeSlice2.svg" width={45} height={45} />
+            <Title order={2}>Hellofresh Search</Title>
+          </NextLink>
         </Group>
 
         <Group>
-          <Group ml={50} spacing={5} className={classes.links}>
+          <Group ml={50} spacing={5}>
             <ButtonToggle />
           </Group>
 

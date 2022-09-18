@@ -21,6 +21,7 @@ export const useAddImportedRecipeMutation = () => {
   const onSubmitHandler = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     mutate(url);
+    setUrl("");
   };
 
   return {

@@ -9,14 +9,17 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "test": "turbo run test",
+    "test": "yarn workspace @stiforr/frontend test --watch",
     "lint": "turbo run lint",
     "stop": "turbo run stop",
     "start": "turbo run start",
-    "storybook": "turbo run storybook",
+    "nps:prepare": "nps prepare",
     "prisma:migrate": "yarn workspace @stiforr/backend prisma migrate",
     "prisma:studio": "yarn workspace @stiforr/backend prisma studio",
-    "commit": "cz"
+    "prisma:generate": "yarn workspace @stiforr/backend prisma generate",
+    "commit": "cz",
+    "e2e:open": "NODE_ENV=test turbo run e2e:open",
+    "e2e:run": "NODE_ENV=test turbo run e2e:run"
   },
   "workspaces": {
     "packages": [
@@ -38,7 +41,7 @@
     "nps-utils": "1.7.0",
     "prettier": "2.7.1",
     "rimraf": "3.0.2",
-    "turbo": "1.4.3"
+    "turbo": "1.4.6"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint",

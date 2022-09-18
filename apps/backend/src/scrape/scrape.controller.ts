@@ -11,13 +11,23 @@ export class ScrapeController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string, @Query("user") user: string) {
-    return this.scrapeService.findOne(id, user);
+  findOneByUser(@Param("id") id: string, @Query("user") user: string) {
+    return this.scrapeService.findOneByUser(id, user);
+  }
+
+  @Get("one/:id")
+  findOne(@Param("id") id: string) {
+    return this.scrapeService.findOne(id);
+  }
+
+  @Get("imported/all")
+  async findAll() {
+    return this.scrapeService.findAll();
   }
 
   @Get()
-  async findAll(@Query("user") user: string) {
-    return this.scrapeService.findAll(user);
+  async findAllByUser(@Query("user") user: string) {
+    return this.scrapeService.findAllByUser(user);
   }
 
   @Patch(":id")
