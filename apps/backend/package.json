@@ -29,7 +29,7 @@
     "@nestjs/mapped-types": "1.1.0",
     "@nestjs/platform-express": "9.0.11",
     "@nestjs/schedule": "2.1.0",
-    "@ntegral/nestjs-sentry": "3.0.7",
+    "@ntegral/nestjs-sentry": "4.0.0",
     "@sentry/node": "7.13.0",
     "@sentry/tracing": "7.13.0",
     "algoliasearch": "4.14.2",
