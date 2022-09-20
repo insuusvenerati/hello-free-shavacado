@@ -3,7 +3,6 @@
 import {
   AppShell,
   Aside,
-  Box,
   Divider,
   Group,
   List,
@@ -12,36 +11,27 @@ import {
   Navbar,
   ScrollArea,
   Text,
-  TextInput,
   Title,
   Transition,
 } from "@mantine/core";
-import { useState } from "react";
-import { CurrentRefinements } from "react-instantsearch-hooks-web";
-import { useAddImportedRecipeMutation } from "hooks/useAddImportedRecipeMutation";
+import { useClickOutside } from "@mantine/hooks";
 import { useFavoriteRecipesQuery } from "hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "hooks/useGetImportedRecipesQuery";
-import { ClearRefinements } from "./Search/ClearRefinements";
+import { useState } from "react";
+import { CurrentRefinements } from "react-instantsearch-hooks-web";
+import { AddImportedRecipeForm } from "./AddImportedRecipeForm";
 import { ImportedRecipeLink } from "./ImportedRecipeLink";
 import { MyHeader } from "./MyHeader";
 import { NavbarContent } from "./NavContent";
 import { RecipeLink } from "./RecipeLink";
+import { ClearRefinements } from "./Search/ClearRefinements";
 import { RefinementList } from "./Search/RefinementList";
-import { useClickOutside } from "@mantine/hooks";
 
 type AppShellProps = {
   children: JSX.Element[] | JSX.Element;
 };
 
 export const MyAppShell = ({ children }: AppShellProps) => {
-  const {
-    onSubmitHandler,
-    error: addImportedRecipeError,
-    setUrl,
-    isError,
-    isLoading: addImportedRecipeLoading,
-    url,
-  } = useAddImportedRecipeMutation();
   const { data: importedRecipes } = useGetImportedRecipesQuery();
   const { data: recipes, isLoading } = useFavoriteRecipesQuery();
   const [opened, setOpened] = useState(false);
@@ -79,16 +69,9 @@ export const MyAppShell = ({ children }: AppShellProps) => {
               <Title mb="sm" order={3}>
                 Imported Recipes
               </Title>
-              <Box onSubmit={onSubmitHandler} mb="sm" component="form">
-                <TextInput
-                  onChange={(event) => setUrl(event.currentTarget.value)}
-                  value={url}
-                  disabled={addImportedRecipeLoading}
-                  error={isError && addImportedRecipeError?.message}
-                  placeholder="Enter a URL"
-                  label="Import Recipe"
-                />
-              </Box>
+
+              <AddImportedRecipeForm />
+
               <List
                 center
                 listStyleType="none"

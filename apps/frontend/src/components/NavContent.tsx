@@ -22,6 +22,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import { AddImportedRecipeForm } from "./AddImportedRecipeForm";
 import { MoonIcon } from "./Icons/MoonIcon";
 import { SunIcon } from "./Icons/SunIcon";
 
@@ -237,6 +238,9 @@ export const NavbarContent = ({
                 </NavLink>
               </Box>
             </Navbar.Section>
+
+            <AddImportedRecipeForm />
+
             <Navbar.Section className={classes.footer}>
               <Text className={classes.title}>{user?.primaryEmailAddress?.emailAddress}</Text>
             </Navbar.Section>

@@ -51,13 +51,13 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
 
   return !matches ? (
     <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-      <Header height={70} p="md">
-        <Group>
+      <Header height={70}>
+        <Group style={{ height: 70 }} position="center">
           <Burger mr="sm" onClick={handleDrawer} opened={opened} size="md" />
           <NextLink href="/">
             <Image alt="logo" src="/OrangeSlice2.svg" width={50} height={50} />
           </NextLink>
-          <SearchBox />
+          <SearchBox style={{ maxWidth: 250 }} role="search" />
         </Group>
       </Header>
     </MediaQuery>
