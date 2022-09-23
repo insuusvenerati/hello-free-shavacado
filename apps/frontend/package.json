@@ -24,7 +24,7 @@
     "@mantine/nprogress": "5.4.0",
     "@sentry/nextjs": "7.13.0",
     "algoliasearch": "4.14.2",
-    "framer-motion": "7.3.5",
+    "framer-motion": "7.3.6",
     "instantsearch.css": "7.4.5",
     "next": "12.3.1",
     "next-axiom": "0.14.0",
