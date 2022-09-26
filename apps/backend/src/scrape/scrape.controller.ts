@@ -6,8 +6,8 @@ export class ScrapeController {
   constructor(private readonly scrapeService: ScrapeService) {}
 
   @Post()
-  create(@Query() query) {
-    return this.scrapeService.create({ url: query.url, user: query.user });
+  create(@Query("url") url: string, @Query("user") user: string) {
+    return this.scrapeService.create({ url, user });
   }
 
   @Get(":id")
