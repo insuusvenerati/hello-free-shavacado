@@ -1,19 +1,23 @@
+import * as clerk from "@clerk/clerk-sdk-node";
 import { CacheModule, MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import * as redisStore from "cache-manager-ioredis";
-import { AppService } from "./app.service";
-import { HellofreshModule } from "./hellofresh/hellofresh.module";
-import { LoggerMiddleware } from "./middleware/logger.middleware";
-import { PlaceholderModule } from "./placeholder/placeholder.module";
-import { RecipeModule } from "./recipe/recipe.module";
-import { GroceriesModule } from "./groceries/groceries.module";
-import { ScrapeModule } from "./scrape/scrape.module";
-import { AppController } from "./app.controller";
-import { AuthModule } from "./auth/auth.module";
+import { APP_INTERCEPTOR } from "@nestjs/core";
 import { SentryInterceptor, SentryModule } from "@ntegral/nestjs-sentry";
 import * as Sentry from "@sentry/node";
-import { APP_INTERCEPTOR } from "@nestjs/core";
+import * as redisStore from "cache-manager-ioredis";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { CreatedRecipeModule } from "./created-recipe/created-recipe.module";
+import { GroceriesModule } from "./groceries/groceries.module";
+import { HellofreshModule } from "./hellofresh/hellofresh.module";
+import { LoggerMiddleware } from "./middleware/logger.middleware";
 import { TraceMiddleware } from "./middleware/trace.middleware";
+import { PlaceholderModule } from "./placeholder/placeholder.module";
+import { PrismaService } from "./prisma.service";
+import { RecipeModule } from "./recipe/recipe.module";
+import { ScrapeModule } from "./scrape/scrape.module";
+import { UsersModule } from "./users/users.module";
+import { UsersService } from "./users/users.service";
 
 const ENV = process.env.NODE_ENV;
 
@@ -27,13 +31,13 @@ const ENV = process.env.NODE_ENV;
       tracesSampleRate: 1.0,
     }),
     ConfigModule.forRoot({
-      envFilePath: !ENV ? ".env" : `.env.${ENV}.local`,
+      isGlobal: true,
     }),
     CacheModule.register({
       isGlobal: true,
-      ttl: ENV === "production" ? 60 : 1,
+      ttl: ENV === "production" ? 60 * 60 * 24 : 60,
       store: redisStore,
-      host: process.env.REDISHOST,
+      host: process.env.REDISHOST || "localhost",
       port: +process.env.REDISPORT || 6379,
       // family: 6,
       password: process.env.REDISPASSWORD,
@@ -43,14 +47,21 @@ const ENV = process.env.NODE_ENV;
     RecipeModule,
     GroceriesModule,
     ScrapeModule,
-    AuthModule,
+    CreatedRecipeModule,
+    UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_INTERCEPTOR, useValue: new SentryInterceptor() }],
+  providers: [
+    AppService,
+    { provide: APP_INTERCEPTOR, useValue: new SentryInterceptor() },
+    UsersService,
+    PrismaService,
+  ],
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {
     consumer.apply(LoggerMiddleware).forRoutes("*");
     consumer.apply(TraceMiddleware).forRoutes("*");
+    // consumer.apply(clerk.ClerkExpressRequireAuth).forRoutes("created-recipe");
   }
 }
