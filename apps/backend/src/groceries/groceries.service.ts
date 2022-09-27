@@ -1,20 +1,37 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { InjectSentry, SentryService } from "@ntegral/nestjs-sentry";
+import { Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "src/prisma.service";
+import { CreateGroceryDto } from "./dto/create-grocery.dto";
 
 @Injectable()
 export class GroceriesService {
-  private readonly logger = new Logger(GroceriesService.name);
+  constructor(private prisma: PrismaService) {}
 
-  constructor(
-    private prisma: PrismaService,
-    @InjectSentry() private readonly sentryClient: SentryService,
-  ) {}
-
-  async create(createGroceryDto: Prisma.GroceryCreateInput) {
+  async create(createGroceryDto: CreateGroceryDto) {
     return await this.prisma.grocery.create({
-      data: createGroceryDto,
+      data: {
+        ...createGroceryDto.grocery,
+        recipe: {
+          connectOrCreate: {
+            create: {
+              ...createGroceryDto.recipe,
+            },
+            where: {
+              uuid: createGroceryDto.recipe.uuid,
+            },
+          },
+        },
+        user: {
+          connectOrCreate: {
+            create: {
+              ...createGroceryDto.user,
+            },
+            where: {
+              id: createGroceryDto.user.id,
+            },
+          },
+        },
+      },
     });
   }
 
@@ -25,7 +42,6 @@ export class GroceriesService {
     orderBy?: Prisma.GroceryOrderByWithRelationAndSearchRelevanceInput;
   }) {
     const { user, take, skip, orderBy } = params;
-    this.logger.debug(orderBy);
 
     if (isNaN(skip)) {
       return await this.prisma.grocery.findMany({

@@ -12,7 +12,6 @@ import axios from "axios";
 import { Cache } from "cache-manager";
 import { PrismaService } from "src/prisma.service";
 import { RecipeQuery } from "src/types/recipes";
-import { hellofreshIndex } from "src/util/algolia";
 
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 const CUISINE_URL = `https://gw.hellofresh.com/api/cuisines?country=us&locale=en-US&take=250`;
@@ -90,40 +89,52 @@ export class HellofreshService {
         rating: recipe.recipe.averageRating,
       };
     });
-    const algoliaIndexResponse = await hellofreshIndex
-      .saveObjects(hellofreshDocuments, { autoGenerateObjectIDIfNotExist: true })
-      .wait();
+    // const algoliaIndexResponse = await hellofreshIndex
+    //   .saveObjects(hellofreshDocuments, { autoGenerateObjectIDIfNotExist: true })
+    //   .wait();
 
     return {
       message: "Recipes scraped successfully",
-      algoliaIndexResponse,
+      // algoliaIndexResponse,
     };
   }
 
   async scrapeIngredients() {
+    const token = await this.cacheManager.get<Token>("hf-token");
+
     for (let skip = 0; skip <= 1250; skip += 250) {
       console.log(skip);
       const URL = `https://gw.hellofresh.com/api/ingredients?country=us&locale=en-US&take=250&skip=${skip}`;
       const response = await axios.get<IngredientsResponse>(URL, {
         headers: {
-          authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjEyNjQzNjksImlhdCI6MTY1ODYzNDYyNiwiaXNzIjoic2VuZiIsImp0aSI6IjhkN2FkMjIwLTdkOTctNDQ3ZS05YjcyLThmNDA0YWE2NDk3ZiJ9.2eNOXzBTEERKHKc5d-6e5_hNGd-GCi24OShZ3qEnauE`,
+          authorization: `Bearer ${token.access_token}`,
         },
       });
-      response.data.items.map(async (item) => {
+
+      const prismaUpsert = response.data.items.map((item) => {
         if (item.family === null) {
-          return;
+          return this.prisma.ingredient.create({
+            data: {
+              ...item,
+              family: undefined,
+            },
+          });
         }
-        await this.prisma.ingredient.upsert({
-          create: item,
-          update: item,
-          where: { id: item.id },
+        return this.prisma.ingredient.create({
+          data: item,
         });
       });
+
+      await this.prisma.$transaction(prismaUpsert);
     }
-    const prismaResponse = await this.prisma.ingredient.findMany();
+
+    // await this.prisma.$transaction()
+
+    return await this.prisma.ingredient.findMany();
   }
 
-  async findAll(query: string, page: number, token: string) {
+  async findAll(query: string, page: number) {
+    const token = await this.cacheManager.get<Token>("hf-token");
     const tsquerySpecialChars = /[()|&:*!]/g;
     const getQueryFromSearchPhrase = (searchPhrase: string) =>
       searchPhrase.replace(tsquerySpecialChars, " ").trim().split(/\s+/).join(" | ");
@@ -149,7 +160,7 @@ export class HellofreshService {
     if (dbSearch.length >= 20) return results;
 
     const response = await axios.get(`${BASE_URL}take=20&q=${query}&skip=${skip}`, {
-      headers: { authorization: token },
+      headers: { authorization: token.access_token },
     });
 
     response.data.items.map(async (item) => {
@@ -197,13 +208,13 @@ export class HellofreshService {
   }
 
   async findOneById(id: string) {
-    const { recipe } = await this.prisma.hellofresh.findFirst({
+    const data = await this.prisma.hellofresh.findFirst({
       where: {
         id,
       },
     });
 
-    return recipe;
+    return data.recipe;
   }
 
   async getAllCuisines(token: string) {
@@ -279,5 +290,22 @@ export class HellofreshService {
     }) as Prisma.Prisma__PopularRecipeClient<PopularRecipe>[];
 
     return { response: `${popularRecipeScrapeResponse.length} popular recipes added` };
+  }
+
+  async getAllIngredients(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.IngredientWhereUniqueInput;
+    where?: Prisma.IngredientWhereInput;
+    orderBy?: Prisma.IngredientOrderByWithRelationAndSearchRelevanceInput;
+  }): Promise<Ingredient[]> {
+    const { skip, take = 10, cursor, where, orderBy } = params;
+    return await this.prisma.ingredient.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 }

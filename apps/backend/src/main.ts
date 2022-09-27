@@ -1,14 +1,13 @@
 import { HttpAdapterHost, NestFactory } from "@nestjs/core";
+import * as SentryTracing from "@sentry/tracing";
+import * as cookieParser from "cookie-parser";
 import { AppModule } from "./app.module";
 import { PrismaClientExceptionFilter } from "./prisma-client-exception.filter";
-import * as SentryTracing from "@sentry/tracing";
-import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  // app.use(cookieParser());
-  app.useGlobalPipes(new ValidationPipe());
+  app.use(cookieParser());
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
   SentryTracing.addExtensionMethods();

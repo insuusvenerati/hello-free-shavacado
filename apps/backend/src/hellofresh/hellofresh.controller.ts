@@ -1,10 +1,7 @@
 import {
   CacheInterceptor,
-  CacheTTL,
   Controller,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Query,
@@ -13,7 +10,9 @@ import {
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
+import { Ingredient } from "@prisma/client";
 import { Request } from "express";
+import { IngredientsParamsDTO } from "./dto/params.dto";
 import { HellofreshService } from "./hellofresh.service";
 
 @Controller("hellofresh")
@@ -22,25 +21,12 @@ export class HellofreshController {
   constructor(private readonly hellofreshService: HellofreshService) {}
 
   @Get()
-  @UsePipes(new ValidationPipe({ transform: true }))
-  findAll(@Query("q") q: string, @Query("page") page: number, @Req() request: Request) {
-    const token = request.headers.authorization;
-    if (!token) throw new HttpException("No valid token", HttpStatus.FORBIDDEN);
-    if (!q) throw new HttpException("No query supplied", HttpStatus.NOT_FOUND);
-    return this.hellofreshService.findAll(q, page, token);
+  findAll(@Query("q") q: string, @Query("page") page: number) {
+    return this.hellofreshService.findAll(q, page);
   }
-
-  // @Get("recipe")
-  // @UsePipes(new ValidationPipe({ transform: true }))
-  // @CacheTTL(60)
-  // findOne(@Query("q") q: string, @Req() request: Request) {
-  //   const token = request.headers.authorization;
-  //   return this.hellofreshService.findOne(q, token);
-  // }
 
   @Get("recipe/:id")
   @UsePipes(new ValidationPipe({ transform: true }))
-  @CacheTTL(0)
   findOneById(@Param("id") id: string) {
     return this.hellofreshService.findOneById(id);
   }
@@ -52,13 +38,18 @@ export class HellofreshController {
   }
 
   @Get("favorites")
-  @CacheTTL(60 * 60 * 24)
   async getFavoriteRecipes() {
     return await this.hellofreshService.getFavoriteRecipes();
   }
 
+  @Get("ingredients")
+  @UsePipes(new ValidationPipe({ transform: true, skipMissingProperties: true }))
+  async getAllIngredients(@Query() params: IngredientsParamsDTO) {
+    return await this.hellofreshService.getAllIngredients(params);
+  }
+
   @Post("scrapeIngredients")
-  async scrapeIngredients() {
+  async scrapeIngredients(): Promise<Ingredient[]> {
     return await this.hellofreshService.scrapeIngredients();
   }
 

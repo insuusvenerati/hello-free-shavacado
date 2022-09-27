@@ -1,5 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/common";
-import { Recipe as RecipeModel, Prisma } from "@prisma/client";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from "@nestjs/common";
+import { Recipe as RecipeModel } from "@prisma/client";
+import { RecipeDto } from "./dto/recipe.dto";
 import { RecipeService } from "./recipe.service";
 
 @Controller("recipe")
@@ -7,9 +18,10 @@ export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}
 
   @Post()
+  @UsePipes(new ValidationPipe({ transform: true }))
   create(
     @Body()
-    recipeData: Prisma.RecipeCreateInput,
+    recipeData: RecipeDto,
   ): Promise<RecipeModel> {
     return this.recipeService.create(recipeData);
   }

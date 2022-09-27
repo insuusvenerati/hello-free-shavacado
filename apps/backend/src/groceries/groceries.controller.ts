@@ -10,6 +10,7 @@ import {
   ValidationPipe,
 } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
+import { CreateGroceryDto } from "./dto/create-grocery.dto";
 import { GroceriesService } from "./groceries.service";
 
 @Controller("groceries")
@@ -17,7 +18,8 @@ export class GroceriesController {
   constructor(private readonly groceriesService: GroceriesService) {}
 
   @Post()
-  create(@Body() createGroceryDto: Prisma.GroceryCreateInput) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  create(@Body() createGroceryDto: CreateGroceryDto) {
     return this.groceriesService.create(createGroceryDto);
   }
 

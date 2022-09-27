@@ -24,10 +24,6 @@
   "workspaces": {
     "packages": [
       "apps/*"
-    ],
-    "nohoist": [
-      "@stiforr/frontend/**",
-      "@stiforr/backend/**"
     ]
   },
   "devDependencies": {
