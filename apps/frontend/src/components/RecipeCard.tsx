@@ -8,9 +8,11 @@ import { AddToFavorites } from "./Buttons/AddToFavorites";
 import { CustomNextLink } from "./CustomNextLink";
 import { RecipeCardImage } from "./RecipeCardImage";
 import { HF_CARD_IMAGE_URL, HF_PLACEHOLDERURL } from "../util/constants";
+import { CreatedRecipe, isCreatedRecipe } from "types/createdRecipe";
+import { CreatedRecipeCard } from "./RecipeCard/CreatedRecipe";
 
 type Props = {
-  recipe: Hit<RecipeHit> | ImportedRecipe | Item;
+  recipe: Hit<RecipeHit> | ImportedRecipe | Item | CreatedRecipe;
 } & Omit<CardProps, "children">;
 
 export const RecipeCard = ({ recipe, ...props }: Props) => {
@@ -21,6 +23,8 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
       </Container>
     );
   }
+
+  if (isCreatedRecipe(recipe)) return <CreatedRecipeCard recipe={recipe} {...props} />;
 
   if (isImportedRecipe(recipe)) {
     return (

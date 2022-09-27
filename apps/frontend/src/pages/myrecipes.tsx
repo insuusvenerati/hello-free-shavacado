@@ -1,4 +1,5 @@
 import { Grid, LoadingOverlay, SegmentedControl, SegmentedControlItem, Title } from "@mantine/core";
+import { useGetAllCreatedRecipes } from "hooks/useGetAllCreatedRecipes";
 import { NextSeo } from "next-seo";
 import { useMemo, useState } from "react";
 import { useQueries } from "react-query";
@@ -8,9 +9,9 @@ import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
 
 const RecipeList = () => {
-  // const [recipes, setRecipes] = useState<RecipeQuery[]>();
   const { data: favoriteRecipes, isSuccess } = useFavoriteRecipesQuery();
   const { data: importedRecipes, isSuccess: importedRecipesSuccess } = useGetImportedRecipesQuery();
+  const { data: createdRecipes } = useGetAllCreatedRecipes();
   const [section, setSection] = useState<string>("imported-recipes");
 
   const recipeQueries = useQueries(
@@ -34,6 +35,10 @@ const RecipeList = () => {
       {
         label: "Favorite Recipes",
         value: "favorite-recipes",
+      },
+      {
+        label: "Created Recipes",
+        value: "created-recipes",
       },
     ],
     [],
@@ -82,6 +87,24 @@ const RecipeList = () => {
           </Title>
           <Grid justify="center">
             {recipes?.map((item) => {
+              if (!item) return;
+              return (
+                <Grid.Col key={item.id} lg={3} md={12}>
+                  <RecipeCard recipe={item} />
+                </Grid.Col>
+              );
+            })}
+          </Grid>
+        </>
+      ) : null}
+
+      {section === "created-recipes" ? (
+        <>
+          <Title mb="md" mt="md" align="center" order={1}>
+            Created Recipes
+          </Title>
+          <Grid justify="center">
+            {createdRecipes?.map((item) => {
               if (!item) return;
               return (
                 <Grid.Col key={item.id} lg={3} md={12}>

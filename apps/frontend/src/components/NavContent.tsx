@@ -5,6 +5,7 @@ import {
   CogIcon,
   HomeIcon,
   ArrowLeftOnRectangleIcon,
+  PlusIcon,
 } from "@heroicons/react/24/outline";
 import {
   Box,
@@ -144,6 +145,7 @@ const navLinks = [
   { href: "/", label: "Home", icon: HomeIcon },
   { href: "/myrecipes", label: "My Recipes", icon: BookmarkIcon },
   { href: "/groceries", label: "Groceries", icon: CakeIcon },
+  { href: "/add", label: "Add a recipe", icon: PlusIcon },
 ];
 
 export const NavbarContent = ({
@@ -179,7 +181,7 @@ export const NavbarContent = ({
   const links = useMemo(
     () =>
       navLinks.map((link) => (
-        <Link key={link.label} href={link.href} passHref>
+        <Link key={link.href} href={link.href} passHref>
           <NavLink
             sx={{ whiteSpace: "nowrap" }}
             label={link.label}

@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useClerk } from "@clerk/nextjs";
 import { CheckIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Accordion, ActionIcon, Box, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import Image from "next/image";
@@ -11,6 +11,7 @@ import { HF_AVATAR_IMAGE_URL } from "../util/constants";
 export const IngredientCard = ({ recipe }: { recipe: Item }) => {
   const { mutate: addGroceryMutation, isLoading } = useAddGroceryMutation();
   const { userId } = useAuth();
+  const { user } = useClerk();
   const { data: groceries } = useGetGroceriesQuery({ take: "999" });
 
   const isGroceryAdded = (id: string) => groceries?.some((g) => g.uuid === id);
@@ -32,49 +33,42 @@ export const IngredientCard = ({ recipe }: { recipe: Item }) => {
                 const ingredientYield = yields.filter((y) => y.id === ingredient.id);
                 return (
                   <Group key={ingredient.id}>
-                    <form
-                      onSubmit={(event) => {
-                        event.preventDefault();
-                        if (userId) {
-                          addGroceryMutation({
+                    <ActionIcon
+                      loading={isLoading}
+                      onClick={() =>
+                        addGroceryMutation({
+                          grocery: {
                             ingredient: ingredient.name,
                             amount: ingredientYield[0].amount,
                             unit: ingredientYield[0].unit,
                             imagePath: ingredient.imagePath,
-                            userId: userId,
-                            slug: ingredient.slug,
                             family: ingredient.family.name,
+                            slug: ingredient.slug,
                             uuid: ingredient.id,
-                            recipe: {
-                              connectOrCreate: {
-                                create: {
-                                  imagePath: recipe.imagePath,
-                                  name: recipe.name,
-                                  userId: userId,
-                                  slug: recipe.slug,
-                                  uuid: recipe.id,
-                                },
-                                where: { uuid: recipe.id },
-                              },
-                            },
-                          });
-                        }
-                      }}
+                          },
+                          recipe: {
+                            name: recipe.name,
+                            slug: recipe.slug,
+                            uuid: recipe.id,
+                            imagePath: recipe.imagePath,
+                          },
+                          user: {
+                            id: userId,
+                            name: user?.fullName,
+                            username: user?.username,
+                          },
+                        })
+                      }
+                      variant="light"
+                      color="green"
+                      disabled={isGroceryAdded(ingredient.id)}
                     >
-                      <ActionIcon
-                        loading={isLoading}
-                        type="submit"
-                        variant="light"
-                        color="green"
-                        disabled={isGroceryAdded(ingredient.id)}
-                      >
-                        {isGroceryAdded(ingredient.id) ? (
-                          <CheckIcon width={16} />
-                        ) : (
-                          <PlusIcon width={16} />
-                        )}
-                      </ActionIcon>
-                    </form>
+                      {isGroceryAdded(ingredient.id) ? (
+                        <CheckIcon width={16} />
+                      ) : (
+                        <PlusIcon width={16} />
+                      )}
+                    </ActionIcon>
                     <Image
                       alt={ingredient.description}
                       height={60}

@@ -6,7 +6,7 @@ import {
   SyntheticEvent,
   useContext,
 } from "react";
-import { useRecipes } from "../hooks/useRecipes";
+import { useRecipes } from "hooks/useRecipes";
 import { Item } from "../types/recipes";
 
 type RecipesContextType = {

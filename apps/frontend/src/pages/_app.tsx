@@ -1,21 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/unbound-method */
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut } from "@clerk/nextjs";
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
+import { HeadMeta } from "components/HeadMeta";
+import { Layout } from "components/Layout/Layout";
+import { RouterTransition } from "components/RouterTransition";
 import "instantsearch.css/themes/algolia-min.css";
+import { RecipeJsonLdProps } from "next-seo";
 import { AppProps as NextAppProps } from "next/app";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { Layout } from "components/Layout/Layout";
-import { RouterTransition } from "components/RouterTransition";
 import { Item } from "../types/recipes";
-import { HeadMeta } from "components/HeadMeta";
-import { RecipeJsonLdProps } from "next-seo";
 
 const CLERK_FRONTEND_KEY = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
 
@@ -30,8 +31,12 @@ type CustomPageProps = {
   recipe: Item;
 };
 
+const publicPages = ["/", "/privacy", "/recipe/[id]"];
+
 const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
   const { openGraphData = [] } = pageProps;
+  const { pathname } = useRouter();
+  const isPublicPage = publicPages.includes(pathname);
 
   // eslint-disable-next-line react/hook-use-state
   const [queryClient] = useState(
@@ -43,7 +48,6 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
             staleTime: 1000 * 60 * 60,
             refetchOnMount: false,
             notifyOnChangeProps: ["data", "error"],
-            retry: 3,
           },
         },
       }),
@@ -67,7 +71,6 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
           <meta key={i} {...og} />
         ))}
       </Head>
-      {/*<RecipeJsonLd {...jsonLdData} />*/}
 
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
@@ -76,12 +79,20 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
             <ClerkProvider frontendApi={CLERK_FRONTEND_KEY} {...pageProps}>
               <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen={false} />
-                {/* <Hydrate state={pageProps.dehydratedState}> */}
-                {/*<DefaultSeo {...NextSeoConfig} />*/}
                 <Layout>
-                  <Component {...pageProps} />
+                  {isPublicPage ? (
+                    <Component {...pageProps} />
+                  ) : (
+                    <>
+                      <SignedIn>
+                        <Component {...pageProps} />
+                      </SignedIn>
+                      <SignedOut>
+                        <RedirectToSignIn />
+                      </SignedOut>
+                    </>
+                  )}
                 </Layout>
-                {/* </Hydrate> */}
               </QueryClientProvider>
             </ClerkProvider>
           </NotificationsProvider>

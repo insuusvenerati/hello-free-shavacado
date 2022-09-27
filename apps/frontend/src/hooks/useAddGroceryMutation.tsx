@@ -1,21 +1,15 @@
-import { useAuth, useClerk } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { showNotification } from "@mantine/notifications";
 import { useMutation, useQueryClient } from "react-query";
 import { AddGrocery, Grocery } from "../types/grocery";
 import { addGrocery } from "../util/addGrocery";
 
-type MutationError = {
-  statusCode: string;
-  message: string;
-};
-
 export const useAddGroceryMutation = () => {
   const { userId } = useAuth();
   const queryClient = useQueryClient();
-  const { openSignIn } = useClerk();
-  return useMutation<Grocery, MutationError, AddGrocery, unknown>(
+  return useMutation<Grocery, Error, AddGrocery, unknown>(
     (grocery) => {
-      return addGrocery(userId, grocery, openSignIn);
+      return addGrocery(userId, grocery);
     },
     {
       onSuccess: async (grocery) => {
@@ -30,7 +24,7 @@ export const useAddGroceryMutation = () => {
       onError: (error) => {
         showNotification({
           color: "red",
-          title: `Code ${error.statusCode}`,
+          title: error.message,
           message: "Unable to add ingredient",
         });
       },

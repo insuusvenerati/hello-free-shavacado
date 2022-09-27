@@ -1,14 +1,8 @@
-import { SignInProps } from "@clerk/types";
 import { AddGrocery, Grocery } from "../types/grocery";
 import { API_URL } from "./constants";
 
-export const addGrocery = async (
-  userId: string | undefined | null,
-  grocery: AddGrocery,
-  openSignIn: (signInProps?: SignInProps) => void,
-) => {
-  if (typeof userId !== "string") {
-    openSignIn({});
+export const addGrocery = async (userId: string | undefined | null, grocery: AddGrocery) => {
+  if (!userId) {
     throw new Error("Not signed in");
   }
 
@@ -19,5 +13,10 @@ export const addGrocery = async (
     },
     body: JSON.stringify(grocery),
   });
+
+  if (!response.ok) {
+    throw new Error("Failed to add grocery");
+  }
+
   return (await response.json()) as Grocery;
 };

@@ -1,4 +1,5 @@
 import { RecipeQuery } from "../types/recipes";
+import type { Hellofresh } from "@stiforr/backend";
 import { HELLOFRESH_SEARCH_URL } from "./constants";
 
 export type Token = {

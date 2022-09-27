@@ -1,5 +1,7 @@
+// @ts-check
+
 const withPlugins = require("next-compose-plugins");
-const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require("next/constants");
+const { PHASE_PRODUCTION_BUILD } = require("next/constants");
 const withPWA = require("next-pwa");
 const { withAxiom } = require("next-axiom");
 const { withSentryConfig } = require("@sentry/nextjs");
@@ -21,7 +23,7 @@ const nextConfig = {
   eslint: {
     dirs: ["pages", "components", "hooks"],
   },
-  output: !onVercel ? "standalone" : null,
+  output: !onVercel ? "standalone" : undefined,
   images: {
     domains: ["img.hellofresh.com", "imagesvc.meredithcorp.io"],
     remotePatterns: [
@@ -38,7 +40,6 @@ const nextConfig = {
   },
 };
 
-// module.exports = withBundleAnalyzer(withAxiom(withPWA(nextConfig)));
 module.exports = withPlugins(
   [
     [withPWA, { pwaConfig }, [PHASE_PRODUCTION_BUILD]],

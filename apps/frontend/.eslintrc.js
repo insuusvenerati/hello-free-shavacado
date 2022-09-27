@@ -1,3 +1,8 @@
+// @ts-check
+
+/**
+ * @type {import("eslint").ESLint.ConfigData}
+ */
 module.exports = {
   extends: ["plugin:react-hooks/recommended", "next/core-web-vitals"],
   parser: "@typescript-eslint/parser",

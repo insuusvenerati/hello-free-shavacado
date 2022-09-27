@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useClerk } from "@clerk/nextjs";
 import { ArrowLeftIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import {
   Affix,
@@ -15,13 +15,15 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { AddToFavorites } from "components/Buttons/AddToFavorites";
+import { ShareButton } from "components/Buttons/ShareButton";
 import { CustomNextLink } from "components/CustomNextLink";
 import { IngredientCard } from "components/IngredientsCard";
 import { useAddGroceryMutation } from "hooks/useAddGroceryMutation";
 import { GetStaticPaths, GetStaticProps } from "next";
+import { RecipeJsonLd, RecipeJsonLdProps } from "next-seo";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Fragment, SyntheticEvent } from "react";
+import { Fragment } from "react";
 import { Item } from "types/recipes";
 import {
   HF_CARD_IMAGE_URL,
@@ -32,11 +34,8 @@ import {
 } from "util/constants";
 import { getPopularRecipes } from "util/getPopularRecipes";
 import { getRecipeById } from "util/getRecipeById";
-import { AddGrocery } from "../../types/grocery";
-import { createMetaTagsFromRecipe } from "../../util/createMetaTagsFromRecipe";
 import { createJsonLdDataFromRecipe } from "../../util/createJsonLdDataFromRecipe";
-import { RecipeJsonLd, RecipeJsonLdProps } from "next-seo";
-import { ShareButton } from "components/Buttons/ShareButton";
+import { createMetaTagsFromRecipe } from "../../util/createMetaTagsFromRecipe";
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const id = params?.id as string;
@@ -63,6 +62,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const Recipe = ({ recipe, jsonLdData }: { recipe: Item; jsonLdData: RecipeJsonLdProps }) => {
   const matches = useMediaQuery("(min-width: 900px)", true);
   const { userId } = useAuth();
+  const { user } = useClerk();
   const router = useRouter();
   const { mutate: addGroceryMutation, isLoading } = useAddGroceryMutation();
 
@@ -71,39 +71,34 @@ const Recipe = ({ recipe, jsonLdData }: { recipe: Item; jsonLdData: RecipeJsonLd
   const addGroceriesIngredients = recipe.ingredients?.map((ingredient) => {
     const ingredientYield = yields?.filter((y) => y.id === ingredient.id);
     return {
-      ingredient: ingredient.name,
-      amount: ingredientYield[0].amount,
-      unit: ingredientYield[0].unit,
-      imagePath: ingredient.imagePath,
-      userId: userId,
-      slug: ingredient.slug,
-      family: ingredient.family.name,
-      uuid: ingredient.id,
-      recipe: {
-        connectOrCreate: {
-          create: {
-            id: recipe.id,
-            imagePath: recipe.imagePath,
-            name: recipe.name,
-            userId: userId,
-            slug: recipe.slug,
-            uuid: recipe.id,
-          },
-          where: { uuid: recipe.id },
-        },
+      grocery: {
+        ingredient: ingredient.name,
+        amount: ingredientYield[0].amount,
+        unit: ingredientYield[0].unit,
+        imagePath: ingredient.imagePath,
+        family: ingredient.family.name,
+        slug: ingredient.slug,
+        uuid: ingredient.id,
       },
-    } as AddGrocery;
+      recipe: {
+        name: recipe.name,
+        slug: recipe.slug,
+        uuid: recipe.id,
+        imagePath: recipe.imagePath,
+      },
+      user: {
+        id: userId,
+        name: user?.fullName,
+        username: user?.username,
+      },
+    };
   });
 
-  const handleAddAllIngredients = (event: SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleAddAllIngredients = () => {
     addGroceriesIngredients?.map((addg) => {
       addGroceryMutation(addg);
     });
   };
-
-  // if (!recipe) return <LoadingOverlay visible />;
-  // console.log(recipe);
 
   return (
     <>
@@ -138,11 +133,11 @@ const Recipe = ({ recipe, jsonLdData }: { recipe: Item; jsonLdData: RecipeJsonLd
                   <Button leftIcon={<DocumentIcon width={16} />}>Print the Recipe Card</Button>
                 </CustomNextLink>
               )}
-              <form onSubmit={handleAddAllIngredients}>
-                <Button loading={isLoading} type="submit">
-                  Add all ingredients to groceries
-                </Button>
-              </form>
+
+              <Button onClick={handleAddAllIngredients} loading={isLoading}>
+                Add all ingredients to groceries
+              </Button>
+
               <ShareButton image={`${HF_CARD_IMAGE_URL}${recipe.imagePath}`} />
             </Group>
           </Group>
