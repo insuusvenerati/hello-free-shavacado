@@ -1,4 +1,3 @@
-import * as clerk from "@clerk/clerk-sdk-node";
 import { CacheModule, MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_INTERCEPTOR } from "@nestjs/core";
@@ -62,6 +61,5 @@ export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {
     consumer.apply(LoggerMiddleware).forRoutes("*");
     consumer.apply(TraceMiddleware).forRoutes("*");
-    // consumer.apply(clerk.ClerkExpressRequireAuth).forRoutes("created-recipe");
   }
 }
