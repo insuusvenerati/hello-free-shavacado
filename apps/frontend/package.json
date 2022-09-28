@@ -13,7 +13,7 @@
   "version": "1.5.0-develop.2",
   "private": true,
   "dependencies": {
-    "@clerk/nextjs": "4.3.0",
+    "@clerk/nextjs": "4.3.2",
     "@emotion/react": "11.10.4",
     "@emotion/server": "11.10.0",
     "@heroicons/react": "2.0.11",
