@@ -11,7 +11,6 @@ import { GroceriesModule } from "./groceries/groceries.module";
 import { HellofreshModule } from "./hellofresh/hellofresh.module";
 import { LoggerMiddleware } from "./middleware/logger.middleware";
 import { TraceMiddleware } from "./middleware/trace.middleware";
-import { PlaceholderModule } from "./placeholder/placeholder.module";
 import { PrismaService } from "./prisma.service";
 import { RecipeModule } from "./recipe/recipe.module";
 import { ScrapeModule } from "./scrape/scrape.module";
@@ -42,7 +41,6 @@ const ENV = process.env.NODE_ENV;
       password: process.env.REDISPASSWORD,
     }),
     HellofreshModule,
-    PlaceholderModule,
     RecipeModule,
     GroceriesModule,
     ScrapeModule,
