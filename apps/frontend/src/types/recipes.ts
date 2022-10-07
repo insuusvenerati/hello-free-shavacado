@@ -1,3 +1,14 @@
+import { RecipeHit } from "./recipeSearchQuery";
+import { Hit } from "instantsearch.js";
+import { CreatedRecipe } from "./createdRecipe";
+import { ImportedRecipe } from "./importedRecipe";
+
+export const isRecipe = (
+  recipe: Item | Hit<RecipeHit> | CreatedRecipe | ImportedRecipe,
+): recipe is Item => {
+  return (recipe as Item).seoName !== undefined;
+};
+
 export interface RecipeQuery {
   take: number;
   skip: number;
@@ -62,7 +73,7 @@ export interface Item {
 }
 
 export interface Allergen {
-  id: ID;
+  id: string;
   type: string;
   description: null;
   tracesOf: boolean;
@@ -72,16 +83,6 @@ export interface Allergen {
   usage: number;
   name: string;
   slug: string;
-}
-
-export enum ID {
-  The57962A07B7E8697D4B3052F5 = "57962a07b7e8697d4b3052f5",
-  The57962A07B7E8697D4B3052F6 = "57962a07b7e8697d4b3052f6",
-  The57962A07B7E8697D4B3052F7 = "57962a07b7e8697d4b3052f7",
-  The57962A07B7E8697D4B3052F8 = "57962a07b7e8697d4b3052f8",
-  The57962A07B7E8697D4B3052F9 = "57962a07b7e8697d4b3052f9",
-  The57962A07B7E8697D4B3052Fa = "57962a07b7e8697d4b3052fa",
-  The5B50A59331C241Ab96E75A8B = "5b50a59331c241ab96e75a8b",
 }
 
 export interface Category {
@@ -111,7 +112,7 @@ export interface ItemIngredient {
   imagePath: string;
   usage: number;
   hasDuplicatedName: null;
-  allergens: ID[];
+  allergens: string[];
   family: Family;
   uuid: string;
 }
@@ -140,7 +141,7 @@ export interface Label {
 }
 
 export interface Nutrition {
-  type: Type;
+  type: string;
   name: Name;
   amount: number;
   unit: NutritionUnit;
@@ -157,19 +158,6 @@ export enum Name {
   SaturatedFat = "Saturated Fat",
   Sodium = "Sodium",
   Sugar = "Sugar",
-}
-
-export enum Type {
-  The57B42A48B7E8697D4B305304 = "57b42a48b7e8697d4b305304",
-  The57B42A48B7E8697D4B305305 = "57b42a48b7e8697d4b305305",
-  The57B42A48B7E8697D4B305306 = "57b42a48b7e8697d4b305306",
-  The57B42A48B7E8697D4B305307 = "57b42a48b7e8697d4b305307",
-  The57B42A48B7E8697D4B305308 = "57b42a48b7e8697d4b305308",
-  The57B42A48B7E8697D4B305309 = "57b42a48b7e8697d4b305309",
-  The57B42A48B7E8697D4B30530A = "57b42a48b7e8697d4b30530a",
-  The57B42A48B7E8697D4B30530B = "57b42a48b7e8697d4b30530b",
-  The57B42A48B7E8697D4B30530C = "57b42a48b7e8697d4b30530c",
-  The57B42A48B7E8697D4B30530D = "57b42a48b7e8697d4b30530d",
 }
 
 export enum NutritionUnit {

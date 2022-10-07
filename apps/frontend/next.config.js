@@ -25,7 +25,7 @@ const nextConfig = {
   },
   output: !onVercel ? "standalone" : undefined,
   images: {
-    domains: ["img.hellofresh.com", "imagesvc.meredithcorp.io"],
+    domains: ["img.hellofresh.com", "imagesvc.meredithcorp.io", "localhost"],
     remotePatterns: [
       {
         protocol: "https",

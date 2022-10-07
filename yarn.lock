@@ -1327,12 +1327,12 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@clerk/backend-core@^2.5.1":
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/@clerk/backend-core/-/backend-core-2.5.1.tgz#f1e7bc4bbdf3213feed9a2ba5b5d16e36e49ce3d"
-  integrity sha512-zeN7ZZhejCbxMMWFEjvT2XbryAtowYVGwS5YzqXuoZ8yQIKR1PMINXt1ASAPq/gG0EPj3UnYeHusAYUJYYHdSQ==
+"@clerk/backend-core@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@clerk/backend-core/-/backend-core-2.8.1.tgz#128c41595633829c6728a4a8d065d4a19f7b7401"
+  integrity sha512-R3nK4sQqzuEWAdcM+zSoSeJFBbi8xmAWu7hL/nOkGiaPZhlA8KP6btY+EjkQlyoON6wNmxeasZK0RHnB/jG3bQ==
   dependencies:
-    "@clerk/types" "^3.7.1"
+    "@clerk/types" "^3.10.1"
     "@peculiar/webcrypto" "^1.4.0"
     "@types/node" "^16.11.55"
     "@types/node-fetch" "^2"
@@ -1341,22 +1341,22 @@
     snakecase-keys "^5.1.2"
     tslib "^2.3.1"
 
-"@clerk/clerk-react@^4.2.2":
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/@clerk/clerk-react/-/clerk-react-4.2.2.tgz#65f553cb4e60e489a9785651d60a89c251b67e8c"
-  integrity sha512-JB6QIf7s6W9jToHvHKJ10RN4W3sd5DfuH/zrEUCKRTz8pPftiShs9IDu0D6Cj6n2+F4GQc/8XELDvreHA96PKw==
+"@clerk/clerk-react@^4.2.6":
+  version "4.2.6"
+  resolved "https://registry.yarnpkg.com/@clerk/clerk-react/-/clerk-react-4.2.6.tgz#e36ab5877dd31691d14239ccff9795a5f7f49c86"
+  integrity sha512-830Ykdr9vI8Ld8lBybZWAXXmxSYlxnZOsc8RQF1StEtACF0tFnga+AO7Amgi0z2s8yiX/EsT84SxK0fwLOekHQ==
   dependencies:
-    "@clerk/types" "^3.7.1"
+    "@clerk/types" "^3.10.1"
     swr "^1.3.0"
     tslib "^2.3.1"
 
-"@clerk/clerk-sdk-node@^4.3.2":
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/@clerk/clerk-sdk-node/-/clerk-sdk-node-4.3.2.tgz#a329d5ad34ef79deba5afc4bdabce3268611d2a7"
-  integrity sha512-1WZB9bVW8xI//a9MLuGyK8Mjt5tCSykjxVAK2Ksx3JXxDerCjr/PUM8xGM87ocBwlmqLLc2wO1JwnNT55mEOiw==
+"@clerk/clerk-sdk-node@^4.4.2":
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/@clerk/clerk-sdk-node/-/clerk-sdk-node-4.4.2.tgz#58f9901e85e59003e0429e009df06a2e227aba86"
+  integrity sha512-gpnARk4OmSImmsfwBxdSX9BhWbPVTxIJTh2cG1g7ktmyqpkzXx/V7vWab2AcrZz0JL/hg47ZupMWwFOyoPgCEA==
   dependencies:
-    "@clerk/backend-core" "^2.5.1"
-    "@clerk/types" "^3.7.1"
+    "@clerk/backend-core" "^2.8.1"
+    "@clerk/types" "^3.10.1"
     "@peculiar/webcrypto" "^1.4.0"
     "@types/cookies" "^0.7.7"
     "@types/express" "^4.17.11"
@@ -1371,32 +1371,32 @@
     snakecase-keys "^3.2.1"
     tslib "^2.3.1"
 
-"@clerk/edge@^1.10.2":
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/@clerk/edge/-/edge-1.10.2.tgz#e81e2d17937ab8dd35578a2ce58d413a32b5779b"
-  integrity sha512-tlY1kUF1IRpMtHpBR04CmDsICZkmFHSgBu78SEXFJO0+g+/mrsi7omBj8o21MZ1MO1HGPRvlNb7xiZdugSBjWQ==
+"@clerk/edge@^1.12.2":
+  version "1.12.2"
+  resolved "https://registry.yarnpkg.com/@clerk/edge/-/edge-1.12.2.tgz#5deb706c9b6339fcf80a663792dbb88533ca3190"
+  integrity sha512-qqQKKmupM3wbtbigZ2iXfI2Hc2OblPfX6hlIXE1jFwf/DcGGxU5zThT+fTKWsW3meL5s/iMxv0olZBtrKMpGnA==
   dependencies:
-    "@clerk/backend-core" "^2.5.1"
-    "@clerk/types" "^3.7.1"
+    "@clerk/backend-core" "^2.8.1"
+    "@clerk/types" "^3.10.1"
     "@peculiar/webcrypto" "^1.4.0"
     "@types/node" "^16.11.55"
     next "^12.2.0"
 
-"@clerk/nextjs@4.3.2":
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/@clerk/nextjs/-/nextjs-4.3.2.tgz#45ef0302c5b45fd3ce3741a75791b5406aa1b265"
-  integrity sha512-Pw5EPw6hiL7BY2bo56a3FzIkcF8wTxOEtjvqxH8+mbacSEG7aBwVFe63I1exgZpazQbLBVDdA5dLy0HyjY1Hcg==
+"@clerk/nextjs@4.5.2":
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/@clerk/nextjs/-/nextjs-4.5.2.tgz#ea1d58c2f955569ac0a29efc79bc70619f2cd556"
+  integrity sha512-kXmNlouAeAN9CBNj+Ol5ZDUELiZVMGyG/r+DE2mbKs0/9YZ+/gfd1CXTGNxZ7qFzDGdwMZErdPBVgQoyy0CMEA==
   dependencies:
-    "@clerk/clerk-react" "^4.2.2"
-    "@clerk/clerk-sdk-node" "^4.3.2"
-    "@clerk/edge" "^1.10.2"
-    "@clerk/types" "^3.7.1"
+    "@clerk/clerk-react" "^4.2.6"
+    "@clerk/clerk-sdk-node" "^4.4.2"
+    "@clerk/edge" "^1.12.2"
+    "@clerk/types" "^3.10.1"
     tslib "^2.3.1"
 
-"@clerk/types@^3.7.1":
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/@clerk/types/-/types-3.7.1.tgz#d12619a4a036fbd39832bbcfdaf96ef3beb49c80"
-  integrity sha512-/W/eR39hpSVBUdm75OplztN9UNk55ExqJqENZvvKJknyRtUN87LDJlAsQB+zGEHRqLZ5BGVeSRuu2KpMbvHEzA==
+"@clerk/types@^3.10.1":
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/@clerk/types/-/types-3.10.1.tgz#dfc1a87a703b3c45bb90283c82c2b9d232d1c627"
+  integrity sha512-RZgTSkWu0CWeAWKw0WaYOVu7O/vlLsvBN4rptxDH5c4uQOgRmF/wBILmniSCmBMhyyihTW2pfiXsZpCatbJixQ==
   dependencies:
     csstype "^3.1.0"
 
@@ -1695,10 +1695,10 @@
   dependencies:
     tslib "^2.4.0"
 
-"@heroicons/react@2.0.11":
-  version "2.0.11"
-  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.0.11.tgz#2c6cf4c66d81142ec87c102502407d8c353558bb"
-  integrity sha512-bASjOgSSaYj8HqXWsOqaBiB6ZLalE/g90WYGgZ5lPm4KCCG7wPXntY4kzHf5NrLh6UBAcnPwvbiw1Ne9GYfJtw==
+"@heroicons/react@2.0.12":
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.0.12.tgz#7e5a16c82512f89a30266dd36f8b8465b3e3e216"
+  integrity sha512-FZxKh3i9aKIDxyALTgIpSF2t6V6/eZfF5mRu41QlwkX3Oxzecdm1u6dpft6PQGxIBwO7TKYWaMAYYL8mp/EaOg==
 
 "@humanwhocodes/config-array@^0.10.4":
   version "0.10.4"
@@ -1984,73 +1984,73 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@mantine/core@5.4.1":
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/@mantine/core/-/core-5.4.1.tgz#d7d051b9c7fee7869a1e31cc8a5ab75fb0e61a5d"
-  integrity sha512-lzDlUrUxz535XroXA8QnPXyIjfoqGqq9lJzQ9hhSYStrsvhAvQOUAcLLi1JLOYrqqJlFE+nSprDgDR/ysetkPg==
+"@mantine/core@5.5.4":
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/@mantine/core/-/core-5.5.4.tgz#afe31b8d5c644e856048027e75155eb7ab978661"
+  integrity sha512-N0k8vBxuJOAwfchxd8gr1HXjsSw1HumQR9WR2OVCHmRR84ur2VniRB8iN4pCYSvnIXjUqpN1rzfnmAYTTogS+A==
   dependencies:
     "@floating-ui/react-dom-interactions" "^0.10.1"
-    "@mantine/styles" "5.4.1"
-    "@mantine/utils" "5.4.1"
+    "@mantine/styles" "5.5.4"
+    "@mantine/utils" "5.5.4"
     "@radix-ui/react-scroll-area" "1.0.0"
     react-textarea-autosize "8.3.4"
 
-"@mantine/form@5.4.1":
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/@mantine/form/-/form-5.4.1.tgz#f6016215e89a6684dccfe9e943af2ee2bc812256"
-  integrity sha512-n7Iujyy7S93TG+A3ol7RuNCAP3O/AEgfryxJlsGIF0YK14zX3aUqeJYAG5XF5IcT5gz8JmDCzzwC3xf6uItp1g==
+"@mantine/form@5.5.4":
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/@mantine/form/-/form-5.5.4.tgz#3ad7280e2d1be2eef494bc6f2eb335cc22906627"
+  integrity sha512-SKfVBmJGykwmEfMpRacXmhC2pwaKiR3fGPHppT0w1Gy/DDQx9BpwR7XgCcnPJFoR70CUZrVo5J/aglxPOIGSoA==
   dependencies:
     fast-deep-equal "^3.1.3"
     klona "^2.0.5"
 
-"@mantine/hooks@5.4.1":
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-5.4.1.tgz#957b4c446bdbf38c5ecc5b45842f0dd7a0248efc"
-  integrity sha512-qLYWLhFTciyHZCHiSUXoGei3DBwo+2gjCP1zdko9YzKer9xgfKoVDBoxBGTdsAVpac4ZzmeMk/Jm74fWn8PU+A==
+"@mantine/hooks@5.5.4":
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-5.5.4.tgz#5b7f14dfffba4f59aed21ee6bccf336a438f96a3"
+  integrity sha512-4lPIcZgoMkq+GCILN8CDTVxYzsE/Gfi6ICjHhPZU1Ufmw0mftpjTQhLx3+TFMtBlqnamgBia2ZS1o2BpvTLazA==
 
-"@mantine/next@5.4.1":
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/@mantine/next/-/next-5.4.1.tgz#5e436487868c20a86cd02c2752baa2c67c2be7c1"
-  integrity sha512-4PGzhqPS4GCBV5mccPel04Bw+VGLK9SvPmWzi50lT0n/dslGcoJlJtUFTDn9uDv4uCTP839hOoBklv33I7pIDw==
+"@mantine/next@5.5.4":
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/@mantine/next/-/next-5.5.4.tgz#1c0da5c72db251dac0e1a9147e271de095f6aa8a"
+  integrity sha512-7vVZEyW4rN7O1ytVT0mW7jnsd7GkcFwphdvXJq6sa8pzWvOUpIo5uG2zsIzoxxv27mjhfF1bxIolL0vAdwgfwA==
   dependencies:
-    "@mantine/ssr" "5.4.1"
-    "@mantine/styles" "5.4.1"
+    "@mantine/ssr" "5.5.4"
+    "@mantine/styles" "5.5.4"
 
-"@mantine/notifications@5.4.1":
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-5.4.1.tgz#b0b9ecb8c8c2c3a396264eeec38d445b3811df16"
-  integrity sha512-HiibhEhS7irz+fz1NYhHUPymeys9E+BttjR6HVrl6d6oKraTJLSdFs7q4aPcCmLRpd1PCHT2AFO5pU+krT2Zjw==
+"@mantine/notifications@5.5.4":
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-5.5.4.tgz#da06b82de4b6a757ab4fef76bf14b0a73e66a14a"
+  integrity sha512-icX+uhGE+5DmZFPfcxLdjetyJhDzy1HtDT+F4Z898EJoFasHZZrd9dcOpc9wxESe73aHR1UsiEsJQz3wllKqUg==
   dependencies:
-    "@mantine/utils" "5.4.1"
+    "@mantine/utils" "5.5.4"
     react-transition-group "4.4.2"
 
-"@mantine/nprogress@5.4.1":
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/@mantine/nprogress/-/nprogress-5.4.1.tgz#11d9ba3adecfb2c1e8f0bf0e12a40c906d70171e"
-  integrity sha512-y9M3FGpS9NQCpUt5MIcOww8SZuNn1wKkDrDzBWZr3bgR4JwKqEXhrxn5moLUugJ2RtJZDInAUHfvs4vsnlvTgA==
+"@mantine/nprogress@5.5.4":
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/@mantine/nprogress/-/nprogress-5.5.4.tgz#273356b0090e80b463ad7f4199981b74702e9d6a"
+  integrity sha512-6Bx7+D9xwFDWW/THCBJGlDVgAv3jWCW55SXxeRi7dXkN5BmU5Fqe0NY3JS902iTsTyrXE9HgI2jXtVMJHZOrkA==
   dependencies:
-    "@mantine/utils" "5.4.1"
+    "@mantine/utils" "5.5.4"
 
-"@mantine/ssr@5.4.1":
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/@mantine/ssr/-/ssr-5.4.1.tgz#f73a2aa51ea58b9d1d9f4764964d6497abb28059"
-  integrity sha512-UGWJty8/us5RRCZypGfDIRPAVtjYyOFRuFJYw0Yijss0UH3vDeYKDRVfUnyXzASt1b6QWqEd6o6fxiWpZSPqIg==
+"@mantine/ssr@5.5.4":
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/@mantine/ssr/-/ssr-5.5.4.tgz#61dbd84ad0bc8927c0d3b868bcb00a51727e4de1"
+  integrity sha512-WkT6GkeiFS3DAEWV3vZlOUoRIqJnJHP1TgOioLxWqsCuXI3h3V+AxiOHk4+G1PB4EXwHWdoJgK3UoU91pC2NsQ==
   dependencies:
-    "@mantine/styles" "5.4.1"
+    "@mantine/styles" "5.5.4"
     html-react-parser "1.4.12"
 
-"@mantine/styles@5.4.1":
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/@mantine/styles/-/styles-5.4.1.tgz#dd0b91e249b37150a24786a4adbf2eb6aa2ba147"
-  integrity sha512-rhLivlSHHJqGlxwaFhAs34TPMcLpvYczhIxBxApj/ngP8LZD8+DPSk+yGN1pAL2Q2JBGKMnhqz5H9ow8zzOYcA==
+"@mantine/styles@5.5.4":
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/@mantine/styles/-/styles-5.5.4.tgz#53cdb808f652d11265b6b8e99d99d6f03a5db5e4"
+  integrity sha512-Mf1vFMoiF+VYPgohGHE6/5h9mefNK78y7LrTwAhfbxYPys6gjorSrXURg5j1b/9TS9hCBF+rxTmfnOpAPWzaHw==
   dependencies:
     clsx "1.1.1"
     csstype "3.0.9"
 
-"@mantine/utils@5.4.1":
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.4.1.tgz#06242925933faeca619b28e74d58a63ce94567c8"
-  integrity sha512-yaZ7gv9dkr98L65EjaAniZmJpVEPzHbe5aDDljIePLgcU5hVCdUls2v31YXslTf1/CJ5yZp/L7LPYLN86EXlEA==
+"@mantine/utils@5.5.4":
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.5.4.tgz#4cea84cfbe16ac04b9b407b4215c66d606c702f3"
+  integrity sha512-EO0iD99wfvKC09WHpCXrqb5ewTmuYf4GeNR3xOtecNaXNbFUVxmlV6wwhsJ61YScy+7bM1lplwNvkGz5CF0v7Q==
 
 "@motionone/animation@^10.13.1":
   version "10.14.0"
@@ -4946,6 +4946,13 @@ cross-env@^3.1.4:
     cross-spawn "^5.1.0"
     is-windows "^1.0.0"
 
+cross-env@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-7.0.3.tgz#865264b29677dc015ba8418918965dd232fc54cf"
+  integrity sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==
+  dependencies:
+    cross-spawn "^7.0.1"
+
 cross-spawn@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
@@ -4955,7 +4962,7 @@ cross-spawn@^5.1.0:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
-cross-spawn@^7.0.0, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
+cross-spawn@^7.0.0, cross-spawn@^7.0.1, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.3.tgz#f73a85b9d5d41d045551c177e2882d4ac85728a6"
   integrity sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==
@@ -7043,10 +7050,10 @@ instantsearch.css@7.4.5:
   resolved "https://registry.yarnpkg.com/instantsearch.css/-/instantsearch.css-7.4.5.tgz#2a521aa634329bf1680f79adf87c79d67669ec8d"
   integrity sha512-iIGBYjCokU93DDB8kbeztKtlu4qVEyTg1xvS6iSO1YvqRwkIZgf0tmsl/GytsLdZhuw8j4wEaeYsCzNbeJ/zEQ==
 
-instantsearch.js@^4.46.1:
-  version "4.46.1"
-  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-4.46.1.tgz#93f2309e6fb8821b00a00eadcb14c368e713ddca"
-  integrity sha512-zcuCVtMPwpzmqprtUMh6qF21hJiaipRSA8vbFZlrRfNZMg0gkm5JE2sPPBDoMWMED+1yIIDgoyLzTKRXamJzlQ==
+instantsearch.js@^4.47.0:
+  version "4.47.0"
+  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-4.47.0.tgz#eb06d4deede956dff9391e577469061e0d7e9c56"
+  integrity sha512-SoIVDGtqKFtGQxcEr2vKo0SxbRjAksRKUDP+kRvD/J6tqx8qVZdSArY3XwvEOmhqee/0wK4p4ZMAJS+NI8M8cg==
   dependencies:
     "@algolia/events" "^4.0.1"
     "@algolia/ui-components-highlight-vdom" "^1.1.2"
@@ -9825,23 +9832,23 @@ react-dom@18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
-react-instantsearch-hooks-web@6.34.0:
-  version "6.34.0"
-  resolved "https://registry.yarnpkg.com/react-instantsearch-hooks-web/-/react-instantsearch-hooks-web-6.34.0.tgz#f299f642b09ea3ace54e9dd6b9a98f3758aa59cc"
-  integrity sha512-Of2c6imZROIcoZ0MTLxO0Jd3/KLLB34ItsngUOwFnBoc3og6mMFvfPkJtJ6vcKuV6UFwtjoPBU211D2K4BFjLA==
+react-instantsearch-hooks-web@6.36.0:
+  version "6.36.0"
+  resolved "https://registry.yarnpkg.com/react-instantsearch-hooks-web/-/react-instantsearch-hooks-web-6.36.0.tgz#9ab8df046696f6adae45a996e98b69bb7fc21fae"
+  integrity sha512-6U56o0wmzhc3H8kDK+J0zYOY166TQ5nL7EXYgzRA9vgiiFG0oGfb1rcIefOL1XrHQcV5HRLOQIqca/FvpnhZ+g==
   dependencies:
     "@babel/runtime" "^7.1.2"
-    instantsearch.js "^4.46.1"
-    react-instantsearch-hooks "6.34.0"
+    instantsearch.js "^4.47.0"
+    react-instantsearch-hooks "6.36.0"
 
-react-instantsearch-hooks@6.34.0:
-  version "6.34.0"
-  resolved "https://registry.yarnpkg.com/react-instantsearch-hooks/-/react-instantsearch-hooks-6.34.0.tgz#bb40eceb40695eea0456f075bfe1ccd7578cc8c1"
-  integrity sha512-Byuj695E321lMndaLvT4wP7jlbsx/bnh1UT8MKKUqpuRmTCJfD3C1AvMKmG8fnZLDUOqmq07Dr8DGU41GG/h2Q==
+react-instantsearch-hooks@6.36.0:
+  version "6.36.0"
+  resolved "https://registry.yarnpkg.com/react-instantsearch-hooks/-/react-instantsearch-hooks-6.36.0.tgz#585b507eafa4025e81ae230bf41c939e38761f3b"
+  integrity sha512-RW+tmcD7wTaw+H0xq80q2vmVUQT+3yoaemdMaoK3ZJjMJK1FbfQVnzEq5dlCIaLFi11+N2txXdP38nOZrbCaJQ==
   dependencies:
     "@babel/runtime" "^7.1.2"
     algoliasearch-helper "^3.11.1"
-    instantsearch.js "^4.46.1"
+    instantsearch.js "^4.47.0"
     use-sync-external-store "^1.0.0"
 
 react-is@^16.13.1, react-is@^16.7.0:
@@ -10401,10 +10408,10 @@ setprototypeof@1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-sharp@0.31.0:
-  version "0.31.0"
-  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.31.0.tgz#ce9b5202a5667486721cf07fd5b52360b1c2275a"
-  integrity sha512-ft96f8WzGxavg0rkLpMw90MTPMUZDyf0tHjPPh8Ob59xt6KzX8EqtotcqZGUm7kwqpX2pmYiyYX2LL0IZ/FDEw==
+sharp@0.31.1:
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.31.1.tgz#b2f7076d381a120761aa93700cadefcf90a22458"
+  integrity sha512-GR8M1wBwOiFKLkm9JPun27OQnNRZdHfSf9VwcdZX6UrRmM1/XnOrLFTF0GAil+y/YK4E6qcM/ugxs80QirsHxg==
   dependencies:
     color "^4.2.3"
     detect-libc "^2.0.1"

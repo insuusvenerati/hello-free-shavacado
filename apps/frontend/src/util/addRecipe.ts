@@ -37,6 +37,10 @@ export const addRecipe = async ({ user, recipeSlug, recipeName, imagePath, uuid 
     body,
   });
 
+  if (!response.ok) {
+    throw new Error("Error adding recipe");
+  }
+
   const data = (await response.json()) as Promise<FavoritedRecipe>;
 
   return data;

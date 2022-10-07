@@ -10,14 +10,16 @@
       ]
     },
     "@stiforr/frontend#build": {
-      "dependsOn": [
-        "$NEXT_PUBLIC_CLERK_FRONTEND_API",
-        "$NEXT_PUBLIC_API_URL"
+      "dependsOn": [],
+      "env": [
+        "NEXT_PUBLIC_CLERK_FRONTEND_API",
+        "NEXT_PUBLIC_API_URL"
       ]
     },
     "@stiforr/backend#build": {
-      "dependsOn": [
-        "$DATABASE_URL"
+      "dependsOn": [],
+      "env": [
+        "DATABASE_URL"
       ]
     },
     "test": {
@@ -39,7 +41,9 @@
       "cache": false
     },
     "e2e:run": {
-      "dependsOn": ["build"]
+      "dependsOn": [
+        "build"
+      ]
     }
   }
 }

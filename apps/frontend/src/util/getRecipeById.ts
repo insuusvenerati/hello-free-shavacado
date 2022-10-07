@@ -7,6 +7,11 @@ type Args = {
 
 export const getRecipeById = async ({ id }: Args) => {
   const response = await fetch(`${API_URL}/hellofresh/recipe/${id}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch recipe");
+  }
+
   const data = (await response.json()) as Item;
   return data;
 };

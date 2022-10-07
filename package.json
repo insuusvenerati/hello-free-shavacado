@@ -26,11 +26,13 @@
       "apps/*"
     ],
     "nohoist": [
-      "@stiforr/backend/**"
+      "@stiforr/backend/**",
+      "@stiforr/frontend/**"
     ]
   },
   "devDependencies": {
     "commitizen": "4.2.5",
+    "cross-env": "^7.0.3",
     "cz-conventional-changelog": "3.3.0",
     "dotenv": "16.0.1",
     "eslint": "8.22.0",

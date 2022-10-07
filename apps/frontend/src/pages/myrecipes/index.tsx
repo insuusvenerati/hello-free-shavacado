@@ -1,15 +1,45 @@
-import { Grid, LoadingOverlay, SegmentedControl, SegmentedControlItem, Title } from "@mantine/core";
+import { buildClerkProps, getAuth } from "@clerk/nextjs/server";
+import {
+  Grid,
+  Loader,
+  SegmentedControl,
+  SegmentedControlItem,
+  Skeleton,
+  Title,
+} from "@mantine/core";
+import { CreatedRecipeCard } from "components/RecipeCard/CreatedRecipe";
+import { ImportedRecipeCard } from "components/RecipeCard/ImportedRecipeCard";
 import { useGetAllCreatedRecipes } from "hooks/useGetAllCreatedRecipes";
+import { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
 import { useMemo, useState } from "react";
-import { useQueries } from "react-query";
+import { dehydrate, QueryClient, useQueries } from "react-query";
 import { getRecipeById } from "util/getRecipeById";
-import { RecipeCard } from "../components/RecipeCard";
-import { useFavoriteRecipesQuery } from "../hooks/useFavoriteRecipesQuery";
-import { useGetImportedRecipesQuery } from "../hooks/useGetImportedRecipesQuery";
+import { getRecipes } from "util/getRecipes";
+import { RecipeCard } from "../../components/RecipeCard/RecipeCard";
+import { useFavoriteRecipesQuery } from "../../hooks/useFavoriteRecipesQuery";
+import { useGetImportedRecipesQuery } from "../../hooks/useGetImportedRecipesQuery";
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const auth = getAuth(req);
+
+  const queryClient = new QueryClient();
+  console.log(auth);
+
+  if (auth.userId) {
+    console.log(auth.userId);
+    await queryClient.prefetchQuery(["favoriteRecipes", auth.userId], () =>
+      getRecipes(auth.userId),
+    );
+  }
+
+  return {
+    props: { ...buildClerkProps(req), dehydratedState: dehydrate(queryClient) },
+  };
+};
 
 const RecipeList = () => {
-  const { data: favoriteRecipes, isSuccess } = useFavoriteRecipesQuery();
+  const { data: favoriteRecipes } = useFavoriteRecipesQuery();
   const { data: importedRecipes, isSuccess: importedRecipesSuccess } = useGetImportedRecipesQuery();
   const { data: createdRecipes } = useGetAllCreatedRecipes();
   const [section, setSection] = useState<string>("imported-recipes");
@@ -44,10 +74,10 @@ const RecipeList = () => {
     [],
   );
 
-  if (!isSuccess || !importedRecipesSuccess) {
+  if (!importedRecipesSuccess) {
     return (
       <Grid justify="center">
-        <LoadingOverlay visible />
+        <Loader />
       </Grid>
     );
   }
@@ -73,7 +103,7 @@ const RecipeList = () => {
           <Grid justify="center">
             {importedRecipes.map((recipe) => (
               <Grid.Col lg={3} md={12} key={recipe.id}>
-                <RecipeCard recipe={recipe} />
+                <ImportedRecipeCard recipe={recipe} />
               </Grid.Col>
             ))}
           </Grid>
@@ -90,7 +120,9 @@ const RecipeList = () => {
               if (!item) return;
               return (
                 <Grid.Col key={item.id} lg={3} md={12}>
-                  <RecipeCard recipe={item} />
+                  <Skeleton visible={!item}>
+                    <RecipeCard recipe={item} />
+                  </Skeleton>
                 </Grid.Col>
               );
             })}
@@ -108,7 +140,7 @@ const RecipeList = () => {
               if (!item) return;
               return (
                 <Grid.Col key={item.id} lg={3} md={12}>
-                  <RecipeCard recipe={item} />
+                  <CreatedRecipeCard recipe={item} />
                 </Grid.Col>
               );
             })}

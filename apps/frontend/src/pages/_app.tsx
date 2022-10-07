@@ -14,7 +14,7 @@ import { AppProps as NextAppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Item } from "../types/recipes";
 
@@ -25,7 +25,7 @@ type AppProps<P = unknown> = {
 } & Omit<NextAppProps<P>, "pageProps">;
 
 type CustomPageProps = {
-  // dehydratedState: DehydratedState;
+  dehydratedState: DehydratedState;
   openGraphData: Array<Record<string, any>>;
   jsonLdData: RecipeJsonLdProps;
   recipe: Item;
@@ -33,12 +33,18 @@ type CustomPageProps = {
 
 const publicPages = ["/", "/privacy", "/recipe/[id]"];
 
-const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
-  const { openGraphData = [] } = pageProps;
-  const { pathname } = useRouter();
-  const isPublicPage = publicPages.includes(pathname);
+// const queryClient = new QueryClient({
+//   defaultOptions: {
+//     queries: {
+//       refetchOnWindowFocus: false,
+//       staleTime: 1000 * 60 * 60,
+//       refetchOnMount: false,
+//       notifyOnChangeProps: ["data", "error"],
+//     },
+//   },
+// })
 
-  // eslint-disable-next-line react/hook-use-state
+const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -52,6 +58,10 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
         },
       }),
   );
+  const { openGraphData = [] } = pageProps;
+  const { pathname } = useRouter();
+  const isPublicPage = publicPages.includes(pathname);
+
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: "color-scheme",
     defaultValue: "light",
@@ -78,21 +88,23 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
             <RouterTransition />
             <ClerkProvider frontendApi={CLERK_FRONTEND_KEY} {...pageProps}>
               <QueryClientProvider client={queryClient}>
-                <ReactQueryDevtools initialIsOpen={false} />
-                <Layout>
-                  {isPublicPage ? (
-                    <Component {...pageProps} />
-                  ) : (
-                    <>
-                      <SignedIn>
-                        <Component {...pageProps} />
-                      </SignedIn>
-                      <SignedOut>
-                        <RedirectToSignIn />
-                      </SignedOut>
-                    </>
-                  )}
-                </Layout>
+                <Hydrate state={pageProps.dehydratedState}>
+                  <ReactQueryDevtools initialIsOpen={false} />
+                  <Layout>
+                    {isPublicPage ? (
+                      <Component {...pageProps} />
+                    ) : (
+                      <>
+                        <SignedIn>
+                          <Component {...pageProps} />
+                        </SignedIn>
+                        <SignedOut>
+                          <RedirectToSignIn />
+                        </SignedOut>
+                      </>
+                    )}
+                  </Layout>
+                </Hydrate>
               </QueryClientProvider>
             </ClerkProvider>
           </NotificationsProvider>

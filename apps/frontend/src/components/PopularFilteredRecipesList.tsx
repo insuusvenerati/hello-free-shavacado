@@ -3,7 +3,7 @@ import { memo } from "react";
 import { RecipeQuery } from "types/recipes";
 import { useRecipesContext } from "../context/RecipesContext";
 import { usePopularRecipesQuery } from "hooks/usePopularRecipesQuery";
-import { RecipeCard } from "./RecipeCard";
+import { RecipeCard } from "./RecipeCard/RecipeCard";
 
 type Props = {
   modalHandler: () => void;

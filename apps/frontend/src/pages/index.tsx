@@ -54,8 +54,6 @@ const Home = () => {
       <Grid columns={4} justify="center">
         <Hits />
       </Grid>
-
-      {/* <FilteredOrPopularRecipesList staticRecipes={popularRecipes} modalHandler={modalHandler} /> */}
     </>
   );
 };
