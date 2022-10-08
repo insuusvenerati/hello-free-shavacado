@@ -14,6 +14,8 @@ import { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
 import { useMemo, useState } from "react";
 import { dehydrate, QueryClient, useQueries } from "react-query";
+import { getAllCreatedRecipes } from "util/getAllCreatedRecipes";
+import { getImportedRecipes } from "util/getImportedRecipes";
 import { getRecipeById } from "util/getRecipeById";
 import { getRecipes } from "util/getRecipes";
 import { RecipeCard } from "../../components/RecipeCard/RecipeCard";
@@ -21,17 +23,15 @@ import { useFavoriteRecipesQuery } from "../../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../../hooks/useGetImportedRecipesQuery";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const auth = getAuth(req);
+  const { userId, getToken } = getAuth(req);
 
   const queryClient = new QueryClient();
-  console.log(auth);
 
-  if (auth.userId) {
-    console.log(auth.userId);
-    await queryClient.prefetchQuery(["favoriteRecipes", auth.userId], () =>
-      getRecipes(auth.userId),
-    );
-  }
+  await queryClient.prefetchQuery(["favoriteRecipes", userId], () => getRecipes(userId));
+  await queryClient.prefetchQuery(["importedRecipes", userId], () => getImportedRecipes(userId));
+  await queryClient.prefetchQuery(["created-recipe", userId], async () =>
+    getAllCreatedRecipes({ userId, token: await getToken() }),
+  );
 
   return {
     props: { ...buildClerkProps(req), dehydratedState: dehydrate(queryClient) },

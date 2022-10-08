@@ -1382,7 +1382,7 @@
     "@types/node" "^16.11.55"
     next "^12.2.0"
 
-"@clerk/nextjs@4.5.2":
+"@clerk/nextjs@^4.5.2":
   version "4.5.2"
   resolved "https://registry.yarnpkg.com/@clerk/nextjs/-/nextjs-4.5.2.tgz#ea1d58c2f955569ac0a29efc79bc70619f2cd556"
   integrity sha512-kXmNlouAeAN9CBNj+Ol5ZDUELiZVMGyG/r+DE2mbKs0/9YZ+/gfd1CXTGNxZ7qFzDGdwMZErdPBVgQoyy0CMEA==

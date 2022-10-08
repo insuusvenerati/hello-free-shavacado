@@ -26,23 +26,10 @@ type AppProps<P = unknown> = {
 
 type CustomPageProps = {
   dehydratedState: DehydratedState;
-  openGraphData: Array<Record<string, any>>;
+  openGraphData: Array<Record<string, unknown>>;
   jsonLdData: RecipeJsonLdProps;
   recipe: Item;
 };
-
-const publicPages = ["/", "/privacy", "/recipe/[id]"];
-
-// const queryClient = new QueryClient({
-//   defaultOptions: {
-//     queries: {
-//       refetchOnWindowFocus: false,
-//       staleTime: 1000 * 60 * 60,
-//       refetchOnMount: false,
-//       notifyOnChangeProps: ["data", "error"],
-//     },
-//   },
-// })
 
 const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
   const [queryClient] = useState(
@@ -59,8 +46,7 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
       }),
   );
   const { openGraphData = [] } = pageProps;
-  const { pathname } = useRouter();
-  const isPublicPage = publicPages.includes(pathname);
+  const { push } = useRouter();
 
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: "color-scheme",
@@ -82,34 +68,23 @@ const App = ({ Component, pageProps }: AppProps<CustomPageProps>) => {
         ))}
       </Head>
 
-      <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-        <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-          <NotificationsProvider>
-            <RouterTransition />
-            <ClerkProvider frontendApi={CLERK_FRONTEND_KEY} {...pageProps}>
+      <ClerkProvider navigate={(to) => push(to)} frontendApi={CLERK_FRONTEND_KEY} {...pageProps}>
+        <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+          <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+            <NotificationsProvider>
+              <RouterTransition />
               <QueryClientProvider client={queryClient}>
                 <Hydrate state={pageProps.dehydratedState}>
                   <ReactQueryDevtools initialIsOpen={false} />
                   <Layout>
-                    {isPublicPage ? (
-                      <Component {...pageProps} />
-                    ) : (
-                      <>
-                        <SignedIn>
-                          <Component {...pageProps} />
-                        </SignedIn>
-                        <SignedOut>
-                          <RedirectToSignIn />
-                        </SignedOut>
-                      </>
-                    )}
+                    <Component {...pageProps} />
                   </Layout>
                 </Hydrate>
               </QueryClientProvider>
-            </ClerkProvider>
-          </NotificationsProvider>
-        </MantineProvider>
-      </ColorSchemeProvider>
+            </NotificationsProvider>
+          </MantineProvider>
+        </ColorSchemeProvider>
+      </ClerkProvider>
     </>
   );
 };

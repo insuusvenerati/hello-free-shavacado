@@ -4,6 +4,23 @@ import { forwardRef } from "react";
 import { Pagination, SortBy } from "react-instantsearch-hooks-web";
 import { NextSeo } from "next-seo";
 import defaultSEO from "../../next-seo.config";
+import { GetServerSideProps } from "next";
+import { buildClerkProps, getAuth } from "@clerk/nextjs/server";
+import { dehydrate, QueryClient } from "react-query";
+import { getImportedRecipes } from "util/getImportedRecipes";
+import { getRecipes } from "util/getRecipes";
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { userId } = getAuth(req);
+
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(["importedRecipes", userId], () => getImportedRecipes(userId));
+  await queryClient.prefetchQuery(["favoriteRecipes", userId], () => getRecipes(userId));
+
+  return {
+    props: { ...buildClerkProps(req), dehydratedState: dehydrate(queryClient) },
+  };
+};
 
 interface ItemProps extends SelectItemProps {
   color: MantineColor;
