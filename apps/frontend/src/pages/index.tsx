@@ -10,7 +10,8 @@ import { dehydrate, QueryClient } from "react-query";
 import { getImportedRecipes } from "util/getImportedRecipes";
 import { getRecipes } from "util/getRecipes";
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
   const { userId } = getAuth(req);
 
   const queryClient = new QueryClient();

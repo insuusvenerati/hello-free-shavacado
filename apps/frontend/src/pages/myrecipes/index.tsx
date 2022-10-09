@@ -22,7 +22,8 @@ import { RecipeCard } from "../../components/RecipeCard/RecipeCard";
 import { useFavoriteRecipesQuery } from "../../hooks/useFavoriteRecipesQuery";
 import { useGetImportedRecipesQuery } from "../../hooks/useGetImportedRecipesQuery";
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
   const { userId, getToken } = getAuth(req);
 
   const queryClient = new QueryClient();
