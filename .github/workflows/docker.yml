@@ -21,10 +21,11 @@ jobs:
           record: true
           build: yarn build
           start: yarn start
-          wait-on: 'http://localhost:3000'
+          wait-on: "http://localhost:3000"
           command: yarn e2e:run
           working-directory: apps/frontend
         env:
+          CLERK_API_KEY: ${{ secrets.CLERK_API_KEY }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CYPRESS_PROJECT_ID: ${{ secrets.PROJECT_ID }}
@@ -38,7 +39,7 @@ jobs:
 
   release:
     if: ${{ !startsWith(github.event.ref, 'refs/tags/') }}
-    needs: [ tests ]
+    needs: [tests]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -70,10 +71,10 @@ jobs:
           environment: production
 
   docker:
-    needs: [ tests ]
+    needs: [tests]
     strategy:
       matrix:
-        app: [ "frontend", "backend" ]
+        app: ["frontend", "backend"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
