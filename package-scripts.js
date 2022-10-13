@@ -11,7 +11,7 @@ module.exports = {
     prepare: {
       description: "This sets up the project folder with dependencies and services",
       default: series.nps("prepare.frontend", "prepare.backend"),
-      frontend: "yarn install",
+      frontend: "pnpm install",
       backend: "docker-compose -f apps/backend/docker-compose.yml up -d",
       supabase: "nps supabase.start",
     },

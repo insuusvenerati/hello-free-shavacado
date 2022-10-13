@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --parallel",
     "test": "yarn workspace @stiforr/frontend test --watch",
     "lint": "turbo run lint",
     "stop": "turbo run stop",
@@ -17,48 +17,42 @@
     "prisma:migrate": "yarn workspace @stiforr/backend prisma migrate",
     "prisma:studio": "yarn workspace @stiforr/backend prisma studio",
     "prisma:generate": "yarn workspace @stiforr/backend prisma generate",
-    "commit": "cz",
-    "e2e:open": "NODE_ENV=test turbo run e2e:open",
-    "e2e:run": "NODE_ENV=test turbo run e2e:run"
+    "e2e:open": "cross-env NODE_ENV=test turbo run e2e:open",
+    "e2e:run": "cross-env NODE_ENV=test turbo run e2e:run",
+    "fix-mismatches": "pnpm syncpack fix-mismatches"
   },
-  "workspaces": {
-    "packages": [
-      "apps/*"
-    ],
-    "nohoist": [
-      "@stiforr/backend/**",
-      "@stiforr/frontend/**"
-    ]
-  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "devDependencies": {
-    "commitizen": "4.2.5",
     "cross-env": "^7.0.3",
-    "cz-conventional-changelog": "3.3.0",
     "dotenv": "16.0.1",
-    "eslint": "8.22.0",
+    "eslint": "^8.23.1",
     "husky": "8.0.1",
     "lint-staged": "13.0.3",
     "nps": "5.10.0",
     "nps-utils": "1.7.0",
     "prettier": "2.7.1",
     "rimraf": "3.0.2",
-    "turbo": "1.5.4"
+    "turbo": "1.5.4",
+    "syncpack": "^8.2.4"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "eslint",
-    "*.{ts,tsx,css,md}": "prettier --write"
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
+    "*.{ts,tsx}": [
+      "eslint",
+      "prettier --write"
+    ]
   },
   "volta": {
-    "node": "16.17.1",
+    "node": "16.18.0",
     "yarn": "1.22.19",
     "npm": "8.19.2"
   },
   "engines": {
     "node": "16.x"
+  },
+  "syncpack": {
+    "workspace": false
   }
 }
