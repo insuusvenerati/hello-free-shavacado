@@ -3,7 +3,7 @@ RUN apt-get update && apt-get install -y openssl
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
-RUN turbo prune --scope=remix --docker
+RUN turbo prune --scope=@stiforr/remix --docker
 RUN find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
 
 # Base strategy to have layer caching
@@ -53,7 +53,7 @@ USER remixjs
 COPY --from=pruner --chown=remixjs:nodejs /app/out/full/ .
 COPY --from=production-deps --chown=remixjs:nodejs /app .
 
-COPY --from=builder --chown=remixjs:nodejs /app/apps/remix/build/server.js ./apps/remix/build/server.js
+# COPY --from=builder --chown=remixjs:nodejs /app/apps/remix/build/server.js ./apps/remix/build/server.js
 COPY --from=builder --chown=remixjs:nodejs /app/apps/remix/build ./apps/remix/build
 COPY --from=builder --chown=remixjs:nodejs /app/apps/remix/public ./apps/remix/public
 

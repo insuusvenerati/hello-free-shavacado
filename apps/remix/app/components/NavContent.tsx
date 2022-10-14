@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import { SignInButton, UserButton } from "@clerk/remix";
+import { SignInButton, UserButton, useUser } from "@clerk/remix";
 import {
   ArrowLeftOnRectangleIcon,
   BookmarkIcon,
@@ -9,6 +9,7 @@ import {
   PlusIcon,
 } from "@heroicons/react/24/outline";
 import type { MantineGradient, SegmentedControlItem } from "@mantine/core";
+import { Text } from "@mantine/core";
 import {
   Box,
   Button,
@@ -155,7 +156,7 @@ export const NavbarContent = ({
   // const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  // const { isSignedIn, user } = useUser();
+  const { isSignedIn, user } = useUser();
   const dark = colorScheme === "dark";
   const buttonGradient: MantineGradient = {
     from: dark ? "orange" : "indigo",
@@ -223,7 +224,7 @@ export const NavbarContent = ({
             <Navbar.Section style={styles} className={classes.header}>
               <Box mt="sm">
                 {links}
-                {/* <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} /> */}
+                <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
                 <NavLink icon={<CogIcon width={16} />} label="Settings">
                   <Button
                     mt="sm"
@@ -242,7 +243,7 @@ export const NavbarContent = ({
             <AddImportedRecipeForm />
 
             <Navbar.Section className={classes.footer}>
-              {/* <Text className={classes.title}>{user?.primaryEmailAddress?.emailAddress}</Text> */}
+              <Text className={classes.title}>{user?.primaryEmailAddress?.emailAddress}</Text>
             </Navbar.Section>
           </>
         )}

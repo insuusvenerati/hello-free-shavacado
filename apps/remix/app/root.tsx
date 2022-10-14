@@ -1,9 +1,10 @@
-import { ClerkCatchBoundary } from "@clerk/remix";
+import { ClerkApp, ClerkCatchBoundary } from "@clerk/remix";
+import { rootAuthLoader } from "@clerk/remix/ssr.server";
 import type { ColorScheme } from "@mantine/core";
 import { ColorSchemeProvider, createEmotionCache, MantineProvider } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { StylesPlaceholder } from "@mantine/remix";
 import type { LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -14,13 +15,14 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 import algoliasearch from "algoliasearch/lite";
+import satelliteCss from "instantsearch.css/themes/algolia-min.css";
 import { history } from "instantsearch.js/cjs/lib/routers/index.js";
-import { useState } from "react";
+import { useCallback } from "react";
 import { getServerState } from "react-instantsearch-hooks-server";
 import type { InstantSearchServerState } from "react-instantsearch-hooks-web";
 import { InstantSearch, InstantSearchSSRProvider } from "react-instantsearch-hooks-web";
+import remixImageStyles from "remix-image/remix-image.css";
 import { Layout } from "./components/Layout/Layout";
-import satelliteCss from "instantsearch.css/themes/algolia-min.css";
 
 type LoaderData = {
   ENV: Record<string, string>;
@@ -30,28 +32,18 @@ type LoaderData = {
 
 const searchClient = algoliasearch("FVE0OTGLPF", "5263e7543c5a02a750e44a978098b3c0");
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const serverUrl = request.url;
-  const serverState = await getServerState(<SearchProvider serverUrl={serverUrl} />);
+export const loader: LoaderFunction = (args) => {
+  return rootAuthLoader(args, async ({ request }) => {
+    const serverUrl = request.url;
+    const serverState = await getServerState(<SearchProvider serverUrl={serverUrl} />);
 
-  return json({
-    serverState,
-    serverUrl,
+    // fetch data
+    return {
+      serverState,
+      serverUrl,
+    };
   });
 };
-
-// export const loader: LoaderFunction = (args) => {
-//   return rootAuthLoader(args, ({ request }) => {
-//     const { sessionId, userId, getToken } = request.auth;
-//     // fetch data
-//     return json({
-//       ENV: {
-//         ALGOLIA_APP: process.env.ALGOLIA_APP,
-//         ALGOLIA_KEY: process.env.ALGOLIA_KEY,
-//       },
-//     });
-//   });
-// };
 
 function SearchProvider({
   serverState,
@@ -92,16 +84,26 @@ export const meta: MetaFunction = () => ({
 });
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: satelliteCss }];
+  return [
+    { rel: "stylesheet", href: satelliteCss },
+    { rel: "stylesheet", href: remixImageStyles },
+  ];
 };
 
 createEmotionCache({ key: "mantine" });
 
 function App() {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
-  const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
-  const { ENV, serverState, serverUrl } = useLoaderData<LoaderData>();
+  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+    key: "color-scheme",
+    defaultValue: "light",
+    getInitialValueInEffect: true,
+  });
+
+  const toggleColorScheme = useCallback(
+    () => setColorScheme((current) => (current === "dark" ? "light" : "dark")),
+    [setColorScheme],
+  );
+  const { serverState, serverUrl } = useLoaderData<LoaderData>();
 
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
@@ -118,11 +120,6 @@ function App() {
                 <Outlet />
               </Layout>
               <ScrollRestoration />
-              <script
-                dangerouslySetInnerHTML={{
-                  __html: `window.ENV = ${JSON.stringify(ENV)}`,
-                }}
-              />
               <Scripts />
               <LiveReload />
             </body>
@@ -133,7 +130,25 @@ function App() {
   );
 }
 
-// export default ClerkApp(App);
-export default App;
+export default ClerkApp(App);
+// export default App;
 
 export const CatchBoundary = ClerkCatchBoundary();
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
+  return (
+    <html>
+      <head>
+        <title>Oh no!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <h3>Oops</h3>
+        <pre>{JSON.stringify(error.message, null, 2)}</pre>
+        <Scripts />
+      </body>
+    </html>
+  );
+}

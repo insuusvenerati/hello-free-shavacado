@@ -1,6 +1,5 @@
 import { Button, ButtonProps } from "@mantine/core";
 import { ShareIcon } from "@heroicons/react/24/solid";
-import { useRouter } from "next/router";
 
 type ShareButtonProps = {
   text?: string;

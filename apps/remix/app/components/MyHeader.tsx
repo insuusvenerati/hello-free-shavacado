@@ -2,8 +2,8 @@ import { Burger, createStyles, Group, Header, Image, MediaQuery, Title } from "@
 import { useMediaQuery } from "@mantine/hooks";
 import { Link } from "@remix-run/react";
 import { useCallback } from "react";
-import { SearchBox } from "react-instantsearch-hooks-web";
 import { ButtonToggle } from "./Buttons/ColorSchemeToggle";
+import { Search } from "./Search/Search";
 
 type Props = {
   opened: boolean;
@@ -42,7 +42,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export const MyHeader = ({ opened, setOpened }: Props) => {
-  const matches = useMediaQuery("(min-width: 900px)", true);
+  const matches = useMediaQuery("(min-width: 900px)", true, { getInitialValueInEffect: false });
   const { classes } = useStyles();
 
   const handleDrawer = useCallback(() => {
@@ -57,7 +57,7 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
           <Link to="/">
             <Image alt="logo" src="/OrangeSlice2.svg" width={50} height={50} />
           </Link>
-          <SearchBox style={{ maxWidth: 250 }} role="search" />
+          <Search style={{ maxWidth: 250 }} role="search" />
         </Group>
       </Header>
     </MediaQuery>
@@ -77,7 +77,8 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
             <ButtonToggle />
           </Group>
 
-          <SearchBox />
+          <Search />
+          {/* <SearchBox placeholder="Search" /> */}
         </Group>
       </div>
     </Header>

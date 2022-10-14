@@ -2,7 +2,7 @@ import { Grid } from "@mantine/core";
 import type { UseHitsProps } from "react-instantsearch-hooks-web";
 import { useHits } from "react-instantsearch-hooks-web";
 import type { RecipeHit } from "~/types/recipeSearchQuery";
-import { RecipeCard } from "./RecipeCard";
+import { RecipeCard } from "./RecipeCard/RecipeCard";
 
 // transform-origin: 100% 0%; transform: translate(10%,10%) rotate(200deg); opacity:0 transition: 5s all ease-out;
 
