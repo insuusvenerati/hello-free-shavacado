@@ -2,3 +2,7 @@
 .git/
 **/.env*
 docker-compose.yml
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
