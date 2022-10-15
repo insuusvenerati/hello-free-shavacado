@@ -41,5 +41,5 @@
       "dependsOn": ["build"]
     }
   },
-  "globalDependencies": ["tsconfig.json"]
+  "globalDependencies": ["tsconfig.json", "turbo.json"]
 }
