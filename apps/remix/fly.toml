@@ -8,6 +8,9 @@ processes = []
 [env]
   PORT = "8080"
 
+[build]
+  dockerfile = "Dockerfile"
+
 [experimental]
   allowed_public_ports = []
   auto_rollback = true

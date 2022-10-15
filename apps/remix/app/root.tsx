@@ -36,12 +36,7 @@ export const loader: LoaderFunction = (args) => {
   return rootAuthLoader(args, async ({ request }) => {
     const serverUrl = request.url;
     const serverState = await getServerState(<SearchProvider serverUrl={serverUrl} />);
-
-    // fetch data
-    return {
-      serverState,
-      serverUrl,
-    };
+    return { serverState, serverUrl };
   });
 };
 
@@ -65,7 +60,6 @@ function SearchProvider({
               if (typeof window === "undefined") {
                 return new URL(serverUrl);
               }
-
               return window.location;
             },
           }),
@@ -98,55 +92,44 @@ function App() {
     defaultValue: "light",
     getInitialValueInEffect: true,
   });
-
   const toggleColorScheme = useCallback(
     () => setColorScheme((current) => (current === "dark" ? "light" : "dark")),
     [setColorScheme],
   );
+
   const { serverState, serverUrl } = useLoaderData<LoaderData>();
 
   return (
-    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-      <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-        <SearchProvider serverUrl={serverUrl} serverState={serverState}>
-          <html lang="en">
-            <head>
-              <StylesPlaceholder />
-              <Meta />
-              <Links />
-            </head>
-            <body>
+    <html lang="en">
+      <head>
+        <Meta /> <Links /> <StylesPlaceholder />
+      </head>
+      <body>
+        <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+          <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+            <SearchProvider serverUrl={serverUrl} serverState={serverState}>
               <Layout>
                 <Outlet />
               </Layout>
-              <ScrollRestoration />
-              <Scripts />
-              <LiveReload />
-            </body>
-          </html>
-        </SearchProvider>
-      </MantineProvider>
-    </ColorSchemeProvider>
+              <ScrollRestoration /> <Scripts /> <LiveReload />
+            </SearchProvider>
+          </MantineProvider>
+        </ColorSchemeProvider>
+      </body>
+    </html>
   );
 }
-
 export default ClerkApp(App);
-// export default App;
-
 export const CatchBoundary = ClerkCatchBoundary();
-
 export function ErrorBoundary({ error }: { error: Error }) {
   console.error(error);
   return (
     <html>
       <head>
-        <title>Oh no!</title>
-        <Meta />
-        <Links />
+        <title>Oh no!</title> <Meta /> <Links />
       </head>
       <body>
-        <h3>Oops</h3>
-        <pre>{JSON.stringify(error.message, null, 2)}</pre>
+        <h3>Oops</h3> <pre>{JSON.stringify(error.message, null, 2)}</pre>
         <Scripts />
       </body>
     </html>

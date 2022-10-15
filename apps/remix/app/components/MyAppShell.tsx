@@ -13,6 +13,7 @@ import {
   Transition,
 } from "@mantine/core";
 import { useClickOutside } from "@mantine/hooks";
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { CurrentRefinements } from "react-instantsearch-hooks-web";
 import { AddImportedRecipeForm } from "./AddImportedRecipeForm";
@@ -22,7 +23,7 @@ import { ClearRefinements } from "./Search/ClearRefinements";
 import { RefinementList } from "./Search/RefinementList";
 
 type AppShellProps = {
-  children: JSX.Element[] | JSX.Element;
+  children: ReactNode;
 };
 
 export const MyAppShell = ({ children }: AppShellProps) => {
@@ -34,9 +35,10 @@ export const MyAppShell = ({ children }: AppShellProps) => {
 
   return (
     <AppShell
+      // padding="md"
       aside={
         <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-          <Aside hiddenBreakpoint="sm" p="md" width={{ sm: 210, lg: 310 }}>
+          <Aside hiddenBreakpoint="sm" p="md" width={{ sm: 210, lg: 300 }}>
             <Aside.Section grow component={ScrollArea}>
               {/* <LoadingOverlay visible={isLoading} /> */}
               <Title order={3} mb="md">

@@ -20,7 +20,7 @@ export default function Index() {
         </Grid.Col>
       </Grid>
 
-      <Grid columns={4} justify="center">
+      <Grid columns={12} justify="center">
         <Hits />
       </Grid>
     </>

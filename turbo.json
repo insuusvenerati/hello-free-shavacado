@@ -5,27 +5,19 @@
       "cache": false
     },
     "build": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "build/**", ".next/**"]
     },
     "@stiforr/frontend#build": {
       "dependsOn": [],
-      "env": [
-        "NEXT_PUBLIC_CLERK_FRONTEND_API",
-        "NEXT_PUBLIC_API_URL"
-      ]
+      "env": ["NEXT_PUBLIC_CLERK_FRONTEND_API", "NEXT_PUBLIC_API_URL"]
     },
     "@stiforr/backend#build": {
       "dependsOn": [],
-      "env": [
-        "DATABASE_URL"
-      ]
+      "env": ["DATABASE_URL"]
     },
     "test": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "lint": {
@@ -41,9 +33,7 @@
       "cache": false
     },
     "e2e:run": {
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     }
   }
 }

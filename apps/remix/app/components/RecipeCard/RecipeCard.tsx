@@ -1,13 +1,11 @@
 import type { CardProps } from "@mantine/core";
-import { Group, Stack } from "@mantine/core";
-import { Anchor, Badge, Card, createStyles, Text, Tooltip } from "@mantine/core";
+import { Anchor, Badge, Card, createStyles, Group, Stack, Text, Tooltip } from "@mantine/core";
 import { Link } from "@remix-run/react";
 import type { Hit } from "instantsearch.js";
-import Image from "remix-image";
 import type { Item } from "~/types/recipes";
 import type { RecipeHit } from "~/types/recipeSearchQuery";
-import { HF_CARD_IMAGE_URL } from "~/util/constants";
 import { AddToFavorites } from "../Buttons/AddToFavorites";
+import { HellofreshImage } from "../HellofreshImage";
 
 const useStyles = createStyles((theme) => ({
   linkText: {
@@ -31,14 +29,30 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
   const { classes } = useStyles();
 
   return (
-    <Card sx={{ height: "auto" }} withBorder shadow="md" {...props}>
+    <Card withBorder shadow="md" {...props}>
       <Card.Section mb="sm">
-        <Image
+        <HellofreshImage
           alt={recipe?.name}
+          // placeholder="blur"
           height={340}
-          src={`${HF_CARD_IMAGE_URL}${recipe?.imagePath}`}
+          src={`${recipe?.imagePath}`}
           width={600}
-          style={{ objectFit: "cover", width: "100%", height: "auto" }}
+          style={{
+            minWidth: "100%",
+            minHeight: "100%",
+            height: "100%",
+            objectFit: "cover",
+            width: "100%",
+          }}
+          dprVariants={[1, 3]}
+          responsive={[
+            {
+              size: {
+                width: 600,
+                height: 340,
+              },
+            },
+          ]}
         />
       </Card.Section>
       <Stack sx={{ height: 125 }} justify="space-between" spacing="xs">

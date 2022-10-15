@@ -12,7 +12,7 @@ export const Hits = (props: UseHitsProps<RecipeHit>) => {
   return (
     <>
       {hits.map((hit) => (
-        <Grid.Col data-test-id="recipe-card" key={hit.objectID} md={1} sm={2}>
+        <Grid.Col data-test-id="recipe-card" key={hit.objectID} md={3} sm={2}>
           <RecipeCard recipe={hit} />
         </Grid.Col>
       ))}
