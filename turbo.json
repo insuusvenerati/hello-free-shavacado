@@ -40,5 +40,6 @@
     "e2e:run": {
       "dependsOn": ["build"]
     }
-  }
+  },
+  "globalDependencies": ["tsconfig.json"]
 }
