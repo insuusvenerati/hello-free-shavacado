@@ -9,12 +9,17 @@
       "outputs": ["dist/**", "build/**", ".next/**"]
     },
     "@stiforr/frontend#build": {
-      "dependsOn": [],
+      "dependsOn": ["^build"],
       "env": ["NEXT_PUBLIC_CLERK_FRONTEND_API", "NEXT_PUBLIC_API_URL"]
     },
     "@stiforr/backend#build": {
-      "dependsOn": [],
+      "dependsOn": ["^build"],
       "env": ["DATABASE_URL"]
+    },
+    "@stiforr/remix#build": {
+      "dependsOn": ["^build"],
+      "env": [],
+      "outputs": ["build/**"]
     },
     "test": {
       "dependsOn": ["^build"],

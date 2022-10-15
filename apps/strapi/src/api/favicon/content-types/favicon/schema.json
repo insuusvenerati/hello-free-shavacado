@@ -1,0 +1,23 @@
+{
+  "kind": "singleType",
+  "collectionName": "favicons",
+  "info": {
+    "singularName": "favicon",
+    "pluralName": "favicons",
+    "displayName": "favicon"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "image": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false,
+      "required": true
+    }
+  }
+}
