@@ -2,7 +2,7 @@ import { ClerkApp, ClerkCatchBoundary } from "@clerk/remix";
 import { rootAuthLoader } from "@clerk/remix/ssr.server";
 import type { ColorScheme } from "@mantine/core";
 import { ColorSchemeProvider, createEmotionCache, MantineProvider } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
+import { useColorScheme, useLocalStorage } from "@mantine/hooks";
 import { StylesPlaceholder } from "@mantine/remix";
 import type { LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import {
@@ -17,7 +17,6 @@ import {
 import algoliasearch from "algoliasearch/lite";
 import satelliteCss from "instantsearch.css/themes/algolia-min.css";
 import { history } from "instantsearch.js/cjs/lib/routers/index.js";
-import { useCallback } from "react";
 import { getServerState } from "react-instantsearch-hooks-server";
 import type { InstantSearchServerState } from "react-instantsearch-hooks-web";
 import { InstantSearch, InstantSearchSSRProvider } from "react-instantsearch-hooks-web";
@@ -87,15 +86,10 @@ export const links: LinksFunction = () => {
 createEmotionCache({ key: "mantine" });
 
 function App() {
-  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
-    key: "color-scheme",
-    defaultValue: "light",
-    getInitialValueInEffect: true,
-  });
-  const toggleColorScheme = useCallback(
-    () => setColorScheme((current) => (current === "dark" ? "light" : "dark")),
-    [setColorScheme],
-  );
+  const preferredColorScheme = useColorScheme();
+  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>(preferredColorScheme);
+  const toggleColorScheme = (value?: ColorScheme) =>
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
   const { serverState, serverUrl } = useLoaderData<LoaderData>();
 

@@ -1,4 +1,4 @@
-const isVercel = process.env.NODE_ENV === "production" && process.env.VERCEL === "1";
+const isVercel = process.env.NODE_ENV === "production" && process.env.VERCEL === 1;
 
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
