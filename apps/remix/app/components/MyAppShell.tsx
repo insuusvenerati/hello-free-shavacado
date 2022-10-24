@@ -9,6 +9,7 @@ import {
   MediaQuery,
   Navbar,
   ScrollArea,
+  Text,
   Title,
   Transition,
 } from "@mantine/core";
@@ -16,9 +17,12 @@ import { useClickOutside } from "@mantine/hooks";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { CurrentRefinements } from "react-instantsearch-hooks-web";
+import { useTypedLoaderData } from "remix-typedjson";
+import type { FavoritedRecipe } from "~/types/favoriteRecipe";
 import { AddImportedRecipeForm } from "./AddImportedRecipeForm";
 import { MyHeader } from "./MyHeader";
 import { NavbarContent } from "./NavContent";
+import { RecipeLink } from "./RecipeLink";
 import { ClearRefinements } from "./Search/ClearRefinements";
 import { RefinementList } from "./Search/RefinementList";
 
@@ -29,6 +33,7 @@ type AppShellProps = {
 export const MyAppShell = ({ children }: AppShellProps) => {
   // const { data: importedRecipes } = useGetImportedRecipesQuery();
   // const { data: recipes, isLoading } = useFavoriteRecipesQuery();
+  const { favoriteRecipes } = useTypedLoaderData<{ favoriteRecipes: FavoritedRecipe[] }>();
   const [opened, setOpened] = useState(false);
   const ref = useClickOutside(() => setOpened(false));
   const [section, setSection] = useState<"nav" | "filters">("nav");
@@ -38,13 +43,12 @@ export const MyAppShell = ({ children }: AppShellProps) => {
       // padding="md"
       aside={
         <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-          <Aside hiddenBreakpoint="sm" p="md" width={{ sm: 210, lg: 300 }}>
+          <Aside hiddenBreakpoint="sm" p="md" width={{ sm: 210, lg: 310 }}>
             <Aside.Section grow component={ScrollArea}>
-              {/* <LoadingOverlay visible={isLoading} /> */}
               <Title order={3} mb="md">
                 Favorite Recipes
               </Title>
-              {/* {recipes && recipes?.length > 0 ? (
+              {favoriteRecipes && favoriteRecipes?.length > 0 ? (
                 <List
                   center
                   listStyleType="none"
@@ -54,13 +58,13 @@ export const MyAppShell = ({ children }: AppShellProps) => {
                     },
                   }}
                 >
-                  {recipes?.map((recipe) => (
+                  {favoriteRecipes?.map((recipe) => (
                     <RecipeLink favoritedRecipe={recipe} key={recipe.id} />
                   ))}
                 </List>
               ) : (
                 <Text>You don&apos;t have any recipes!</Text>
-              )} */}
+              )}
               <Divider my="sm" />
               <Title mb="sm" order={3}>
                 Imported Recipes

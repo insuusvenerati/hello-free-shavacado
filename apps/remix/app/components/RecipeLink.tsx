@@ -10,7 +10,6 @@ const useStyles = createStyles((theme) => ({
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    color: theme.colorScheme === "light" ? theme.primaryColor : "white",
   },
 }));
 
@@ -21,8 +20,6 @@ export const RecipeLink = ({
   favoritedRecipe: FavoritedRecipe;
   recipe: any;
 }) => {
-  // const { data: recipe, isSuccess } = useGetRecipeById(favoritedRecipe?.uuid);
-  // const { mutate } = useDeleteFavoriteRecipe(favoritedRecipe.id);
   const { classes } = useStyles();
 
   return (
@@ -33,23 +30,23 @@ export const RecipeLink = ({
             alt={favoritedRecipe.name}
             radius={0}
             size="lg"
-            src={`${HF_AVATAR_IMAGE_URL}${favoritedRecipe?.imagePath}`}
+            src={`${HF_AVATAR_IMAGE_URL}${favoritedRecipe?.image_path}`}
           />
         }
       >
         <Group noWrap>
-          <Link to={recipe.websiteUrl} target="_blank">
-            <Tooltip label={recipe.name} withArrow>
-              <Text className={classes.linkText} size="sm">
-                {recipe.name}
-              </Text>
-            </Tooltip>
-          </Link>
-          <Tooltip label="Delete favorite" withArrow>
+          {/* <Link to={recipe.websiteUrl} target="_blank">
+            <Tooltip label={recipe.name} withArrow> */}
+          <Text className={classes.linkText} size="sm">
+            {favoritedRecipe.name}
+          </Text>
+          {/* </Tooltip>
+          </Link> */}
+          {/* <Tooltip label="Delete favorite" withArrow>
             <ActionIcon color="red" onClick={mutate}>
               <TrashIcon />
             </ActionIcon>
-          </Tooltip>
+          </Tooltip> */}
           <Link to={`/recipe/${favoritedRecipe?.uuid}`}>
             <Tooltip label="View Instructions">
               <ActionIcon mr="xs">

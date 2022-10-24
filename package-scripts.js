@@ -13,7 +13,6 @@ module.exports = {
       default: series.nps("prepare.frontend", "prepare.backend"),
       frontend: "pnpm install",
       backend: "docker-compose -f apps/backend/docker-compose.yml up -d",
-      supabase: "nps supabase.start",
     },
     docker: {
       description: "Manages docker related backend services",
@@ -47,8 +46,9 @@ module.exports = {
     clean: {
       description: "Remove dev and build outputs from all projects",
       default: series.nps("clean.buildArtifacts", "clean.nodeModules"),
-      buildArtifacts: "rimraf apps/frontend/.next apps/backend/dist",
-      nodeModules: "rimraf node_modules apps/frontend/node_modules apps/backend/node_modules",
+      buildArtifacts: "rimraf apps/frontend/.next apps/backend/dist apps/remix/build ",
+      nodeModules:
+        "rimraf node_modules apps/frontend/node_modules apps/backend/node_modules apps/remix/node_modules apps/strapi/node_modules",
     },
   },
 };

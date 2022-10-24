@@ -73,22 +73,22 @@ export class HellofreshService {
       });
     }
 
-    const allRecipesQuery = await this.prisma.hellofresh.findMany();
+    // const allRecipesQuery = await this.prisma.hellofresh.findMany();
 
-    const hellofreshDocuments = allRecipesQuery.map((recipe: any) => {
-      const ingredients = recipe.recipe.ingredients.map((ing) => ({ name: ing.name }));
-      const tags = recipe.recipe.tags.map((tag) => ({ name: tag.name, id: tag.id }));
-      return {
-        name: recipe.name,
-        description: recipe.description,
-        id: recipe.id,
-        ingredients: ingredients,
-        tags: tags,
-        slug: recipe.recipe.slug,
-        imagePath: recipe.recipe.imagePath,
-        rating: recipe.recipe.averageRating,
-      };
-    });
+    // const hellofreshDocuments = allRecipesQuery.map((recipe: any) => {
+    //   const ingredients = recipe.recipe.ingredients.map((ing) => ({ name: ing.name }));
+    //   const tags = recipe.recipe.tags.map((tag) => ({ name: tag.name, id: tag.id }));
+    //   return {
+    //     name: recipe.name,
+    //     description: recipe.description,
+    //     id: recipe.id,
+    //     ingredients: ingredients,
+    //     tags: tags,
+    //     slug: recipe.recipe.slug,
+    //     imagePath: recipe.recipe.imagePath,
+    //     rating: recipe.recipe.averageRating,
+    //   };
+    // });
     // const algoliaIndexResponse = await hellofreshIndex
     //   .saveObjects(hellofreshDocuments, { autoGenerateObjectIDIfNotExist: true })
     //   .wait();

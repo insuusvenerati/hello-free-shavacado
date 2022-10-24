@@ -1,61 +1,62 @@
-FROM node:16-bullseye-slim AS pruner
-RUN apt-get update && apt-get install -y openssl
+FROM node:18-bullseye-slim as base
 WORKDIR /app
+ENV NODE_ENV production
+
+RUN apt-get update && apt-get install -y openssl
+
 RUN yarn global add turbo
 COPY . .
 RUN turbo prune --scope=@stiforr/remix --docker
-RUN find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
 
-# Base strategy to have layer caching
-FROM node:16-bullseye-slim AS base
-RUN apt-get update && apt-get install -y openssl
-WORKDIR /app
-COPY .gitignore .gitignore
-COPY --from=pruner /app/out/json/ .
-COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
-# COPY --from=pruner /app/out/full/ .
+# Dev deps
+FROM node:18-bullseye-slim as deps
 
-FROM base AS dev-deps
 WORKDIR /app
 RUN corepack enable
+
+ADD .gitignore .gitignore
+COPY --from=base /app/out/json/ .
+COPY --from=base /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=base /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 RUN pnpm install --ignore-scripts --frozen-lockfile
 
-FROM base AS production-deps
+# Production deps
+FROM node:18-bullseye-slim as production-deps
 WORKDIR /app
 RUN corepack enable
 ENV NODE_ENV production
+COPY --from=deps /root/.local/share/pnpm/store/v3 /root/.local/share/pnpm/store/v3
+COPY --from=base /app/out/json/ .
+COPY --from=base /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=base /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 RUN pnpm install --prod --frozen-lockfile
-# COPY --from=pruner /app/out/full/packages/database/prisma/schema.prisma /app/packages/database/prisma/schema.prisma
-# RUN pnpx prisma generate --schema /app/packages/database/prisma/schema.prisma
 
-FROM base AS builder
+# Builder
+FROM node:18-bullseye-slim as builder
 WORKDIR /app
 RUN corepack enable
-# ENV NODE_ENV production
-COPY --from=pruner /app/out/full/ .
-COPY --from=dev-deps /app/ .
+ENV NODE_ENV production
+
+COPY --from=base /app/out/full/ .
+COPY --from=deps /app/ .
 COPY turbo.json turbo.json
-# RUN pnpm run generate
-RUN pnpm run build --filter=remix...
+RUN pnpm run build --filter=remix
 
 # Runner
-FROM node:16-bullseye-slim AS runner
-RUN apt-get update && apt-get install -y openssl
+FROM node:18-bullseye-slim as runner
+
 WORKDIR /app
 RUN corepack enable
 ENV NODE_ENV production
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 remixjs
-RUN chown -R remixjs:nodejs /app
+
+COPY --from=builder --chown=remixjs:nodejs /app/ .
+COPY --from=production-deps --chown=remixjs:nodejs /app/ .
+
+RUN pnpm prisma:generate
+RUN mv apps/remix/start_with_migrations.sh ./start_with_migrations.sh
+
 USER remixjs
-
-COPY --from=pruner --chown=remixjs:nodejs /app/out/full/ .
-COPY --from=production-deps --chown=remixjs:nodejs /app .
-
-# COPY --from=builder --chown=remixjs:nodejs /app/apps/remix/build/server.js ./apps/remix/build/server.js
-COPY --from=builder --chown=remixjs:nodejs /app/apps/remix/build ./apps/remix/build
-COPY --from=builder --chown=remixjs:nodejs /app/apps/remix/public ./apps/remix/public
-
-# release_command = "pnpx prisma migrate deploy --schema packages/database/prisma/schema.prisma"
-CMD ["pnpm", "--filter", "remix", "run", "start"]
+CMD [ "sh", "-c", "./start_with_migrations.sh" ]

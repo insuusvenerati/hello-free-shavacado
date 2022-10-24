@@ -1,0 +1,66 @@
+FROM node:16-bullseye-slim AS pruner
+RUN apt-get update && apt-get install -y openssl
+WORKDIR /app
+RUN yarn global add turbo
+COPY . .
+RUN turbo prune --scope=@stiforr/remix --docker
+# RUN find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
+
+# Base strategy to have layer caching
+FROM node:16-bullseye-slim AS base
+RUN apt-get update && apt-get install -y openssl
+WORKDIR /app
+COPY .gitignore .gitignore
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+# COPY --from=pruner /app/out/full/ .
+
+FROM base AS dev-deps
+WORKDIR /app
+RUN corepack enable
+RUN pnpm install --ignore-scripts --frozen-lockfile
+
+FROM base AS production-deps
+WORKDIR /app
+RUN corepack enable
+ENV NODE_ENV production
+COPY --from=dev-deps /root/.local/share/pnpm/store/v3 /root/.local/share/pnpm/store/v3
+RUN pnpm install --prod --frozen-lockfile
+# COPY --from=pruner /app/out/full/apps/remix/prisma/schema.prisma /app/prisma/schema.prisma
+# RUN ls -la
+# RUN pnpx prisma generate --schema /app/prisma/schema.prisma
+
+FROM base AS builder
+WORKDIR /app
+RUN corepack enable
+ENV NODE_ENV production
+COPY --from=pruner /app/out/full/ .
+COPY --from=dev-deps /app/ .
+COPY turbo.json turbo.json
+RUN pnpm run prisma:generate
+RUN pnpm run build --filter=remix...
+
+
+# # Runner
+# FROM node:16-bullseye-slim AS runner
+# RUN apt-get update && apt-get install -y openssl
+# WORKDIR /app
+# RUN corepack enable
+# ENV NODE_ENV production
+
+# RUN addgroup --system --gid 1001 nodejs
+# RUN adduser --system --uid 1001 remixjs
+# RUN chown -R remixjs:nodejs /app
+# USER remixjs
+
+# COPY --from=pruner --chown=remixjs:nodejs /app/out/full/ .
+# COPY --from=production-deps --chown=remixjs:nodejs /app .
+
+# # COPY --from=builder --chown=remixjs:nodejs /app/apps/remix/build/server.js ./apps/remix/build/server.js
+# COPY --from=builder --chown=remixjs:nodejs /app/apps/remix/build /app/apps/remix/build
+# COPY --from=builder --chown=remixjs:nodejs /app/apps/remix/public /app/apps/remix/public
+
+
+# # release_command = "pnpx prisma migrate deploy --schema packages/database/prisma/schema.prisma"
+# CMD ["pnpm", "--filter", "remix", "run", "start"]

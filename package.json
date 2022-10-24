@@ -13,10 +13,11 @@
     "lint": "turbo run lint",
     "stop": "turbo run stop",
     "start": "turbo run start",
+    "deploy": "turbo run deploy",
     "nps:prepare": "nps prepare",
-    "prisma:migrate": "yarn workspace @stiforr/backend prisma migrate",
-    "prisma:studio": "yarn workspace @stiforr/backend prisma studio",
-    "prisma:generate": "yarn workspace @stiforr/backend prisma generate",
+    "prisma:migrate": "turbo run prisma:migrate",
+    "prisma:generate": "turbo run prisma:generate",
+    "prisma:studio": "turbo run prisma:studio",
     "e2e:open": "cross-env NODE_ENV=test turbo run e2e:open",
     "e2e:run": "cross-env NODE_ENV=test turbo run e2e:run",
     "fix-mismatches": "pnpm syncpack fix-mismatches"
@@ -45,7 +46,7 @@
     ]
   },
   "volta": {
-    "node": "16.18.0",
+    "node": "18.11.0",
     "yarn": "1.22.19",
     "npm": "8.19.2"
   },

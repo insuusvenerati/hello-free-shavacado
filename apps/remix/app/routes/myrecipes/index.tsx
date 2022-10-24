@@ -2,10 +2,11 @@ import { getAuth } from "@clerk/remix/ssr.server";
 import type { SegmentedControlItem } from "@mantine/core";
 import { Skeleton } from "@mantine/core";
 import { Grid, SegmentedControl, Title } from "@mantine/core";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderArgs, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { useMemo, useState } from "react";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { CreatedRecipeCard } from "~/components/RecipeCard/CreatedRecipe";
 import { ImportedRecipeCard } from "~/components/RecipeCard/ImportedRecipeCard";
 import { RecipeCard } from "~/components/RecipeCard/RecipeCard";
@@ -19,14 +20,14 @@ type LoaderData = {
   favoriteRecipes: Awaited<ReturnType<typeof getRecipes>>;
 };
 
-export const loader: LoaderFunction = async ({ context, params, request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const { userId } = await getAuth(request);
 
   const createdRecipes = await getAllCreatedRecipes(userId);
   const importedRecipes = await getImportedRecipes(userId);
   const favoriteRecipes = await getRecipes(userId);
 
-  return json<LoaderData>({
+  return typedjson({
     createdRecipes,
     importedRecipes,
     favoriteRecipes,
@@ -34,7 +35,7 @@ export const loader: LoaderFunction = async ({ context, params, request }) => {
 };
 
 const RecipeList = () => {
-  const { createdRecipes, importedRecipes, favoriteRecipes } = useLoaderData<LoaderData>();
+  const { createdRecipes, importedRecipes, favoriteRecipes } = useTypedLoaderData<typeof loader>();
   const [section, setSection] = useState<string>("imported-recipes");
 
   const sectionControlData: SegmentedControlItem[] = useMemo(
@@ -87,8 +88,7 @@ const RecipeList = () => {
             Favorite Recipes
           </Title>
           <Grid justify="center">
-            {favoriteRecipes?.map((item) => {
-              if (!item) return;
+            {favoriteRecipes.map((item) => {
               return (
                 <Grid.Col key={item.id} lg={3} md={12}>
                   <Skeleton visible={!item}>
@@ -107,8 +107,7 @@ const RecipeList = () => {
             Created Recipes
           </Title>
           <Grid justify="center">
-            {createdRecipes?.map((item) => {
-              if (!item) return;
+            {createdRecipes.map((item) => {
               return (
                 <Grid.Col key={item.id} lg={3} md={12}>
                   <CreatedRecipeCard recipe={item} />

@@ -1,5 +1,5 @@
 #!/bin/sh
 
 set -ex
-npx prisma migrate deploy
-npm run start
+pnpm --filter remix exec prisma migrate deploy
+pnpm run start

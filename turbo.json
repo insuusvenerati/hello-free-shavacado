@@ -8,6 +8,10 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**", ".next/**"]
     },
+    "deploy": {
+      "dependsOn": [],
+      "cache": false
+    },
     "@stiforr/frontend#build": {
       "dependsOn": ["^build"],
       "env": ["NEXT_PUBLIC_CLERK_FRONTEND_API", "NEXT_PUBLIC_API_URL"]
@@ -20,6 +24,14 @@
       "dependsOn": ["^build"],
       "env": ["CLERK_FRONTEND_API", "API_URL", "CLERK_API_KEY", "ALGOLIA_APP", "ALGOLIA_KEY"],
       "outputs": ["build/**"]
+    },
+    "prisma:migrate": {
+      "dependsOn": [],
+      "cache": false
+    },
+    "prisma:generate": {
+      "dependsOn": ["^build"],
+      "outputs": []
     },
     "test": {
       "dependsOn": ["^build"],

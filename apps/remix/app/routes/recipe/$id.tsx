@@ -12,77 +12,75 @@ import {
   Title,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import type { ThrownResponse } from "@remix-run/react";
+import { Link, useCatch } from "@remix-run/react";
 import { Fragment } from "react";
 import Image from "remix-image";
-import type { Item } from "~/types/recipes";
-import { HF_COVER_IMAGE_URL, HF_ICON_IMAGE_URL, HF_STEP_IMAGE_URL } from "~/util/constants";
-import { getRecipeById } from "~/util/getRecipeById";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { HellofreshImage } from "~/components/HellofreshImage";
+import { HF_ICON_IMAGE_URL, HF_STEP_IMAGE_URL } from "~/util/constants";
+import { db } from "~/util/db.server";
 
-export const loader: LoaderFunction = async ({ params }) => {
-  const recipe = await getRecipeById(params.id);
-  return json({ recipe });
+export const loader = async ({ params }: LoaderArgs) => {
+  if (!params.id) {
+    throw json({ error: "No id provided" }, { status: 400 });
+  }
+
+  const recipe = await db.hellofresh.findFirst({
+    where: {
+      id: params.id,
+    },
+  });
+
+  if (!recipe) {
+    throw json({ error: "Recipe not found" }, { status: 404 });
+  }
+
+  // const recipe = await getRecipeById(params.id);
+  return typedjson(recipe);
 };
 
 const RecipePage = () => {
   const matches = useMediaQuery("(min-width: 900px)", true);
-  const { recipe } = useLoaderData<{ recipe: Item }>();
-  // const { userId } = useAuth();
-  // const { user } = useClerk();
-  // const router = useRouter();
-  // const { mutate: addGroceryMutation, isLoading } = useAddGroceryMutation();
-
-  // const yields = recipe.yields?.map((y) => y.ingredients).flat();
-
-  // const addGroceriesIngredients = recipe.ingredients?.map((ingredient) => {
-  //   const ingredientYield = yields?.filter((y) => y.id === ingredient.id);
-  //   return {
-  //     grocery: {
-  //       ingredient: ingredient.name,
-  //       amount: ingredientYield[0].amount,
-  //       unit: ingredientYield[0].unit,
-  //       imagePath: ingredient.imagePath,
-  //       family: ingredient.family.name,
-  //       slug: ingredient.slug,
-  //       uuid: ingredient.id,
-  //     },
-  //     recipe: {
-  //       name: recipe.name,
-  //       slug: recipe.slug,
-  //       uuid: recipe.id,
-  //       imagePath: recipe.imagePath,
-  //     },
-  //     user: {
-  //       id: userId,
-  //       name: user?.fullName,
-  //       username: user?.username,
-  //     },
-  //   };
-  // });
-
-  // const handleAddAllIngredients = () => {
-  //   addGroceriesIngredients?.map((addg) => {
-  //     addGroceryMutation(addg);
-  //   });
-  // };
+  const { recipe } = useTypedLoaderData<typeof loader>();
 
   return (
     <>
-      {/* <RecipeJsonLd {...jsonLdData} /> */}
       <Affix position={{ bottom: 20, left: 20 }}>
-        <Button leftIcon={<ArrowLeftIcon width={12} />} onClick={() => router.back()}>
-          Go back
-        </Button>
+        <Button leftIcon={<ArrowLeftIcon width={12} />}>Go back</Button>
       </Affix>
 
-      <Image
+      <HellofreshImage
         alt={recipe.name}
         height={800}
-        src={`${HF_COVER_IMAGE_URL}${recipe.imagePath}`}
-        width={2400}
-        style={{ objectFit: "cover", width: "100%", height: "auto" }}
+        src={recipe.imagePath}
+        width={1200}
+        style={{
+          objectFit: "cover",
+          width: "100%",
+          height: "auto",
+          minHeight: "unset",
+          minWidth: "unset",
+        }}
+        dprVariants={[1, 2, 3]}
+        responsive={[
+          {
+            size: {
+              width: 1600,
+              height: 400,
+            },
+            maxWidth: 1900,
+          },
+          {
+            size: {
+              width: 2200,
+              height: 500,
+            },
+            maxWidth: 2600,
+          },
+        ]}
       />
 
       <Container size="xl">
@@ -174,3 +172,14 @@ const RecipePage = () => {
 };
 
 export default RecipePage;
+
+export function CatchBoundary() {
+  // Here, we need to pass the ThrownResponse type, which receives the possible status codes and data as generics
+  const caught = useCatch<ThrownResponse<404, { error: string }>>();
+  return (
+    <main>
+      <h1>{caught.data.error}</h1>
+      <p>Status {caught.status}</p>
+    </main>
+  );
+}

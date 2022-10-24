@@ -29,33 +29,44 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
   const { classes } = useStyles();
 
   return (
-    <Card withBorder shadow="md" {...props}>
+    <Card sx={{ aspectRatio: "1/1" }} shadow="md" {...props}>
       <Card.Section mb="sm">
         <HellofreshImage
-          alt={recipe?.name}
-          // placeholder="blur"
+          alt={recipe.name}
+          src={`${recipe.imagePath}`}
           height={340}
-          src={`${recipe?.imagePath}`}
           width={600}
           style={{
-            minWidth: "100%",
-            minHeight: "100%",
-            height: "100%",
-            objectFit: "cover",
             width: "100%",
+            height: "auto",
+            minHeight: "unset",
+            objectFit: "cover",
+            minWidth: "unset",
           }}
-          dprVariants={[1, 3]}
+          dprVariants={[1, 2]}
           responsive={[
+            {
+              size: {
+                width: 300,
+                height: 170,
+              },
+              maxWidth: 1800,
+            },
             {
               size: {
                 width: 600,
                 height: 340,
               },
+              maxWidth: 2400,
+            },
+            {
+              size: { width: 1200, height: 680 },
+              maxWidth: 4800,
             },
           ]}
         />
       </Card.Section>
-      <Stack sx={{ height: 125 }} justify="space-between" spacing="xs">
+      <Stack sx={{ minHeight: 135 }} justify="space-between" spacing="xs">
         <Anchor component={Link} to={`/recipe/${recipe?.id}`}>
           <Tooltip label={recipe.name} withArrow>
             <Text className={classes.linkText} weight="bold">

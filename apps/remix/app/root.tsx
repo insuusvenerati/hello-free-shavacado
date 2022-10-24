@@ -12,8 +12,12 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useFetchers,
   useLoaderData,
+  useTransition,
 } from "@remix-run/react";
+import NProgress from "nprogress";
+import nProgressStyles from "nprogress/nprogress.css";
 import algoliasearch from "algoliasearch/lite";
 import satelliteCss from "instantsearch.css/themes/algolia-min.css";
 import { history } from "instantsearch.js/cjs/lib/routers/index.js";
@@ -22,6 +26,8 @@ import type { InstantSearchServerState } from "react-instantsearch-hooks-web";
 import { InstantSearch, InstantSearchSSRProvider } from "react-instantsearch-hooks-web";
 import remixImageStyles from "remix-image/remix-image.css";
 import { Layout } from "./components/Layout/Layout";
+import { db } from "./util/db.server";
+import { useEffect, useMemo } from "react";
 
 type LoaderData = {
   ENV: Record<string, string>;
@@ -33,9 +39,16 @@ const searchClient = algoliasearch("FVE0OTGLPF", "5263e7543c5a02a750e44a978098b3
 
 export const loader: LoaderFunction = (args) => {
   return rootAuthLoader(args, async ({ request }) => {
+    const { userId } = request.auth;
     const serverUrl = request.url;
+
+    const favoriteRecipes = await db.recipe.findMany({
+      where: {
+        user_id: userId,
+      },
+    });
     const serverState = await getServerState(<SearchProvider serverUrl={serverUrl} />);
-    return { serverState, serverUrl };
+    return { serverState, serverUrl, favoriteRecipes };
   });
 };
 
@@ -80,6 +93,7 @@ export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: satelliteCss },
     { rel: "stylesheet", href: remixImageStyles },
+    { rel: "stylesheet", href: nProgressStyles },
   ];
 };
 
@@ -90,8 +104,25 @@ function App() {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>(preferredColorScheme);
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
-
   const { serverState, serverUrl } = useLoaderData<LoaderData>();
+
+  let transition = useTransition();
+
+  let fetchers = useFetchers();
+
+  let state = useMemo<"idle" | "loading">(
+    function getGlobalState() {
+      let states = [transition.state, ...fetchers.map((fetcher) => fetcher.state)];
+      if (states.every((state) => state === "idle")) return "idle";
+      return "loading";
+    },
+    [transition.state, fetchers],
+  );
+
+  useEffect(() => {
+    if (state === "loading") NProgress.start();
+    if (state === "idle") NProgress.done();
+  }, [transition.state]);
 
   return (
     <html lang="en">

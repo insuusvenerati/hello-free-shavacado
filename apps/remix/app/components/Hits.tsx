@@ -1,4 +1,3 @@
-import { Grid } from "@mantine/core";
 import type { UseHitsProps } from "react-instantsearch-hooks-web";
 import { useHits } from "react-instantsearch-hooks-web";
 import type { RecipeHit } from "~/types/recipeSearchQuery";
@@ -12,9 +11,9 @@ export const Hits = (props: UseHitsProps<RecipeHit>) => {
   return (
     <>
       {hits.map((hit) => (
-        <Grid.Col data-test-id="recipe-card" key={hit.objectID} md={3} sm={2}>
-          <RecipeCard recipe={hit} />
-        </Grid.Col>
+        // <Grid.Col data-test-id="recipe-card" key={hit.objectID} md={3} sm={12}>
+        <RecipeCard key={hit.objectID} recipe={hit} />
+        // </Grid.Col>
       ))}
     </>
   );

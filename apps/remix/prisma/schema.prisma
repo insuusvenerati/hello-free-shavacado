@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ImportedRecipe {
+  id                        String    @id @default(dbgenerated("fn_ksuid()"))
+  name                      String
+  image                     String
+  description               String
+  cook_time                 String
+  prep_time                 String
+  total_time                String
+  keywords                  String[]
+  recipeCategories          String[]
+  recipeCuisines            String[]
+  recipeIngredients         String[]
+  recipeInstructions        String[]
+  recipeTypes               String[]
+  recipeYield               String
+  cooktime_original_format  String?
+  preptime_original_format  String?
+  totaltime_original_format String?
+  url                       String
+  user_id                   String
+  created_at                DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt                 DateTime?
+  user                      user      @relation(fields: [user_id], references: [id])
+}
+
+model created_recipe {
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime?
+  id          String    @id @default(dbgenerated("fn_ksuid()"))
+  name        String
+  description String
+  ingredients String[]
+  difficulty  String?
+  steps       String[]
+  image       String
+  tags        String[]
+  userId      String?
+  user        user?     @relation(fields: [userId], references: [id])
+}
+
+model grocery {
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  ingredient String
+  amount     Float?    @default(1)
+  unit       String?
+  image_path String?
+  id         String    @id @default(dbgenerated("fn_ksuid()"))
+  user_id    String
+  family     String
+  slug       String
+  uuid       String
+  recipe_id  String
+  updatedAt  DateTime?
+  recipe     recipe    @relation(fields: [recipe_id], references: [id])
+  user       user      @relation(fields: [user_id], references: [id])
+}
+
+model hellofresh {
+  created_at  DateTime?               @default(now()) @db.Timestamptz(6)
+  recipe      Json
+  id          String                  @id @default(dbgenerated("fn_ksuid()"))
+  updatedAt   DateTime?
+  name        String
+  description String
+  textSearch  Unsupported("tsvector") @default(dbgenerated("(setweight(to_tsvector('english'::regconfig, COALESCE(name, ''::text)), 'A'::\"char\") || setweight(to_tsvector('english'::regconfig, COALESCE(description, ''::text)), 'B'::\"char\"))"))
+
+  @@index([textSearch], type: Gin)
+}
+
+model ingredient {
+  created_at        DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime?
+  id                String    @id @default(dbgenerated("fn_ksuid()"))
+  country           String?
+  type              String?
+  slug              String?
+  description       String?
+  internal_name     String?
+  shipped           Boolean?
+  image_link        String?
+  image_path        String?
+  usage             Int?
+  hasDuplicatedName Boolean?
+  uuid              String?
+  name              String?
+  allergens         Json[]
+  family            Json?
+}
+
+model popular_recipe {
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime?
+  name       String?
+  recipe     Json?
+  id         String    @id @default(dbgenerated("fn_ksuid()"))
+}
+
+model recipe {
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  user_id    String?
+  name       String?
+  image_path String?
+  id         String    @id @default(dbgenerated("fn_ksuid()"))
+  slug       String    @unique
+  uuid       String    @unique
+  updatedAt  DateTime?
+  user       user?     @relation(fields: [user_id], references: [id])
+  grocery    grocery[]
+}
+
+model user {
+  created_at     DateTime?        @default(now()) @db.Timestamptz(6)
+  id             String           @id @default(dbgenerated("fn_ksuid()"))
+  name           String?
+  updatedAt      DateTime?
+  username       String           @unique
+  ImportedRecipe ImportedRecipe[]
+  created_recipe created_recipe[]
+  grocery        grocery[]
+  recipe         recipe[]
+}

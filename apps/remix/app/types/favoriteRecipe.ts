@@ -4,6 +4,6 @@ export type FavoritedRecipe = {
   id?: string;
   userId: string;
   name: string;
-  imagePath: string;
+  image_path: string;
   uuid: string;
 };
