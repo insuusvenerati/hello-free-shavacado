@@ -72,9 +72,9 @@
     "url": "https://github.com/insuusvenerati/hello-free-shavacado.git"
   },
   "volta": {
-    "node": "18.12.0"
+    "node": "16"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=16"
   }
 }

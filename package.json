@@ -17,7 +17,6 @@
     "prisma:migrate": "yarn workspace @stiforr/backend prisma migrate",
     "prisma:studio": "yarn workspace @stiforr/backend prisma studio",
     "prisma:generate": "yarn workspace @stiforr/backend prisma generate",
-    "commit": "cz",
     "e2e:open": "NODE_ENV=test turbo run e2e:open",
     "e2e:run": "NODE_ENV=test turbo run e2e:run"
   },
@@ -31,9 +30,7 @@
     ]
   },
   "devDependencies": {
-    "commitizen": "4.2.5",
     "cross-env": "^7.0.3",
-    "cz-conventional-changelog": "3.3.0",
     "dotenv": "16.0.1",
     "eslint": "8.22.0",
     "husky": "8.0.1",
@@ -48,17 +45,12 @@
     "*.{ts,tsx}": "eslint",
     "*.{ts,tsx,css,md}": "prettier --write"
   },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
-  },
   "volta": {
-    "node": "18.12.0",
+    "node": "16.18.0",
     "yarn": "1.22.19",
     "npm": "8.19.2"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=16"
   }
 }
