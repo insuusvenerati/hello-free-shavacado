@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "hellofresh" ALTER COLUMN "recipe" DROP NOT NULL,
+ALTER COLUMN "name" DROP NOT NULL,
+ALTER COLUMN "description" DROP NOT NULL,
+ALTER COLUMN "textSearch" DROP NOT NULL;

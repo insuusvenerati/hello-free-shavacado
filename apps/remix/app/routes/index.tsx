@@ -1,6 +1,19 @@
 import { getAuth } from "@clerk/remix/ssr.server";
-import { Container, Grid, SimpleGrid, Text, Title } from "@mantine/core";
+import {
+  Accordion,
+  Button,
+  Code,
+  Container,
+  CopyButton,
+  Grid,
+  SimpleGrid,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import type { ActionArgs } from "@remix-run/node";
+import { useCatch } from "@remix-run/react";
+import { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import { Pagination, SortBy } from "react-instantsearch-hooks-web";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
@@ -11,14 +24,14 @@ import { db } from "~/util/db.server";
 const recipeSchema = z.object({
   slug: z.string(),
   name: z.string(),
-  image_path: z.string(),
+  imagePath: z.string(),
   uuid: z.string(),
 });
 
 export const action = async ({ request }: ActionArgs) => {
   const { userId, claims } = await getAuth(request);
 
-  if (!userId) {
+  if (!userId || !claims) {
     return typedjson({ error: "Not logged in" }, { status: 401 });
   }
 
@@ -34,8 +47,8 @@ export const action = async ({ request }: ActionArgs) => {
           },
           create: {
             id: userId,
-            username: claims?.username,
-            name: claims?.name,
+            username: claims.username as string,
+            name: claims.name as string,
           },
         },
       },
@@ -81,10 +94,40 @@ export default function Index() {
 }
 
 export const ErrorBoundary = ({ error }: { error: Error }) => {
+  console.log(error);
   return (
     <>
       <Title order={3}>Oops an error occured</Title>
       <Text>{error.message}</Text>
     </>
+  );
+};
+
+export const CatchBoundary: CatchBoundaryComponent = () => {
+  const caught = useCatch();
+  console.log(caught);
+  return (
+    <Container>
+      <Title order={3}>Oops an error occured</Title>
+      <Text>{caught.statusText}</Text>
+      Check the console for errors or expand them here:
+      <Accordion>
+        <Accordion.Item value="error">
+          <Accordion.Control>Error message</Accordion.Control>
+          <Accordion.Panel>
+            <Stack>
+              <CopyButton value={caught.data}>
+                {({ copied, copy }) => (
+                  <Button onClick={copy} variant={copied ? "light" : "default"}>
+                    {copied ? "Copied" : "Copy"}
+                  </Button>
+                )}
+              </CopyButton>
+              <Code>{JSON.stringify(caught.data, null, 2)}</Code>
+            </Stack>
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
+    </Container>
   );
 };

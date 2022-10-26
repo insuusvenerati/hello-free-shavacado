@@ -47,7 +47,7 @@ export function ButtonToggle() {
       <UnstyledButton
         aria-label="Toggle theme"
         className={classes.control}
-        onClick={() => toggleColorScheme()}
+        onClick={() => toggleColorScheme(colorScheme === "dark" ? "light" : "dark")}
         title="Ctrl + J"
       >
         <Text size="sm" className={classes.value}>

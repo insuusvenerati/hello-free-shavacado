@@ -1,8 +1,8 @@
 import { ClerkApp, ClerkCatchBoundary } from "@clerk/remix";
+import { renderToString } from "react-dom/server";
 import { rootAuthLoader } from "@clerk/remix/ssr.server";
 import type { ColorScheme } from "@mantine/core";
 import { ColorSchemeProvider, createEmotionCache, MantineProvider } from "@mantine/core";
-import { useColorScheme, useLocalStorage } from "@mantine/hooks";
 import { StylesPlaceholder } from "@mantine/remix";
 import type { LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import {
@@ -12,27 +12,29 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useFetcher,
   useFetchers,
   useLoaderData,
   useTransition,
 } from "@remix-run/react";
-import NProgress from "nprogress";
-import nProgressStyles from "nprogress/nprogress.css";
 import algoliasearch from "algoliasearch/lite";
 import satelliteCss from "instantsearch.css/themes/algolia-min.css";
-import { history } from "instantsearch.js/cjs/lib/routers/index.js";
+import NProgress from "nprogress";
+import nProgressStyles from "nprogress/nprogress.css";
+import { useEffect, useMemo } from "react";
 import { getServerState } from "react-instantsearch-hooks-server";
 import type { InstantSearchServerState } from "react-instantsearch-hooks-web";
 import { InstantSearch, InstantSearchSSRProvider } from "react-instantsearch-hooks-web";
 import remixImageStyles from "remix-image/remix-image.css";
 import { Layout } from "./components/Layout/Layout";
 import { db } from "./util/db.server";
-import { useEffect, useMemo } from "react";
+import { getThemeSession } from "./util/theme.server";
+import { NotificationsProvider } from "@mantine/notifications";
 
 type LoaderData = {
-  ENV: Record<string, string>;
   serverState: InstantSearchServerState;
-  serverUrl: string;
+  serverUrl?: string;
+  theme: ColorScheme;
 };
 
 const searchClient = algoliasearch("FVE0OTGLPF", "5263e7543c5a02a750e44a978098b3c0");
@@ -40,15 +42,18 @@ const searchClient = algoliasearch("FVE0OTGLPF", "5263e7543c5a02a750e44a978098b3
 export const loader: LoaderFunction = (args) => {
   return rootAuthLoader(args, async ({ request }) => {
     const { userId } = request.auth;
-    const serverUrl = request.url;
 
-    const favoriteRecipes = await db.recipe.findMany({
-      where: {
-        user_id: userId,
-      },
-    });
-    const serverState = await getServerState(<SearchProvider serverUrl={serverUrl} />);
-    return { serverState, serverUrl, favoriteRecipes };
+    const [themeSession, favoriteRecipes, serverState] = await Promise.all([
+      getThemeSession(request),
+      db.recipe.findMany({
+        where: {
+          userId,
+        },
+      }),
+      getServerState(<SearchProvider />, { renderToString }),
+    ]);
+
+    return { serverState, favoriteRecipes, theme: themeSession.getTheme() };
   });
 };
 
@@ -58,25 +63,12 @@ function SearchProvider({
   children,
 }: {
   serverState?: InstantSearchServerState;
-  serverUrl: string;
+  serverUrl?: string;
   children?: React.ReactNode;
 }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
-      <InstantSearch
-        searchClient={searchClient}
-        indexName="hellofresh"
-        routing={{
-          router: history({
-            getLocation() {
-              if (typeof window === "undefined") {
-                return new URL(serverUrl);
-              }
-              return window.location;
-            },
-          }),
-        }}
-      >
+      <InstantSearch searchClient={searchClient} indexName="hellofresh">
         {children}
       </InstantSearch>
     </InstantSearchSSRProvider>
@@ -100,11 +92,13 @@ export const links: LinksFunction = () => {
 createEmotionCache({ key: "mantine" });
 
 function App() {
-  const preferredColorScheme = useColorScheme();
-  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>(preferredColorScheme);
-  const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
-  const { serverState, serverUrl } = useLoaderData<LoaderData>();
+  const fetcher = useFetcher();
+
+  const toggleColorScheme = (value: ColorScheme) => {
+    fetcher.submit({ theme: value }, { method: "post", action: "/api/theme" });
+  };
+
+  const { serverState, theme } = useLoaderData<LoaderData>();
 
   let transition = useTransition();
 
@@ -130,14 +124,16 @@ function App() {
         <Meta /> <Links /> <StylesPlaceholder />
       </head>
       <body>
-        <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-          <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-            <SearchProvider serverUrl={serverUrl} serverState={serverState}>
-              <Layout>
-                <Outlet />
-              </Layout>
-              <ScrollRestoration /> <Scripts /> <LiveReload />
-            </SearchProvider>
+        <ColorSchemeProvider colorScheme={theme} toggleColorScheme={toggleColorScheme}>
+          <MantineProvider theme={{ colorScheme: theme }} withGlobalStyles withNormalizeCSS>
+            <NotificationsProvider>
+              <SearchProvider serverState={serverState}>
+                <Layout>
+                  <Outlet />
+                </Layout>
+                <ScrollRestoration /> <Scripts /> <LiveReload />
+              </SearchProvider>
+            </NotificationsProvider>
           </MantineProvider>
         </ColorSchemeProvider>
       </body>

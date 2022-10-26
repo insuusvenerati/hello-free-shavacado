@@ -19,29 +19,50 @@ async function main() {
 
   for (let skip = 0; skip <= 3750; skip += 250) {
     console.log(skip);
+
     const response = await fetch(`${BASE_URL}take=250&skip=${skip}`, {
       headers: { authorization: `Bearer ${token.access_token}` },
     });
 
     const recipes = await response.json();
 
-    recipes.items.map(async (item) => {
-      await db.hellofresh.upsert({
-        where: { id: item.id },
-        create: {
-          name: item.name,
-          id: item.id,
-          recipe: item,
-          description: item.description,
-        },
-        update: {
-          name: item.name,
-          id: item.id,
-          recipe: item,
-          description: item.description,
-        },
-      });
-    });
+    await db.$transaction(
+      recipes.items.map((item) =>
+        db.hellofresh.upsert({
+          where: { id: item.id },
+          create: {
+            name: item.name,
+            id: item.id,
+            recipe: item,
+            description: item.description,
+          },
+          update: {
+            name: item.name,
+            id: item.id,
+            recipe: item,
+            description: item.description,
+          },
+        }),
+      ),
+    );
+
+    // await recipes.items.map(async (item) => {
+    //   await db.hellofresh.upsert({
+    //     where: { id: item.id },
+    //     create: {
+    //       name: item.name,
+    //       id: item.id,
+    //       recipe: item,
+    //       description: item.description,
+    //     },
+    //     update: {
+    //       name: item.name,
+    //       id: item.id,
+    //       recipe: item,
+    //       description: item.description,
+    //     },
+    //   });
+    // });
   }
 }
 

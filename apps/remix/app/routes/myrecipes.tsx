@@ -1,31 +1,25 @@
 import { getAuth } from "@clerk/remix/ssr.server";
-import type { SegmentedControlItem } from "@mantine/core";
-import { Skeleton } from "@mantine/core";
+import { SegmentedControlItem, Tabs } from "@mantine/core";
 import { Grid, SegmentedControl, Title } from "@mantine/core";
-import type { LoaderArgs, LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import type { LoaderArgs } from "@remix-run/node";
+import { Link, Outlet } from "@remix-run/react";
 import { useMemo, useState } from "react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { CreatedRecipeCard } from "~/components/RecipeCard/CreatedRecipe";
 import { ImportedRecipeCard } from "~/components/RecipeCard/ImportedRecipeCard";
 import { RecipeCard } from "~/components/RecipeCard/RecipeCard";
-import { getAllCreatedRecipes } from "~/util/getAllCreatedRecipes";
-import { getImportedRecipes } from "~/util/getImportedRecipes";
-import { getRecipes } from "~/util/getRecipes";
-
-type LoaderData = {
-  createdRecipes: Awaited<ReturnType<typeof getAllCreatedRecipes>>;
-  importedRecipes: Awaited<ReturnType<typeof getImportedRecipes>>;
-  favoriteRecipes: Awaited<ReturnType<typeof getRecipes>>;
-};
+import { getAllCreatedRecipes } from "~/util/getAllCreatedRecipes.server";
+import { getImportedRecipes } from "~/util/getImportedRecipes.server";
+import { getRecipes } from "~/util/getRecipes.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { userId } = await getAuth(request);
 
-  const createdRecipes = await getAllCreatedRecipes(userId);
-  const importedRecipes = await getImportedRecipes(userId);
-  const favoriteRecipes = await getRecipes(userId);
+  const [createdRecipes, importedRecipes, favoriteRecipes] = await Promise.all([
+    getAllCreatedRecipes(userId),
+    getImportedRecipes(userId),
+    getRecipes(userId),
+  ]);
 
   return typedjson({
     createdRecipes,
@@ -59,15 +53,27 @@ const RecipeList = () => {
   // display all the recipes
   return (
     <>
-      <SegmentedControl
+      {/* <SegmentedControl
         onChange={setSection}
         fullWidth
         data={sectionControlData}
         value={section}
         mb="md"
-      />
+      /> */}
 
-      {section === "imported-recipes" ? (
+      <Tabs orientation="vertical" defaultValue="imported">
+        <Tabs.List grow>
+          <Tabs.Tab value="imported">
+            <Link to="imported">Imported Recipes</Link>
+          </Tabs.Tab>
+          <Tabs.Tab value="created">Created Recipes</Tabs.Tab>
+          <Tabs.Tab value="favorite">Favorite Recipes</Tabs.Tab>
+        </Tabs.List>
+      </Tabs>
+
+      <Outlet context={importedRecipes} />
+
+      {/* {section === "imported-recipes" ? (
         <>
           <Title mb="md" align="center" order={1}>
             Imported Recipes
@@ -91,9 +97,7 @@ const RecipeList = () => {
             {favoriteRecipes.map((item) => {
               return (
                 <Grid.Col key={item.id} lg={3} md={12}>
-                  <Skeleton visible={!item}>
-                    <RecipeCard recipe={item} />
-                  </Skeleton>
+                  <RecipeCard recipe={item} />
                 </Grid.Col>
               );
             })}
@@ -116,7 +120,7 @@ const RecipeList = () => {
             })}
           </Grid>
         </>
-      ) : null}
+      ) : null} */}
     </>
   );
 };

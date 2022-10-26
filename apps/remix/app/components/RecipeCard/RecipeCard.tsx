@@ -1,9 +1,8 @@
 import type { CardProps } from "@mantine/core";
 import { Anchor, Badge, Card, createStyles, Group, Stack, Text, Tooltip } from "@mantine/core";
+import type { Recipe } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import type { Hit } from "instantsearch.js";
-import type { Item } from "~/types/recipes";
-import type { RecipeHit } from "~/types/recipeSearchQuery";
 import { AddToFavorites } from "../Buttons/AddToFavorites";
 import { HellofreshImage } from "../HellofreshImage";
 
@@ -22,7 +21,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 type Props = {
-  recipe: Hit<RecipeHit> | Item;
+  recipe: Hit<Recipe> | Recipe;
 } & Omit<CardProps, "children">;
 
 export const RecipeCard = ({ recipe, ...props }: Props) => {
@@ -32,7 +31,8 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
     <Card sx={{ aspectRatio: "1/1" }} shadow="md" {...props}>
       <Card.Section mb="sm">
         <HellofreshImage
-          alt={recipe.name}
+          placeholder="blur"
+          alt={recipe.name || recipe.slug}
           src={`${recipe.imagePath}`}
           height={340}
           width={600}
@@ -70,7 +70,7 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
         <Anchor component={Link} to={`/recipe/${recipe?.id}`}>
           <Tooltip label={recipe.name} withArrow>
             <Text className={classes.linkText} weight="bold">
-              {recipe?.name}
+              {recipe.name}
             </Text>
           </Tooltip>
         </Anchor>
@@ -80,8 +80,8 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
         </Text>
 
         <Group>
-          {recipe?.tags?.length > 0
-            ? recipe?.tags?.map((tag) => (
+          {recipe.tags?.length > 0
+            ? recipe.tags?.map((tag) => (
                 <Badge key={`${recipe?.id}-${tag?.id}}`} size="xs">
                   {tag.name}
                 </Badge>

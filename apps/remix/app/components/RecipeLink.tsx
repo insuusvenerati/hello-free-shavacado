@@ -1,7 +1,7 @@
-import { LinkIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { LinkIcon } from "@heroicons/react/24/outline";
 import { ActionIcon, Avatar, createStyles, Group, List, Paper, Text, Tooltip } from "@mantine/core";
+import type { Recipe } from "@prisma/client";
 import { Link } from "@remix-run/react";
-import type { FavoritedRecipe } from "~/types/favoriteRecipe";
 import { HF_AVATAR_IMAGE_URL } from "~/util/constants";
 
 const useStyles = createStyles((theme) => ({
@@ -17,7 +17,7 @@ export const RecipeLink = ({
   favoritedRecipe,
   recipe,
 }: {
-  favoritedRecipe: FavoritedRecipe;
+  favoritedRecipe: Recipe;
   recipe: any;
 }) => {
   const { classes } = useStyles();
@@ -30,7 +30,7 @@ export const RecipeLink = ({
             alt={favoritedRecipe.name}
             radius={0}
             size="lg"
-            src={`${HF_AVATAR_IMAGE_URL}${favoritedRecipe?.image_path}`}
+            src={`${HF_AVATAR_IMAGE_URL}${favoritedRecipe?.imagePath}`}
           />
         }
       >

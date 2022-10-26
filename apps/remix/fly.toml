@@ -11,6 +11,9 @@ processes = []
 [build]
   dockerfile = "Dockerfile"
 
+[deploy]
+  release_command = "pnpm --filter remix exec prisma migrate deploy"
+
 [experimental]
   allowed_public_ports = []
   auto_rollback = true

@@ -1,6 +1,6 @@
 import type { CardProps } from "@mantine/core";
 import { Badge, Card, Image } from "@mantine/core";
-import type { CreatedRecipe } from "~/types/createdRecipe";
+import type { CreatedRecipe } from "@prisma/client";
 
 type Props = {
   recipe: CreatedRecipe;

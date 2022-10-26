@@ -10,7 +10,7 @@ import type { RecipeHit } from "~/types/recipeSearchQuery";
 type Props = { selectedRecipe: RecipeHit | Item } & ButtonProps;
 
 export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
-  const fetcher = useFetcher<Prisma.recipeCreateInput>();
+  const fetcher = useFetcher<Prisma.RecipeCreateInput>();
 
   return (
     <Button
@@ -19,7 +19,7 @@ export const AddToFavorites = ({ selectedRecipe, ...rest }: Props) => {
           {
             slug: selectedRecipe.slug,
             name: selectedRecipe.name,
-            image_path: selectedRecipe.imagePath,
+            imagePath: selectedRecipe.imagePath,
             uuid: selectedRecipe.id,
           },
 
