@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { SearchBox } from "react-instantsearch-hooks-web";
 import { ButtonToggle } from "./Buttons/ColorSchemeToggle";
 import { NextLink } from "@mantine/next";
+import Link from "next/link";
 
 type Props = {
   opened: boolean;
@@ -54,9 +55,9 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
       <Header height={70}>
         <Group style={{ height: 70 }} position="center">
           <Burger mr="sm" onClick={handleDrawer} opened={opened} size="md" />
-          <NextLink href="/">
+          <Link href="/">
             <Image alt="logo" src="/OrangeSlice2.svg" width={50} height={50} />
-          </NextLink>
+          </Link>
           <SearchBox style={{ maxWidth: 250 }} role="search" />
         </Group>
       </Header>
@@ -66,10 +67,10 @@ export const MyHeader = ({ opened, setOpened }: Props) => {
       <div className={classes.inner}>
         <Group>
           <Burger mr="sm" onClick={handleDrawer} opened={opened} size="md" />
-          <NextLink className={classes.link} href="/">
+          <Link className={classes.link} href="/">
             <Image alt="logo" src="/OrangeSlice2.svg" width={45} height={45} />
             <Title order={2}>Hellofresh Search</Title>
-          </NextLink>
+          </Link>
         </Group>
 
         <Group>

@@ -186,7 +186,6 @@ export const NavbarContent = ({
             sx={{ whiteSpace: "nowrap" }}
             label={link.label}
             icon={<link.icon width={16} />}
-            component="a"
             active={router.pathname === link.href}
           />
         </Link>
