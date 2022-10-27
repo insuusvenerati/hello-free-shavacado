@@ -18,7 +18,7 @@ export const RecipeLink = ({
   recipe,
 }: {
   favoritedRecipe: Recipe;
-  recipe: any;
+  recipe?: any;
 }) => {
   const { classes } = useStyles();
 

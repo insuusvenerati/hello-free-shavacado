@@ -13,8 +13,6 @@
     "postinstall": "prisma generate",
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_ENV=production nest build",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
     "start": "nest start",
     "dev": "cross-env NODE_ENV=development nest start --watch --preserveWatchOutput",
     "start:debug": "nest start --debug --watch",

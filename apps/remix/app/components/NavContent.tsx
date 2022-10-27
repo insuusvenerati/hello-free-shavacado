@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import { SignInButton, UserButton, useUser } from "@clerk/remix";
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/remix";
+import { dark } from "@clerk/themes";
 import {
   ArrowLeftOnRectangleIcon,
   BookmarkIcon,
@@ -9,18 +10,18 @@ import {
   PlusIcon,
 } from "@heroicons/react/24/outline";
 import type { MantineGradient, SegmentedControlItem } from "@mantine/core";
-import { Text } from "@mantine/core";
 import {
   Box,
   Button,
   createStyles,
   Navbar,
-  NavLink,
+  NavLink as MantineNavLink,
   SegmentedControl,
+  Text,
   Transition,
   useMantineColorScheme,
 } from "@mantine/core";
-import { Link } from "@remix-run/react";
+import { NavLink } from "@remix-run/react";
 import { useMemo } from "react";
 import { AddImportedRecipeForm } from "./AddImportedRecipeForm";
 import { MoonIcon } from "./Icons/MoonIcon";
@@ -95,42 +96,46 @@ const useStyles = createStyles((theme, _params, getRef) => {
   };
 });
 
-const SignInOrUserProfile = ({
-  isSignedIn,
-  dark,
-}: {
-  isSignedIn: boolean | undefined;
-  dark: boolean;
-}) => {
-  if (!isSignedIn) {
-    return (
-      <NavLink
-        sx={{ whiteSpace: "nowrap" }}
-        icon={<ArrowLeftOnRectangleIcon color={dark ? "yellow" : "black"} width={16} />}
-        label="Account"
-      >
-        <SignInButton mode="modal">
-          <Button
-            leftIcon={<ArrowLeftOnRectangleIcon width={16} />}
-            variant="gradient"
-            gradient={{ from: "indigo", to: "cyan" }}
-            fullWidth
-            mt="sm"
-          >
-            Sign In
-          </Button>
-        </SignInButton>
-      </NavLink>
-    );
-  }
+const SignInOrUserProfile = () => {
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === "dark";
   return (
-    <NavLink
-      sx={{ whiteSpace: "nowrap" }}
-      icon={<ArrowLeftOnRectangleIcon color={dark ? "yellow" : "black"} width={16} />}
-      label="Account"
-    >
-      <UserButton showName />
-    </NavLink>
+    <>
+      <SignedIn>
+        <MantineNavLink
+          sx={{ whiteSpace: "nowrap" }}
+          icon={<ArrowLeftOnRectangleIcon color={isDark ? "yellow" : "black"} width={16} />}
+          label="Account"
+        >
+          <UserButton
+            appearance={{
+              baseTheme: colorScheme === "dark" ? dark : undefined,
+            }}
+            showName
+          />
+        </MantineNavLink>
+      </SignedIn>
+
+      <SignedOut>
+        <MantineNavLink
+          sx={{ whiteSpace: "nowrap" }}
+          icon={<ArrowLeftOnRectangleIcon color={dark ? "yellow" : "black"} width={16} />}
+          label="Account"
+        >
+          <SignInButton mode="modal">
+            <Button
+              leftIcon={<ArrowLeftOnRectangleIcon width={16} />}
+              variant="gradient"
+              gradient={{ from: "indigo", to: "cyan" }}
+              fullWidth
+              mt="sm"
+            >
+              Sign In
+            </Button>
+          </SignInButton>
+        </MantineNavLink>
+      </SignedOut>
+    </>
   );
 };
 
@@ -156,7 +161,7 @@ export const NavbarContent = ({
   // const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const { isSignedIn, user } = useUser();
+  const { user } = useUser();
   const dark = colorScheme === "dark";
   const buttonGradient: MantineGradient = {
     from: dark ? "orange" : "indigo",
@@ -180,15 +185,14 @@ export const NavbarContent = ({
   const links = useMemo(
     () =>
       navLinks.map((link) => (
-        <Link key={link.href} to={link.href}>
-          <NavLink
-            sx={{ whiteSpace: "nowrap" }}
-            label={link.label}
-            icon={<link.icon width={16} />}
-            // component="a"
-            // active={useResolvedPath(link.href) === link.href}
-          />
-        </Link>
+        <MantineNavLink
+          component={NavLink}
+          to={link.href}
+          sx={{ whiteSpace: "nowrap" }}
+          label={link.label}
+          icon={<link.icon width={16} />}
+          key={link.href}
+        />
       )),
     [],
   );
@@ -224,19 +228,19 @@ export const NavbarContent = ({
             <Navbar.Section style={styles} className={classes.header}>
               <Box mt="sm">
                 {links}
-                <SignInOrUserProfile dark={dark} isSignedIn={isSignedIn} />
-                <NavLink icon={<CogIcon width={16} />} label="Settings">
+                <SignInOrUserProfile />
+                <MantineNavLink icon={<CogIcon width={16} />} label="Settings">
                   <Button
                     mt="sm"
                     leftIcon={dark ? <MoonIcon /> : <SunIcon />}
                     variant="gradient"
                     gradient={buttonGradient}
                     fullWidth
-                    onClick={() => toggleColorScheme()}
+                    onClick={() => toggleColorScheme(colorScheme === "dark" ? "light" : "dark")}
                   >
                     Theme
                   </Button>
-                </NavLink>
+                </MantineNavLink>
               </Box>
             </Navbar.Section>
 

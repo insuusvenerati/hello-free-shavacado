@@ -1,19 +1,18 @@
 import { getAuth } from "@clerk/remix/ssr.server";
-import { SegmentedControlItem, Tabs } from "@mantine/core";
-import { Grid, SegmentedControl, Title } from "@mantine/core";
-import type { LoaderArgs } from "@remix-run/node";
+import { Tabs } from "@mantine/core";
+import { LoaderArgs, redirect } from "@remix-run/node";
 import { Link, Outlet } from "@remix-run/react";
-import { useMemo, useState } from "react";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import { CreatedRecipeCard } from "~/components/RecipeCard/CreatedRecipe";
-import { ImportedRecipeCard } from "~/components/RecipeCard/ImportedRecipeCard";
-import { RecipeCard } from "~/components/RecipeCard/RecipeCard";
+import { typedjson } from "remix-typedjson";
 import { getAllCreatedRecipes } from "~/util/getAllCreatedRecipes.server";
 import { getImportedRecipes } from "~/util/getImportedRecipes.server";
 import { getRecipes } from "~/util/getRecipes.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { userId } = await getAuth(request);
+
+  if (!userId) {
+    return redirect("/login");
+  }
 
   const [createdRecipes, importedRecipes, favoriteRecipes] = await Promise.all([
     getAllCreatedRecipes(userId),
@@ -29,27 +28,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 const RecipeList = () => {
-  const { createdRecipes, importedRecipes, favoriteRecipes } = useTypedLoaderData<typeof loader>();
-  const [section, setSection] = useState<string>("imported-recipes");
-
-  const sectionControlData: SegmentedControlItem[] = useMemo(
-    () => [
-      {
-        label: "Imported Recipes",
-        value: "imported-recipes",
-      },
-      {
-        label: "Favorite Recipes",
-        value: "favorite-recipes",
-      },
-      {
-        label: "Created Recipes",
-        value: "created-recipes",
-      },
-    ],
-    [],
-  );
-
   // display all the recipes
   return (
     <>
@@ -71,7 +49,7 @@ const RecipeList = () => {
         </Tabs.List>
       </Tabs>
 
-      <Outlet context={importedRecipes} />
+      <Outlet />
 
       {/* {section === "imported-recipes" ? (
         <>

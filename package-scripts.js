@@ -29,12 +29,6 @@ module.exports = {
         build: `docker build -f docker/nginx/Dockerfile -t stiforr/hfs-proxy docker/nginx/.`,
       },
     },
-    supabase: {
-      description: "Manages the supabase backend services",
-      default: "nps supabase.start",
-      start: "cd apps && supabase start",
-      stop: "cd apps && supabase stop",
-    },
     dev: {
       description: "Starts the dev environment",
       default: "yarn dev",
