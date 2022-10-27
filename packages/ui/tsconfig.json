@@ -1,8 +1,0 @@
-{
-  "extends": "@stiforr/tsconfig/ui.json",
-  "compilerOptions": {
-    "baseUrl": "./src"
-  },
-  "include": ["**/*.tsx", "**/*.ts"],
-  "exclude": ["node_modules", "dist"]
-}
