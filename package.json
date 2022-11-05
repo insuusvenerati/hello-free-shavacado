@@ -1,43 +1,121 @@
 {
-  "name": "hello-free-shavacado",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "remix-tailwind",
   "private": true,
-  "repository": "git@github.com:insuusvenerati/hello-free-shavacado.git",
-  "author": "Sean Norwood <norwood.sean@gmail.com>",
-  "license": "MIT",
+  "sideEffects": false,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
-    "test": "yarn workspace @stiforr/frontend test --watch",
-    "lint": "turbo run lint",
-    "stop": "turbo run stop",
-    "start": "turbo run start",
-    "deploy": "turbo run deploy",
-    "nps:prepare": "nps prepare",
-    "prisma:migrate": "turbo run prisma:migrate",
-    "prisma:generate": "turbo run prisma:generate",
-    "prisma:studio": "turbo run prisma:studio",
-    "e2e:open": "cross-env NODE_ENV=test turbo run e2e:open",
-    "e2e:run": "cross-env NODE_ENV=test turbo run e2e:run",
-    "fix-mismatches": "pnpm syncpack fix-mismatches"
+    "build": "run-s build:*",
+    "build:css": "cross-env NODE_ENV=production postcss ./styles/tailwind.css -o app/styles/tailwind.css",
+    "build:remix": "cross-env NODE_ENV=production remix build",
+    "dev": "concurrently \"pnpm run dev:css\" \"pnpm run dev:remix\"",
+    "dev:css": "postcss ./styles/tailwind.css -w -o app/styles/tailwind.css",
+    "dev:remix": "cross-env NODE_ENV=development binode --require ./mocks -- @remix-run/dev:remix dev",
+    "format": "prettier --write .",
+    "prisma:generate": "prisma generate",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "algolia:seed": "dotenv -e .env ts-node other/seedAlgolia.ts",
+    "setup": "prisma generate && prisma migrate deploy && prisma db seed",
+    "start": "remix-serve build",
+    "start:mocks": "binode --require ./mocks -- @remix-run/serve:remix-serve build",
+    "test": "vitest",
+    "test:e2e:dev": "start-server-and-test dev http://localhost:3000 \"npx cypress open\"",
+    "pretest:e2e:run": "npm run build",
+    "test:e2e:run": "cross-env PORT=8811 start-server-and-test start:mocks http://localhost:8811 \"npx cypress run\"",
+    "typecheck": "tsc -b && tsc -b cypress",
+    "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
+  "eslintIgnore": [
+    "/node_modules",
+    "/build",
+    "/public/build",
+    "/recipe-data-scraper",
+    "/patches"
   ],
+  "dependencies": {
+    "@algolia/autocomplete-core": "^1.7.3",
+    "@algolia/autocomplete-js": "^1.7.3",
+    "@algolia/autocomplete-plugin-recent-searches": "^1.7.3",
+    "@algolia/autocomplete-theme-classic": "^1.7.3",
+    "@mantine/hooks": "^5.7.0",
+    "@prisma/client": "^4.5.0",
+    "@remix-run/node": "^1.7.5",
+    "@remix-run/react": "^1.7.5",
+    "@remix-run/serve": "^1.7.5",
+    "@remix-run/server-runtime": "^1.7.5",
+    "@tailwindcss/typography": "^0.5.7",
+    "algoliasearch": "4.14.2",
+    "axios": "0.27.2",
+    "bcryptjs": "^2.4.3",
+    "cheerio": "1.0.0-rc.12",
+    "daisyui": "^2.38.0",
+    "instantsearch.js": "^4.49.1",
+    "isbot": "^3.6.3",
+    "iso8601-duration": "^2.1.1",
+    "microdata-node": "^2.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-instantsearch-hooks-server": "^6.38.0",
+    "react-instantsearch-hooks-web": "^6.38.0",
+    "recipe-data-scraper": "1.4.1",
+    "remix-auth": "^3.3.0",
+    "remix-auth-form": "^1.2.0",
+    "remix-typedjson": "^0.1.4",
+    "tiny-invariant": "^1.3.1"
+  },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@remix-run/dev": "^1.7.5",
+    "@remix-run/eslint-config": "^1.7.5",
+    "@testing-library/cypress": "^8.0.3",
+    "@testing-library/dom": "^8.19.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/eslint": "^8.4.9",
+    "@types/node": "^18.11.7",
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
+    "@types/workbox-core": "^4.3.1",
+    "@vitejs/plugin-react": "^2.2.0",
+    "@vitest/coverage-c8": "^0.24.3",
+    "autoprefixer": "^10.4.13",
+    "binode": "^1.0.5",
+    "c8": "^7.12.0",
+    "concurrently": "^7.5.0",
+    "cookie": "^0.5.0",
     "cross-env": "^7.0.3",
-    "dotenv": "16.0.3",
-    "eslint": "^8.25.0",
-    "husky": "8.0.1",
-    "lint-staged": "13.0.3",
-    "nps": "5.10.0",
-    "nps-utils": "1.7.0",
+    "cypress": "^10.11.0",
+    "esbuild-register": "^3.3.3",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "happy-dom": "^7.6.6",
+    "msw": "^0.47.4",
+    "npm-run-all": "^4.1.5",
+    "patch-package": "^6.5.0",
+    "postcss": "^8.4.18",
+    "postcss-cli": "^10.0.0",
+    "postcss-lightningcss": "^0.6.0",
     "prettier": "2.7.1",
-    "rimraf": "3.0.2",
-    "turbo": "1.5.6",
-    "syncpack": "^8.2.4"
+    "prettier-plugin-tailwindcss": "^0.1.13",
+    "prisma": "^4.5.0",
+    "start-server-and-test": "^1.14.0",
+    "tailwindcss": "^3.2.1",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.0",
+    "typescript": "^4.8.4",
+    "vite": "^3.2.1",
+    "vite-tsconfig-paths": "^3.5.2",
+    "vitest": "^0.24.3"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "prisma": {
+    "seed": "ts-node --transpile-only prisma/seed.ts"
+  },
+  "volta": {
+    "node": "18.12.0"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -45,14 +123,9 @@
       "prettier --write"
     ]
   },
-  "volta": {
-    "node": "18.12.0",
-    "yarn": "1.22.19"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "syncpack": {
-    "workspace": false
+  "pnpm": {
+    "patchedDependencies": {
+      "recipe-data-scraper@1.4.1": "patches/recipe-data-scraper@1.4.1.patch"
+    }
   }
 }

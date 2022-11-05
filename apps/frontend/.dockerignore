@@ -1,9 +1,0 @@
-.next/
-.git/
-node_modules/
-.env*
-.sentryclirc
-tmp/
-.turbo/
-Dockerfile
-.dockerignore

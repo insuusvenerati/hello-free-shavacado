@@ -1,3 +1,5 @@
 {
-  "dotenv.enableAutocloaking": false
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": "file:///home/stiforr/Developer/hello-free-shavacado/.github/workflows/deploy.yml"
+  }
 }

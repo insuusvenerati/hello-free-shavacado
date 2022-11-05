@@ -1,8 +1,7 @@
-**/node_modules/
-.git/
-**/.env*
-docker-compose.yml
-.env*
-.flaskenv*
-!.env.project
-!.env.vault
+/node_modules
+*.log
+.DS_Store
+.env
+/.cache
+/public/build
+/build
