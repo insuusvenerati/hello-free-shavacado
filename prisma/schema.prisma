@@ -1,0 +1,202 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["extendedWhereUnique"]
+}
+
+model User {
+  id              String           @id @default(cuid())
+  email           String           @unique
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  imageUrl        String?
+  password        Password?
+  favoriteRecipes FavoriteRecipe[]
+  ImportedRecipe  ImportedRecipe[]
+}
+
+model Password {
+  hash   String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+}
+
+model FavoriteRecipe {
+  id       String @id @default(cuid())
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  recipeId String @unique
+}
+
+model ImportedRecipeCategory {
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  name             String         @unique
+  ImportedRecipe   ImportedRecipe @relation(fields: [importedRecipeId], references: [id])
+  importedRecipeId String
+
+  @@id([importedRecipeId, name])
+}
+
+model ImportedRecipeCuisine {
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  name             String         @unique
+  ImportedRecipe   ImportedRecipe @relation(fields: [importedRecipeId], references: [id])
+  importedRecipeId String
+
+  @@id([importedRecipeId, name])
+}
+
+model ImportedRecipeIngredient {
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  name             String         @unique
+  ImportedRecipe   ImportedRecipe @relation(fields: [importedRecipeId], references: [id])
+  importedRecipeId String
+
+  @@id([importedRecipeId, name])
+}
+
+model ImportedRecipeStep {
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  index            Int
+  caption          String         @unique
+  ImportedRecipe   ImportedRecipe @relation(fields: [importedRecipeId], references: [id])
+  importedRecipeId String
+
+  @@id([importedRecipeId, caption])
+}
+
+model ImportedRecipeKeyword {
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  name             String         @unique
+  ImportedRecipe   ImportedRecipe @relation(fields: [importedRecipeId], references: [id])
+  importedRecipeId String
+
+  @@id([importedRecipeId, name])
+}
+
+model ImportedRecipe {
+  id                      String                     @id @default(cuid())
+  createdAt               DateTime                   @default(now())
+  updatedAt               DateTime                   @updatedAt
+  name                    String
+  image                   String?
+  description             String
+  cookTime                String
+  prepTime                String
+  totalTime               String?
+  recipeCategories        ImportedRecipeCategory[]
+  recipeCuisines          ImportedRecipeCuisine[]
+  recipeIngredients       ImportedRecipeIngredient[]
+  recipeInstructions      ImportedRecipeStep[]
+  keywords                ImportedRecipeKeyword[]
+  recipeYield             String
+  cookTimeOriginalFormat  String?
+  prepTimeOriginalFormat  String?
+  totalTimeOriginalFormat String?
+  url                     String                     @unique
+  user                    User                       @relation(fields: [userId], references: [id])
+  userId                  String
+}
+
+model Recipe {
+  id             String           @id @default(cuid())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  name           String
+  description    String
+  difficulty     Int
+  seoDescription String?
+  imagePath      String
+  ratingsCount   Int?
+  averageRating  Float?
+  favoritesCount Int?
+  totalTime      String?
+  prepTime       String?
+  cookTime       String?
+  slug           String
+  allergens      Allergen[]
+  ingredients    Ingredient[]
+  nutrition      String
+  tags           Tag[]
+  steps          Step[]
+  category       Category?        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  cuisines       Cuisine[]
+  categoryId     String?
+  favoriteRecipe FavoriteRecipe[]
+}
+
+model Ingredient {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String   @unique
+  Recipe       Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId     String
+  Step         Step?    @relation(fields: [stepRecipeId, stepIndex], references: [recipeId, index])
+  stepRecipeId String?
+  stepIndex    Int?
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+  Recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId  String
+}
+
+model Step {
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  caption              String?
+  index                Int
+  image                String?
+  instructions         String
+  instructionsHTML     String?
+  instructionsMarkdown String?
+  ingredients          Ingredient[]
+  Recipe               Recipe       @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId             String
+
+  @@id(fields: [recipeId, index])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  iconPath  String?
+  Recipe    Recipe[]
+}
+
+model Cuisine {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  iconPath  String?
+  Recipe    Recipe?  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId  String?
+}
+
+model Allergen {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  iconPath  String?
+  Recipe    Recipe?  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId  String?
+}

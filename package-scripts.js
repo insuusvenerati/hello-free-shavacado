@@ -11,9 +11,8 @@ module.exports = {
     prepare: {
       description: "This sets up the project folder with dependencies and services",
       default: series.nps("prepare.frontend", "prepare.backend"),
-      frontend: "yarn install",
+      frontend: "pnpm install",
       backend: "docker-compose -f apps/backend/docker-compose.yml up -d",
-      supabase: "nps supabase.start",
     },
     docker: {
       description: "Manages docker related backend services",
@@ -30,12 +29,6 @@ module.exports = {
         build: `docker build -f docker/nginx/Dockerfile -t stiforr/hfs-proxy docker/nginx/.`,
       },
     },
-    supabase: {
-      description: "Manages the supabase backend services",
-      default: "nps supabase.start",
-      start: "cd apps && supabase start",
-      stop: "cd apps && supabase stop",
-    },
     dev: {
       description: "Starts the dev environment",
       default: "yarn dev",
@@ -47,8 +40,9 @@ module.exports = {
     clean: {
       description: "Remove dev and build outputs from all projects",
       default: series.nps("clean.buildArtifacts", "clean.nodeModules"),
-      buildArtifacts: "rimraf apps/frontend/.next apps/backend/dist",
-      nodeModules: "rimraf node_modules apps/frontend/node_modules apps/backend/node_modules",
+      buildArtifacts: "rimraf apps/frontend/.next apps/backend/dist apps/remix/build ",
+      nodeModules:
+        "rimraf node_modules apps/frontend/node_modules apps/backend/node_modules apps/remix/node_modules apps/strapi/node_modules",
     },
   },
 };
