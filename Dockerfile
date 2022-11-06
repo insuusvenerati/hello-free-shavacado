@@ -1,11 +1,11 @@
 # base node image
-FROM node:18-bullseye-slim as base
+FROM node:18.12.0-alpine3.16 as base
 
 # set for base and all layer that inherit from it
 ENV NODE_ENV production
 
 # Install openssl for Prisma
-RUN apt-get update && apt-get install -y openssl sqlite3
+RUN apk add --no-cache openssl sqlite
 
 # Install all node_modules, including dev dependencies
 FROM base as deps

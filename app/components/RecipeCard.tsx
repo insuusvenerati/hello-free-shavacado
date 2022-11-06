@@ -11,11 +11,11 @@ type Props = {
     | (Recipe & {
         tags: Tag[];
       });
-};
+} & React.HTMLAttributes<HTMLDivElement>;
 
-export const RecipeCard = ({ recipe }: Props) => {
+export const RecipeCard = ({ recipe, ...props }: Props) => {
   return (
-    <div className="card-compact card h-auto w-auto bg-zinc-800 shadow-lg">
+    <div className="card-compact card h-auto w-auto bg-zinc-800 shadow-lg" {...props}>
       <Link to={`/recipes/${recipe.id}`}>
         <figure className="cursor-pointer rounded-t-xl">
           <img

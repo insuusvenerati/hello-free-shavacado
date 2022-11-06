@@ -1,14 +1,12 @@
 /* global workbox importScripts */
 
 const CACHE = "pwabuilder-offline-page";
-const PRECACHE_ASSETS = ["/icons/", "/splash_screens/", "/build/"];
+const PRECACHE_ASSETS = ["/icons/", "/splash_screens/", "/build/", "/public/build/"];
 
-importScripts(
-  "https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js"
-);
+importScripts("https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js");
 
 // TODO: replace the following with the correct offline fallback page i.e.: const offlineFallbackPage = "offline.html";
-const offlineFallbackPage = "oops.html";
+const offlineFallbackPage = "/oops.html";
 
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
@@ -32,7 +30,7 @@ workbox.routing.registerRoute(
   new RegExp("/*"),
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: CACHE,
-  })
+  }),
 );
 
 self.addEventListener("fetch", (event) => {
@@ -53,7 +51,7 @@ self.addEventListener("fetch", (event) => {
           const cachedResp = await cache.match(offlineFallbackPage);
           return cachedResp;
         }
-      })()
+      })(),
     );
   }
 });

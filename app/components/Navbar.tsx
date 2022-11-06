@@ -27,10 +27,7 @@ export const Navbar = () => {
           <div className="dropdown-end dropdown">
             <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
               <div className="w-10 rounded-full">
-                <img
-                  alt="placeholder"
-                  src="https://placeimg.com/80/80/people"
-                />
+                <img alt="placeholder" src="https://placeimg.com/80/80/people" />
               </div>
             </label>
             <ul
@@ -38,22 +35,16 @@ export const Navbar = () => {
               className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
             >
               <li>
-                <Link to="/recipes">Recipes</Link>
+                <Link to="/favorites">Favorites</Link>
               </li>
               <li>
-                <Link to="/recipes/imported" className="justify-between">
-                  Imported
-                </Link>
+                <Link to="/imported">Imported</Link>
               </li>
-              <li>
+              {/* <li>
                 <a>Settings</a>
-              </li>
+              </li> */}
               <li>
-                <span
-                  onClick={() =>
-                    fetcher.submit({}, { method: "post", action: "/logout" })
-                  }
-                >
+                <span onClick={() => fetcher.submit({}, { method: "post", action: "/logout" })}>
                   Logout
                 </span>
               </li>

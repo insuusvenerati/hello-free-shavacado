@@ -1,13 +1,14 @@
-import type { FavoriteRecipe } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { Response } from "@remix-run/node";
-import { useFetcher, useMatches } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import type { ActionArgs } from "@remix-run/server-runtime";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
 import { TrashIcon } from "~/components/TrashIcon";
 import { prisma } from "~/db.server";
 import { requireUser } from "~/session.server";
+import type { FavoritesWithRecipeAndId } from "~/types/favorites";
+import { useMatchesData } from "~/utils";
 
 export const action = async ({ request }: ActionArgs) => {
   const user = await requireUser(request);
@@ -51,19 +52,21 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export const AddToFavoritesButton = ({ id }: { id: string }) => {
-  const favorites = useMatches().find((match) => match.pathname === "/recipes")?.data as
-    | FavoriteRecipe[]
-    | undefined;
+  const favorites = useMatchesData<{ favoriteRecipes: FavoritesWithRecipeAndId }>(
+    "root",
+  )?.favoriteRecipes;
 
   const isFavorite =
-    typeof favorites !== "undefined" && favorites.some((favorite) => favorite.recipeId === id);
+    typeof favorites !== "undefined" &&
+    favorites.length > 0 &&
+    favorites.some((favorite) => favorite.recipe.id === id);
 
   const addToFavorites = useFetcher<typeof action>();
   const loading = addToFavorites.state !== "idle";
   const isError = typeof addToFavorites.data !== "undefined" && "statusText" in addToFavorites.data;
   const isSuccess = typeof addToFavorites.data !== "undefined" && !isError;
   const buttonText = useMemo(() => {
-    if (isSuccess || isFavorite) return "Added to favorites";
+    if (isSuccess || isFavorite) return "Added";
     if (isError) return "Error adding to favorites";
     return "Add to favorites";
   }, [isError, isFavorite, isSuccess]);
@@ -75,7 +78,7 @@ export const AddToFavoritesButton = ({ id }: { id: string }) => {
         onClick={() =>
           addToFavorites.submit({ query: id }, { method: "post", action: "/recipes/favorite" })
         }
-        className={`btn btn-primary btn-sm ${isFavorite ? "btn-success" : ""}  ${
+        className={`btn btn-primary w-full btn-sm ${isFavorite ? "btn-success" : ""}  ${
           loading ? "loading" : ""
         } ${isError ? "btn-error" : ""}`}
       >

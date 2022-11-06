@@ -12,20 +12,19 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useCatch,
   useLoaderData,
 } from "@remix-run/react";
 import { renderToString } from "react-dom/server";
-
+import styles from "@algolia/autocomplete-theme-classic/dist/theme.css";
+import type { CatchBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
 import { getServerState } from "react-instantsearch-hooks-server";
-import {
-  InstantSearch,
-  InstantSearchSSRProvider,
-} from "react-instantsearch-hooks-web";
+import { InstantSearch, InstantSearchSSRProvider } from "react-instantsearch-hooks-web";
 import { Layout } from "./components/Layout";
+import { prisma } from "./db.server";
 import { searchClient } from "./models/search";
 import { getUser } from "./session.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import styles from "@algolia/autocomplete-theme-classic/dist/theme.css";
 
 const SplashScreens = () => (
   <>
@@ -178,15 +177,30 @@ export const meta: MetaFunction = () => ({
 
 export async function loader({ request }: LoaderArgs) {
   const serverUrl = request.url;
-  const serverState = await getServerState(
-    <SearchProvider serverUrl={serverUrl} />,
-    {
+  const user = await getUser(request);
+
+  const [favoriteRecipes, serverState] = await Promise.all([
+    prisma.favoriteRecipe.findMany({
+      where: {
+        userId: user?.id ? user.id : "0", //stupid hack to prevent infinite redirects when using requireUser
+      },
+      select: {
+        id: true,
+        recipe: {
+          include: {
+            tags: true,
+          },
+        },
+      },
+    }),
+    getServerState(<SearchProvider serverUrl={serverUrl} />, {
       renderToString,
-    }
-  );
+    }),
+  ]);
 
   return json({
-    user: await getUser(request),
+    favoriteRecipes,
+    user,
     serverState,
     serverUrl,
   });
@@ -216,43 +230,20 @@ export default function App() {
     <html className="h-screen" lang="en">
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <link
-          href="/android-chrome-192x192.png"
-          rel="apple-touch-icon"
-          sizes="192x192"
-        />
-        <link
-          href="/favicon-32x32.png"
-          rel="icon"
-          sizes="32x32"
-          type="image/png"
-        />
-        <link
-          href="/favicon-16x16.png"
-          rel="icon"
-          sizes="16x16"
-          type="image/png"
-        />
-        <meta
-          property="og:url"
-          content="https://hello-free-shavacado-new.fly.dev/"
-        />
+        <link href="/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />
+        <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+        <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+        <meta property="og:url" content="https://hello-free-shavacado-new.fly.dev/" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="logo.jpg" />
+        <meta property="og:image" content="/logo.jpg" />
         <meta property="og:title" content="Hello Free Shavacado" />
         <meta property="og:description" content="Delicious!" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          property="twitter:domain"
-          content="hello-free-shavacado-new.fly.dev"
-        />
-        <meta
-          property="twitter:url"
-          content="https://hello-free-shavacado-new.fly.dev/"
-        />
+        <meta property="twitter:domain" content="hello-free-shavacado-new.fly.dev" />
+        <meta property="twitter:url" content="https://hello-free-shavacado-new.fly.dev/" />
         <meta name="twitter:title" content="Hello Free Shavacado" />
         <meta name="twitter:description" content="Delicious!" />
-        <meta name="twitter:image" content="logo.jpg"></meta>
+        <meta name="twitter:image" content="/logo.jpg"></meta>
         <link href="/site.webmanifest" rel="manifest" />
         <link href="/safari-pinned-tab.svg" rel="mask-icon" />
         <meta content="#da532c" name="msapplication-TileColor" />
@@ -286,6 +277,24 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
       </head>
       <body>
         {/* add the UI you want your users to see */}
+        <Scripts />
+      </body>
+    </html>
+  );
+};
+
+export const CatchBoundary: CatchBoundaryComponent = () => {
+  const caught = useCatch();
+  console.log(caught);
+  return (
+    <html>
+      <head>
+        <title>Oh no!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        {caught.statusText}
         <Scripts />
       </body>
     </html>

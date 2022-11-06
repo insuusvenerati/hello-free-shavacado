@@ -1,4 +1,4 @@
-import { Form, useCatch } from "@remix-run/react";
+import { Form, useCatch, useTransition } from "@remix-run/react";
 import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime";
 import recipeDataScraper from "recipe-data-scraper";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
@@ -82,6 +82,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 const ImportedRecipesPage = () => {
   const recipes = useTypedLoaderData<typeof loader>();
+  const transition = useTransition();
 
   return (
     <>
@@ -89,17 +90,30 @@ const ImportedRecipesPage = () => {
         <h1 className="mb-10 text-center text-5xl">Imported Recipes</h1>
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
           <Form
-            className="col-span-3 grid w-full max-w-lg justify-self-center"
+            className="col-span-3 grid w-full max-w-lg justify-self-center form-control"
             method="post"
-            action="/recipes/imported"
+            action="/imported"
           >
-            <label htmlFor="url">Import Recipe</label>
-            <input
-              placeholder="https://allrecipes.com/recipe/12345"
-              type="text"
-              className="input w-full max-w-lg"
-              name="url"
-            />
+            <label className="label" htmlFor="url">
+              <span className="label-text">Import recipe</span>
+            </label>
+            <label className="input-group">
+              <input
+                placeholder="https://allrecipes.com/recipe/12345"
+                type="text"
+                className="input w-full max-w-lg"
+                name="url"
+                disabled={transition.state !== "idle"}
+              />
+              {transition.state !== "idle" && (
+                <span>
+                  <div
+                    className="animate-spin block w-8 h-8 border-4 border-t-blue-300 rounded-full"
+                    role="status"
+                  />
+                </span>
+              )}
+            </label>
           </Form>
           {recipes.map((recipe) => (
             <ImportedRecipeCard key={recipe.id} recipe={recipe} />
@@ -115,7 +129,7 @@ export const CatchBoundary = () => {
   const caught = useCatch();
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto min-h-screen">
       <h1>Oh no</h1>
       <pre>{JSON.stringify(caught, null, 2)}</pre>
     </div>
