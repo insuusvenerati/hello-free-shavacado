@@ -33,7 +33,7 @@ jobs:
           cache: "pnpm"
 
       - name: 📥 Download deps
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: 🔬 Lint
         run: pnpm run lint
@@ -60,7 +60,7 @@ jobs:
           cache: "pnpm"
 
       - name: 📥 Download deps
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: 🔎 Type check
         run: pnpm run typecheck
@@ -87,7 +87,7 @@ jobs:
           cache: "pnpm"
 
       - name: 📥 Download deps
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: ⚡ Run vitest
         run: pnpm run test -- --coverage
@@ -121,7 +121,7 @@ jobs:
           cache: "pnpm"
 
       - name: 📥 Download deps
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: 🛠 Setup Database
         run: pnpx prisma migrate reset --force
