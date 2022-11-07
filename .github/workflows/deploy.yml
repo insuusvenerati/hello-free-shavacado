@@ -145,6 +145,8 @@ jobs:
           browser: ${{ matrix.browsers }}
         env:
           PORT: "8811"
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/upload-artifact@v2
         if: failure()
