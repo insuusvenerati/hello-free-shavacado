@@ -78,7 +78,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         </div>
         {isHome && (
           <div className="drawer-side mt-20">
-            <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
+            {/* <label htmlFor="my-drawer-2" className="drawer-overlay"></label> */}
             <div className="grid w-80 auto-rows-max gap-10 p-10">
               <Form method="post" action="/recipes/imported">
                 <label htmlFor="url">Import Recipe</label>
@@ -102,12 +102,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
                 attribute="ingredients.name"
                 operator="and"
               />
-              <RefinementList
-                showMoreLimit={50}
-                showMore
-                attribute="tags.name"
-                operator="and"
-              />
+              <RefinementList showMoreLimit={50} showMore attribute="tags.name" operator="and" />
             </div>
           </div>
         )}

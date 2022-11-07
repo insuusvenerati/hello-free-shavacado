@@ -21,24 +21,15 @@ export async function action({ request }: ActionArgs) {
   const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
 
   if (!validateEmail(email)) {
-    return json(
-      { errors: { email: "Email is invalid", password: null } },
-      { status: 400 }
-    );
+    return json({ errors: { email: "Email is invalid", password: null } }, { status: 400 });
   }
 
   if (typeof password !== "string" || password.length === 0) {
-    return json(
-      { errors: { email: null, password: "Password is required" } },
-      { status: 400 }
-    );
+    return json({ errors: { email: null, password: "Password is required" } }, { status: 400 });
   }
 
   if (password.length < 8) {
-    return json(
-      { errors: { email: null, password: "Password is too short" } },
-      { status: 400 }
-    );
+    return json({ errors: { email: null, password: "Password is too short" } }, { status: 400 });
   }
 
   const existingUser = await getUserByEmail(email);
@@ -50,7 +41,7 @@ export async function action({ request }: ActionArgs) {
           password: null,
         },
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -98,7 +89,6 @@ export default function Join() {
                 ref={emailRef}
                 id="email"
                 required
-                autoFocus={true}
                 name="email"
                 type="email"
                 autoComplete="email"

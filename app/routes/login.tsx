@@ -21,24 +21,15 @@ export async function action({ request }: ActionArgs) {
   const remember = formData.get("remember");
 
   if (!validateEmail(email)) {
-    return json(
-      { errors: { email: "Email is invalid", password: null } },
-      { status: 400 }
-    );
+    return json({ errors: { email: "Email is invalid", password: null } }, { status: 400 });
   }
 
   if (typeof password !== "string" || password.length === 0) {
-    return json(
-      { errors: { email: null, password: "Password is required" } },
-      { status: 400 }
-    );
+    return json({ errors: { email: null, password: "Password is required" } }, { status: 400 });
   }
 
   if (password.length < 8) {
-    return json(
-      { errors: { email: null, password: "Password is too short" } },
-      { status: 400 }
-    );
+    return json({ errors: { email: null, password: "Password is too short" } }, { status: 400 });
   }
 
   const user = await verifyLogin(email, password);
@@ -46,7 +37,7 @@ export async function action({ request }: ActionArgs) {
   if (!user) {
     return json(
       { errors: { email: "Invalid email or password", password: null } },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -92,7 +83,6 @@ export default function LoginPage() {
                 ref={emailRef}
                 id="email"
                 required
-                autoFocus={true}
                 name="email"
                 type="email"
                 autoComplete="email"
@@ -132,10 +122,7 @@ export default function LoginPage() {
           </div>
 
           <input type="hidden" name="redirectTo" value={redirectTo} />
-          <button
-            type="submit"
-            className="btn-primary btn w-full rounded py-2 px-4"
-          >
+          <button type="submit" className="btn-primary btn w-full rounded py-2 px-4">
             Log in
           </button>
           <div className="flex items-center justify-between">
