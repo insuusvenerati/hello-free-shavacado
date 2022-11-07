@@ -121,7 +121,9 @@ jobs:
           cache: "pnpm"
 
       - name: 📥 Download deps
-        run: pnpm install --frozen-lockfile
+        run: |
+          pnpx cypress install
+          pnpm install --frozen-lockfile
 
       - name: 🖥 Cache cypress binary
         uses: actions/cache@v3
@@ -138,9 +140,7 @@ jobs:
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v4
         with:
-          start: |
-            pnpx cypress install
-            pnpm run start:mocks
+          start: pnpm run start:mocks
           wait-on: "http://localhost:8811"
           browser: ${{ matrix.browsers }}
         env:
