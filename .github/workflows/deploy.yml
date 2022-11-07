@@ -155,6 +155,12 @@ jobs:
           name: cypress-screenshots-${{ matrix.browsers }}
           path: cypress/screenshots
 
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
+
   build:
     name: 🐳 Build
     # only build/deploy main branch on pushes
