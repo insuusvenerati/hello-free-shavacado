@@ -123,6 +123,8 @@ jobs:
       - name: 🛠 Setup Database
         run: |
           npx prisma migrate dev
+          ls -la
+          ls -la prisma
           npx prisma migrate reset --force
 
       - name: ⚙️ Build
