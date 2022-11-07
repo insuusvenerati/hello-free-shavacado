@@ -24,15 +24,17 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
+          install-command: pnpm install
+          node-version: 18
 
       - name: 🔬 Lint
-        run: npm run lint
+        run: pnpm run lint
 
   typecheck:
     name: ʦ TypeScript
@@ -47,15 +49,17 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
+          install-command: pnpm install
+          node-version: 18
 
       - name: 🔎 Type check
-        run: npm run typecheck --if-present
+        run: pnpm run typecheck --if-present
 
   vitest:
     name: ⚡ Vitest
@@ -70,19 +74,22 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
+          install-command: pnpm install
+          node-version: 18
 
       - name: ⚡ Run vitest
-        run: npm run test -- --coverage
+        run: pnpm run test -- --coverage
 
   cypress:
     name: ⚫️ Cypress
     runs-on: ubuntu-latest
+    container: node18.12.0-chrome106-ff106
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -96,23 +103,25 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
+          install-command: pnpm install
+          node-version: 18
 
       - name: 🛠 Setup Database
         run: npx prisma migrate reset --force
 
       - name: ⚙️ Build
-        run: npm run build
+        run: pnpm run build
 
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v4
         with:
-          start: npm run start:mocks
+          start: pnpm run start:mocks
           wait-on: "http://localhost:8811"
         env:
           PORT: "8811"
