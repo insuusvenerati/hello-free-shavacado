@@ -123,6 +123,12 @@ jobs:
       - name: 📥 Download deps
         run: pnpm install --frozen-lockfile
 
+      - name: 🖥 Cache cypress binary
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ matrix.browsers }}
+
       - name: 🛠 Setup Database
         run: pnpx prisma migrate reset --force
 
