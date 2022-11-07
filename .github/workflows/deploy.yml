@@ -95,10 +95,10 @@ jobs:
   cypress:
     name: ⚫️ Cypress
     runs-on: ubuntu-latest
-    container: cypress/browsers:node18.12.0-chrome106-ff106
+    # container: cypress/browsers:node18.12.0-chrome106-ff106
     steps:
-      # - name: 🛑 Cancel Previous Runs
-      #   uses: styfle/cancel-workflow-action@0.11.0
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -122,10 +122,10 @@ jobs:
 
       - name: 🛠 Setup Database
         run: |
-          npx prisma migrate dev
+          pnpx prisma migrate dev
           ls -la
           ls -la prisma
-          npx prisma migrate reset --force
+          pnpx prisma migrate reset --force
 
       - name: ⚙️ Build
         run: pnpm run build
