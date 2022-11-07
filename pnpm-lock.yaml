@@ -39,7 +39,7 @@ importers:
       '@vitest/coverage-c8': ^0.24.3
       algoliasearch: 4.14.2
       autoprefixer: ^10.4.13
-      axios: 0.27.2
+      axios: 1.1.3
       bcryptjs: ^2.4.3
       binode: ^1.0.5
       c8: ^7.12.0
@@ -48,7 +48,7 @@ importers:
       cookie: ^0.5.0
       cross-env: ^7.0.3
       cypress: ^10.11.0
-      daisyui: ^2.38.0
+      daisyui: ^2.38.1
       esbuild-register: ^3.3.3
       eslint: ^8.26.0
       eslint-config-prettier: ^8.5.0
@@ -98,10 +98,10 @@ importers:
       '@remix-run/server-runtime': 1.7.5_biqbaboplfbrettd7655fr4n2y
       '@tailwindcss/typography': 0.5.7_tailwindcss@3.2.1
       algoliasearch: 4.14.2
-      axios: 0.27.2
+      axios: 1.1.3
       bcryptjs: 2.4.3
       cheerio: 1.0.0-rc.12
-      daisyui: 2.38.0_axqeqcuz5amcmkns6zo6im645q
+      daisyui: 2.38.1_axqeqcuz5amcmkns6zo6im645q
       instantsearch.js: 4.49.1_algoliasearch@4.14.2
       isbot: 3.6.3
       iso8601-duration: 2.1.1
@@ -7540,6 +7540,16 @@ packages:
       - debug
     dev: false
 
+  /axios/1.1.3:
+    resolution: {integrity: sha512-00tXVRwKx/FZr/IDVFt4C+f9FYairX517WoGCL6dpOntqLkZofjhu43F/Xl44UOpqa+9sLFDrG/XAnFsUYgkDA==}
+    dependencies:
+      follow-redirects: 1.15.2
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /axobject-query/2.2.0:
     resolution: {integrity: sha512-Td525n+iPOOyUQIeBfcASuG6uJsDOITl7Mds5gFyerkWiX7qhUTdYUBlSgNMyVqtSJqwpt1kXGLdUt6SykLMRA==}
     dev: true
@@ -8885,6 +8895,22 @@ packages:
 
   /daisyui/2.38.0_axqeqcuz5amcmkns6zo6im645q:
     resolution: {integrity: sha512-/AIT/XrNY8QLpXnoEXU7aFv5NRU7R3NSpg13ujs+hkTlDlR8pkjsGMqTRKvMf7orCX9833VLFAFJw+CH4EORvA==}
+    peerDependencies:
+      autoprefixer: ^10.0.2
+      postcss: ^8.1.6
+    dependencies:
+      autoprefixer: 10.4.13_postcss@8.4.18
+      color: 4.2.3
+      css-selector-tokenizer: 0.8.0
+      postcss: 8.4.18
+      postcss-js: 4.0.0_postcss@8.4.18
+      tailwindcss: 3.2.1_neo3lunb2qpadwxplzw7r2isgm
+    transitivePeerDependencies:
+      - ts-node
+    dev: false
+
+  /daisyui/2.38.1_axqeqcuz5amcmkns6zo6im645q:
+    resolution: {integrity: sha512-fHAVi+bT3H9QCNM7LNEH1EMPT0IwqufuW2RNhTJZorX3TftB1bWW437BVmSt70AZH72Xvp0mVxwVS3ChSKSj0w==}
     peerDependencies:
       autoprefixer: ^10.0.2
       postcss: ^8.1.6
