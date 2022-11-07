@@ -25,28 +25,39 @@ export const Navbar = () => {
       <div className="navbar-end w-full">
         {matchesData?.user ? (
           <div className="dropdown-end dropdown">
-            <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
-              <div className="w-10 rounded-full">
-                <img alt="placeholder" src="https://placeimg.com/80/80/people" />
-              </div>
-            </label>
+            <button className="btn-ghost btn-circle avatar btn">
+              <img
+                className="w-10 rounded-full"
+                alt="placeholder"
+                src="https://placeimg.com/80/80/people"
+              />
+            </button>
             <ul
-              tabIndex={0}
+              role="menu"
+              id="menu"
               className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
             >
               <li>
-                <Link to="/favorites">Favorites</Link>
+                <Link role="menuitem" to="/favorites">
+                  Favorites
+                </Link>
               </li>
               <li>
-                <Link to="/imported">Imported</Link>
+                <Link role="menuitem" to="/imported">
+                  Imported
+                </Link>
               </li>
               {/* <li>
                 <a>Settings</a>
               </li> */}
               <li>
-                <span onClick={() => fetcher.submit({}, { method: "post", action: "/logout" })}>
+                <Link
+                  role="menuitem"
+                  onClick={() => fetcher.submit({}, { method: "post", action: "/logout" })}
+                  to="/logout"
+                >
                   Logout
-                </span>
+                </Link>
               </li>
             </ul>
           </div>

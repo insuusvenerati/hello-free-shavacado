@@ -182,7 +182,11 @@ export async function loader({ request }: LoaderArgs) {
   const [favoriteRecipes, serverState] = await Promise.all([
     prisma.favoriteRecipe.findMany({
       where: {
-        userId: user?.id ? user.id : "0", //stupid hack to prevent infinite redirects when using requireUser
+        user: {
+          some: {
+            id: user?.id,
+          },
+        },
       },
       select: {
         id: true,
@@ -269,7 +273,7 @@ export default function App() {
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   console.error(error);
   return (
-    <html>
+    <html lang="en">
       <head>
         <title>Oh no!</title>
         <Meta />
@@ -287,7 +291,7 @@ export const CatchBoundary: CatchBoundaryComponent = () => {
   const caught = useCatch();
   console.log(caught);
   return (
-    <html>
+    <html lang="en">
       <head>
         <title>Oh no!</title>
         <Meta />

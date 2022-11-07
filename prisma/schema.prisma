@@ -28,8 +28,7 @@ model Password {
 model FavoriteRecipe {
   id       String @id @default(cuid())
   recipe   Recipe @relation(fields: [recipeId], references: [id])
-  user     User   @relation(fields: [userId], references: [id])
-  userId   String
+  user     User[]
   recipeId String @unique
 }
 

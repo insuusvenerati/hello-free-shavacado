@@ -20,7 +20,11 @@ export const action = async ({ request }: ActionArgs) => {
   invariant(query, "Query is required");
   const results = await prisma.favoriteRecipe.findMany({
     where: {
-      AND: [{ userId: user.id }, { recipe: { name: { contains: query as string } } }],
+      AND: [
+        { user: { some: { id: user.id } } },
+        { recipe: { name: { contains: query as string } } },
+      ],
+      OR: [{ recipe: { description: { contains: query as string } } }],
     },
     select: {
       id: true,

@@ -9,69 +9,91 @@ import { requireUser } from "~/session.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request);
-  return await prisma.importedRecipe.findMany({
+  const recipes = await prisma.importedRecipe.findMany({
     where: {
       userId: user.id,
     },
+    include: {
+      recipeCategories: true,
+      recipeCuisines: true,
+      recipeIngredients: true,
+      recipeInstructions: true,
+      keywords: true,
+    },
   });
+  return typedjson(recipes);
 };
 
 export const action = async ({ request }: ActionArgs) => {
   const user = await requireUser(request);
   const formData = await request.formData();
   const url = formData.get("url");
-  invariant(typeof url === "string", "Missing url");
+  const intent = formData.get("intent");
+  const recipeId = formData.get("recipeId");
+
   try {
+    if (intent === "delete") {
+      invariant(typeof recipeId === "string", "Missing recipeId");
+      return typedjson(
+        await prisma.importedRecipe.delete({
+          where: {
+            id: recipeId,
+          },
+        }),
+      );
+    }
+    invariant(typeof url === "string", "Missing url");
     const recipe = await recipeDataScraper(url);
-    const importedRecipe = await prisma.importedRecipe.create({
-      data: {
-        ...recipe,
-        keywords: {
-          connectOrCreate: recipe.keywords.map((keyword) => ({
-            where: { name: keyword },
-            create: {
-              name: keyword,
+    return typedjson(
+      await prisma.importedRecipe.create({
+        data: {
+          ...recipe,
+          keywords: {
+            connectOrCreate: recipe.keywords.map((keyword) => ({
+              where: { name: keyword },
+              create: {
+                name: keyword,
+              },
+            })),
+          },
+          recipeInstructions: {
+            create: recipe.recipeInstructions.map((instruction, index) => ({
+              caption: instruction,
+              index: index,
+            })),
+          },
+          recipeIngredients: {
+            connectOrCreate: recipe.recipeIngredients.map((ingredient) => ({
+              where: { name: ingredient },
+              create: {
+                name: ingredient,
+              },
+            })),
+          },
+          recipeCuisines: {
+            connectOrCreate: recipe.recipeCuisines.map((cuisine) => ({
+              where: { name: cuisine },
+              create: {
+                name: cuisine,
+              },
+            })),
+          },
+          recipeCategories: {
+            connectOrCreate: recipe.recipeCategories.map((category) => ({
+              where: { name: category },
+              create: {
+                name: category,
+              },
+            })),
+          },
+          user: {
+            connect: {
+              id: user.id,
             },
-          })),
-        },
-        recipeInstructions: {
-          create: recipe.recipeInstructions.map((instruction, index) => ({
-            caption: instruction,
-            index: index,
-          })),
-        },
-        recipeIngredients: {
-          connectOrCreate: recipe.recipeIngredients.map((ingredient) => ({
-            where: { name: ingredient },
-            create: {
-              name: ingredient,
-            },
-          })),
-        },
-        recipeCuisines: {
-          connectOrCreate: recipe.recipeCuisines.map((cuisine) => ({
-            where: { name: cuisine },
-            create: {
-              name: cuisine,
-            },
-          })),
-        },
-        recipeCategories: {
-          connectOrCreate: recipe.recipeCategories.map((category) => ({
-            where: { name: category },
-            create: {
-              name: category,
-            },
-          })),
-        },
-        user: {
-          connect: {
-            id: user.id,
           },
         },
-      },
-    });
-    return typedjson(importedRecipe);
+      }),
+    );
   } catch (error) {
     if (error instanceof Error) {
       throw new Response(error.message, { status: 400 });
@@ -129,7 +151,7 @@ export const CatchBoundary = () => {
   const caught = useCatch();
 
   return (
-    <div className="container mx-auto min-h-screen">
+    <div className="container mx-auto max-w-2xl min-h-screen">
       <h1>Oh no</h1>
       <pre>{JSON.stringify(caught, null, 2)}</pre>
     </div>

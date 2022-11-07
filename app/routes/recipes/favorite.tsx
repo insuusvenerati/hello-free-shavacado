@@ -22,15 +22,21 @@ export const action = async ({ request }: ActionArgs) => {
       return await prisma.favoriteRecipe.delete({
         where: {
           recipeId: id,
-          userId: user.id,
         },
       });
     }
-    return await prisma.favoriteRecipe.create({
-      include: {
-        recipe: true,
+    return await prisma.favoriteRecipe.upsert({
+      where: {
+        recipeId: id,
       },
-      data: {
+      update: {
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+      create: {
         user: {
           connect: {
             id: user.id,
@@ -51,6 +57,9 @@ export const action = async ({ request }: ActionArgs) => {
   }
 };
 
+/**
+ * @param {string} id Recipe ID, NOT favorite ID
+ */
 export const AddToFavoritesButton = ({ id }: { id: string }) => {
   const favorites = useMatchesData<{ favoriteRecipes: FavoritesWithRecipeAndId }>(
     "root",

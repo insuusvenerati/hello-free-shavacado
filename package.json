@@ -11,6 +11,7 @@
     "dev:remix": "cross-env NODE_ENV=development binode --require ./mocks -- @remix-run/dev:remix dev",
     "format": "prettier --write .",
     "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "algolia:seed": "dotenv -e .env ts-node other/seedAlgolia.ts",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
@@ -69,6 +70,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/bcryptjs": "^2.4.2",
+    "@types/cookie": "^0.5.1",
     "@types/eslint": "^8.4.9",
     "@types/node": "^18.11.7",
     "@types/react": "^18.0.24",
@@ -87,6 +89,7 @@
     "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
     "happy-dom": "^7.6.6",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
@@ -112,7 +115,7 @@
     "node": ">=16"
   },
   "prisma": {
-    "seed": "ts-node --transpile-only prisma/seed.ts"
+    "seed": "node --experimental-fetch -r esbuild-register prisma/seed.ts"
   },
   "volta": {
     "node": "18.12.0"

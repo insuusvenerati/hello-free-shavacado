@@ -1,11 +1,13 @@
 import type { ImportedRecipe } from "@prisma/client";
-import { Link } from "@remix-run/react";
+import { Link, useFetcher } from "@remix-run/react";
+import { TrashIcon } from "./TrashIcon";
 
 type Props = {
   recipe: ImportedRecipe;
 };
 
 export const ImportedRecipeCard = ({ recipe }: Props) => {
+  const fetcher = useFetcher();
   return (
     <div className="card-compact card h-auto w-auto bg-zinc-800 shadow-lg">
       <Link to={`/recipes/imported/${recipe.id}`}>
@@ -20,6 +22,19 @@ export const ImportedRecipeCard = ({ recipe }: Props) => {
       <div className="card-body">
         <h2 className="card-title">{recipe.name}</h2>
         <p>{recipe.description}</p>
+        <div className="card-actions justify-end">
+          <button
+            onClick={() =>
+              fetcher.submit(
+                { recipeId: recipe.id, intent: "delete" },
+                { method: "post", action: "/imported" },
+              )
+            }
+            className="btn btn-error gap-2"
+          >
+            <TrashIcon /> <span>Delete</span>
+          </button>
+        </div>
       </div>
     </div>
   );
