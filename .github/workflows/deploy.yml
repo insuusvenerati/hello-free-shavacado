@@ -21,6 +21,11 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
+
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
@@ -46,6 +51,11 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
+
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
@@ -70,6 +80,11 @@ jobs:
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
@@ -99,6 +114,11 @@ jobs:
 
       - name: 🏄 Copy test env vars
         run: cp .env.example .env
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
