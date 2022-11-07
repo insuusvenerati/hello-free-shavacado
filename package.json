@@ -3,6 +3,7 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
+    "postinstall": "prisma generate",
     "build": "run-s build:*",
     "build:css": "cross-env NODE_ENV=production postcss ./styles/tailwind.css -o app/styles/tailwind.css",
     "build:remix": "cross-env NODE_ENV=production remix build",
