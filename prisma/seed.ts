@@ -43,7 +43,7 @@ async function seed() {
   });
 
   for (let skip = 0; skip <= skipLimit; skip += 250) {
-    console.log(`Fetching recipes ${skip} to ${skip + 250}...`);
+    console.log(`Fetching recipes ${skip} to ${skip + 250} with a max of ${skipLimit}...`);
 
     try {
       const response = await fetch(`${BASE_URL}take=250&skip=${skip}`, {
