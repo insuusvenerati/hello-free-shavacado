@@ -61,6 +61,7 @@
     "tiny-invariant": "^1.3.1"
   },
   "devDependencies": {
+    "tsx": "^3.11.0",
     "@faker-js/faker": "^7.6.0",
     "@remix-run/dev": "^1.7.5",
     "@remix-run/eslint-config": "^1.7.5",
@@ -85,7 +86,6 @@
     "cookie": "^0.5.0",
     "cross-env": "^7.0.3",
     "cypress": "^10.11.0",
-    "esbuild-register": "^3.3.3",
     "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-cypress": "^2.12.1",
@@ -115,7 +115,7 @@
     "node": ">=16"
   },
   "prisma": {
-    "seed": "node --experimental-fetch -r esbuild-register prisma/seed.ts"
+    "seed": "tsx --experimental-fetch prisma/seed.ts"
   },
   "volta": {
     "node": "18.12.0"
