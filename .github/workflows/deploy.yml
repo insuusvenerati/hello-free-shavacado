@@ -143,6 +143,7 @@ jobs:
           start: pnpm run start:mocks
           wait-on: "http://localhost:8811"
           browser: ${{ matrix.browsers }}
+          record: true
         env:
           PORT: "8811"
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
