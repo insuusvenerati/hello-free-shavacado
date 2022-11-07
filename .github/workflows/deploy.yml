@@ -132,7 +132,9 @@ jobs:
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v4
         with:
-          start: pnpm run start:mocks
+          start: |
+            pnpx cypress install
+            pnpm run start:mocks
           wait-on: "http://localhost:8811"
           browser: ${{ matrix.browsers }}
         env:
