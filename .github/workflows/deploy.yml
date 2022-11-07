@@ -30,13 +30,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: "pnpm"
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
-          install-command: pnpm install
-          node-version: 18
+        run: pnpm install
 
       - name: 🔬 Lint
         run: pnpm run lint
@@ -60,13 +57,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: "pnpm"
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
-          install-command: pnpm install
-          node-version: 18
+        run: pnpm install
 
       - name: 🔎 Type check
         run: pnpm run typecheck
@@ -90,13 +84,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: "pnpm"
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
-          install-command: pnpm install
-          node-version: 18
+        run: pnpm install
 
       - name: ⚡ Run vitest
         run: pnpm run test -- --coverage
@@ -124,13 +115,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: "pnpm"
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
-          install-command: pnpm install
-          node-version: 18
+        run: pnpm install
 
       - name: 🛠 Setup Database
         run: npx prisma migrate reset --force
