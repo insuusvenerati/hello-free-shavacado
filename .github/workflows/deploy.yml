@@ -95,9 +95,13 @@ jobs:
   cypress:
     name: ⚫️ Cypress
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browsers: [chrome, firefox, edge]
     steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
+      # - name: 🛑 Cancel Previous Runs
+      #   uses: styfle/cancel-workflow-action@0.11.0
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -130,8 +134,15 @@ jobs:
         with:
           start: pnpm run start:mocks
           wait-on: "http://localhost:8811"
+          browser: ${{ matrix.browsers }}
         env:
           PORT: "8811"
+
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots-${{ matrix.browsers }}
+          path: cypress/screenshots
 
   build:
     name: 🐳 Build
