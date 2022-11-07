@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import type { Recipe } from "~/types/recipe";
 
 const prisma = new PrismaClient();
-
+const skipLimit = process.env.CI ? 250 : 3750;
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 
 const TOKEN_URL =
@@ -42,8 +42,8 @@ async function seed() {
     },
   });
 
-  for (let skip = 0; skip <= 3750; skip += 250) {
-    console.log(skip);
+  for (let skip = 0; skip <= skipLimit; skip += 250) {
+    console.log(`Fetching recipes ${skip} to ${skip + 250}...`);
 
     try {
       const response = await fetch(`${BASE_URL}take=250&skip=${skip}`, {
@@ -122,8 +122,8 @@ async function seed() {
               },
               ratingsCount: item.ratingsCount,
             },
-          })
-        )
+          }),
+        ),
       );
     } catch (error) {
       if (error instanceof PrismaClientValidationError) {
