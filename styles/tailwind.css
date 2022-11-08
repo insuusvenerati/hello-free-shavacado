@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #27272a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #18181b;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #18181b;
+}
+
+div div.aa-Autocomplete {
+  color: inherit;
+}
+
+.aa-Autocomplete form.aa-Form {
+  background-color: unset;
+  border: unset;
+}
+
+input.aa-Input {
+  @apply text-gray-400 !important;
+  color: unset;
+  border-color: inherit;
+}
+
+button.aa-DetachedSearchButton {
+  background-color: unset;
+}
+
+div.aa-DetachedContainer {
+  background: unset;
+  background-color: #27272a;
+}
+
+button.aa-DetachedCancelButton {
+  @apply text-gray-400 !important;
+}
+
+form.aa-Form {
+  background-color: unset;
+}
