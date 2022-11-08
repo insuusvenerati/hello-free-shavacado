@@ -118,7 +118,7 @@
     "node": ">=16"
   },
   "prisma": {
-    "seed": "tsx --experimental-fetch prisma/seed.ts"
+    "seed": "npx tsx --experimental-fetch prisma/seed.ts"
   },
   "volta": {
     "node": "18.12.0"
