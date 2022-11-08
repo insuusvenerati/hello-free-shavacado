@@ -12,3 +12,6 @@ node_modules
 /app/styles/tailwind.css
 !.env.example
 !.env.vault
+/test-results/
+/playwright-report/
+/playwright/.cache/

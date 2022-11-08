@@ -27,12 +27,12 @@ describe("smoke tests", () => {
     cy.findByRole("menuitem", { name: /logout/i }).click();
   });
 
-  // it("should allow you to favorite and unfavorite a recipe", () => {
-  //   cy.login();
+  it("should allow you to favorite and unfavorite a recipe", () => {
+    cy.login();
 
-  //   cy.visitAndCheck("/");
+    cy.visitAndCheck("/");
 
-  //   cy.findByRole("button", { name: /ADD TO FAVORITES/i }).click();
-  //   cy.findByRole("button", { name: /Remove from favorites/i }).click();
-  // });
+    cy.findByRole("button", { name: /ADD TO FAVORITES/i }).click();
+    cy.findByRole("button", { name: /Remove from favorites/i }).click();
+  });
 });

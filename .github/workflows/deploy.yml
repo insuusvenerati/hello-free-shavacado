@@ -92,13 +92,9 @@ jobs:
       - name: ⚡ Run vitest
         run: pnpm run test -- --coverage
 
-  cypress:
-    name: ⚫️ Cypress
+  e2e:
+    name: ⚫️ e2e
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        browsers: [chrome]
     steps:
       # - name: 🛑 Cancel Previous Runs
       #   uses: styfle/cancel-workflow-action@0.11.0
@@ -122,14 +118,14 @@ jobs:
 
       - name: 📥 Download deps
         run: |
-          pnpx cypress install
+          # pnpx cypress install
           pnpm install --frozen-lockfile
 
-      - name: 🖥 Cache cypress binary
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/Cypress
-          key: ${{ runner.os }}-cypress-${{ matrix.browsers }}
+      # - name: 🖥 Cache cypress binary
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/.cache/Cypress
+      #     key: ${{ runner.os }}-cypress-${{ matrix.browsers }}
 
       - name: 🛠 Setup Database
         run: pnpx prisma migrate reset --force
@@ -137,29 +133,42 @@ jobs:
       - name: ⚙️ Build
         run: pnpm run build
 
-      - name: 🌳 Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          start: pnpm run start:mocks
-          wait-on: "http://localhost:8811"
-          browser: ${{ matrix.browsers }}
-          record: true
-        env:
-          PORT: "8811"
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
 
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: cypress-screenshots-${{ matrix.browsers }}
-          path: cypress/screenshots
+      - name: Run Playwright tests
+        run: pnpm dlx playwright test
 
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: cypress-videos
-          path: cypress/videos
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      # - name: 🌳 Cypress run
+      #   uses: cypress-io/github-action@v4
+      #   with:
+      #     start: pnpm run start:mocks
+      #     wait-on: "http://localhost:8811"
+      #     browser: ${{ matrix.browsers }}
+      #     record: true
+      #   env:
+      #     PORT: "8811"
+      #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - uses: actions/upload-artifact@v3
+      #   if: failure()
+      #   with:
+      #     name: cypress-screenshots-${{ matrix.browsers }}
+      #     path: cypress/screenshots
+
+      # - uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: cypress-videos
+      #     path: cypress/videos
 
   build:
     name: 🐳 Build
