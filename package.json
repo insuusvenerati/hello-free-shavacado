@@ -35,7 +35,6 @@
   ],
   "dependencies": {
     "@algolia/autocomplete-core": "^1.7.3",
-    "tsx": "^3.11.0",
     "@algolia/autocomplete-js": "^1.7.3",
     "@algolia/autocomplete-plugin-recent-searches": "^1.7.3",
     "@algolia/autocomplete-theme-classic": "^1.7.3",
@@ -66,6 +65,7 @@
     "@faker-js/faker": "^7.6.0",
     "@playwright/test": "^1.27.1",
     "@remix-run/dev": "^1.7.5",
+    "tsx": "^3.11.0",
     "@remix-run/eslint-config": "^1.7.5",
     "@testing-library/cypress": "^8.0.3",
     "@testing-library/dom": "^8.19.0",
