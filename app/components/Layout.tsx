@@ -12,10 +12,13 @@ export const Layout = ({ children }: { children: ReactNode }) => {
     <>
       <Navbar />
 
-      <div className="drawer-mobile drawer h-auto bg-zinc-900">
+      <div className="drawer-mobile drawer h-auto bg-black">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content mt-20 mb-10 sm:mb-0">
-          {children}
+          <label htmlFor="my-drawer-2" className="btn btn-primary drawer-button lg:hidden">
+            Open drawer
+          </label>
+          <div className="lg:mx-2 lg:ml-[17%]">{children}</div>
           <div className="btm-nav lg:hidden">
             <NavLink to="/">
               <button className="flex basis-full flex-col items-center justify-center">
@@ -77,9 +80,10 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           </div>
         </div>
         {isHome && (
-          <div className="drawer-side mt-20">
-            {/* <label htmlFor="my-drawer-2" className="drawer-overlay"></label> */}
-            <div className="grid w-80 auto-rows-max gap-10 p-10">
+          <div className="drawer-side h-screen static lg:fixed">
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+            <label id="my-drawer-2" htmlFor="my-drawer-2" className="drawer-overlay" />
+            <div className="grid w-80 auto-rows-max gap-10 p-10 mt-10 bg-base-100">
               <Form method="post" action="/recipes/imported">
                 <label htmlFor="url">Import Recipe</label>
                 <input

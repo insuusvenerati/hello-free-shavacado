@@ -15,7 +15,7 @@ type Props = {
 
 export const RecipeCard = ({ recipe, ...props }: Props) => {
   return (
-    <div className="card-compact card h-auto w-auto bg-zinc-800 shadow-lg" {...props}>
+    <div className="card-compact card h-auto w-auto bg-zinc-800" {...props}>
       <Link to={`/recipes/${recipe.id}`}>
         <figure className="cursor-pointer rounded-t-xl">
           <img

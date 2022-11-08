@@ -18,20 +18,21 @@
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
     "start": "remix-serve build",
     "start:mocks": "binode --require ./mocks -- @remix-run/serve:remix-serve build",
-    "test": "vitest",
-    "test:e2e:dev": "start-server-and-test dev http://localhost:3000 \"npx cypress open\"",
-    "pretest:e2e:run": "npm run build",
-    "test:e2e:run": "cross-env PORT=8811 start-server-and-test start:mocks http://localhost:8811 \"npx cypress run\"",
-    "typecheck": "tsc -b && tsc -b cypress",
-    "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run",
-    "playwright": "playwright test"
+    "vitest": "vitest",
+    "test:e2e:dev": "npx playwright test --trace=on",
+    "test:e2e:run": "playwright test",
+    "typecheck": "tsc -b",
+    "validate": "run-p \"vitest --run\" lint typecheck test:e2e:run",
+    "playwright:codegen": "playwright codegen localhost:3000 --viewport-size=1920,1080"
   },
   "eslintIgnore": [
     "/node_modules",
     "/build",
     "/public/build",
     "/recipe-data-scraper",
-    "/patches"
+    "/patches",
+    "/test-results",
+    "/playwright-report"
   ],
   "dependencies": {
     "@algolia/autocomplete-core": "^1.7.3",
@@ -87,16 +88,14 @@
     "concurrently": "^7.5.0",
     "cookie": "^0.5.0",
     "cross-env": "^7.0.3",
-    "cypress": "^10.11.0",
     "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-playwright": "^0.11.2",
     "happy-dom": "^7.6.6",
-    "husky": "^8.0.1",
+    "husky": "^8.0.2",
     "lint-staged": "^13.0.3",
-    "msw": "^0.47.4",
+    "msw": "^0.48.0",
     "npm-run-all": "^4.1.5",
     "patch-package": "^6.5.0",
     "postcss": "^8.4.18",
@@ -104,7 +103,7 @@
     "postcss-lightningcss": "^0.6.0",
     "prettier": "2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",
-    "prisma": "^4.5.0",
+    "prisma": "^4.6.0",
     "start-server-and-test": "^1.14.0",
     "tailwindcss": "^3.2.2",
     "ts-node": "^10.9.1",
@@ -112,7 +111,7 @@
     "typescript": "^4.8.4",
     "vite": "^3.2.3",
     "vite-tsconfig-paths": "^3.5.2",
-    "vitest": "^0.25.0"
+    "vitest": "^0.25.1"
   },
   "engines": {
     "node": ">=16"
