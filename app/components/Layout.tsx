@@ -36,7 +36,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
                 <span className="btm-nav-label">Home</span>
               </button>
             </NavLink>
-            <NavLink to="/recipes">
+            <NavLink to="/favorites">
               <button className="flex basis-full flex-col items-center justify-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +55,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
                 <span className="btm-nav-label">Favorites</span>
               </button>
             </NavLink>
-            <NavLink to="/recipes/imported">
+            <NavLink to="/imported">
               <button className="flex basis-full flex-col items-center justify-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
