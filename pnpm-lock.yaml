@@ -47,21 +47,19 @@ importers:
       concurrently: ^7.5.0
       cookie: ^0.5.0
       cross-env: ^7.0.3
-      cypress: ^10.11.0
       daisyui: ^2.38.1
       eslint: ^8.27.0
       eslint-config-prettier: ^8.5.0
-      eslint-plugin-cypress: ^2.12.1
       eslint-plugin-jsx-a11y: ^6.6.1
       eslint-plugin-playwright: ^0.11.2
       happy-dom: ^7.6.6
-      husky: ^8.0.1
+      husky: ^8.0.2
       instantsearch.js: ^4.49.1
       isbot: ^3.6.3
       iso8601-duration: ^2.1.1
       lint-staged: ^13.0.3
       microdata-node: ^2.0.0
-      msw: ^0.47.4
+      msw: ^0.48.0
       npm-run-all: ^4.1.5
       patch-package: ^6.5.0
       postcss: ^8.4.18
@@ -69,7 +67,7 @@ importers:
       postcss-lightningcss: ^0.6.0
       prettier: 2.7.1
       prettier-plugin-tailwindcss: ^0.1.13
-      prisma: ^4.5.0
+      prisma: ^4.6.0
       react: ^18.2.0
       react-dom: ^18.2.0
       react-instantsearch-hooks-server: ^6.38.0
@@ -85,14 +83,14 @@ importers:
       typescript: ^4.8.4
       vite: ^3.2.3
       vite-tsconfig-paths: ^3.5.2
-      vitest: ^0.25.0
+      vitest: ^0.25.1
     dependencies:
       '@algolia/autocomplete-core': 1.7.3
       '@algolia/autocomplete-js': 1.7.3_qs6lk5nhygj2o3hj4sf6xnr724
       '@algolia/autocomplete-plugin-recent-searches': 1.7.3_qs6lk5nhygj2o3hj4sf6xnr724
       '@algolia/autocomplete-theme-classic': 1.7.3
       '@mantine/hooks': 5.7.0_react@18.2.0
-      '@prisma/client': 4.5.0_prisma@4.5.0
+      '@prisma/client': 4.5.0_prisma@4.6.0
       '@remix-run/node': 1.7.5_biqbaboplfbrettd7655fr4n2y
       '@remix-run/react': 1.7.5_biqbaboplfbrettd7655fr4n2y
       '@remix-run/serve': 1.7.5_biqbaboplfbrettd7655fr4n2y
@@ -138,16 +136,14 @@ importers:
       concurrently: 7.5.0
       cookie: 0.5.0
       cross-env: 7.0.3
-      cypress: 10.11.0
       eslint: 8.27.0
       eslint-config-prettier: 8.5.0_eslint@8.27.0
-      eslint-plugin-cypress: 2.12.1_eslint@8.27.0
       eslint-plugin-jsx-a11y: 6.6.1_eslint@8.27.0
       eslint-plugin-playwright: 0.11.2_eslint@8.27.0
       happy-dom: 7.6.6
-      husky: 8.0.1
+      husky: 8.0.2
       lint-staged: 13.0.3
-      msw: 0.47.4_typescript@4.8.4
+      msw: 0.48.0_typescript@4.8.4
       npm-run-all: 4.1.5
       patch-package: 6.5.0
       postcss: 8.4.18
@@ -155,7 +151,7 @@ importers:
       postcss-lightningcss: 0.6.0_postcss@8.4.18
       prettier: 2.7.1
       prettier-plugin-tailwindcss: 0.1.13_prettier@2.7.1
-      prisma: 4.5.0
+      prisma: 4.6.0
       start-server-and-test: 1.14.0
       tailwindcss: 3.2.2_neo3lunb2qpadwxplzw7r2isgm
       ts-node: 10.9.1_cbe7ovvae6zqfnmtgctpgpys54
@@ -164,7 +160,7 @@ importers:
       typescript: 4.8.4
       vite: 3.2.3_@types+node@18.11.9
       vite-tsconfig-paths: 3.5.2_vite@3.2.3
-      vitest: 0.25.0_happy-dom@7.6.6
+      vitest: 0.25.1_happy-dom@7.6.6
 
   apps/backend:
     specifiers:
@@ -5232,6 +5228,20 @@ packages:
       prisma: 4.5.0
     dev: false
 
+  /@prisma/client/4.5.0_prisma@4.6.0:
+    resolution: {integrity: sha512-B2cV0OPI1smhdYUxsJoLYQLoMlLH06MUxgFUWQnHodGMX98VRVXKmQE/9OcrTNkqtke5RC+YU24Szxd04tZA2g==}
+    engines: {node: '>=14.17'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+    dependencies:
+      '@prisma/engines-version': 4.5.0-43.0362da9eebca54d94c8ef5edd3b2e90af99ba452
+      prisma: 4.6.0
+    dev: false
+
   /@prisma/engines-version/4.4.0-66.f352a33b70356f46311da8b00d83386dd9f145d6:
     resolution: {integrity: sha512-P5v/PuEIJLYXZUZBvOLPqoyCW+m6StNqHdiR6te++gYVODpPdLakks5HVx3JaZIY+LwR02juJWFlwpc9Eog/ug==}
     dev: true
@@ -5247,6 +5257,10 @@ packages:
 
   /@prisma/engines/4.5.0:
     resolution: {integrity: sha512-4t9ir2SbQQr/wMCNU4YpHWp5hU14J2m3wHUZnGJPpmBF8YtkisxyVyQsKd1e6FyLTaGq8LOLhm6VLYHKqKNm+g==}
+    requiresBuild: true
+
+  /@prisma/engines/4.6.0:
+    resolution: {integrity: sha512-S+72PAl0zTCbIGou1uXD/McvzdtP+bjOs0LRmGZfcOQcVqR9x/0f6Z+dqpUU0zIcqHEl+0DOB8UXaTwRvssFsQ==}
     requiresBuild: true
 
   /@radix-ui/number/1.0.0:
@@ -10667,15 +10681,6 @@ packages:
       globals: 11.12.0
     dev: true
 
-  /eslint-plugin-cypress/2.12.1_eslint@8.27.0:
-    resolution: {integrity: sha512-c2W/uPADl5kospNDihgiLc7n87t5XhUbFDoTl6CfVkmG+kDAb5Ux10V9PoLPu9N+r7znpc+iQlcmAqT1A/89HA==}
-    peerDependencies:
-      eslint: '>= 3.2.1'
-    dependencies:
-      eslint: 8.27.0
-      globals: 11.12.0
-    dev: true
-
   /eslint-plugin-es/3.0.1_eslint@8.26.0:
     resolution: {integrity: sha512-GUmAsJaN4Fc7Gbtl8uOBlayo2DqhwWvEzykMHSCZHU3XdJ+NSzzZcVhXh3VxX5icqQ+oQdIEawXX8xkR3mIFmQ==}
     engines: {node: '>=8.10.0'}
@@ -12698,8 +12703,8 @@ packages:
     engines: {node: '>=12.20.0'}
     dev: true
 
-  /husky/8.0.1:
-    resolution: {integrity: sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==}
+  /husky/8.0.2:
+    resolution: {integrity: sha512-Tkv80jtvbnkK3mYWxPZePGFpQ/tT3HNSs/sasF9P2YfkMezDl3ON37YN6jUUI4eTg5LcyVynlb6r4eyvOmspvg==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
@@ -15568,6 +15573,43 @@ packages:
       - supports-color
     dev: true
 
+  /msw/0.48.0_typescript@4.8.4:
+    resolution: {integrity: sha512-bInpCikiW1VnjNkEjdaL5Wj+P/Xgz/U1GiUH/++Ck96w+FRpegP38HqBHJjdYZM1oH8VrtGiT14xvQHHhUTDzQ==}
+    engines: {node: '>=14'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      typescript: '>= 4.2.x <= 4.8.x'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@mswjs/cookies': 0.2.2
+      '@mswjs/interceptors': 0.17.6
+      '@open-draft/until': 1.0.3
+      '@types/cookie': 0.4.1
+      '@types/js-levenshtein': 1.1.1
+      chalk: 4.1.1
+      chokidar: 3.5.3
+      cookie: 0.4.2
+      graphql: 16.6.0
+      headers-polyfill: 3.1.2
+      inquirer: 8.2.4
+      is-node-process: 1.0.1
+      js-levenshtein: 1.1.6
+      node-fetch: 2.6.7
+      outvariant: 1.3.0
+      path-to-regexp: 6.2.1
+      statuses: 2.0.1
+      strict-event-emitter: 0.2.8
+      type-fest: 2.19.0
+      typescript: 4.8.4
+      yargs: 17.6.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: true
+
   /multer/1.4.4-lts.1:
     resolution: {integrity: sha512-WeSGziVj6+Z2/MwQo3GvqzgR+9Uc+qt8SwHKh3gvNPiISKfsMfG4SvCOFYlxxgkXt7yIV2i1yczehm0EOKIxIg==}
     engines: {node: '>= 6.0.0'}
@@ -16786,6 +16828,14 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.5.0
+
+  /prisma/4.6.0:
+    resolution: {integrity: sha512-TAnObUMGCM9NLt9nsRs1WWYQGPKsJOK8bN/7gSAnBcYIxMCFFDe+XtFYJbyTzsJZ/i+0rH4zg8au3m7HX354LA==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      '@prisma/engines': 4.6.0
 
   /process-nextick-args/2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
@@ -19969,6 +20019,52 @@ packages:
 
   /vitest/0.25.0_happy-dom@7.6.6:
     resolution: {integrity: sha512-CVgBdKSeA27mowKC/C31Tx7ZBjRoyasq/yW7zoqUaCdKaOsjdzRUH5KgSL3eG36DzaaUsbnwWPUbAOtFz5k6tQ==}
+    engines: {node: '>=v14.16.0'}
+    hasBin: true
+    peerDependencies:
+      '@edge-runtime/vm': '*'
+      '@vitest/browser': '*'
+      '@vitest/ui': '*'
+      happy-dom: '*'
+      jsdom: '*'
+    peerDependenciesMeta:
+      '@edge-runtime/vm':
+        optional: true
+      '@vitest/browser':
+        optional: true
+      '@vitest/ui':
+        optional: true
+      happy-dom:
+        optional: true
+      jsdom:
+        optional: true
+    dependencies:
+      '@types/chai': 4.3.3
+      '@types/chai-subset': 1.3.3
+      '@types/node': 18.11.9
+      acorn: 8.8.0
+      acorn-walk: 8.2.0
+      chai: 4.3.6
+      debug: 4.3.4
+      happy-dom: 7.6.6
+      local-pkg: 0.4.2
+      source-map: 0.6.1
+      strip-literal: 0.4.2
+      tinybench: 2.3.1
+      tinypool: 0.3.0
+      tinyspy: 1.0.2
+      vite: 3.2.3_@types+node@18.11.9
+    transitivePeerDependencies:
+      - less
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+    dev: true
+
+  /vitest/0.25.1_happy-dom@7.6.6:
+    resolution: {integrity: sha512-eH74h6MkuEgsqR4mAQZeMK9O0PROiKY+i+1GMz/fBi5A3L2ml5U7JQs7LfPU7+uWUziZyLHagl+rkyfR8SLhlA==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:

@@ -13,6 +13,7 @@
     "format": "prettier --write .",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:reset": "prisma migrate reset",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "algolia:seed": "dotenv -e .env ts-node other/seedAlgolia.ts",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
