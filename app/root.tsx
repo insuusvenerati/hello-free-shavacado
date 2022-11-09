@@ -1,3 +1,4 @@
+import styles from "@algolia/autocomplete-theme-classic/dist/theme.css";
 import type {
   ErrorBoundaryComponent,
   LinksFunction,
@@ -15,14 +16,14 @@ import {
   useCatch,
   useLoaderData,
 } from "@remix-run/react";
-import { renderToString } from "react-dom/server";
-import styles from "@algolia/autocomplete-theme-classic/dist/theme.css";
 import type { CatchBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
+import { renderToString } from "react-dom/server";
 import { getServerState } from "react-instantsearch-hooks-server";
 import { InstantSearch, InstantSearchSSRProvider } from "react-instantsearch-hooks-web";
 import { Layout } from "./components/Layout";
 import { prisma } from "./db.server";
 import { searchClient } from "./models/search";
+import { getThemeSession } from "./models/theme.server";
 import { getUser } from "./session.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 
@@ -179,7 +180,7 @@ export async function loader({ request }: LoaderArgs) {
   const serverUrl = request.url;
   const user = await getUser(request);
 
-  const [favoriteRecipes, serverState] = await Promise.all([
+  const [favoriteRecipes, serverState, themeSession] = await Promise.all([
     prisma.favoriteRecipe.findMany({
       where: {
         user: {
@@ -200,6 +201,7 @@ export async function loader({ request }: LoaderArgs) {
     getServerState(<SearchProvider serverUrl={serverUrl} />, {
       renderToString,
     }),
+    getThemeSession(request),
   ]);
 
   return json({
@@ -207,6 +209,7 @@ export async function loader({ request }: LoaderArgs) {
     user,
     serverState,
     serverUrl,
+    theme: themeSession.getTheme(),
   });
 }
 
@@ -229,7 +232,7 @@ function SearchProvider({
 }
 
 export default function App() {
-  const { serverState, serverUrl } = useLoaderData<typeof loader>();
+  const { serverState, serverUrl, theme } = useLoaderData<typeof loader>();
   return (
     <html className="h-screen" lang="en">
       <head>
@@ -256,7 +259,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body data-theme="halloween">
+      <body data-theme={theme ?? "dark"}>
         <SearchProvider serverState={serverState} serverUrl={serverUrl}>
           <Layout>
             <Outlet />
@@ -264,7 +267,7 @@ export default function App() {
         </SearchProvider>
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
+        {process.env.NODE_ENV === "development" && <LiveReload />}
       </body>
     </html>
   );
@@ -280,7 +283,9 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
         <Links />
       </head>
       <body>
-        {/* add the UI you want your users to see */}
+        <pre>{JSON.stringify(error.message, null, 2)}</pre>
+        <div className="divider"></div>
+        <code>{JSON.stringify(error.stack, null, 2)}</code>
         <Scripts />
       </body>
     </html>

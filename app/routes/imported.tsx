@@ -123,7 +123,7 @@ const ImportedRecipesPage = () => {
               <input
                 placeholder="https://allrecipes.com/recipe/12345"
                 type="text"
-                className="input w-full max-w-lg"
+                className="input w-full max-w-lg bg-white"
                 name="url"
                 disabled={transition.state !== "idle"}
               />

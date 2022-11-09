@@ -968,7 +968,20 @@ module.exports = {
   ],
   daisyui: {
     styled: true,
-    themes: ["halloween"],
+    themes: [
+      {
+        cream: {
+          primary: "#006771",
+          secondary: "#FFA700",
+          accent: "#FFCA69",
+          neutral: "#FFFDD3",
+          "base-100": "#FEEEB4",
+        },
+      },
+      "halloween",
+      "dark",
+      "light",
+    ],
   },
   plugins: [require("daisyui")],
 };

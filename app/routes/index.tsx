@@ -1,5 +1,6 @@
 import { useCatch } from "@remix-run/react";
 import type { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules";
+import type { ErrorBoundaryComponent } from "@remix-run/server-runtime";
 import { useInfiniteHits } from "react-instantsearch-hooks-web";
 import { RecipeHits } from "~/components/RecipeHits";
 
@@ -35,6 +36,15 @@ export const CatchBoundary: CatchBoundaryComponent = () => {
     <div className="container mx-auto mt-5 mb-5">
       <h1>Something went wrong</h1>
       <pre>{caught.data}</pre>
+    </div>
+  );
+};
+
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+  return (
+    <div className="container mx-auto mt-5 mb-5">
+      <h1>Something went wrong</h1>
+      <pre>{error.message}</pre>
     </div>
   );
 };

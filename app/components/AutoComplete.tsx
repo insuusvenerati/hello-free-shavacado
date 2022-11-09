@@ -63,7 +63,7 @@ export function Autocomplete({ className, ...autocompleteProps }: AutocompletePr
       plugins,
       classNames: {
         input: "input input-bordered",
-        root: "bg-base-300 rounded-box min-w-[200%] lg:w-[200%]",
+        root: "rounded-box min-w-[200%] lg:w-[200%]",
         detachedSearchButton: "btn btn-sm bg-base-300",
         detachedSearchButtonIcon: "btn-ghost",
         detachedContainer: "bg-base-300",

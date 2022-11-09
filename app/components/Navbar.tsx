@@ -1,8 +1,29 @@
 import { useMediaQuery } from "@mantine/hooks";
 import type { User } from "@prisma/client";
 import { Link, useFetcher } from "@remix-run/react";
+import { ColorSchemeSwitcher } from "~/routes/resource/set-theme";
 import { useMatchesData } from "~/utils";
 import { Autocomplete } from "./AutoComplete";
+
+const Bars = ({ ...props }: React.SVGProps<SVGSVGElement>) => (
+  <label htmlFor="my-drawer-2">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="w-6 h-6 mr-4 lg:hidden"
+      {...props}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+      />
+    </svg>
+  </label>
+);
 
 export const Navbar = () => {
   const matchesData = useMatchesData<{ user: User }>("root");
@@ -10,7 +31,7 @@ export const Navbar = () => {
   const fetcher = useFetcher();
 
   return (
-    <nav className="top-o navbar fixed z-50 border-b-2 border-b-primary bg-base-300">
+    <nav className="top-o navbar fixed z-50 border-b-2 border-b-primary bg-base-100">
       {matches && (
         <div className="navbar-start">
           <Link to="/" className="btn-ghost btn text-xl normal-case">
@@ -19,10 +40,13 @@ export const Navbar = () => {
         </div>
       )}
 
+      <Bars />
+
       <div className="navbar-center">
         <Autocomplete placeholder="Search" />
       </div>
       <div className="navbar-end w-full">
+        <ColorSchemeSwitcher />
         {matchesData?.user ? (
           <div className="dropdown-end dropdown">
             <button className="btn-ghost btn-circle avatar btn">

@@ -9,11 +9,11 @@ type Props = {
 export const ImportedRecipeCard = ({ recipe }: Props) => {
   const fetcher = useFetcher();
   return (
-    <div className="card-compact card h-auto w-auto bg-zinc-800 shadow-lg">
+    <div className="card-compact card h-auto w-auto bg-transparent">
       <Link to={`/recipes/imported/${recipe.id}`}>
         <figure className="cursor-pointer">
           <img
-            src={"http://placeimg.com/1000/1000/nature"}
+            src={recipe.image ?? "http://placeimg.com/1000/1000/nature"}
             alt={recipe.name}
             className="w-full object-cover transition-all duration-100 hover:scale-105"
           />
@@ -21,7 +21,6 @@ export const ImportedRecipeCard = ({ recipe }: Props) => {
       </Link>
       <div className="card-body">
         <h2 className="card-title">{recipe.name}</h2>
-        <p>{recipe.description}</p>
         <div className="card-actions justify-end">
           <button
             onClick={() =>
