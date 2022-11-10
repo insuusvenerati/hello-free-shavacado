@@ -64,7 +64,7 @@ const RecipesPage = () => {
   }, [favoriteRecipesFromSearch?.results, hasResults]);
 
   return (
-    <main className="container mx-auto mt-5 h-screen">
+    <main className="container mx-auto mt-5 mb-5">
       <Form action="/favorites" method="post" className="form-control gap-2 max-w-md mb-4">
         <label className="label" htmlFor="query">
           <span className="label-text">Search</span>
