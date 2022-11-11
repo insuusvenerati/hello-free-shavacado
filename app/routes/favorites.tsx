@@ -69,7 +69,12 @@ const RecipesPage = () => {
         <label className="label" htmlFor="query">
           <span className="label-text">Search</span>
         </label>
-        <input name="query" placeholder="Search your favorites" type="search" className="input" />
+        <input
+          name="query"
+          placeholder="Search your favorites"
+          type="search"
+          className="input bg-base-300"
+        />
         <button type="submit" className="btn max-w-xs">
           Submit
         </button>
