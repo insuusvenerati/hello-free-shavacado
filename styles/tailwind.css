@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Mona Sans";
+  font-style: normal;
+  font-weight: 100 1000;
+  font-display: swap;
+  font-stretch: 25% 151%;
+  src: url("public/fonts/mona-sans/Mona-Sans.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Mona Sans Fallback";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Arial");
+  ascent-override: 79.79%;
+  descent-override: 16.66%;
+  line-gap-override: 0%;
+  size-adjust: 100.26%;
+}
+
+/* html {
+  font-family: "Mona Sans", "Mona Sans Fallback";
+} */
+
 ::-webkit-scrollbar {
   width: 5px;
 }

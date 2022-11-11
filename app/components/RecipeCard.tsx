@@ -15,13 +15,13 @@ type Props = {
 
 export const RecipeCard = ({ recipe, ...props }: Props) => {
   return (
-    <div className="card-compact card h-auto w-auto bg-transparent rounded-none" {...props}>
+    <div className="card-compact card h-auto w-auto bg-base-300 rounded-md" {...props}>
       <Link to={`/recipes/${recipe.id}`}>
         <figure className="cursor-pointer">
           <img
             src={`${HF_CARD_IMAGE_URL}${recipe.imagePath}`}
             alt={recipe.name}
-            className="w-full object-cover transition-all duration-100 hover:scale-105"
+            className="w-full object-cover transition-all duration-100 hover:scale-105 rounded-md"
           />
         </figure>
       </Link>

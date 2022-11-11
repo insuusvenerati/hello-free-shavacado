@@ -8,7 +8,7 @@ const hydrate = () => {
       document,
       <StrictMode>
         <RemixBrowser />
-      </StrictMode>
+      </StrictMode>,
     );
   });
 };
@@ -25,7 +25,10 @@ if ("serviceWorker" in navigator) {
   if (process.env.NODE_ENV === "production") {
     window.addEventListener("load", () => {
       // we will register it after the page complete the load
-      navigator.serviceWorker.register("/sw.js");
+      navigator.serviceWorker.register("/sw.js").then((registration) => {
+        console.log("SW registered: ", registration);
+        registration.update();
+      });
     });
   }
 }

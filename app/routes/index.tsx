@@ -8,7 +8,7 @@ export default function Index() {
   const { showMore } = useInfiniteHits();
   return (
     <>
-      <main className="container mx-auto mt-5 mb-5">
+      <main className="container mx-auto p-1 lg:p-5">
         {/* <div className="mb-2 grid items-center justify-center gap-2 md:flex">
           <Pagination />
           <Sort
@@ -19,12 +19,13 @@ export default function Index() {
             ]}
           />
         </div> */}
-        <div className="grid grid-cols-1 gap-4 p-2 md:grid-cols-2 md:p-0 lg:grid-cols-6 lg:p-0">
+
+        <div className="grid grid-cols-1 gap-4 p-2 md:grid-cols-2 lg:grid-cols-5 lg:ml-40">
           <RecipeHits />
+          <button onClick={showMore} className="btn btn-primary my-2 col-span-full">
+            Show more
+          </button>
         </div>
-        <button onClick={showMore} className="btn my-2 w-full">
-          Show more
-        </button>
       </main>
     </>
   );

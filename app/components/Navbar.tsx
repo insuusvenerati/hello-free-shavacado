@@ -31,7 +31,7 @@ export const Navbar = () => {
   const fetcher = useFetcher();
 
   return (
-    <nav className="top-o navbar fixed z-50 border-b-2 border-b-primary bg-base-100">
+    <nav className="navbar border-b-2 border-b-primary">
       {matches && (
         <div className="navbar-start">
           <Link to="/" className="btn-ghost btn text-xl normal-case">
@@ -40,16 +40,16 @@ export const Navbar = () => {
         </div>
       )}
 
-      <Bars />
+      {/* <Bars /> */}
 
       <div className="navbar-center">
         <Autocomplete placeholder="Search" />
       </div>
-      <div className="navbar-end w-full">
-        <ColorSchemeSwitcher />
+      <div className="navbar-end w-full gap-2">
+        {matches ? <ColorSchemeSwitcher /> : null}
         {matchesData?.user ? (
           <div className="dropdown-end dropdown">
-            <button className="btn-ghost btn-circle avatar btn">
+            <button type="button" className="btn-ghost btn-circle avatar btn">
               <img
                 className="w-10 rounded-full"
                 alt="placeholder"
@@ -59,7 +59,7 @@ export const Navbar = () => {
             <ul
               role="menu"
               id="menu"
-              className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
+              className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-300 p-2 shadow"
             >
               <li>
                 <Link role="menuitem" to="/favorites">
