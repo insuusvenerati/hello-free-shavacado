@@ -5,7 +5,7 @@
   "scope": "/",
   "start_url": "/",
   "name": "Hello Free Shavacado",
-  "short_name": "Hello Free Shavacado",
+  "short_name": "HF",
   "orientation": "portrait-primary",
   "prefer_related_applications": false,
   "shortcuts": [
@@ -493,7 +493,6 @@
   "description": "Search for recipes on Hellofresh",
   "dir": "ltr",
   "lang": "en",
-  "display_override": ["fullscreen"],
   "categories": ["food", "lifestyle"],
   "screenshots": [
     {

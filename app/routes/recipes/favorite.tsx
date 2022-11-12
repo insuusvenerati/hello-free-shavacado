@@ -83,6 +83,7 @@ export const AddToFavoritesButton = ({ id }: { id: string }) => {
   return (
     <div className="btn-group flex">
       <button
+        type="button"
         disabled={isFavorite}
         onClick={() =>
           addToFavorites.submit({ query: id }, { method: "post", action: "/recipes/favorite" })
@@ -111,6 +112,8 @@ export const AddToFavoritesButton = ({ id }: { id: string }) => {
       </button>
       {isFavorite ? (
         <button
+          title="Remove from favorites"
+          type="button"
           onClick={() =>
             addToFavorites.submit(
               { query: id, intent: "delete" },
