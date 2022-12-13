@@ -70,7 +70,7 @@ specifiers:
   react-instantsearch-hooks-server: ^6.38.0
   react-instantsearch-hooks-web: ^6.38.0
   recipe-data-scraper: 1.4.1
-  remix: 0.0.0-experimental-5b4bceda6
+  remix: 1.8.2
   remix-typedjson: ^0.1.5
   start-server-and-test: ^1.14.0
   tailwindcss: ^3.2.2
@@ -108,7 +108,7 @@ dependencies:
   react-instantsearch-hooks-server: 6.38.0_fzyfqr3mixyxftdbf7mmfo2jb4
   react-instantsearch-hooks-web: 6.38.0_fzyfqr3mixyxftdbf7mmfo2jb4
   recipe-data-scraper: 1.4.1_7ndszw3sr2aouasv2wyqt5u2du
-  remix: 0.0.0-experimental-5b4bceda6
+  remix: 1.8.2
   remix-typedjson: 0.1.5_7mjz4majesudzlbzo7nmpuidzq
   tiny-invariant: 1.3.1
 
@@ -9481,8 +9481,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /remix/0.0.0-experimental-5b4bceda6:
-    resolution: {integrity: sha512-o7mWFfSz5chQkFxAuKtUv/7KaNfd3oVG/U8oK1r07cdLye25gnOrRHzfu1xx2Scggdl35VolR3JJTQ3pptp5jw==}
+  /remix/1.8.2:
+    resolution: {integrity: sha512-f0mWcwhTV1Upe38CumbxPCt+dErvRA0YFfDMcsW7G4tlEidcE54tSTzRivMNfPtBqZ8V+dxU5KYTySX1tO1DHA==}
     engines: {node: '>=14'}
     dev: false
 
