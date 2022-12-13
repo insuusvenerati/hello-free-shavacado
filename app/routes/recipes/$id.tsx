@@ -1,5 +1,4 @@
 import { prisma } from "~/db.server";
-
 import { Response } from "@remix-run/node";
 import { useCatch, useLoaderData } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
@@ -30,34 +29,22 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 const RecipePage = () => {
   const data = useLoaderData<typeof loader>();
+  console.log(data);
   return (
-    <div className="grid grid-flow-row auto-rows-min gap-10">
-      <div className="carousel w-full">
-        <div className="carousel-item w-full">
-          <img
-            src={`${HF_COVER_IMAGE_URL}${data?.imagePath}`}
-            alt={data?.name}
-            className="h-auto w-full object-cover"
-          />
+    <>
+      <div
+        className="hero h-auto"
+        style={{ backgroundImage: `url(${HF_COVER_IMAGE_URL}${data.imagePath})` }}
+      >
+        <div className="hero-overlay bg-opacity-60"></div>
+        <div className="hero-content text-center text-neutral-content">
+          <div className="max-w-xl">
+            <h1 className="mb-5 text-5xl font-bold">{data.name}</h1>
+            <p className="mb-5">{data.description}</p>
+          </div>
         </div>
       </div>
-      <div className="container mx-auto">
-        <h1 className="text-2xl font-bold">{data?.name}</h1>
-      </div>
-      <div className="container mx-auto">
-        <p className="text-sm">{data?.description}</p>
-      </div>
-      <div className="container mx-auto">
-        <div className="tabs">
-          {/* <a className="tab tab-bordered">Tab 1</a>
-          <a className="tab tab-bordered tab-active">Tab 2</a>
-          <a className="tab tab-bordered">Tab 3</a>
-          <a className="tab tab-bordered">Tab 3</a>
-          <a className="tab tab-bordered">Tab 3</a>
-          <a className="tab tab-bordered">Tab 3</a> */}
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 

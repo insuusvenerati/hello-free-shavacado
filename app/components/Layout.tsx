@@ -34,7 +34,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           </button>
         </NavLink>
 
-        <NavLink to="/favorites">
+        <NavLink to="/user/favorites">
           <button title="Favorites" type="button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           </button>
         </NavLink>
 
-        <NavLink to="/imported">
+        <NavLink to="/user/imported">
           <button title="Imported" type="button">
             <svg
               xmlns="http://www.w3.org/2000/svg"

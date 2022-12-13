@@ -62,12 +62,12 @@ export const Navbar = () => {
               className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-300 p-2 shadow"
             >
               <li>
-                <Link role="menuitem" to="/favorites">
+                <Link role="menuitem" to="/user/favorites">
                   Favorites
                 </Link>
               </li>
               <li>
-                <Link role="menuitem" to="/imported">
+                <Link role="menuitem" to="/user/imported">
                   Imported
                 </Link>
               </li>
