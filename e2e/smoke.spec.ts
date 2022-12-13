@@ -27,10 +27,10 @@ test("smoke tests", async ({ page }) => {
   await page.getByRole("button", { name: "placeholder" }).click();
 
   await page.getByRole("menuitem", { name: "Favorites" }).click();
-  await expect(page).toHaveURL("http://localhost:3000/favorites");
+  await expect(page).toHaveURL("http://localhost:3000/user/favorites");
 
   await page.getByRole("menuitem", { name: "Imported" }).click();
-  await expect(page).toHaveURL("http://localhost:3000/imported");
+  await expect(page).toHaveURL("http://localhost:3000/user/imported");
 
   await page.getByRole("menuitem", { name: "Logout" }).click();
   await expect(page).toHaveURL("http://localhost:3000/");
