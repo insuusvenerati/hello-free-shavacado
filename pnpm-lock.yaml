@@ -20,7 +20,7 @@ specifiers:
   '@remix-run/react': ^1.8.2
   '@remix-run/serve': ^1.8.2
   '@remix-run/server-runtime': ^1.8.2
-  '@testing-library/cypress': ^8.0.7
+  '@testing-library/cypress': ^9.0.0
   '@testing-library/dom': ^8.19.0
   '@testing-library/jest-dom': ^5.16.5
   '@testing-library/react': ^13.4.0
@@ -117,7 +117,7 @@ devDependencies:
   '@playwright/test': 1.28.1
   '@remix-run/dev': 1.8.2_765kn7wosh7l6qycg36arvfudi
   '@remix-run/eslint-config': 1.8.2_tn6ozhzi5twwqsvqh5iimryhr4
-  '@testing-library/cypress': 8.0.7_cypress@10.11.0
+  '@testing-library/cypress': 9.0.0_cypress@12.3.0
   '@testing-library/dom': 8.19.0
   '@testing-library/jest-dom': 5.16.5
   '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
@@ -2573,15 +2573,15 @@ packages:
       defer-to-connect: 2.0.1
     dev: true
 
-  /@testing-library/cypress/8.0.7_cypress@10.11.0:
-    resolution: {integrity: sha512-3HTV725rOS+YHve/gD9coZp/UcPK5xhr4H0GMnq/ni6USdtzVtSOG9WBFtd8rYnrXk8rrGD+0toRFYouJNIG0Q==}
+  /@testing-library/cypress/9.0.0_cypress@12.3.0:
+    resolution: {integrity: sha512-c1XiCGeHGGTWn0LAU12sFUfoX3qfId5gcSE2yHode+vsyHDWraxDPALjVnHd4/Fa3j4KBcc5k++Ccy6A9qnkMA==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
-      cypress: ^2.1.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
+      cypress: ^12.0.0
     dependencies:
       '@babel/runtime': 7.19.4
       '@testing-library/dom': 8.19.0
-      cypress: 10.11.0
+      cypress: 12.3.0
     dev: true
 
   /@testing-library/dom/8.19.0:
@@ -4279,9 +4279,9 @@ packages:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
     dev: true
 
-  /cypress/10.11.0:
-    resolution: {integrity: sha512-lsaE7dprw5DoXM00skni6W5ElVVLGAdRUUdZjX2dYsGjbY/QnpzWZ95Zom1mkGg0hAaO/QVTZoFVS7Jgr/GUPA==}
-    engines: {node: '>=12.0.0'}
+  /cypress/12.3.0:
+    resolution: {integrity: sha512-ZQNebibi6NBt51TRxRMYKeFvIiQZ01t50HSy7z/JMgRVqBUey3cdjog5MYEbzG6Ktti5ckDt1tfcC47lmFwXkw==}
+    engines: {node: ^14.0.0 || ^16.0.0 || >=18.0.0}
     hasBin: true
     requiresBuild: true
     dependencies:
