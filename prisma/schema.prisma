@@ -90,8 +90,8 @@ model ImportedRecipe {
   name                    String
   image                   String?
   description             String
-  cookTime                String
-  prepTime                String
+  cookTime                String?
+  prepTime                String?
   totalTime               String?
   recipeCategories        ImportedRecipeCategory[]
   recipeCuisines          ImportedRecipeCuisine[]
