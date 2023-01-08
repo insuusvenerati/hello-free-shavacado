@@ -44,12 +44,13 @@ export const action = async ({ request }: ActionArgs) => {
     }
     invariant(typeof url === "string", "Missing url");
     const recipe = await recipeDataScraper(url);
+    console.log(recipe);
     return typedjson(
       await prisma.importedRecipe.create({
         data: {
           ...recipe,
           keywords: {
-            connectOrCreate: recipe.keywords.map((keyword) => ({
+            connectOrCreate: recipe.keywords?.map((keyword) => ({
               where: { name: keyword },
               create: {
                 name: keyword,
@@ -57,13 +58,13 @@ export const action = async ({ request }: ActionArgs) => {
             })),
           },
           recipeInstructions: {
-            create: recipe.recipeInstructions.map((instruction, index) => ({
+            create: recipe.recipeInstructions?.map((instruction, index) => ({
               caption: instruction,
               index: index,
             })),
           },
           recipeIngredients: {
-            connectOrCreate: recipe.recipeIngredients.map((ingredient) => ({
+            connectOrCreate: recipe.recipeIngredients?.map((ingredient) => ({
               where: { name: ingredient },
               create: {
                 name: ingredient,
@@ -71,7 +72,7 @@ export const action = async ({ request }: ActionArgs) => {
             })),
           },
           recipeCuisines: {
-            connectOrCreate: recipe.recipeCuisines.map((cuisine) => ({
+            connectOrCreate: recipe.recipeCuisines?.map((cuisine) => ({
               where: { name: cuisine },
               create: {
                 name: cuisine,
@@ -79,7 +80,7 @@ export const action = async ({ request }: ActionArgs) => {
             })),
           },
           recipeCategories: {
-            connectOrCreate: recipe.recipeCategories.map((category) => ({
+            connectOrCreate: recipe.recipeCategories?.map((category) => ({
               where: { name: category },
               create: {
                 name: category,
