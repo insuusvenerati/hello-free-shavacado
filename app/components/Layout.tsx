@@ -14,7 +14,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         <Sidebar className="hidden max-h-full p-5 lg:grid absolute overflow-y-auto left-0 w-72 auto-rows-max gap-10" />
       ) : null}
       {children}
-      <div className="btm-nav lg:hidden sticky bottom-0">
+      <div className="btm-nav lg:hidden fixed bottom-0">
         <NavLink to="/">
           <button title="Home" type="button">
             <svg

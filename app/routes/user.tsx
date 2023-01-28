@@ -5,7 +5,6 @@ import { requireUser } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const user = await requireUser(request);
-
   return typedjson(user);
 };
 

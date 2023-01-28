@@ -29,7 +29,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 const RecipePage = () => {
   const data = useLoaderData<typeof loader>();
-  console.log(data);
+
   return (
     <>
       <div

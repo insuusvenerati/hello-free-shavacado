@@ -6,11 +6,9 @@ import { requireUser } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const user = await requireUser(request);
-
   const importedRecipes = await prisma.importedRecipe.findMany({
     where: { user: { id: user.id } },
   });
-
   if (!importedRecipes) return typedjson({ importedRecipes: [] });
 
   return typedjson({ importedRecipes });
