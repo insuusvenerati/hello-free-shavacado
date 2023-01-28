@@ -36,7 +36,7 @@ const ImportedRecipePage = () => {
             <div className="flex">Prep time: {data.prepTime}</div>
             <div className="flex">Total time: {data.totalTime}</div>
           </div>
-          <div
+          <button
             tabIndex={0}
             className="collapse border collapse-arrow border-base-300 bg-base-300 rounded-box mt-6"
           >
@@ -44,7 +44,7 @@ const ImportedRecipePage = () => {
             <div className="collapse-content">
               <p>{data.description}</p>
             </div>
-          </div>
+          </button>
         </div>
       </div>
     </>
