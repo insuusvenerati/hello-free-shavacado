@@ -26,6 +26,11 @@
   font-family: "Mona Sans", "Mona Sans Fallback";
 } */
 
+html,
+body {
+  overscroll-behavior-y: none;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
 }

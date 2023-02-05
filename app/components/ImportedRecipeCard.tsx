@@ -1,5 +1,7 @@
 import type { ImportedRecipe } from "@prisma/client";
-import { Link, useFetcher } from "@remix-run/react";
+import { Link } from "@remix-run/react";
+import { useTypedFetcher } from "remix-typedjson";
+import type { action } from "~/routes/resource/imported";
 import { TrashIcon } from "./TrashIcon";
 
 type Props = {
@@ -7,9 +9,10 @@ type Props = {
 };
 
 export const ImportedRecipeCard = ({ recipe }: Props) => {
-  const fetcher = useFetcher();
+  const fetcher = useTypedFetcher<typeof action>();
+
   return (
-    <div className="card-compact card h-auto w-auto bg-transparent">
+    <div className="card-compact card h-auto w-auto bg-transparent max-w-md">
       <Link to={`/recipes/imported/${recipe.id}`}>
         <figure className="cursor-pointer">
           <img
@@ -21,18 +24,13 @@ export const ImportedRecipeCard = ({ recipe }: Props) => {
       </Link>
       <div className="card-body">
         <h2 className="card-title">{recipe.name}</h2>
-        <div className="card-actions justify-end">
-          <button
-            onClick={() =>
-              fetcher.submit(
-                { recipeId: recipe.id, intent: "delete" },
-                { method: "post", action: "/imported" },
-              )
-            }
-            className="btn btn-error gap-2"
-          >
-            <TrashIcon /> <span>Delete</span>
-          </button>
+        <div className="card-actions">
+          <fetcher.Form method="delete" action="/user/imported">
+            <input type="hidden" name="recipeId" value={recipe.id} />
+            <button type="submit" className="btn btn-error gap-2">
+              <TrashIcon /> <span>Delete</span>
+            </button>
+          </fetcher.Form>
         </div>
       </div>
     </div>

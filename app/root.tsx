@@ -1,11 +1,9 @@
-import styles from "@algolia/autocomplete-theme-classic/dist/theme.css";
 import type {
   ErrorBoundaryComponent,
   LinksFunction,
   LoaderArgs,
   MetaFunction,
 } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -14,15 +12,12 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
-  useLoaderData,
 } from "@remix-run/react";
 import type { CatchBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
-import { renderToString } from "react-dom/server";
-import { getServerState } from "react-instantsearch-hooks-server";
-import { InstantSearch, InstantSearchSSRProvider } from "react-instantsearch-hooks-web";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { Layout } from "./components/Layout";
 import { prisma } from "./db.server";
-import { searchClient } from "./models/search";
+import { getUserColorScheme } from "./db/getUserColorScheme.server";
 import { getThemeSession } from "./models/theme.server";
 import { getUser } from "./session.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
@@ -163,10 +158,7 @@ const SplashScreens = () => (
 );
 
 export const links: LinksFunction = () => {
-  return [
-    { rel: "stylesheet", href: tailwindStylesheetUrl },
-    { rel: "stylesheet", href: styles },
-  ];
+  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
 };
 
 export const meta: MetaFunction = () => ({
@@ -177,62 +169,43 @@ export const meta: MetaFunction = () => ({
 });
 
 export async function loader({ request }: LoaderArgs) {
-  const serverUrl = request.url;
-  const user = await getUser(request);
+  try {
+    const user = await getUser(request);
 
-  const [favoriteRecipes, serverState, themeSession] = await Promise.all([
-    prisma.favoriteRecipe.findMany({
-      where: {
-        user: {
-          some: {
-            id: user?.id,
+    const [favoriteRecipes, themeSession, colorScheme] = await Promise.all([
+      prisma.favoriteRecipe.findMany({
+        where: {
+          user: {
+            every: {
+              id: user?.id,
+            },
           },
         },
-      },
-      select: {
-        id: true,
-        recipe: {
-          include: {
-            tags: true,
+        include: {
+          recipe: {
+            include: {
+              tags: true,
+            },
           },
         },
-      },
-    }),
-    getServerState(<SearchProvider serverUrl={serverUrl} />, {
-      renderToString,
-    }),
-    getThemeSession(request),
-  ]);
+      }),
+      getThemeSession(request),
+      getUserColorScheme(user),
+    ]);
 
-  return json({
-    favoriteRecipes,
-    user,
-    serverState,
-    serverUrl,
-    theme: themeSession.getTheme(),
-  });
-}
-
-function SearchProvider({
-  serverState,
-  serverUrl,
-  children,
-}: {
-  serverState?: any;
-  serverUrl: string;
-  children?: React.ReactNode;
-}) {
-  return (
-    <InstantSearchSSRProvider {...serverState}>
-      <InstantSearch searchClient={searchClient} indexName="hellofresh">
-        {children}
-      </InstantSearch>
-    </InstantSearchSSRProvider>
-  );
+    return typedjson({
+      favoriteRecipes,
+      user,
+      colorScheme: colorScheme ?? themeSession.getTheme(),
+    });
+  } catch (error) {
+    if (error instanceof Error) throw new Error(error.message);
+    throw new Error("Something went wrong");
+  }
 }
 
 export default function App() {
-  const { serverState, serverUrl, theme } = useLoaderData<typeof loader>();
+  const { colorScheme } = useTypedLoaderData<typeof loader>();
   return (
     <html className="h-screen" lang="en">
       <head>
@@ -259,12 +232,10 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body data-theme={theme ?? "dark"}>
-        <SearchProvider serverState={serverState} serverUrl={serverUrl}>
-          <Layout>
-            <Outlet />
-          </Layout>
-        </SearchProvider>
+      <body data-theme={colorScheme ?? "dark"}>
+        <Layout>
+          <Outlet />
+        </Layout>
         <ScrollRestoration />
         <Scripts />
         {process.env.NODE_ENV === "development" && <LiveReload />}
@@ -295,6 +266,7 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 export const CatchBoundary: CatchBoundaryComponent = () => {
   const caught = useCatch();
   console.log(caught);
+  if (!caught.data) throw new Error("No data");
   return (
     <html lang="en">
       <head>

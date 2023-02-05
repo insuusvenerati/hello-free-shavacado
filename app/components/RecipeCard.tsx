@@ -1,16 +1,12 @@
 import type { Recipe, Tag } from "@prisma/client";
 import { Link } from "@remix-run/react";
-import type { Hit } from "instantsearch.js";
 import { HF_CARD_IMAGE_URL } from "~/constants";
-import { AddToFavoritesButton } from "~/routes/recipes/favorite";
-import type { RecipeHit } from "~/types/recipe";
+import { AddToFavoritesButton } from "./AddToFavoritesButton";
 
 type Props = {
-  recipe:
-    | Hit<RecipeHit>
-    | (Recipe & {
-        tags: Tag[];
-      });
+  recipe: Recipe & {
+    tags: Tag[];
+  };
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const RecipeCard = ({ recipe, ...props }: Props) => {
@@ -27,7 +23,6 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
       </Link>
       <div className="card-body justify-between">
         <div className="card-title text-sm">{recipe.name}</div>
-        {/* <p>{recipe.description?.slice(0, 100)}...</p> */}
         <div className="btn-group">
           {recipe.tags
             ?.map((tag) => (

@@ -9,4 +9,7 @@ module.exports = {
     "instantsearch.js/es/connectors/relevant-sort/connectRelevantSort",
     "recipe-data-scraper",
   ],
+  future: {
+    unstable_dev: false,
+  },
 };

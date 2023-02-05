@@ -3,27 +3,7 @@ import type { User } from "@prisma/client";
 import { Link, useFetcher } from "@remix-run/react";
 import { ColorSchemeSwitcher } from "~/routes/resource/set-theme";
 import { useMatchesData } from "~/utils";
-import { Autocomplete } from "./AutoComplete";
-
-const Bars = ({ ...props }: React.SVGProps<SVGSVGElement>) => (
-  <label htmlFor="my-drawer-2">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className="w-6 h-6 mr-4 lg:hidden"
-      {...props}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-      />
-    </svg>
-  </label>
-);
+import { SearchForm } from "./SearchForm";
 
 export const Navbar = () => {
   const matchesData = useMatchesData<{ user: User }>("root");
@@ -31,23 +11,21 @@ export const Navbar = () => {
   const fetcher = useFetcher();
 
   return (
-    <nav className="navbar border-b-2 border-b-primary">
+    <nav className="navbar justify-between border-b-2 border-b-primary">
       {matches && (
-        <div className="navbar-start">
+        <div className="navbar-start max-w-sm">
           <Link to="/" className="btn-ghost btn text-xl normal-case">
             Hello Free Shavacado
           </Link>
         </div>
       )}
 
-      {/* <Bars /> */}
-
-      <div className="navbar-center">
-        <Autocomplete placeholder="Search" />
+      <div className="navbar-center w-full max-w-md">
+        <SearchForm placeholder="Search" className="input input-bordered w-full" />
       </div>
-      <div className="navbar-end w-full gap-2">
+      <div className="navbar-end max-w-sm gap-2">
         {matches ? <ColorSchemeSwitcher /> : null}
-        {matchesData?.user ? (
+        {matches && matchesData?.user ? (
           <div className="dropdown-end dropdown">
             <button type="button" className="btn-ghost btn-circle avatar btn">
               <img
@@ -86,9 +64,11 @@ export const Navbar = () => {
             </ul>
           </div>
         ) : (
-          <Link to="/login" className="btn-ghost btn">
-            Login
-          </Link>
+          matches && (
+            <Link to="/login" className="btn-ghost btn">
+              Login
+            </Link>
+          )
         )}
       </div>
     </nav>

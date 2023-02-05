@@ -14,8 +14,8 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         <Sidebar className="hidden max-h-full p-5 lg:grid absolute overflow-y-auto left-0 w-72 auto-rows-max gap-10" />
       ) : null}
       {children}
-      <div className="btm-nav lg:hidden fixed bottom-0">
-        <NavLink to="/">
+      <div className="btm-nav h-20 lg:hidden items-start fixed bottom-0 overflow-hidden">
+        <NavLink className="h-3/4" to="/">
           <button title="Home" type="button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +34,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           </button>
         </NavLink>
 
-        <NavLink to="/user/favorites">
+        <NavLink className="h-3/4" to="/user/favorites">
           <button title="Favorites" type="button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           </button>
         </NavLink>
 
-        <NavLink to="/user/imported">
+        <NavLink className="h-3/4" to="/user/imported">
           <button title="Imported" type="button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
