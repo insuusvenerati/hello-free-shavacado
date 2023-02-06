@@ -1,25 +1,18 @@
 import type { LoaderArgs } from "@remix-run/server-runtime";
-import { typedjson } from "remix-typedjson";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { RecipeCard } from "~/components/RecipeCard";
-import { prisma } from "~/db.server";
+import { getUserFavorites } from "~/db/getUserFavorites.server";
 import { requireUser } from "~/session.server";
-import type { FavoritesWithRecipeAndId } from "~/types/favorites";
-import { useMatchesData } from "~/utils";
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request);
-  const favoriteRecipes = await prisma.favoriteRecipe.findMany({
-    where: { user: { every: { id: user.id } } },
-    include: { recipe: { include: { tags: true } } },
-  });
+  const favoriteRecipes = await getUserFavorites(user.id);
 
-  return typedjson({ favoriteRecipes });
+  return typedjson(favoriteRecipes);
 };
 
 const UserFavoritesPage = () => {
-  const favoriteRecipes = useMatchesData<{ favoriteRecipes: FavoritesWithRecipeAndId }>(
-    "root",
-  )?.favoriteRecipes;
+  const favoriteRecipes = useTypedLoaderData<typeof loader>();
   const count = favoriteRecipes.length;
 
   return (

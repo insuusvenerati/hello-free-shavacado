@@ -1,6 +1,7 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { toast } from "react-toastify";
 import { useTypedFetcher } from "remix-typedjson";
-import type { action } from "~/routes/favorites";
+import type { action } from "~/routes/recipes/favorite";
 import type { FavoritesWithRecipeAndId } from "~/types/favorites";
 import { useMatchesData } from "~/utils";
 import { TrashIcon } from "./TrashIcon";
@@ -18,13 +19,26 @@ export const AddToFavoritesButton = ({ id }: { id: string }) => {
 
   const addToFavorites = useTypedFetcher<typeof action>();
   const loading = addToFavorites.state === "submitting";
-  const isError = typeof addToFavorites.data !== "undefined" && addToFavorites.data.error;
+  const isError = addToFavorites.data?.status === "error";
+  const isDeletedSuccess =
+    addToFavorites.data?.method === "DELETE" && addToFavorites.data?.status === "success";
+  const isSuccess =
+    addToFavorites.type === "done" &&
+    addToFavorites.data?.status === "success" &&
+    !isError &&
+    addToFavorites.data?.method !== "DELETE";
+
+  // Show toast when favorite is added, removed, or error
+  useEffect(() => {
+    isError && toast("Error adding to favorites", { theme: "dark" });
+    isSuccess && toast("Added to favorites", { theme: "dark" });
+    isDeletedSuccess && toast("Removed from favorites", { theme: "dark" });
+  }, [isDeletedSuccess, isError, isSuccess]);
 
   const buttonText = useMemo(() => {
     if (isFavorite) return "Added";
-    if (isError) return "Error adding to favorites";
     return "Add to favorites";
-  }, [isError, isFavorite]);
+  }, [isFavorite]);
 
   return (
     <div className="btn-group flex">
@@ -61,10 +75,7 @@ export const AddToFavoritesButton = ({ id }: { id: string }) => {
           title="Remove from favorites"
           type="button"
           onClick={() =>
-            addToFavorites.submit(
-              { query: id, intent: "delete" },
-              { method: "post", action: "/recipes/favorite" },
-            )
+            addToFavorites.submit({ query: id }, { method: "delete", action: "/recipes/favorite" })
           }
           className="btn btn-error btn-sm"
         >

@@ -1,4 +1,4 @@
-import { Params, RouteMatch, useMatches } from "@remix-run/react";
+import { useMatches } from "@remix-run/react";
 import { useMemo } from "react";
 
 import type { User } from "~/models/user.server";
@@ -41,7 +41,7 @@ function isUser(user: any): user is User {
 }
 
 export function useOptionalUser(): User | undefined {
-  const { data } = useMatchesData<{ user: User }>("root");
+  const data = useMatchesData<{ user: User }>("root");
   if (!data || !isUser(data.user)) {
     return undefined;
   }

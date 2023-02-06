@@ -5,34 +5,9 @@
   "scope": "/",
   "start_url": "/",
   "name": "Hello Free Shavacado",
-  "short_name": "HF",
+  "short_name": "Hello Free Shavacado",
   "orientation": "portrait-primary",
   "prefer_related_applications": false,
-  "shortcuts": [
-    {
-      "name": "Favorite Recipes",
-      "url": "/myrecipes",
-      "description": "Display a list of your favorited recipes",
-      "icons": [
-        {
-          "src": "/OrangeSlice2.svg"
-        }
-      ]
-    },
-    {
-      "name": "Groceries",
-      "url": "/groceries",
-      "description": "Display a list of your groceries",
-      "icons": [
-        {
-          "src": "/OrangeSlice2.svg",
-          "type": "image/svg",
-          "sizes": "any",
-          "purpose": "any maskable"
-        }
-      ]
-    }
-  ],
   "icons": [
     {
       "src": "OrangeSlice2.svg",

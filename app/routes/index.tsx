@@ -46,7 +46,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function Index() {
-  const matches = useMediaQuery("(min-width: 900px)");
+  const matches = useMediaQuery("(min-width: 900px)", true, { getInitialValueInEffect: false });
   const recipes = useTypedLoaderData<typeof loader>();
   const { refreshContainer, pullChange } = usePullRefresh();
   const isLoading = useMemo(() => {

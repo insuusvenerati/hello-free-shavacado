@@ -7,27 +7,28 @@ import { getUserFavorites } from "~/db/getUserFavorites.server";
 import { requireUser } from "~/session.server";
 
 export const action = async ({ request }: ActionArgs) => {
+  const method = request.method;
   const user = await requireUser(request);
   const formData = await request.formData();
   const id = formData.get("query");
-  const intent = formData.get("intent");
 
   invariant(typeof id === "string", "Missing id");
-  const existingFavorites = await getUserFavorites(user.id);
-
-  if (existingFavorites.some((favorite) => favorite.recipeId === id)) {
-    return typedjson({ result: "Already favorited", status: "error" });
-  }
 
   try {
-    if (intent === "delete") {
-      return await prisma.favoriteRecipe.delete({
+    if (method === "DELETE") {
+      const result = await prisma.favoriteRecipe.delete({
         where: {
           recipeId: id,
         },
       });
+      return typedjson({ result, status: "success", method }, { status: 200 });
     }
-    return await prisma.favoriteRecipe.upsert({
+    const existingFavorites = await getUserFavorites(user.id);
+
+    if (existingFavorites.some((favorite) => favorite.recipeId === id)) {
+      return typedjson({ result: "Already favorited", status: "error", method });
+    }
+    const result = await prisma.favoriteRecipe.upsert({
       where: {
         recipeId: id,
       },
@@ -51,9 +52,11 @@ export const action = async ({ request }: ActionArgs) => {
         },
       },
     });
+    return typedjson({ result, status: "success", method }, { status: 201 });
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
-      return typedjson({ result: error.message, status: "error" });
+      return typedjson({ result: error.message, status: "error", method });
     }
+    return typedjson({ result: JSON.stringify(error), status: "error", method });
   }
 };

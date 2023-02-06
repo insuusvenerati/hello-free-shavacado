@@ -21,6 +21,8 @@ import { getUserColorScheme } from "./db/getUserColorScheme.server";
 import { getThemeSession } from "./models/theme.server";
 import { getUser } from "./session.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
+import toastStyles from "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const SplashScreens = () => (
   <>
@@ -158,7 +160,10 @@ const SplashScreens = () => (
 );
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
+  return [
+    { rel: "stylesheet", href: tailwindStylesheetUrl },
+    { rel: "stylesheet", href: toastStyles },
+  ];
 };
 
 export const meta: MetaFunction = () => ({
@@ -171,12 +176,12 @@ export const meta: MetaFunction = () => ({
 export async function loader({ request }: LoaderArgs) {
   try {
     const user = await getUser(request);
-
-    const [favoriteRecipes, themeSession, colorScheme] = await Promise.all([
-      prisma.favoriteRecipe.findMany({
+    let favoriteRecipes;
+    if (user) {
+      favoriteRecipes = await prisma.favoriteRecipe.findMany({
         where: {
           user: {
-            every: {
+            some: {
               id: user?.id,
             },
           },
@@ -188,7 +193,10 @@ export async function loader({ request }: LoaderArgs) {
             },
           },
         },
-      }),
+      });
+    }
+
+    const [themeSession, colorScheme] = await Promise.all([
       getThemeSession(request),
       getUserColorScheme(user),
     ]);
@@ -236,6 +244,7 @@ export default function App() {
         <Layout>
           <Outlet />
         </Layout>
+        <ToastContainer position="bottom-right" theme={colorScheme === "dark" ? "dark" : "light"} />
         <ScrollRestoration />
         <Scripts />
         {process.env.NODE_ENV === "development" && <LiveReload />}
