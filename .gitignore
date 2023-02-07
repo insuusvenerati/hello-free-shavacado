@@ -17,3 +17,4 @@ node_modules
 /playwright/.cache/
 /public/entry.worker.js
 /.cache
+app/styles/tailwind.css

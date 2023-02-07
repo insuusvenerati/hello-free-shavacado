@@ -244,7 +244,7 @@ export default function App() {
         <Layout>
           <Outlet />
         </Layout>
-        <ToastContainer position="bottom-right" theme={colorScheme === "dark" ? "dark" : "light"} />
+        <ToastContainer theme={colorScheme === "dark" ? "dark" : "light"} />
         <ScrollRestoration />
         <Scripts />
         {process.env.NODE_ENV === "development" && <LiveReload />}

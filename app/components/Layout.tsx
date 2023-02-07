@@ -1,18 +1,14 @@
-import { useMediaQuery } from "@mantine/hooks";
 import { NavLink } from "@remix-run/react";
 import type { ReactNode } from "react";
 import { Navbar } from "./Navbar";
-import { Sidebar } from "./Sidebar";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
-  const matches = useMediaQuery("(min-width: 900px)");
-  const isHome = typeof window !== "undefined" && window.location.pathname === "/";
   return (
     <>
       <Navbar />
-      {matches && isHome ? (
+      {/* {matches && isHome ? (
         <Sidebar className="hidden max-h-full p-5 lg:grid absolute overflow-y-auto left-0 w-72 auto-rows-max gap-10" />
-      ) : null}
+      ) : null} */}
       {children}
       <div className="btm-nav h-20 lg:hidden items-start fixed bottom-0 overflow-hidden">
         <NavLink className="h-3/4" to="/">
@@ -55,6 +51,25 @@ export const Layout = ({ children }: { children: ReactNode }) => {
 
         <NavLink className="h-3/4" to="/user/imported">
           <button title="Imported" type="button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
+            </svg>
+          </button>
+        </NavLink>
+
+        <NavLink className="h-3/4" to="/user/settings">
+          <button title="Settings" type="button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"

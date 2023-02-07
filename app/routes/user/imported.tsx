@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { useRef } from "react";
 import { redirect, typedjson, useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
 import invariant from "tiny-invariant";
+import { RecipeGrid } from "~/components/common/RecipeGrid";
 import { ImportedRecipeCard } from "~/components/ImportedRecipeCard";
 import { prisma } from "~/db.server";
 import { requireUser } from "~/session.server";
@@ -168,12 +169,11 @@ const UserImportedPage = () => {
             <p className="text-center">{fetcher.data.error}</p>
           )}
         </fetcher.Form>
-        {/** Centered Recipe card grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <RecipeGrid>
           {importedRecipes.map((recipe) => (
             <ImportedRecipeCard key={recipe.id} recipe={recipe} />
           ))}
-        </div>
+        </RecipeGrid>
       </main>
     </>
   );

@@ -31,7 +31,7 @@ export const ColorSchemeSwitcher = () => {
   return (
     <select
       value={matches?.colorScheme || "dark"}
-      className="select select-accent max-w-xs hidden lg:block"
+      className="select select-accent max-w-xs"
       onChange={(value) =>
         themeFetcher.submit(
           { theme: value.currentTarget.value },

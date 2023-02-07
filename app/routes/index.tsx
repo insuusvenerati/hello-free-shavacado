@@ -90,7 +90,7 @@ export default function Index() {
             Last
           </Link>
         </div>
-        <div className="grid grid-cols-1 gap-4 p-2 md:grid-cols-2 lg:grid-cols-5 lg:ml-40">
+        <div className="grid grid-cols-1 gap-4 p-2 md:grid-cols-2 lg:grid-cols-5 lg:ml-40 mb-20">
           {recipes.results.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />
           ))}

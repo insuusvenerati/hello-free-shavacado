@@ -18,6 +18,8 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
             src={`${HF_CARD_IMAGE_URL}${recipe.imagePath}`}
             alt={recipe.name}
             className="w-full object-cover transition-all duration-100 hover:scale-105 rounded-md"
+            width={600}
+            height={340}
           />
         </figure>
       </Link>
