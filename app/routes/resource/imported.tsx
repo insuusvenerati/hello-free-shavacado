@@ -5,7 +5,6 @@ import { redirect, typedjson } from "remix-typedjson";
 import invariant from "tiny-invariant";
 import { prisma } from "~/db.server";
 import { requireUser } from "~/session.server";
-import { debug } from "~/utils";
 
 // export const loader = async ({ request }: LoaderArgs) => {
 //   if (request.method !== "POST") return redirect("/", { status: 405 });
@@ -93,9 +92,11 @@ export const action = async ({ request }: ActionArgs) => {
       if (error.code === "P2002") {
         return typedjson({ error: "Recipe already exists" });
       }
-      return typedjson({ error });
+      return typedjson({ error: error.message });
     }
-    debug("/resource/imported Error: ", error);
-    return typedjson({ error: "Something went wrong" });
+    if (error instanceof Error) {
+      return typedjson({ error: error.message });
+    }
+    return typedjson({ error: "Unknown error" });
   }
 };

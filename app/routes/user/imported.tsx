@@ -2,9 +2,11 @@ import { Prisma } from "@prisma/client";
 import { useCatch } from "@remix-run/react";
 import type { ActionArgs, ErrorBoundaryComponent, LoaderArgs } from "@remix-run/server-runtime";
 import clsx from "clsx";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 import { redirect, typedjson, useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
 import invariant from "tiny-invariant";
+import { Container } from "~/components/common/Container";
 import { RecipeGrid } from "~/components/common/RecipeGrid";
 import { ImportedRecipeCard } from "~/components/ImportedRecipeCard";
 import { prisma } from "~/db.server";
@@ -120,22 +122,28 @@ const UserImportedPage = () => {
     "input-error": isError,
   });
 
+  function clearInput() {
+    if (inputRef.current) inputRef.current.value = "";
+    fetcher.load("/resource/imported");
+  }
+
+  useEffect(() => {
+    if (isError)
+      toast(
+        "Failed to import recipe. Check the error message under the field or in the browser console",
+        { type: "error", theme: "dark" },
+      );
+  }, [isError]);
+
   return (
     <>
-      <main className="flex flex-col items-center p-1 lg:p-5">
+      <Container>
         <div className="text-xl mb-5">
           You currently have <strong> {count} </strong> imported recipes!
         </div>
         <fetcher.Form className="mb-4 w-full max-w-md" method="post" action="/resource/imported">
           <label className="label input-group">
-            <button
-              type="button"
-              className="btn btn-square"
-              title="Clear"
-              onClick={() => {
-                if (inputRef.current) inputRef.current.value = "";
-              }}
-            >
+            <button type="button" className="btn btn-square" title="Clear" onClick={clearInput}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -166,7 +174,7 @@ const UserImportedPage = () => {
             </button>
           </label>
           {isError && typeof fetcher.data.error === "string" && (
-            <p className="text-center">{fetcher.data.error}</p>
+            <p className="text-center text-red-700">{fetcher.data.error}</p>
           )}
         </fetcher.Form>
         <RecipeGrid>
@@ -174,7 +182,7 @@ const UserImportedPage = () => {
             <ImportedRecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </RecipeGrid>
-      </main>
+      </Container>
     </>
   );
 };

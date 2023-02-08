@@ -1,6 +1,4 @@
-// User settings page
-
-import { ColorSchemeSwitcher } from "../resource/set-theme";
+import { ColorSchemeSwitcher } from "~/components/ColorSchemeSwitcher";
 
 const SettingsPage = () => {
   return (

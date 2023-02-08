@@ -4,6 +4,8 @@ import type { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules"
 import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/server-runtime";
 import { useMemo } from "react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { Container } from "~/components/common/Container";
+import { RecipeGrid } from "~/components/common/RecipeGrid";
 import { RecipeCard } from "~/components/RecipeCard";
 import { prisma } from "~/db.server";
 import { usePullRefresh } from "~/hooks/usePullRefresh";
@@ -75,7 +77,7 @@ export default function Index() {
           {isLoading ? "Loading..." : "Pull to refresh"}
         </div>
       )}
-      <main className="container mx-auto p-1 lg:p-5">
+      <Container>
         <div className="btn-group flex justify-center">
           <Link to={`/?page=1`} className="btn btn-ghost max-w-xs">
             First
@@ -90,7 +92,7 @@ export default function Index() {
             Last
           </Link>
         </div>
-        <div className="grid grid-cols-1 gap-4 p-2 md:grid-cols-2 lg:grid-cols-5 lg:ml-40 mb-20">
+        <RecipeGrid className="lg:grid-cols-5">
           {recipes.results.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
@@ -99,8 +101,8 @@ export default function Index() {
               <h1 className="text-2xl">No results found</h1>
             </div>
           )}
-        </div>
-      </main>
+        </RecipeGrid>
+      </Container>
     </>
   );
 }

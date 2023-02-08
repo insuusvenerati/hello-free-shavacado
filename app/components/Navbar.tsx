@@ -1,8 +1,8 @@
 import { useMediaQuery } from "@mantine/hooks";
 import type { User } from "@prisma/client";
 import { Link, useFetcher } from "@remix-run/react";
-import { ColorSchemeSwitcher } from "~/routes/resource/set-theme";
 import { useMatchesData } from "~/utils";
+import { ColorSchemeSwitcher } from "./ColorSchemeSwitcher";
 import { SearchForm } from "./SearchForm";
 
 export const Navbar = () => {

@@ -41,7 +41,7 @@
   ],
   "dependencies": {
     "@mantine/hooks": "^5.10.3",
-    "@prisma/client": "^4.9.0",
+    "@prisma/client": "^4.10.0",
     "@remix-run/express": "^1.12.0",
     "@remix-run/node": "^1.12.0",
     "@remix-run/react": "^1.12.0",
@@ -56,6 +56,7 @@
     "express": "^4.18.2",
     "isbot": "^3.6.5",
     "iso8601-duration": "^2.1.1",
+    "lucide-react": "^0.112.0",
     "microdata-node": "^2.0.0",
     "morgan": "^1.10.0",
     "react": "^18.2.0",
@@ -65,6 +66,7 @@
     "remix": "1.12.0",
     "remix-typedjson": "^0.1.7",
     "remix-utils": "^6.0.0",
+    "tailwind-merge": "^1.9.1",
     "tiny-invariant": "^1.3.1"
   },
   "devDependencies": {
@@ -100,7 +102,6 @@
     "happy-dom": "^8.2.2",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
-    "msw": "^1.0.0",
     "nodemon": "^2.0.20",
     "npm-run-all": "^4.1.5",
     "patch-package": "^6.5.1",
@@ -109,7 +110,7 @@
     "postcss-lightningcss": "^0.6.0",
     "prettier": "2.8.3",
     "prettier-plugin-tailwindcss": "^0.2.2",
-    "prisma": "^4.9.0",
+    "prisma": "^4.10.0",
     "start-server-and-test": "^1.15.3",
     "tailwindcss": "^3.2.4",
     "ts-node": "^10.9.1",

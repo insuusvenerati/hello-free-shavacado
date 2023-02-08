@@ -1,5 +1,6 @@
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { Container } from "~/components/common/Container";
 import { RecipeGrid } from "~/components/common/RecipeGrid";
 import { RecipeCard } from "~/components/RecipeCard";
 import { getUserFavorites } from "~/db/getUserFavorites.server";
@@ -18,7 +19,7 @@ const UserFavoritesPage = () => {
 
   return (
     <>
-      <main className="flex flex-col items-center p-1 lg:p-5">
+      <Container>
         <div className="text-xl mb-5">
           You currently have <strong> {count} </strong> favorite recipes!
         </div>
@@ -27,7 +28,7 @@ const UserFavoritesPage = () => {
             <RecipeCard key={recipe.id} recipe={recipe.recipe} />
           ))}
         </RecipeGrid>
-      </main>
+      </Container>
     </>
   );
 };

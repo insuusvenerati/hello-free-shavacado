@@ -8,6 +8,7 @@ export const SearchForm = ({ label, ...rest }: SearchFromProps) => {
   const [params, setParams] = useSearchParams();
   const search = params.get("search") || "";
   const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -16,7 +17,7 @@ export const SearchForm = ({ label, ...rest }: SearchFromProps) => {
   }, []);
 
   return (
-    <Form method="get" className="form-control w-full">
+    <Form ref={formRef} method="get" className="form-control w-full">
       <label className="input-group">
         {label}
         {search && (
@@ -27,6 +28,7 @@ export const SearchForm = ({ label, ...rest }: SearchFromProps) => {
               className="btn btn-square"
               onClick={() => {
                 setParams(new URLSearchParams());
+                formRef.current?.reset();
               }}
             >
               <svg

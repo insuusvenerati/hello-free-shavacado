@@ -122,7 +122,6 @@ model Recipe {
   favoritesCount Int?
   totalTime      String?
   prepTime       String?
-  cookTime       String?
   slug           String
   allergens      Allergen[]
   ingredients    Ingredient[]
@@ -140,9 +139,13 @@ model Ingredient {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   name         String   @unique
-  Recipe       Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
-  recipeId     String
-  Step         Step?    @relation(fields: [stepRecipeId, stepIndex], references: [recipeId, index])
+  type         String?
+  slug         String?
+  description  String?
+  imageLink    String?
+  imagePath    String?
+  Recipe       Recipe?  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId     String?
   stepRecipeId String?
   stepIndex    Int?
 }
@@ -157,16 +160,13 @@ model Tag {
 }
 
 model Step {
-  createdAt            DateTime     @default(now())
-  updatedAt            DateTime     @updatedAt
-  caption              String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
   index                Int
-  image                String?
   instructions         String
   instructionsHTML     String?
   instructionsMarkdown String?
-  ingredients          Ingredient[]
-  Recipe               Recipe       @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  Recipe               Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId             String
 
   @@id(fields: [recipeId, index])
@@ -176,7 +176,7 @@ model Category {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String
+  name      String   @unique
   iconPath  String?
   Recipe    Recipe[]
 }
@@ -185,7 +185,7 @@ model Cuisine {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String
+  name      String   @unique
   iconPath  String?
   Recipe    Recipe?  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId  String?
@@ -195,7 +195,7 @@ model Allergen {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String
+  name      String   @unique
   iconPath  String?
   Recipe    Recipe?  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId  String?
