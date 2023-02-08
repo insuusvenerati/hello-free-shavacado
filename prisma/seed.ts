@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from "@prisma/client/runtime";
 import bcrypt from "bcryptjs";
-import type { Recipe } from "~/types/recipe";
+import type { Item, Recipe } from "~/types/recipe";
 
 const prisma = new PrismaClient();
 const skipLimit = process.env.CI ? 250 : 3750;
@@ -9,6 +9,17 @@ const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=u
 
 const TOKEN_URL =
   "https://stiforr-cors-anywhere.fly.dev/https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials";
+
+const itemNotValidForImport = (item: Item) => {
+  return (
+    !Array.isArray(item.ingredients) ||
+    !item.ingredients.length ||
+    !Array.isArray(item.steps) ||
+    !item.steps.length ||
+    item.ratingsCount < 100 ||
+    item.ingredients.length < 2
+  );
+};
 
 async function seed() {
   const email = "rachel@remix.run";
@@ -53,14 +64,7 @@ async function seed() {
       const recipes = (await response.json()) as Recipe;
 
       for (const item of recipes.items) {
-        // console.log("Adding recipe", item.name);
-        if (item.steps.length === 0 || item.ingredients.length === 0 || item.ratingsCount < 100) {
-          const isNotArray = !Array.isArray(item.ingredients);
-          if (isNotArray) {
-            console.log("Ingredients is not an array!");
-          }
-          continue;
-        }
+        if (itemNotValidForImport(item)) continue;
 
         const existingRecipe = await prisma.recipe.findUnique({
           where: {
@@ -153,35 +157,102 @@ async function seed() {
               },
             });
           } catch (error) {
-            if (
-              error instanceof PrismaClientKnownRequestError &&
-              error.message.includes("unique constraint failed")
-            ) {
+            if (error instanceof PrismaClientKnownRequestError) {
+              console.log(`Found duplicate recipe: ${item.name}`);
               const existingRecipe = await prisma.recipe.findUnique({
                 where: {
                   id: item.id,
+                  name: item.name,
                 },
                 include: {
                   allergens: true,
                 },
               });
-              await prisma.recipe.update({
-                where: {
-                  id: existingRecipe?.id,
-                },
-                data: {
-                  allergens: {
-                    connectOrCreate: existingRecipe?.allergens.map((allergen) => ({
-                      where: { name: allergen.name, id: allergen.id },
-                      create: {
-                        name: allergen.name,
-                        iconPath: allergen.iconPath,
-                        id: allergen.id,
-                      },
-                    })),
+              if (existingRecipe) {
+                await prisma.recipe.update({
+                  where: {
+                    id: existingRecipe.id,
+                    name: existingRecipe.name,
                   },
-                },
-              });
+                  data: {
+                    description: item.description,
+                    difficulty: item.difficulty,
+                    imagePath: item.imagePath,
+                    seoDescription: item.seoDescription,
+                    averageRating: item.averageRating,
+                    ratingsCount: item.ratingsCount,
+                    slug: item.slug,
+                    favoritesCount: item.favoritesCount,
+                    totalTime: item.totalTime,
+                    prepTime: item.prepTime,
+                    allergens: {
+                      connectOrCreate: item.allergens.map((allergen) => ({
+                        where: { name: allergen.name, id: allergen.id },
+                        create: {
+                          name: allergen.name,
+                          iconPath: allergen.iconPath,
+                          id: allergen.id,
+                        },
+                      })),
+                    },
+                    ingredients: {
+                      connectOrCreate: item.ingredients.map((ingredient) => ({
+                        where: { id: ingredient.id, name: ingredient.name },
+                        create: {
+                          name: ingredient.name,
+                          id: ingredient.id,
+                        },
+                      })),
+                    },
+                    steps: {
+                      connectOrCreate: item.steps.map((step) => ({
+                        where: {
+                          recipeId_index: { index: step.index, recipeId: item.id },
+                        },
+                        create: {
+                          index: step.index,
+                          image: step.images[0]?.path ?? undefined,
+                          caption: step.images[0]?.caption ?? undefined,
+                          instructions: step.instructions,
+                          instructionsHTML: step.instructionsHTML,
+                        },
+                      })),
+                    },
+                    nutrition: JSON.stringify(item.nutrition),
+                    cuisines: {
+                      connectOrCreate: item.cuisines.map((cuisine) => ({
+                        where: { name: cuisine.name, id: cuisine.id },
+                        create: {
+                          name: cuisine.name,
+                          iconPath: cuisine.iconPath,
+                          id: cuisine.id,
+                        },
+                      })),
+                    },
+                    category: item.category
+                      ? {
+                          connectOrCreate: {
+                            where: { id: item.category.id, name: item.category.name },
+                            create: {
+                              name: item.category.name,
+                              iconPath: item.category.iconPath,
+                              id: item.category.id,
+                            },
+                          },
+                        }
+                      : undefined,
+                    tags: {
+                      connectOrCreate: item.tags.map((tag) => ({
+                        where: { name: tag.name, id: tag.id },
+                        create: {
+                          name: tag.name,
+                          id: tag.id,
+                        },
+                      })),
+                    },
+                  },
+                });
+              }
             }
           }
         }
