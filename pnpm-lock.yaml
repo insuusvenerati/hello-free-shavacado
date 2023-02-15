@@ -9,7 +9,6 @@ specifiers:
   '@faker-js/faker': ^7.6.0
   '@mantine/hooks': ^5.10.3
   '@next-boost/hybrid-disk-cache': ^0.3.0
-  '@playwright/test': ^1.30.0
   '@prisma/client': ^4.10.1
   '@remix-run/dev': ^1.13.0
   '@remix-run/eslint-config': ^1.13.0
@@ -49,7 +48,6 @@ specifiers:
   eslint: ^8.33.0
   eslint-config-prettier: ^8.6.0
   eslint-plugin-jsx-a11y: ^6.7.1
-  eslint-plugin-playwright: ^0.12.0
   express: ^4.18.2
   happy-dom: ^8.2.2
   husky: ^8.0.3
@@ -129,7 +127,6 @@ dependencies:
 
 devDependencies:
   '@faker-js/faker': 7.6.0
-  '@playwright/test': 1.30.0
   '@remix-run/dev': 1.13.0_cfdthv2uspz5a76lrm5wf26biy
   '@remix-run/eslint-config': 1.13.0_6phwajf43xwwgpkdgjffawkphy
   '@testing-library/cypress': 9.0.0_cypress@12.4.1
@@ -156,7 +153,6 @@ devDependencies:
   eslint: 8.33.0
   eslint-config-prettier: 8.6.0_eslint@8.33.0
   eslint-plugin-jsx-a11y: 6.7.1_eslint@8.33.0
-  eslint-plugin-playwright: 0.12.0_eslint@8.33.0
   happy-dom: 8.2.2
   husky: 8.0.3
   lint-staged: 13.1.0
@@ -2393,15 +2389,6 @@ packages:
       picocolors: 1.0.0
       tiny-glob: 0.2.9
       tslib: 2.4.0
-    dev: true
-
-  /@playwright/test/1.30.0:
-    resolution: {integrity: sha512-SVxkQw1xvn/Wk/EvBnqWIq6NLo1AppwbYOjNLmyU0R1RoQ3rLEBtmjTnElcnz8VEtn11fptj1ECxK0tgURhajw==}
-    engines: {node: '>=14'}
-    hasBin: true
-    dependencies:
-      '@types/node': 18.11.18
-      playwright-core: 1.30.0
     dev: true
 
   /@prisma/client/4.10.1_prisma@4.10.1:
@@ -5614,18 +5601,6 @@ packages:
       minimatch: 3.1.2
       resolve: 1.22.1
       semver: 6.3.0
-    dev: true
-
-  /eslint-plugin-playwright/0.12.0_eslint@8.33.0:
-    resolution: {integrity: sha512-KXuzQjVzca5irMT/7rvzJKsVDGbQr43oQPc8i+SLEBqmfrTxlwMwRqfv9vtZqh4hpU0jmrnA/EOfwtls+5QC1w==}
-    peerDependencies:
-      eslint: '>=7'
-      eslint-plugin-jest: '>=24'
-    peerDependenciesMeta:
-      eslint-plugin-jest:
-        optional: true
-    dependencies:
-      eslint: 8.33.0
     dev: true
 
   /eslint-plugin-react-hooks/4.6.0_eslint@8.33.0:
@@ -9009,12 +8984,6 @@ packages:
       jsonc-parser: 3.2.0
       mlly: 1.1.0
       pathe: 1.1.0
-    dev: true
-
-  /playwright-core/1.30.0:
-    resolution: {integrity: sha512-7AnRmTCf+GVYhHbLJsGUtskWTE33SwMZkybJ0v6rqR1boxq2x36U7p1vDRV7HO2IwTZgmycracLxPEJI49wu4g==}
-    engines: {node: '>=14'}
-    hasBin: true
     dev: true
 
   /postcss-cli/10.1.0_aesdjsunmf4wiehhujt67my7tu:

@@ -16,7 +16,6 @@
     "prisma:reset": "prisma migrate reset",
     "prisma:studio": "prisma studio",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "algolia:seed": "dotenv -e .env ts-node other/seedAlgolia.ts",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
     "start": "remix-serve build",
     "start:express": "node ./server.js",
@@ -25,8 +24,7 @@
     "test:e2e:dev": "npx playwright test --trace=on",
     "test:e2e:run": "playwright test",
     "typecheck": "tsc -b",
-    "validate": "run-p \"vitest --run\" lint typecheck test:e2e:run",
-    "playwright:codegen": "playwright codegen localhost:3000 --viewport-size=1920,1080"
+    "validate": "run-p \"vitest --run\" lint typecheck test:e2e:run"
   },
   "eslintIgnore": [
     "/node_modules",
@@ -75,7 +73,6 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
-    "@playwright/test": "^1.30.0",
     "@remix-run/dev": "^1.13.0",
     "@remix-run/eslint-config": "^1.13.0",
     "@testing-library/cypress": "^9.0.0",
@@ -102,7 +99,6 @@
     "eslint": "^8.33.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-playwright": "^0.12.0",
     "happy-dom": "^8.2.2",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
