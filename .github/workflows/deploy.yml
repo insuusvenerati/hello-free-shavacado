@@ -246,6 +246,24 @@ jobs:
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+
+      - name: 📥 Download deps
+        run: pnpm install --frozen-lockfile
+
+      - name: ⚡ Run vitest
+        run: pnpm build --sourcemap
+
       - name: 📦 Create Sentry Release
         uses: getsentry/action-release@v1
         with:
@@ -256,6 +274,11 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+
+      - name: Remove sourcemaps
+        run: |
+          rm -rf build/**/*.js.map
+          rm -rf public/build/**/*.js.map
 
   deploy:
     name: 🚀 Deploy
@@ -277,11 +300,6 @@ jobs:
         with:
           file: "fly.toml"
           field: "app"
-
-      - name: Remove sourcemaps
-        run: |
-          rm -rf build/**/*.js.map
-          rm -rf public/build/**/*.js.map
 
       - name: 🚀 Deploy Staging
         if: ${{ github.ref == 'refs/heads/develop' }}
