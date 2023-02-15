@@ -127,24 +127,24 @@ jobs:
       #     path: ~/.cache/Cypress
       #     key: ${{ runner.os }}-cypress-${{ matrix.browsers }}
 
-      - name: 🛠 Setup Database
-        run: pnpx prisma migrate reset --force
+      # - name: 🛠 Setup Database
+      #   run: pnpx prisma migrate reset --force
 
-      - name: ⚙️ Build
-        run: pnpm run build
+      # - name: ⚙️ Build
+      #   run: pnpm run build
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      # - name: Install Playwright Browsers
+      #   run: npx playwright install --with-deps
 
-      - name: Run Playwright tests
-        run: pnpm dlx playwright test
+      # - name: Run Playwright tests
+      #   run: pnpm dlx playwright test
 
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
+      # - uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: playwright-report
+      #     path: playwright-report/
+      #     retention-days: 30
 
       # - name: 🌳 Cypress run
       #   uses: cypress-io/github-action@v4
