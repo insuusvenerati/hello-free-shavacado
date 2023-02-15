@@ -6,7 +6,7 @@ import type { FavoritesWithRecipeAndId } from "~/types/favorites";
 import { useMatchesData } from "~/utils";
 import { TrashIcon } from "./TrashIcon";
 
-export const AddToFavoritesButton = ({ id }: { id: string }) => {
+export const AddToFavoritesButton = ({ id, name }: { id: string; name: string }) => {
   const favorites = useMatchesData<{ favoriteRecipes: FavoritesWithRecipeAndId }>(
     "root",
   )?.favoriteRecipes;
@@ -19,16 +19,15 @@ export const AddToFavoritesButton = ({ id }: { id: string }) => {
 
   const addToFavorites = useTypedFetcher<typeof action>();
   const loading = addToFavorites.state === "submitting";
-  const isError = addToFavorites.data?.status === "error";
+  const isError = addToFavorites.data?.ok === "false";
   const isDeletedSuccess =
-    addToFavorites.data?.method === "DELETE" && addToFavorites.data?.status === "success";
+    addToFavorites.data?.method === "DELETE" && addToFavorites.data?.ok === "true";
   const isSuccess =
     addToFavorites.type === "done" &&
-    addToFavorites.data?.status === "success" &&
+    addToFavorites.data?.ok === "true" &&
     !isError &&
     addToFavorites.data?.method !== "DELETE";
 
-  // Show toast when favorite is added, removed, or error
   useEffect(() => {
     isError && toast("Error adding to favorites", { theme: "dark" });
     isSuccess && toast("Added to favorites", { theme: "dark" });
@@ -46,7 +45,7 @@ export const AddToFavoritesButton = ({ id }: { id: string }) => {
         type="button"
         disabled={isFavorite}
         onClick={() =>
-          addToFavorites.submit({ query: id }, { method: "post", action: "/recipes/favorite" })
+          addToFavorites.submit({ id, name }, { method: "post", action: "/recipes/favorite" })
         }
         className={`btn btn-primary w-full btn-sm ${isFavorite ? "btn-success" : ""}  ${
           loading ? "loading" : ""
@@ -75,7 +74,7 @@ export const AddToFavoritesButton = ({ id }: { id: string }) => {
           title="Remove from favorites"
           type="button"
           onClick={() =>
-            addToFavorites.submit({ query: id }, { method: "delete", action: "/recipes/favorite" })
+            addToFavorites.submit({ id, name }, { method: "delete", action: "/recipes/favorite" })
           }
           className="btn btn-error btn-sm"
         >

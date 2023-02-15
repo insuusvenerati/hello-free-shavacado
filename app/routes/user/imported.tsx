@@ -8,6 +8,7 @@ import { redirect, typedjson, useTypedFetcher, useTypedLoaderData } from "remix-
 import invariant from "tiny-invariant";
 import { Container } from "~/components/common/Container";
 import { RecipeGrid } from "~/components/common/RecipeGrid";
+import { GridSizeSelect } from "~/components/GridSizeSelect";
 import { ImportedRecipeCard } from "~/components/ImportedRecipeCard";
 import { prisma } from "~/db.server";
 import { requireUser } from "~/session.server";
@@ -141,6 +142,7 @@ const UserImportedPage = () => {
         <div className="text-xl mb-5">
           You currently have <strong> {count} </strong> imported recipes!
         </div>
+        <GridSizeSelect />
         <fetcher.Form className="mb-4 w-full max-w-md" method="post" action="/resource/imported">
           <label className="label input-group">
             <button type="button" className="btn btn-square" title="Clear" onClick={clearInput}>

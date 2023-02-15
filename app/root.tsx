@@ -14,6 +14,9 @@ import {
   useCatch,
 } from "@remix-run/react";
 import type { CatchBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
+import { withSentry } from "@sentry/remix";
+import { ToastContainer } from "react-toastify";
+import toastStyles from "react-toastify/dist/ReactToastify.css";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { Layout } from "./components/Layout";
 import { prisma } from "./db.server";
@@ -21,8 +24,7 @@ import { getUserColorScheme } from "./db/getUserColorScheme.server";
 import { getThemeSession } from "./models/theme.server";
 import { getUser } from "./session.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import toastStyles from "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import remixImageStyles from "remix-image/remix-image.css";
 
 const SplashScreens = () => (
   <>
@@ -163,6 +165,7 @@ export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: tailwindStylesheetUrl },
     { rel: "stylesheet", href: toastStyles },
+    { rel: "stylesheet", href: remixImageStyles },
   ];
 };
 
@@ -212,7 +215,7 @@ export async function loader({ request }: LoaderArgs) {
   }
 }
 
-export default function App() {
+function App() {
   const { colorScheme } = useTypedLoaderData<typeof loader>();
   return (
     <html className="h-screen" lang="en">
@@ -252,6 +255,8 @@ export default function App() {
     </html>
   );
 }
+
+export default withSentry(App);
 
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   console.error(error);

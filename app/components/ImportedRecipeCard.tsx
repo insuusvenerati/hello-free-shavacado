@@ -2,6 +2,7 @@ import type { ImportedRecipe } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import { useTypedFetcher } from "remix-typedjson";
 import type { action } from "~/routes/resource/imported";
+import { RemixImage } from "./RemixImage";
 import { TrashIcon } from "./TrashIcon";
 
 type Props = {
@@ -15,10 +16,21 @@ export const ImportedRecipeCard = ({ recipe }: Props) => {
     <div className="card-compact card h-auto w-auto bg-transparent max-w-md">
       <Link to={`/recipes/imported/${recipe.id}`}>
         <figure className="cursor-pointer">
-          <img
-            src={recipe.image ?? "http://placeimg.com/1000/1000/nature"}
+          <RemixImage
+            src={recipe.image ?? "http://placeimg.com/600/340/nature"}
             alt={recipe.name}
             className="w-full object-cover transition-all duration-100 hover:scale-105"
+            width={600}
+            height={340}
+            responsive={[
+              {
+                size: {
+                  width: 600,
+                  height: 340,
+                },
+                maxWidth: 600,
+              },
+            ]}
           />
         </figure>
       </Link>

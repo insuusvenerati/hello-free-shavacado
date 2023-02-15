@@ -1,5 +1,9 @@
 import { useMatches } from "@remix-run/react";
+import type { ClassValue } from "clsx";
+import clsx from "clsx";
 import { useMemo } from "react";
+import { toast } from "react-toastify";
+import { twMerge } from "tailwind-merge";
 
 import type { User } from "~/models/user.server";
 
@@ -65,5 +69,55 @@ export function validateEmail(email: unknown): email is string {
 export function debug(...args: unknown[]) {
   if (process.env.NODE_ENV === "development") {
     console.log(...args);
+  }
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+export const urlToObject = async (url: string) => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const file = new File([blob], "image.jpg", { type: blob.type });
+  return file;
+};
+
+export async function webShare({
+  text,
+  files: filesUrl,
+  url,
+  title,
+}: {
+  text: string;
+  files?: string[];
+  url?: string;
+  title?: string;
+}) {
+  let files: File[] | undefined;
+  // Test compatibility
+  if (navigator.share === undefined) {
+    toast("Unsupported share feature", { theme: "dark" });
+    return;
+  }
+
+  // Handle file urls
+  if (filesUrl && filesUrl.length > 0) {
+    const filesGetter = filesUrl.map((file) => urlToObject(file));
+    const newFiles = await Promise.all(filesGetter);
+
+    if (!navigator.canShare || !navigator.canShare({ files: newFiles })) {
+      toast("Unsupported share feature", { theme: "dark" });
+      return;
+    }
+
+    files = newFiles;
+  }
+
+  // Share content
+  try {
+    await navigator.share({ text, files, url, title });
+  } catch (error) {
+    toast(`Error sharing: ${error}`);
   }
 }

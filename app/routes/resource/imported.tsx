@@ -36,6 +36,7 @@ export const action = async ({ request }: ActionArgs) => {
             ...recipe,
             image: typeof recipe.image === "object" ? recipe.image.url : recipe.image,
             description: recipe.description ?? null,
+            recipeYield: recipe.recipeYield.toString() ?? null,
             keywords: {
               connectOrCreate: recipe.keywords?.map((keyword) => ({
                 where: { name: keyword },

@@ -1,27 +1,55 @@
+import type { User } from "@prisma/client";
 import { Response } from "@remix-run/node";
 import { useCatch } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import type { CatchBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import invariant from "tiny-invariant";
-import { HF_COVER_IMAGE_URL } from "~/constants";
-import { getRecipeById } from "~/db/getRecipeById.server";
+import { Container } from "~/components/common/Container";
+import { HF_AVATAR_IMAGE_URL, HF_COVER_IMAGE_URL, INGREDIENT_PLACEHOLDER_URL } from "~/constants";
+import { getRecipeByName } from "~/models/recipe.server";
+import { getTokenFromDatabase } from "~/models/token.server";
+import { cn, useMatchesData } from "~/utils";
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const id = params.id;
   invariant(id, "id is required");
-  const recipe = await getRecipeById(id);
-  if (!recipe) {
-    throw new Response("Recipe not found", { status: 404 });
+  const token = await getTokenFromDatabase();
+
+  if (typeof token !== "string") {
+    throw new Response("Unable to get recipe from API. Try again later", { status: 401 });
   }
-  return typedjson(recipe);
+
+  try {
+    const recipe = await getRecipeByName({ name: id, token: token });
+    if (!recipe) {
+      throw new Response("Recipe not found", { status: 404 });
+    }
+    return typedjson(recipe.items[0]);
+  } catch (error) {
+    console.log("Failed to retrieve recipe", error);
+    throw new Response("Unable to retrieve recipe");
+  }
 };
 
 const RecipePage = () => {
   const data = useTypedLoaderData<typeof loader>();
+  const { user } = useMatchesData<{ user: User }>("root");
+  const userPageLayout = user?.recipePageLayout ?? "horizontal";
+  const userColorScheme = user?.colorScheme ?? "dark";
+  const pageLayout = cn("gap-4 pr-2", {
+    "md:flex": userPageLayout === "vertical",
+  });
+
+  const collapseableStyles = cn("text-2xl font-bold mb-4 rounded collapse-title", {
+    "bg-gray-900 text-gray-500": userColorScheme === "dark",
+    "bg-gray-100 text-gray-900": userColorScheme === "light",
+    "bg-primary-content": userColorScheme === "halloween",
+    "bg-accent": userColorScheme === "cream",
+  });
 
   return (
-    <>
+    <div className={pageLayout}>
       <div
         className="hero h-auto"
         style={{ backgroundImage: `url(${HF_COVER_IMAGE_URL}${data.imagePath})` }}
@@ -33,9 +61,8 @@ const RecipePage = () => {
             <p className="mb-5">{data.description}</p>
           </div>
         </div>
-        {/* TODO: Add tags, allergens, etc. */}
       </div>
-      <main className="container mx-auto mt-4 gap-4 flex flex-col">
+      <main className="container mx-auto mt-4 gap-8 flex flex-col p-4">
         <div className="flex flex-col">
           <h2 className="text-2xl font-bold">Allergens</h2>
           <ul>
@@ -46,33 +73,57 @@ const RecipePage = () => {
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold">Tags</h2>
-          <ul>
+          <h2 className="text-2xl font-bold mb-4">Tags</h2>
+          <ul className="flex gap-2">
             {data.tags.map((tag) => (
-              <li key={tag.id}>{tag.name}</li>
+              <li className="badge badge-accent" key={tag.id}>
+                {tag.name}
+              </li>
             ))}
           </ul>
         </div>
 
-        <div>
-          <h2 className="text-2xl font-bold">Ingredients</h2>
-          <ul>
+        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+        <div tabIndex={0} className="collapse collapse-plus">
+          <input defaultChecked type="checkbox" />
+          <h2 className={collapseableStyles}>Ingredients</h2>
+          <ul className="lg:flex lg:flex-col lg:flex-wrap lg:h-96 gap-4 collapse-content">
             {data.ingredients.map((ingredient) => (
-              <li key={ingredient.id}>{ingredient.name}</li>
+              <li className="flex gap-2 items-center" key={ingredient.id}>
+                <div className="avatar">
+                  <div className="w-[50px] rounded-full">
+                    <img
+                      height={50}
+                      width={50}
+                      src={
+                        ingredient.imagePath
+                          ? `${HF_AVATAR_IMAGE_URL}${ingredient.imagePath}`
+                          : `${INGREDIENT_PLACEHOLDER_URL}?text=${ingredient.name}`
+                      }
+                      alt={ingredient.name}
+                    />
+                  </div>
+                </div>
+                {ingredient.name}
+              </li>
             ))}
           </ul>
         </div>
 
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Steps</h2>
-          <ol className="ml-4">
+        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+        <div tabIndex={0} className="collapse collapse-plus mb-20">
+          <input type="checkbox" />
+          <h2 className={collapseableStyles}>Steps</h2>
+          <ol className="ml-4 steps steps-vertical collapse-content items-center p-0">
             {data.steps.map((step) => (
-              <li className="mb-4" key={step.index}>{`${step.index}) ${step.instructions}`}</li>
+              <li className="step" key={step.index}>
+                {step.instructions}
+              </li>
             ))}
           </ol>
         </div>
       </main>
-    </>
+    </div>
   );
 };
 
@@ -82,8 +133,8 @@ export const CatchBoundary: CatchBoundaryComponent = () => {
   const caught = useCatch();
   console.log(caught);
   return (
-    <main className="container mx-auto">
+    <Container>
       <h1 className="text-xl">{caught.data}</h1>
-    </main>
+    </Container>
   );
 };

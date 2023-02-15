@@ -1,16 +1,15 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaClientValidationError } from "@prisma/client/runtime";
 import bcrypt from "bcryptjs";
-import type { Item, Recipe } from "~/types/recipe";
+import type { Item, Recipes } from "~/types/recipe";
 
 const prisma = new PrismaClient();
-const skipLimit = process.env.CI ? 250 : 3750;
+const skipLimit = process.env.CI ? 250 : 4000;
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 
 const TOKEN_URL =
   "https://stiforr-cors-anywhere.fly.dev/https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials";
 
-const itemNotValidForImport = (item: Item) => {
+export const itemNotValidForImport = (item: Item) => {
   return (
     !Array.isArray(item.ingredients) ||
     !item.ingredients.length ||
@@ -61,18 +60,15 @@ async function seed() {
         headers: { authorization: `Bearer ${token.access_token}` },
       });
 
-      const recipes = (await response.json()) as Recipe;
+      const recipes = (await response.json()) as Recipes;
 
-      const ingredients = recipes.items.map((item) => item.ingredients).flat();
-      const allergens = recipes.items.map((item) => item.allergens).flat();
-      const cuisines = recipes.items.map((item) => item.cuisines).flat();
-      const categories = recipes.items.map((item) => item.category).flat();
-
-      // Filter recipes that have no ingredients or steps
-      const filteredRecipes = recipes.items.filter((item) => !itemNotValidForImport(item));
+      // const ingredients = recipes.items.map((item) => item.ingredients).flat();
+      // const allergens = recipes.items.map((item) => item.allergens).flat();
+      // const cuisines = recipes.items.map((item) => item.cuisines).flat();
+      // const categories = recipes.items.map((item) => item.category).flat();
 
       await prisma.$transaction(
-        filteredRecipes.map((item) => {
+        recipes.items.map((item) => {
           return prisma.recipe.create({
             data: {
               id: item.id,

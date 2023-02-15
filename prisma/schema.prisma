@@ -8,16 +8,25 @@ generator client {
   previewFeatures = ["extendedWhereUnique"]
 }
 
+model Token {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  token     String   @unique
+}
+
 model User {
-  id              String           @id @default(cuid())
-  email           String           @unique
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  imageUrl        String?
-  colorScheme     String?
-  password        Password?
-  favoriteRecipes FavoriteRecipe[]
-  ImportedRecipe  ImportedRecipe[]
+  id               String           @id @default(cuid())
+  email            String           @unique
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  imageUrl         String?
+  colorScheme      String?
+  gridSize         String?
+  recipePageLayout String?
+  password         Password?
+  favoriteRecipes  FavoriteRecipe[]
+  ImportedRecipe   ImportedRecipe[]
 }
 
 model Password {

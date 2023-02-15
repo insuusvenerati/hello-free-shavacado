@@ -9,7 +9,6 @@ node_modules
 /prisma/data.db
 /prisma/data.db-journal
 
-/app/styles/tailwind.css
 !.env.example
 !.env.vault
 /test-results/
@@ -17,4 +16,5 @@ node_modules
 /playwright/.cache/
 /public/entry.worker.js
 /.cache
-app/styles/tailwind.css
+.sentryclirc
+.cache_ggshield

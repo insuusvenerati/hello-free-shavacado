@@ -61,6 +61,11 @@ export const Navbar = () => {
                   Logout
                 </Link>
               </li>
+              <li>
+                <Link role="menuitem" to="/user/settings">
+                  Settings
+                </Link>
+              </li>
             </ul>
           </div>
         ) : (

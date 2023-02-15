@@ -1,25 +1,4 @@
-export type RecipeHit = {
-  objectID?: string;
-  name: string;
-  description: string;
-  ingredients: HitIngredient[];
-  rating: number;
-  tags: HitTag[];
-  id: string;
-  slug: string;
-  imagePath: string;
-};
-
-export type HitIngredient = {
-  name: string;
-};
-
-export type HitTag = {
-  name: string;
-  id: string;
-};
-
-export interface Recipe {
+export interface Recipes {
   take: number;
   skip: number;
   count: number;
