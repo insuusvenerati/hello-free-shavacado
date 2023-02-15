@@ -269,7 +269,7 @@ jobs:
         with:
           environment: ${{ github.ref_name }}
           version: ${{ github.sha }}
-          sourcemaps: "./build/**/*.map ./public/build/**/*.map"
+          sourcemaps: "./build ./public/build"
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
