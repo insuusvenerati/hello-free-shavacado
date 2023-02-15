@@ -278,6 +278,11 @@ jobs:
           file: "fly.toml"
           field: "app"
 
+      - name: Remove sourcemaps
+        run: |
+          rm -rf build/**/*.js.map
+          rm -rf public/build/**/*.js.map
+
       - name: 🚀 Deploy Staging
         if: ${{ github.ref == 'refs/heads/develop' }}
         uses: superfly/flyctl-actions@1.3
