@@ -262,7 +262,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm build --sourcemap
+        run: pnpm build
 
       - name: 📦 Create Sentry Release
         uses: getsentry/action-release@v1
