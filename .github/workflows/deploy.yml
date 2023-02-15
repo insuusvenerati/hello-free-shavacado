@@ -261,7 +261,7 @@ jobs:
       - name: 📥 Download deps
         run: pnpm install --frozen-lockfile
 
-      - name: ⚡ Run vitest
+      - name: Build
         run: pnpm build --sourcemap
 
       - name: 📦 Create Sentry Release
