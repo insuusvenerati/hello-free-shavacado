@@ -243,7 +243,7 @@ function App() {
         <Meta />
         <Links />
       </head>
-      <body data-theme={colorScheme ?? "dark"}>
+      <body className="min-h-screen" data-theme={colorScheme ?? "dark"}>
         <Layout>
           <Outlet />
         </Layout>
