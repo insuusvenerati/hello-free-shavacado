@@ -14,5 +14,3 @@ export const TOKEN_URL =
   "https://stiforr-cors-anywhere.fly.dev/https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials";
 
 export const INGREDIENT_PLACEHOLDER_URL = "https://via.placeholder.com/50.webp";
-
-export const FLY_APP_NAME = process.env.FLY_APP_NAME ?? "";
