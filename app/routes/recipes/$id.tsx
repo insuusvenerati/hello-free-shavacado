@@ -3,10 +3,16 @@ import { Response } from "@remix-run/node";
 import { useCatch } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import type { CatchBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
+import type { TypedMetaFunction } from "remix-typedjson";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import invariant from "tiny-invariant";
 import { Container } from "~/components/common/Container";
-import { HF_AVATAR_IMAGE_URL, HF_COVER_IMAGE_URL, INGREDIENT_PLACEHOLDER_URL } from "~/constants";
+import {
+  HF_AVATAR_IMAGE_URL,
+  HF_CARD_IMAGE_URL,
+  HF_COVER_IMAGE_URL,
+  INGREDIENT_PLACEHOLDER_URL,
+} from "~/constants";
 import { getRecipeByName } from "~/models/recipe.server";
 import { getTokenFromDatabase } from "~/models/token.server";
 import { cn, useMatchesData } from "~/utils";
@@ -30,6 +36,22 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     console.log("Failed to retrieve recipe", error);
     throw new Response("Unable to retrieve recipe");
   }
+};
+
+export const meta: TypedMetaFunction<typeof loader> = ({ data }) => {
+  return {
+    title: data.name,
+    description: data.description,
+    "og:description": data.description,
+    "og:image": `${HF_CARD_IMAGE_URL}${data.imagePath}`,
+    "og:url": "https://hello-free-shavacado-new.fly.dev/",
+    "og:type": "website",
+    "og:title": "Hello Free Shavacado",
+    "twitter:card": "summary_large_image",
+    "twitter:title": data.name,
+    "twitter:description": data.description,
+    "twitter:image": `${HF_CARD_IMAGE_URL}${data.imagePath}`,
+  };
 };
 
 const RecipePage = () => {

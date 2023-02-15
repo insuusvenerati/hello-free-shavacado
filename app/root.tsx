@@ -1,9 +1,4 @@
-import type {
-  ErrorBoundaryComponent,
-  LinksFunction,
-  LoaderArgs,
-  MetaFunction,
-} from "@remix-run/node";
+import type { ErrorBoundaryComponent, LinksFunction, LoaderArgs } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -17,6 +12,8 @@ import type { CatchBoundaryComponent } from "@remix-run/server-runtime/dist/rout
 import { withSentry } from "@sentry/remix";
 import { ToastContainer } from "react-toastify";
 import toastStyles from "react-toastify/dist/ReactToastify.css";
+import remixImageStyles from "remix-image/remix-image.css";
+import type { TypedMetaFunction } from "remix-typedjson";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { Layout } from "./components/Layout";
 import { prisma } from "./db.server";
@@ -24,7 +21,6 @@ import { getUserColorScheme } from "./db/getUserColorScheme.server";
 import { getThemeSession } from "./models/theme.server";
 import { getUser } from "./session.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import remixImageStyles from "remix-image/remix-image.css";
 
 const SplashScreens = () => (
   <>
@@ -169,11 +165,22 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const meta: MetaFunction = () => ({
+export const meta: TypedMetaFunction<typeof loader> = () => ({
   charset: "utf-8",
   title: "Hello Free Shavacado",
   viewport: "width=device-width,initial-scale=1",
   description: "Delicious!",
+  "og:url": "https://hello-free-shavacado-new.fly.dev/",
+  "og:type": "website",
+  "og:image": "/logo.jpg",
+  "og:title": "Hello Free Shavacado",
+  "og:description": "Delicious!",
+  "twitter:card": "summary_large_image",
+  "twitter:domain": "hello-free-shavacado-new-staging.fly.dev",
+  "twitter:url": "https://hello-free-shavacado-new-staging.fly.dev/",
+  "twitter:title": "Hello Free Shavacado",
+  "twitter:description": "Delicious!",
+  "twitter:image": "/logo.jpg",
 });
 
 export async function loader({ request }: LoaderArgs) {
@@ -224,17 +231,6 @@ function App() {
         <link href="/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />
         <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
         <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
-        <meta property="og:url" content="https://hello-free-shavacado-new.fly.dev/" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="/logo.jpg" />
-        <meta property="og:title" content="Hello Free Shavacado" />
-        <meta property="og:description" content="Delicious!" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:domain" content="hello-free-shavacado-new.fly.dev" />
-        <meta property="twitter:url" content="https://hello-free-shavacado-new.fly.dev/" />
-        <meta name="twitter:title" content="Hello Free Shavacado" />
-        <meta name="twitter:description" content="Delicious!" />
-        <meta name="twitter:image" content="/logo.jpg"></meta>
         <link href="/site.webmanifest" rel="manifest" />
         <link href="/safari-pinned-tab.svg" rel="mask-icon" />
         <meta content="#da532c" name="msapplication-TileColor" />
