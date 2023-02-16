@@ -7,6 +7,8 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  useFetchers,
+  useTransition,
 } from "@remix-run/react";
 import type { CatchBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
 import { withSentry } from "@sentry/remix";
@@ -20,7 +22,10 @@ import { prisma } from "./db.server";
 import { getUserColorScheme } from "./db/getUserColorScheme.server";
 import { getThemeSession } from "./models/theme.server";
 import { getUser } from "./session.server";
+import NProgress from "nprogress";
+import nProgressStyles from "nprogress/nprogress.css";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
+import { useEffect, useMemo } from "react";
 
 const SplashScreens = () => (
   <>
@@ -162,6 +167,7 @@ export const links: LinksFunction = () => {
     { rel: "stylesheet", href: tailwindStylesheetUrl },
     { rel: "stylesheet", href: toastStyles },
     { rel: "stylesheet", href: remixImageStyles },
+    { rel: "stylesheet", href: nProgressStyles },
   ];
 };
 
@@ -224,6 +230,24 @@ export async function loader({ request }: LoaderArgs) {
 
 function App() {
   const { colorScheme } = useTypedLoaderData<typeof loader>();
+  const transition = useTransition();
+
+  const fetchers = useFetchers();
+
+  const state = useMemo<"idle" | "loading">(
+    function getGlobalState() {
+      const states = [transition.state, ...fetchers.map((fetcher) => fetcher.state)];
+      if (states.every((state) => state === "idle")) return "idle";
+      return "loading";
+    },
+    [transition.state, fetchers],
+  );
+
+  useEffect(() => {
+    if (state === "loading") NProgress.start();
+    if (state === "idle") NProgress.done();
+  }, [transition.state]);
+
   return (
     <html className="h-screen" lang="en">
       <head>

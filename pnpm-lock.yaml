@@ -27,6 +27,7 @@ specifiers:
   '@types/cookie': ^0.5.1
   '@types/eslint': ^8.21.1
   '@types/node': ^18.13.0
+  '@types/nprogress': ^0.2.0
   '@types/react': ^18.0.28
   '@types/react-dom': ^18.0.11
   '@types/workbox-core': ^5.0.0
@@ -59,6 +60,7 @@ specifiers:
   morgan: ^1.10.0
   nodemon: ^2.0.20
   npm-run-all: ^4.1.5
+  nprogress: ^0.2.0
   patch-package: ^6.5.1
   postcss: ^8.4.21
   postcss-cli: ^10.1.0
@@ -111,6 +113,7 @@ dependencies:
   lucide-react: 0.114.0_react@18.2.0
   microdata-node: 2.0.0
   morgan: 1.10.0
+  nprogress: 0.2.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-toastify: 9.1.1_biqbaboplfbrettd7655fr4n2y
@@ -138,6 +141,7 @@ devDependencies:
   '@types/cookie': 0.5.1
   '@types/eslint': 8.21.1
   '@types/node': 18.13.0
+  '@types/nprogress': 0.2.0
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
   '@types/workbox-core': 5.0.0
@@ -3055,6 +3059,10 @@ packages:
 
   /@types/node/18.13.0:
     resolution: {integrity: sha512-gC3TazRzGoOnoKAhUx+Q0t8S9Tzs74z7m0ipwGpSqQrleP14hKxP4/JUeEQcD3W1/aIpnWl8pHowI7WokuZpXg==}
+
+  /@types/nprogress/0.2.0:
+    resolution: {integrity: sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==}
+    dev: true
 
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
@@ -8505,6 +8513,10 @@ packages:
       console-control-strings: 1.1.0
       gauge: 4.0.4
       set-blocking: 2.0.0
+    dev: false
+
+  /nprogress/0.2.0:
+    resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
     dev: false
 
   /nth-check/2.1.1:

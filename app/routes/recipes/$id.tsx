@@ -31,7 +31,11 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     if (!recipe) {
       throw new Response("Recipe not found", { status: 404 });
     }
-    return typedjson(recipe.items[0]);
+    return typedjson(recipe.items[0], {
+      headers: {
+        "Cache-Control": "public, max-age=60, s-maxage=3600",
+      },
+    });
   } catch (error) {
     console.log("Failed to retrieve recipe", error);
     throw new Response("Unable to retrieve recipe");
