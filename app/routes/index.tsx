@@ -1,10 +1,11 @@
 import { useMediaQuery } from "@mantine/hooks";
-import { Link, useCatch } from "@remix-run/react";
+import { Await, Link, useCatch, useLoaderData } from "@remix-run/react";
 import type { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/server-runtime";
-import { useMemo } from "react";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { defer } from "@remix-run/server-runtime";
+import { Suspense, useMemo } from "react";
 import { Container } from "~/components/common/Container";
+import { Loader } from "~/components/common/loader/Loader";
 import { RecipeGrid } from "~/components/common/RecipeGrid";
 import { GridSizeSelect } from "~/components/GridSizeSelect";
 import { RecipeCard } from "~/components/RecipeCard";
@@ -12,6 +13,7 @@ import { prisma } from "~/db.server";
 import { usePullRefresh } from "~/hooks/usePullRefresh";
 import { getAllRecipes } from "~/models/recipe.server";
 import { getTokenFromDatabase } from "~/models/token.server";
+import { filterRecipeResults } from "~/utils";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
@@ -27,58 +29,39 @@ export const loader = async ({ request }: LoaderArgs) => {
     });
   }
 
-  const results = await getAllRecipes({
+  const results = getAllRecipes({
     take,
     skip,
     token,
     search: search.get("search") ?? "",
   });
-  // const results = await prisma.recipe.findMany({
-  //   where: {
-  //     OR: [
-  //       {
-  //         name: {
-  //           contains: search.get("search") || "",
-  //         },
-  //       },
-  //       {
-  //         description: {
-  //           contains: search.get("search") || "",
-  //         },
-  //       },
-  //     ],
-  //   },
-  //   skip,
-  //   take,
-  //   include: {
-  //     tags: true,
-  //     ingredients: true,
-  //     steps: true,
-  //   },
-  //   orderBy: [{ averageRating: "desc" }],
-  // });
 
-  const filteredResults = results.items.filter(
-    (recipe) => recipe.ingredients.length > 1 && recipe.steps.length > 1,
-  );
+  const filteredResults = filterRecipeResults((await results).items);
 
   const totalRecipes = await prisma.recipe.count();
   const totalPages = Math.ceil(totalRecipes / take);
-  const totalRecipeResults = results.items.length;
+  // const totalRecipeResults = results.items.length;
 
-  return typedjson({
-    results: filteredResults,
-    totalRecipes,
-    page: Number(page),
-    totalPages,
-    totalRecipeResults,
-    token,
-  });
+  return defer(
+    {
+      results: filteredResults,
+      totalRecipes,
+      page: Number(page),
+      totalPages,
+      // totalRecipeResults,
+      token,
+    },
+    {
+      headers: {
+        "Cache-Control": "max-age=0, s-maxage=60",
+      },
+    },
+  );
 };
 
 export default function Index() {
   const matches = useMediaQuery("(min-width: 900px)", true, { getInitialValueInEffect: false });
-  const recipes = useTypedLoaderData<typeof loader>();
+  const recipes = useLoaderData<typeof loader>();
   const { refreshContainer, pullChange } = usePullRefresh();
   const isLoading = useMemo(() => {
     if (typeof pullChange === "undefined") return false;
@@ -109,9 +92,6 @@ export default function Index() {
       <Container>
         <aside className="flex flex-col items-center justify-center w-full mb-4">
           <h1 className="text-2xl font-bold">Recipes</h1>
-          <p className="text-center">
-            {recipes.totalRecipes} recipes found. Showing {recipes.results.length} results.
-          </p>
         </aside>
 
         <div className="btn-group flex justify-center mb-4">
@@ -130,14 +110,11 @@ export default function Index() {
           {matches && <GridSizeSelect />}
         </div>
         <RecipeGrid className="lg:grid-cols-5">
-          {recipes.results.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
-          ))}
-          {recipes.totalRecipeResults === 0 && (
-            <div className="col-span-full text-center">
-              <h1 className="text-2xl">No results found</h1>
-            </div>
-          )}
+          <Suspense fallback={<Loader />}>
+            <Await resolve={recipes.results}>
+              {(results) => results.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)}
+            </Await>
+          </Suspense>
         </RecipeGrid>
       </Container>
     </>

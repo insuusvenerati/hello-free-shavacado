@@ -7,6 +7,7 @@ import type { TypedMetaFunction } from "remix-typedjson";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import invariant from "tiny-invariant";
 import { Container } from "~/components/common/Container";
+import { RemixImage } from "~/components/RemixImage";
 import {
   HF_AVATAR_IMAGE_URL,
   HF_CARD_IMAGE_URL,
@@ -118,15 +119,25 @@ const RecipePage = () => {
               <li className="flex gap-2 items-center" key={ingredient.id}>
                 <div className="avatar">
                   <div className="w-[50px] rounded-full">
-                    <img
+                    <RemixImage
                       height={50}
                       width={50}
+                      transformOptions={{ fit: "cover", quality: 20 }}
                       src={
                         ingredient.imagePath
                           ? `${HF_AVATAR_IMAGE_URL}${ingredient.imagePath}`
                           : `${INGREDIENT_PLACEHOLDER_URL}?text=${ingredient.name}`
                       }
                       alt={ingredient.name}
+                      responsive={[
+                        {
+                          size: {
+                            width: 50,
+                            height: 50,
+                          },
+                          maxWidth: 50,
+                        },
+                      ]}
                     />
                   </div>
                 </div>

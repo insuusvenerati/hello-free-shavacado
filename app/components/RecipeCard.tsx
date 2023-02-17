@@ -1,5 +1,6 @@
 import type { Recipe, Tag } from "@prisma/client";
 import { Link } from "@remix-run/react";
+import type { SerializeFrom } from "@remix-run/server-runtime";
 import { HF_CARD_IMAGE_URL } from "~/constants";
 import type { Item } from "~/types/recipe";
 import { AddToFavoritesButton } from "./AddToFavoritesButton";
@@ -10,7 +11,7 @@ type RecipeWithTags = Recipe & {
 };
 
 type Props = {
-  recipe: Item | RecipeWithTags;
+  recipe: SerializeFrom<Item> | RecipeWithTags;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const RecipeCard = ({ recipe, ...props }: Props) => {
@@ -23,6 +24,7 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
         <figure className="cursor-pointer">
           <RemixImage
             src={`${HF_CARD_IMAGE_URL}${recipe.imagePath}`}
+            transformOptions={{ fit: "cover", quality: 20 }}
             alt={recipe.name}
             className="w-full object-cover rounded-md"
             width={600}

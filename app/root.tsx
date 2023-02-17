@@ -1,3 +1,4 @@
+import type { FavoriteRecipe, Recipe, Tag } from "@prisma/client";
 import type { ErrorBoundaryComponent, LinksFunction, LoaderArgs } from "@remix-run/node";
 import {
   Links,
@@ -12,6 +13,9 @@ import {
 } from "@remix-run/react";
 import type { CatchBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
 import { withSentry } from "@sentry/remix";
+import NProgress from "nprogress";
+import nProgressStyles from "nprogress/nprogress.css";
+import { useEffect, useMemo } from "react";
 import { ToastContainer } from "react-toastify";
 import toastStyles from "react-toastify/dist/ReactToastify.css";
 import remixImageStyles from "remix-image/remix-image.css";
@@ -22,10 +26,7 @@ import { prisma } from "./db.server";
 import { getUserColorScheme } from "./db/getUserColorScheme.server";
 import { getThemeSession } from "./models/theme.server";
 import { getUser } from "./session.server";
-import NProgress from "nprogress";
-import nProgressStyles from "nprogress/nprogress.css";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import { useEffect, useMemo } from "react";
 
 const SplashScreens = () => (
   <>
@@ -189,16 +190,22 @@ export const meta: TypedMetaFunction<typeof loader> = () => ({
   "twitter:image": "/logo.jpg",
 });
 
+type FavoriteRecipes = (FavoriteRecipe & {
+  recipe: Recipe & {
+    tags: Tag[];
+  };
+})[];
+
 export async function loader({ request }: LoaderArgs) {
   try {
     const user = await getUser(request);
-    let favoriteRecipes;
+    let favoriteRecipes: FavoriteRecipes = [];
     if (user) {
       favoriteRecipes = await prisma.favoriteRecipe.findMany({
         where: {
           user: {
             some: {
-              id: user?.id,
+              id: user.id,
             },
           },
         },
@@ -212,10 +219,8 @@ export async function loader({ request }: LoaderArgs) {
       });
     }
 
-    const [themeSession, colorScheme] = await Promise.all([
-      getThemeSession(request),
-      getUserColorScheme(user),
-    ]);
+    const themeSession = await getThemeSession(request);
+    const colorScheme = await getUserColorScheme(user);
 
     return typedjson({
       favoriteRecipes,
@@ -231,7 +236,6 @@ export async function loader({ request }: LoaderArgs) {
 function App() {
   const { colorScheme } = useTypedLoaderData<typeof loader>();
   const transition = useTransition();
-
   const fetchers = useFetchers();
 
   const state = useMemo<"idle" | "loading">(
@@ -244,6 +248,7 @@ function App() {
   );
 
   useEffect(() => {
+    NProgress.configure({ showSpinner: false });
     if (state === "loading") NProgress.start();
     if (state === "idle") NProgress.done();
   }, [transition.state]);

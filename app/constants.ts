@@ -14,3 +14,9 @@ export const TOKEN_URL =
   "https://stiforr-cors-anywhere.fly.dev/https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials";
 
 export const INGREDIENT_PLACEHOLDER_URL = "https://via.placeholder.com/50.webp";
+
+export const AKIS_BASE_URL = "https://104.26.7.86/api/v1/recipe";
+
+export enum AkisRecipesCategory {
+  breakfast = 2,
+}
