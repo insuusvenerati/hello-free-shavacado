@@ -24,7 +24,7 @@ export interface Item {
   isAddon: boolean;
   seoName: null | string;
   cardLink: null | string;
-  category: Category;
+  category: Category | null;
   cuisines: Category[];
   headline: string;
   prepTime: string;

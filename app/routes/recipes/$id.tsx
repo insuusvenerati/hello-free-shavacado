@@ -3,10 +3,13 @@ import { Response } from "@remix-run/node";
 import { useCatch } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import type { CatchBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
+import { Clock, Star } from "lucide-react";
 import type { TypedMetaFunction } from "remix-typedjson";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import invariant from "tiny-invariant";
+import { AddToFavoritesButton } from "~/components/AddToFavoritesButton";
 import { Container } from "~/components/common/Container";
+import { ShareButton } from "~/components/common/ShareButton";
 import { RemixImage } from "~/components/RemixImage";
 import {
   HF_AVATAR_IMAGE_URL,
@@ -21,6 +24,7 @@ import { cn, useMatchesData } from "~/utils";
 export const loader = async ({ request, params }: LoaderArgs) => {
   const id = params.id;
   invariant(id, "id is required");
+  const url = new URL(request.url);
   const token = await getTokenFromDatabase();
 
   if (typeof token !== "string") {
@@ -32,11 +36,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     if (!recipe) {
       throw new Response("Recipe not found", { status: 404 });
     }
-    return typedjson(recipe.items[0], {
-      headers: {
-        "Cache-Control": "public, max-age=60, s-maxage=3600",
+    return typedjson(
+      { recipe: recipe.items[0], url },
+      {
+        headers: {
+          "Cache-Control": "public, max-age=60, s-maxage=3600",
+        },
       },
-    });
+    );
   } catch (error) {
     console.log("Failed to retrieve recipe", error);
     throw new Response("Unable to retrieve recipe");
@@ -45,28 +52,30 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const meta: TypedMetaFunction<typeof loader> = ({ data }) => {
   return {
-    title: data.name,
-    description: data.description,
-    "og:description": data.description,
-    "og:image": `${HF_CARD_IMAGE_URL}${data.imagePath}`,
+    title: data.recipe.name,
+    description: data.recipe.description,
+    "og:description": data.recipe.description,
+    "og:image": `${HF_CARD_IMAGE_URL}${data.recipe.imagePath}`,
     "og:url": "https://hello-free-shavacado-new.fly.dev/",
     "og:type": "website",
     "og:title": "Hello Free Shavacado",
     "twitter:card": "summary_large_image",
-    "twitter:title": data.name,
-    "twitter:description": data.description,
-    "twitter:image": `${HF_CARD_IMAGE_URL}${data.imagePath}`,
+    "twitter:title": data.recipe.name,
+    "twitter:description": data.recipe.description,
+    "twitter:image": `${HF_CARD_IMAGE_URL}${data.recipe.imagePath}`,
   };
 };
 
 const RecipePage = () => {
-  const data = useTypedLoaderData<typeof loader>();
+  const { recipe, url } = useTypedLoaderData<typeof loader>();
   const { user } = useMatchesData<{ user: User }>("root");
   const userPageLayout = user?.recipePageLayout ?? "horizontal";
   const userColorScheme = user?.colorScheme ?? "dark";
   const pageLayout = cn("gap-4 pr-2", {
     "md:flex": userPageLayout === "vertical",
   });
+
+  console.log(recipe);
 
   const collapseableStyles = cn("text-2xl font-bold mb-4 rounded collapse-title", {
     "bg-gray-900 text-gray-500": userColorScheme === "dark",
@@ -79,30 +88,75 @@ const RecipePage = () => {
     <div className={pageLayout}>
       <div
         className="hero h-auto"
-        style={{ backgroundImage: `url(${HF_COVER_IMAGE_URL}${data.imagePath})` }}
+        style={{ backgroundImage: `url(${HF_COVER_IMAGE_URL}${recipe.imagePath})` }}
       >
         <div className="hero-overlay bg-opacity-60"></div>
         <div className="hero-content text-center text-neutral-content">
           <div className="max-w-xl">
-            <h1 className="mb-5 text-5xl font-bold">{data.name}</h1>
-            <p className="mb-5">{data.description}</p>
+            <h1 className="mb-5 text-5xl font-bold">{recipe.name}</h1>
+            <p className="mb-5">{recipe.description}</p>
           </div>
         </div>
       </div>
       <main className="container mx-auto mt-4 gap-8 flex flex-col p-4">
-        <div className="flex flex-col">
-          <h2 className="text-2xl font-bold">Allergens</h2>
-          <ul>
-            {data.allergens.map((allergen) => (
-              <li key={allergen.id}>{allergen.name}</li>
+        <div className="flex flex-col lg:flex-row justify-between gap-2">
+          <div className="flex flex-col">
+            <h2 className="text-2xl font-bold">Allergens</h2>
+            <ul>
+              {recipe.allergens.map((allergen) => (
+                <li key={allergen.id}>{allergen.name}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex flex-col">
+            <h2 className="text-2xl font-bold">Cuisines</h2>
+            <ul>
+              {recipe.cuisines.map((cuisine) => (
+                <li key={cuisine.id}>{cuisine.name}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex flex-col">
+            <h2 className="text-2xl font-bold">Category</h2>
+            {recipe.category?.name ?? "No category"}
+          </div>
+          <div className="flex flex-col gap-4">
+            <h2 className="text-2xl font-bold">Data</h2>
+            <div className="flex gap-1 items-center">
+              <h2 className="font-semibold">Total Time:</h2>
+              <Clock className="w-4 h-4 mr-1" />
+              {recipe.totalTime ?? 0} min
+            </div>
+            <div className="flex items-center">
+              <Star className="w-4 h-4 mr-1" />
+              {recipe.averageRating ?? "No ratings yet"}
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <h2 className="text-2xl font-bold">Nutrition</h2>
+            {recipe.nutrition.map((n) => (
+              <span key={n.name}>
+                {n.name}: {n.amount} {n.unit}
+              </span>
             ))}
-          </ul>
+          </div>
+          <div className="flex flex-col gap-4 max-w-xs">
+            <AddToFavoritesButton id={recipe.id} name={recipe.name} />
+            <ShareButton
+              text={recipe.description.slice(0, 64)}
+              title={recipe.name}
+              url={url.href}
+              className="btn btn-sm"
+            >
+              Share Recipe
+            </ShareButton>
+          </div>
         </div>
 
         <div>
           <h2 className="text-2xl font-bold mb-4">Tags</h2>
           <ul className="flex gap-2">
-            {data.tags.map((tag) => (
+            {recipe.tags.map((tag) => (
               <li className="badge badge-accent" key={tag.id}>
                 {tag.name}
               </li>
@@ -115,7 +169,7 @@ const RecipePage = () => {
           <input defaultChecked type="checkbox" />
           <h2 className={collapseableStyles}>Ingredients</h2>
           <ul className="lg:flex lg:flex-col lg:flex-wrap lg:h-96 gap-4 collapse-content">
-            {data.ingredients.map((ingredient) => (
+            {recipe.ingredients.map((ingredient) => (
               <li className="flex gap-2 items-center" key={ingredient.id}>
                 <div className="avatar">
                   <div className="w-[50px] rounded-full">
@@ -152,7 +206,7 @@ const RecipePage = () => {
           <input type="checkbox" />
           <h2 className={collapseableStyles}>Steps</h2>
           <ol className="ml-4 steps steps-vertical collapse-content items-center p-0">
-            {data.steps.map((step) => (
+            {recipe.steps.map((step) => (
               <li className="step" key={step.index}>
                 {step.instructions}
               </li>

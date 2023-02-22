@@ -1,5 +1,5 @@
 # base node image
-FROM node:18.12.1-alpine3.16 as base
+FROM node:18.14.1-alpine3.16 as base
 
 # set for base and all layer that inherit from it
 ENV NODE_ENV production
@@ -12,7 +12,7 @@ FROM base as deps
 
 WORKDIR /myapp
 
-ADD package.json .npmrc ./
+ADD package.json pnpm-lock.yaml .npmrc ./
 RUN npm install --production=false
 
 # Setup production node_modules
@@ -21,7 +21,7 @@ FROM base as production-deps
 WORKDIR /myapp
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
-ADD package.json .npmrc ./
+ADD package.json pnpm-lock.yaml .npmrc ./
 RUN npm prune --production
 
 # Build the app

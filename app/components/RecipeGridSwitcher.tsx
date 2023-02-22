@@ -13,7 +13,7 @@ export const RecipeGridSwitcher = () => {
       className="select select-accent max-w-xs"
       onChange={(value) =>
         fetcher.submit(
-          { "recipe-page-layout": value.currentTarget.value },
+          { recipePageLayout: value.currentTarget.value },
           { method: "post", action: "/resource/user-options" },
         )
       }

@@ -24,9 +24,11 @@ model User {
   colorScheme      String?
   gridSize         String?
   recipePageLayout String?
+  gridLayout       String?
   password         Password?
   favoriteRecipes  FavoriteRecipe[]
   ImportedRecipe   ImportedRecipe[]
+  CreatedRecipe    CreatedRecipe[]
 }
 
 model Password {
@@ -115,6 +117,19 @@ model ImportedRecipe {
   url                     String                     @unique
   user                    User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                  String
+}
+
+model CreatedRecipe {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  description String
+  difficulty  String
+  ingredients String
+  steps       String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
 }
 
 model Recipe {

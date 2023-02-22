@@ -8,7 +8,6 @@ import { getImportedRecipeById } from "~/db/getImportedRecipeById.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const url = new URL(request.url);
-  console.log(url);
   const id = params.id;
   invariant(id, "id is required");
   const recipe = await getImportedRecipeById(id);

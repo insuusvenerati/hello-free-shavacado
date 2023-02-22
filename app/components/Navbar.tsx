@@ -49,9 +49,11 @@ export const Navbar = () => {
                   Imported
                 </Link>
               </li>
-              {/* <li>
-                <a>Settings</a>
-              </li> */}
+              <li>
+                <Link role="menuitem" to="/user/created">
+                  Created
+                </Link>
+              </li>
               <li>
                 <Link
                   role="menuitem"

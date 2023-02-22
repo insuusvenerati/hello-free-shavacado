@@ -1,4 +1,5 @@
 import { useMediaQuery } from "@mantine/hooks";
+import { User } from "@prisma/client";
 import { Await, Link, useCatch, useLoaderData } from "@remix-run/react";
 import type { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/server-runtime";
@@ -7,13 +8,15 @@ import { Suspense, useMemo } from "react";
 import { Container } from "~/components/common/Container";
 import { Loader } from "~/components/common/loader/Loader";
 import { RecipeGrid } from "~/components/common/RecipeGrid";
+import { GridLayoutSwitcher } from "~/components/GridLayoutSwitcher";
 import { GridSizeSelect } from "~/components/GridSizeSelect";
 import { RecipeCard } from "~/components/RecipeCard";
+import { RecipeListItem } from "~/components/RecipeListItem";
 import { prisma } from "~/db.server";
 import { usePullRefresh } from "~/hooks/usePullRefresh";
 import { getAllRecipes } from "~/models/recipe.server";
 import { getTokenFromDatabase } from "~/models/token.server";
-import { filterRecipeResults } from "~/utils";
+import { filterRecipeResults, useMatchesData } from "~/utils";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
@@ -44,7 +47,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   return defer(
     {
-      results: filteredResults,
+      results: filteredResults ?? [],
       totalRecipes,
       page: Number(page),
       totalPages,
@@ -61,6 +64,8 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function Index() {
   const matches = useMediaQuery("(min-width: 900px)", true, { getInitialValueInEffect: false });
+  const { user } = useMatchesData<{ user: User | null }>("root");
+  const gridLayout = user?.gridLayout ?? "grid";
   const recipes = useLoaderData<typeof loader>();
   const { refreshContainer, pullChange } = usePullRefresh();
   const isLoading = useMemo(() => {
@@ -89,33 +94,60 @@ export default function Index() {
           {isLoading ? "Loading..." : "Pull to refresh"}
         </div>
       )}
-      <Container>
-        <aside className="flex flex-col items-center justify-center w-full mb-4">
-          <h1 className="text-2xl font-bold">Recipes</h1>
+      <Container className="items-start">
+        <aside className="flex items-center justify-between w-full mb-4">
+          <div className="btn-group flex justify-center items-center mb-4">
+            <Link to={`/?page=1`} className="btn btn-ghost max-w-xs">
+              First
+            </Link>
+            <Link to={`/?page=${pagination.prevPage}`} className="btn max-w-xs">
+              Prev
+            </Link>
+            <Link prefetch="intent" to={`/?page=${pagination.nextPage}`} className="btn max-w-xs">
+              Next
+            </Link>
+            <Link to={`/?page=${recipes.totalPages}`} className="btn btn-ghost max-w-xs">
+              Last
+            </Link>
+          </div>
+          {matches && (
+            <div className="flex-0 flex gap-2">
+              <span className="flex flex-col gap-1 justify-center items-start">
+                Grid Size
+                <GridSizeSelect />
+              </span>
+
+              <span className="flex flex-col gap-1 justify-center items-start">
+                Grid Layout
+                <GridLayoutSwitcher />
+              </span>
+            </div>
+          )}
         </aside>
 
-        <div className="btn-group flex justify-center mb-4">
-          <Link to={`/?page=1`} className="btn btn-ghost max-w-xs">
-            First
-          </Link>
-          <Link to={`/?page=${pagination.prevPage}`} className="btn max-w-xs">
-            Prev
-          </Link>
-          <Link prefetch="intent" to={`/?page=${pagination.nextPage}`} className="btn max-w-xs">
-            Next
-          </Link>
-          <Link to={`/?page=${recipes.totalPages}`} className="btn btn-ghost max-w-xs">
-            Last
-          </Link>
-          {matches && <GridSizeSelect />}
-        </div>
-        <RecipeGrid className="lg:grid-cols-5">
-          <Suspense fallback={<Loader />}>
-            <Await resolve={recipes.results}>
-              {(results) => results.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)}
-            </Await>
-          </Suspense>
-        </RecipeGrid>
+        {gridLayout === "grid" && (
+          <RecipeGrid className="lg:grid-cols-5">
+            <Suspense fallback={<Loader />}>
+              <Await resolve={recipes.results}>
+                {(results) =>
+                  results.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)
+                }
+              </Await>
+            </Suspense>
+          </RecipeGrid>
+        )}
+
+        {gridLayout === "list" && (
+          <ul className="flex flex-col lg:max-h-96 flex-wrap gap-4">
+            <Suspense fallback={<Loader />}>
+              <Await resolve={recipes.results}>
+                {(results) =>
+                  results.map((recipe) => <RecipeListItem key={recipe.id} recipe={recipe} />)
+                }
+              </Await>
+            </Suspense>
+          </ul>
+        )}
       </Container>
     </>
   );

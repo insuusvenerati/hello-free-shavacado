@@ -24,7 +24,9 @@
     "test:e2e:dev": "npx playwright test --trace=on",
     "test:e2e:run": "playwright test",
     "typecheck": "tsc -b",
-    "validate": "run-p \"vitest --run\" lint typecheck test:e2e:run"
+    "validate": "run-p \"vitest --run\" lint typecheck test:e2e:run",
+    "clean": "rimraf build/ public/build",
+    "semantic-release": "semantic-release"
   },
   "eslintIgnore": [
     "/node_modules",
@@ -88,6 +90,7 @@
     "@types/nprogress": "^0.2.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@types/semantic-release": "^20.0.1",
     "@types/workbox-core": "^5.0.0",
     "@vitejs/plugin-react": "^3.1.0",
     "@vitest/coverage-c8": "^0.28.5",
@@ -113,6 +116,8 @@
     "prettier": "2.8.4",
     "prettier-plugin-tailwindcss": "^0.2.3",
     "prisma": "^4.10.1",
+    "rimraf": "^4.1.2",
+    "semantic-release": "^20.1.0",
     "start-server-and-test": "^1.15.4",
     "tailwindcss": "^3.2.6",
     "ts-node": "^10.9.1",
@@ -124,13 +129,13 @@
     "vitest": "^0.28.5"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "prisma": {
     "seed": "npx tsx --experimental-fetch prisma/seed.ts"
   },
   "volta": {
-    "node": "18.13.0"
+    "node": "18.14.1"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
@@ -142,5 +147,10 @@
     "patchedDependencies": {
       "recipe-data-scraper@1.4.1": "patches/recipe-data-scraper@1.4.1.patch"
     }
+  },
+  "version": "0.0.0-development",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/insuusvenerati/hello-free-shavacado.git"
   }
 }

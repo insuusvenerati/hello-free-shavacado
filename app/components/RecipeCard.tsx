@@ -17,7 +17,7 @@ type Props = {
 export const RecipeCard = ({ recipe, ...props }: Props) => {
   return (
     <div
-      className="card-compact card h-auto w-auto bg-base-300 rounded-md duration-300 hover:-translate-y-1"
+      className="overflow-hidden card-compact card h-auto shadow-md w-auto bg-base-300 rounded-md duration-300 hover:-translate-y-1"
       {...props}
     >
       <Link to={`/recipes/${recipe.name}`}>
@@ -26,7 +26,7 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
             src={`${HF_CARD_IMAGE_URL}${recipe.imagePath}`}
             transformOptions={{ fit: "cover", quality: 20 }}
             alt={recipe.name}
-            className="w-full object-cover rounded-md"
+            className="w-full object-cover rounded-t-md"
             width={600}
             height={340}
             responsive={[

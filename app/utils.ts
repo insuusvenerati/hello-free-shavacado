@@ -97,34 +97,35 @@ export async function webShare({
   title?: string;
 }) {
   let files: File[] | undefined;
-  // Test compatibility
-  if (navigator.share === undefined) {
-    toast("Unsupported share feature", { theme: "dark" });
-    return;
-  }
 
-  // Handle file urls
-  if (filesUrl && filesUrl.length > 0) {
-    const filesGetter = filesUrl.map((file) => urlToObject(file));
-    const newFiles = await Promise.all(filesGetter);
+  if (navigator.share !== undefined) {
+    if (filesUrl && filesUrl.length > 0) {
+      const filesGetter = filesUrl.map((file) => urlToObject(file));
+      const newFiles = await Promise.all(filesGetter);
 
-    if (!navigator.canShare || !navigator.canShare({ files: newFiles })) {
-      toast("Unsupported share feature", { theme: "dark" });
-      return;
+      if (!navigator.canShare || !navigator.canShare({ files: newFiles })) {
+        toast("Unsupported share feature", { theme: "dark" });
+        return;
+      }
+
+      files = newFiles;
     }
 
-    files = newFiles;
-  }
-
-  // Share content
-  try {
-    await navigator.share({ text, files, url, title });
-  } catch (error) {
-    toast(`Error sharing: ${error}`);
+    try {
+      await navigator.share({ text, files, url, title });
+    } catch (error) {
+      toast(`Error sharing: ${error}`);
+    }
+  } else {
+    const shareUrl = `${title}\n${text}\n${url}`;
+    navigator.clipboard
+      .writeText(shareUrl)
+      .then(() => toast("Copied to clipboard", { theme: "dark" }))
+      .catch(() => toast("Error copying to clipboard", { theme: "dark" }));
   }
 }
 
-export const filterRecipeResults = (recipes: Item[]): Promise<Item[]> => {
+export const filterRecipeResults = (recipes: Item[] = []): Promise<Item[]> => {
   return new Promise((resolve, reject) => {
     try {
       const filteredRecipes = recipes.filter(
