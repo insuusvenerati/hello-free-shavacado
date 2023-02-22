@@ -20,7 +20,7 @@ export interface Item {
   author: null | string;
   yields: Yield[];
   comment: null;
-  country: Country;
+  country: string;
   isAddon: boolean;
   seoName: null | string;
   cardLink: null | string;
@@ -31,14 +31,14 @@ export interface Item {
   utensils: Utensil[];
   allergens: Allergen[];
   canonical: null;
-  createdAt: Date;
+  createdAt: string;
   imageLink: string;
   imagePath: string;
   isPremium: boolean;
   nutrition: Nutrition[];
   promotion: null;
   totalTime: TotalTime | null;
-  updatedAt: Date;
+  updatedAt: string;
   videoLink: null;
   yieldType: string;
   clonedFrom: null | string;
@@ -62,66 +62,16 @@ export interface Item {
 }
 
 export interface Allergen {
-  id: ID;
-  name: AllergenName;
-  slug: Slug;
-  type: AllergenType;
+  id: string;
+  name: string;
+  slug: string;
+  type: string;
   usage: number;
   iconLink: string;
-  iconPath: IconPath;
+  iconPath: string;
   tracesOf: boolean;
   description: null;
   triggersTracesOf: boolean;
-}
-
-export enum IconPath {
-  Allergens57962A07B7E8697D4B3052F5E20D9Ca4PNG = "/allergens/57962a07b7e8697d4b3052f5-e20d9ca4.png",
-  Allergens57962A07B7E8697D4B3052F663Afd198PNG = "/allergens/57962a07b7e8697d4b3052f6-63afd198.png",
-  Allergens57962A07B7E8697D4B3052F7Feb8E168PNG = "/allergens/57962a07b7e8697d4b3052f7-feb8e168.png",
-  Allergens57962A07B7E8697D4B3052F8B2Ad43CDPNG = "/allergens/57962a07b7e8697d4b3052f8-b2ad43cd.png",
-  Allergens57962A07B7E8697D4B3052F9Feb8E168PNG = "/allergens/57962a07b7e8697d4b3052f9-feb8e168.png",
-  Allergens57962A07B7E8697D4B3052FaBe127D3FPNG = "/allergens/57962a07b7e8697d4b3052fa-be127d3f.png",
-  Allergens57962A07B7E8697D4B3052Fb172B155CPNG = "/allergens/57962a07b7e8697d4b3052fb-172b155c.png",
-}
-
-export enum ID {
-  The57962A07B7E8697D4B3052F5 = "57962a07b7e8697d4b3052f5",
-  The57962A07B7E8697D4B3052F6 = "57962a07b7e8697d4b3052f6",
-  The57962A07B7E8697D4B3052F7 = "57962a07b7e8697d4b3052f7",
-  The57962A07B7E8697D4B3052F8 = "57962a07b7e8697d4b3052f8",
-  The57962A07B7E8697D4B3052F9 = "57962a07b7e8697d4b3052f9",
-  The57962A07B7E8697D4B3052Fa = "57962a07b7e8697d4b3052fa",
-  The5B50A59331C241Ab96E75A8B = "5b50a59331c241ab96e75a8b",
-}
-
-export enum AllergenName {
-  Eggs = "Eggs",
-  Fish = "Fish",
-  Milk = "Milk",
-  Peanuts = "Peanuts",
-  Soy = "Soy",
-  TreeNuts = "Tree Nuts",
-  Wheat = "Wheat",
-}
-
-export enum Slug {
-  Egg = "egg",
-  Fish = "fish",
-  Milk = "milk",
-  Peanuts = "peanuts",
-  Soy = "soy",
-  TreeNuts = "tree-nuts",
-  Wheat = "wheat",
-}
-
-export enum AllergenType {
-  Egg = "egg",
-  Fish = "fish",
-  Gluten = "gluten",
-  Milk = "milk",
-  NutsNonIs = "nuts-non-is",
-  Peanuts = "peanuts",
-  Soya = "soya",
 }
 
 export interface Category {
@@ -134,10 +84,6 @@ export interface Category {
   iconPath: string;
 }
 
-export enum Country {
-  Us = "US",
-}
-
 export interface ItemIngredient {
   id: string;
   name: string;
@@ -146,9 +92,9 @@ export interface ItemIngredient {
   uuid: string;
   usage: number;
   family: Family;
-  country: Country;
+  country: string;
   shipped: boolean;
-  allergens: ID[];
+  allergens: string[];
   imageLink: null | string;
   imagePath: null | string;
   description: null;
@@ -165,8 +111,8 @@ export interface Family {
   iconLink: null | string;
   iconPath: null | string;
   priority: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   description: null;
   usageByCountry: { [key: string]: number };
 }

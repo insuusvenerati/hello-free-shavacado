@@ -2,12 +2,15 @@
 import type { Recipe, Tag } from "@prisma/client";
 import { useNavigate } from "@remix-run/react";
 import { HF_AVATAR_IMAGE_URL } from "~/constants";
+import type { Item } from "~/types/recipe";
 import { AddToFavoritesButton } from "./AddToFavoritesButton";
 
 type RecipeListItemProps = {
-  recipe: Recipe & {
-    tags: Tag[];
-  };
+  recipe:
+    | Item
+    | (Recipe & {
+        tags: Tag[];
+      });
 } & React.HTMLAttributes<HTMLLIElement>;
 
 export const RecipeListItem = ({ recipe, ...props }: RecipeListItemProps) => {

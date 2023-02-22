@@ -17,7 +17,7 @@ const CreatedRecipesPage = () => {
       <h1 className="text-3xl font-bold">Created Recipes</h1>
       <p className="text-gray-500">Here are all the recipes you've created.</p>
       <ul>
-        {data.map((recipe) => (
+        {data.result.map((recipe) => (
           <li key={recipe.id}>
             <Link className="link" to={`/recipes/created/${recipe.id}`}>
               {recipe.name}

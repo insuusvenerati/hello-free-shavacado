@@ -1,4 +1,5 @@
 import { Recipe } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { Params } from "@remix-run/react";
 import { HF_BASE_URL } from "~/constants";
 import { prisma } from "~/db.server";
@@ -66,11 +67,11 @@ export const createRecipe = async (request: Request) => {
     if (fields.hasOwnProperty(key)) {
       const value = fields[key];
       if (key.startsWith("ingredients[")) {
-        const index = key.match(/\d+/)[0];
-        ingredients[index] = value;
+        const index = key.match(/\d+/);
+        if (index) ingredients[index[0]] = value;
       } else if (key.startsWith("steps[")) {
-        const index = key.match(/\d+/)[0];
-        steps[index] = value;
+        const index = key.match(/\d+/);
+        if (index) steps[index[0]] = value;
       }
     }
   }
@@ -131,8 +132,14 @@ export const getCreatedRecipes = async (request: Request) => {
         user: { id: user.id },
       },
     });
-    return response;
+    return { result: response, success: "false", error: false };
   } catch (error) {
-    return { success: "false", error: error.message };
+    if (error instanceof Error) {
+      return { success: "false", error: error.message, result: [] };
+    }
+    if (error instanceof PrismaClientKnownRequestError) {
+      return { success: "false", error: error.message, result: [] };
+    }
+    return { success: "false", error: "Unknown error occured", result: [] };
   }
 };
