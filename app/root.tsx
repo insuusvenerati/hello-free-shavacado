@@ -254,7 +254,7 @@ function App() {
   }, [transition.state]);
 
   return (
-    <html className="h-screen" lang="en">
+    <html className="min-h-screen" lang="en">
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <link href="/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />

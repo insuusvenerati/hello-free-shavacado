@@ -2,7 +2,7 @@ import { Form, useTransition } from "@remix-run/react";
 import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import { typedjson } from "remix-typedjson";
+import { typedjson, useTypedActionData } from "remix-typedjson";
 import { Container } from "~/components/common/Container";
 import { createRecipe } from "~/models/recipe.server";
 import { requireUser } from "~/session.server";
@@ -19,6 +19,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 const CreateRecipePage = () => {
+  const data = useTypedActionData<typeof action>();
   const transition = useTransition();
   const isLoading = transition.state === "submitting";
   const [ingredientsFields, setIngredientsFields] = useState([{ name: "ingredients", value: "" }]);
@@ -42,7 +43,7 @@ const CreateRecipePage = () => {
   return (
     <Container className="items-start">
       <h1 className="text-xl font-bold mb-4">Create Recipe</h1>
-      <Form className="flex flex-col gap-4 lg:flex-row" method="post">
+      <Form encType="multipart/form-data" className="flex flex-col gap-4 lg:flex-row" method="post">
         <div className="flex flex-col gap-4">
           <label className="input-group">
             <span>Name</span>
@@ -73,10 +74,31 @@ const CreateRecipePage = () => {
               className="input input-bordered"
             />
           </label>
+
+          <label className="input-group">
+            <input
+              accept="imaage/*"
+              type="file"
+              name="imageUrl"
+              className="file-input file-input-bordered"
+            />
+          </label>
+
+          {data?.result?.imageUrl ? (
+            <>
+              <h2 className="text-xl font-semibold">Uploaded Image</h2>
+              <img
+                width={600}
+                height={340}
+                className="h-80 w-96"
+                src={data.result.imageUrl}
+                alt="preview"
+              />
+            </>
+          ) : null}
         </div>
 
         <div className="flex flex-col gap-2">
-          <h2 className="font-bold text-lg">Ingredients</h2>
           {ingredientsFields.map((field, index) => (
             <label key={index} className="input-group">
               <span>Ingredient</span>
@@ -93,7 +115,6 @@ const CreateRecipePage = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <h2 className="font-bold text-lg">Steps</h2>
           {stepsFields.map((field, index) => (
             <label key={index} className="input-group">
               <span>Step</span>

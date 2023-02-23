@@ -1,10 +1,16 @@
-import { Recipe } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import { Params } from "@remix-run/react";
+import type { Params } from "@remix-run/react";
+import type { UploadHandler } from "@remix-run/server-runtime";
+import {
+  unstable_composeUploadHandlers,
+  unstable_createMemoryUploadHandler,
+  unstable_parseMultipartFormData,
+} from "@remix-run/server-runtime";
 import { HF_BASE_URL } from "~/constants";
 import { prisma } from "~/db.server";
 import { requireUser } from "~/session.server";
 import type { Recipes } from "~/types/recipe";
+import { uploadImage } from "~/utils/cloudinary.server";
 
 export const getAllRecipes = async ({
   skip,
@@ -58,8 +64,18 @@ type CreateRecipeInput = {
 
 export const createRecipe = async (request: Request) => {
   const user = await requireUser(request);
-  const body = await request.formData();
-  const fields = Object.fromEntries(body.entries()) as CreateRecipeInput;
+  // const body = await request.formData();
+  const uploadHandler: UploadHandler = unstable_composeUploadHandlers(async ({ name, data }) => {
+    if (name !== "imageUrl") {
+      return undefined;
+    }
+
+    const uploadedImage = await uploadImage(data);
+    return uploadedImage?.secure_url;
+  }, unstable_createMemoryUploadHandler());
+
+  const formData = await unstable_parseMultipartFormData(request, uploadHandler);
+  const fields = Object.fromEntries(formData.entries()) as CreateRecipeInput;
   const ingredients: string[] = [];
   const steps: string[] = [];
 
@@ -86,6 +102,7 @@ export const createRecipe = async (request: Request) => {
     }
   }
 
+  console.log(fields);
   try {
     const response = await prisma.createdRecipe.create({
       data: {
@@ -95,11 +112,13 @@ export const createRecipe = async (request: Request) => {
         user: { connect: { id: user.id } },
       },
     });
-    return response;
+    console.log(response);
+    return { result: response, success: "true", error: false };
   } catch (error) {
     if (error instanceof Error) {
       return { success: "false", error: error.message };
     }
+    console.log(error);
     return { success: "false", error: "Unknown error occured" };
   }
 };

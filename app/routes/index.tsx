@@ -1,5 +1,5 @@
 import { useMediaQuery } from "@mantine/hooks";
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { Await, Link, useCatch, useLoaderData } from "@remix-run/react";
 import type { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/server-runtime";

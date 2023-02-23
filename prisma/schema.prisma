@@ -124,10 +124,11 @@ model CreatedRecipe {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   name        String
-  description String
-  difficulty  String
-  ingredients String
-  steps       String
+  description String?
+  difficulty  String?
+  ingredients String?
+  steps       String?
+  imageUrl    String?
   user        User     @relation(fields: [userId], references: [id])
   userId      String
 }

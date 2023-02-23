@@ -1,4 +1,3 @@
-import { Recipe } from "@prisma/client";
 import { useMatches } from "@remix-run/react";
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
@@ -7,7 +6,7 @@ import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
 
 import type { User } from "~/models/user.server";
-import { Item } from "./types/recipe";
+import type { Item } from "./types/recipe";
 
 const DEFAULT_REDIRECT = "/";
 
