@@ -33,7 +33,9 @@ export const action = async ({ request }: ActionArgs) => {
       }
       case "POST": {
         invariant(typeof url === "string", "Missing url");
+        invariant(typeof recipeId === "string", "Invalid RecipeID");
         const recipe = await recipeDataScraper(url);
+        console.log("recipe", recipe);
         // debug(recipe);
         const importedRecipe = await prisma.importedRecipe.create({
           data: {
@@ -49,9 +51,17 @@ export const action = async ({ request }: ActionArgs) => {
               })),
             },
             recipeInstructions: {
-              create: recipe.recipeInstructions?.map((instruction, index) => ({
-                caption: instruction,
-                index: index,
+              connectOrCreate: recipe.recipeInstructions?.map((instruction, index) => ({
+                create: {
+                  caption: instruction ?? null,
+                  index: index,
+                },
+                where: {
+                  importedRecipeId_index: {
+                    importedRecipeId: recipeId,
+                    index,
+                  },
+                },
               })),
             },
             recipeIngredients: {
@@ -114,6 +124,7 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 
 const UserImportedPage = () => {
   const fetcher = useTypedFetcher<typeof action>();
+  console.log(fetcher);
   const isError = fetcher.data?.error;
   const { importedRecipes } = useTypedLoaderData<typeof loader>();
   const inputRef = useRef<HTMLInputElement>(null);

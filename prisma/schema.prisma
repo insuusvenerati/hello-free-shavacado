@@ -78,11 +78,11 @@ model ImportedRecipeStep {
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   index            Int
-  caption          String         @unique
+  caption          String?
   ImportedRecipe   ImportedRecipe @relation(fields: [importedRecipeId], references: [id], onDelete: Cascade)
   importedRecipeId String
 
-  @@id([importedRecipeId, caption])
+  @@id([importedRecipeId, index])
 }
 
 model ImportedRecipeKeyword {

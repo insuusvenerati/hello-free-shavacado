@@ -112,7 +112,6 @@ export const createRecipe = async (request: Request) => {
         user: { connect: { id: user.id } },
       },
     });
-    console.log(response);
     return { result: response, success: "true", error: false };
   } catch (error) {
     if (error instanceof Error) {
