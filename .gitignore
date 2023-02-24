@@ -18,3 +18,5 @@ node_modules
 /.cache
 .sentryclirc
 .cache_ggshield
+
+docker-compose.yml

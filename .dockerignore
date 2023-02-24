@@ -8,3 +8,4 @@
 .git
 prisma/data.db
 .sentryclirc
+docker-compose.yml

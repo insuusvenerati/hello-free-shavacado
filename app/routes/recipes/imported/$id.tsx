@@ -7,7 +7,7 @@ import { ShareButton } from "~/components/common/ShareButton";
 import { getImportedRecipeById } from "~/db/getImportedRecipeById.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
-  const url = new URL(request.url);
+  const url = request.url;
   const id = params.id;
   invariant(id, "id is required");
   const recipe = await getImportedRecipeById(id);
@@ -46,7 +46,12 @@ const ImportedRecipePage = () => {
             <div className="flex">Cook time: {recipe.cookTime}</div>
             <div className="flex">Prep time: {recipe.prepTime}</div>
             <div className="flex">Total time: {recipe.totalTime}</div>
-            <ShareButton className="btn" text={recipe.name} url={url.href}>
+            <ShareButton
+              className="btn"
+              title={recipe.name}
+              text={recipe.description ?? "Probably a good recipe but with no description"}
+              url={url}
+            >
               Share
             </ShareButton>
           </div>

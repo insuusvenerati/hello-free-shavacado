@@ -116,7 +116,7 @@ export async function webShare({
       toast(`Error sharing: ${error}`);
     }
   } else {
-    const shareUrl = `${title}\n${text}\n${url}`;
+    const shareUrl = `${title}\n\n${text}\n\n${url}`;
     navigator.clipboard
       .writeText(shareUrl)
       .then(() => toast("Copied to clipboard", { theme: "dark" }))

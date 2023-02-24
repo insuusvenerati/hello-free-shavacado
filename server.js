@@ -20,7 +20,7 @@ app.use("/build", express.static("public/build", { immutable: true, maxAge: "1y"
 // more aggressive with this caching.
 app.use(express.static("public", { maxAge: "1h" }));
 
-app.use(morgan("tiny"));
+app.use(morgan("common"));
 
 app.all(
   "*",
