@@ -1,16 +1,12 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import type { Recipe, Tag } from "@prisma/client";
 import { useNavigate } from "@remix-run/react";
+import type { SerializeFrom } from "@remix-run/server-runtime";
 import { HF_AVATAR_IMAGE_URL } from "~/constants";
-import type { Item } from "~/types/recipe";
 import { AddToFavoritesButton } from "./AddToFavoritesButton";
 
 type RecipeListItemProps = {
-  recipe:
-    | Item
-    | (Recipe & {
-        tags: Tag[];
-      });
+  recipe: SerializeFrom<Recipe & { tags: Tag[] }>;
 } & React.HTMLAttributes<HTMLLIElement>;
 
 export const RecipeListItem = ({ recipe, ...props }: RecipeListItemProps) => {

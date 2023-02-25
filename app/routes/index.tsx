@@ -14,9 +14,8 @@ import { RecipeCard } from "~/components/RecipeCard";
 import { RecipeListItem } from "~/components/RecipeListItem";
 import { prisma } from "~/db.server";
 import { usePullRefresh } from "~/hooks/usePullRefresh";
-import { getAllDbRecipes, getAllRecipes } from "~/models/recipe.server";
-import { getTokenFromDatabase } from "~/models/token.server";
-import { filterRecipeResults, useMatchesData } from "~/utils";
+import { getAllDbRecipes } from "~/models/recipe.server";
+import { useMatchesData } from "~/utils";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
@@ -24,7 +23,6 @@ export const loader = async ({ request }: LoaderArgs) => {
   const page = url.searchParams.get("page") || 1;
   const take = Number(url.searchParams.get("take")) || 20;
   const skip = (Number(page) - 1) * take;
-  console.log(search);
   // const token = await getTokenFromDatabase();
 
   // if (typeof token !== "string") {
@@ -42,7 +40,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   // const filteredResults = filterRecipeResults((await results).items);
 
-  const results = await getAllDbRecipes({ skip, take, search });
+  const results = getAllDbRecipes({ skip, take, search });
 
   const totalRecipes = await prisma.recipe.count();
   const totalPages = Math.ceil(totalRecipes / take);
@@ -138,7 +136,21 @@ export default function Index() {
             <Suspense fallback={<Loader />}>
               <Await resolve={recipes.results}>
                 {(results) =>
-                  results.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)
+                  results.map((recipe) => (
+                    <RecipeCard
+                      key={recipe.id}
+                      recipe={{
+                        ...recipe,
+                        createdAt: new Date(recipe.createdAt),
+                        updatedAt: new Date(recipe.updatedAt),
+                        tags: recipe.tags.map((tag) => ({
+                          ...tag,
+                          createdAt: new Date(),
+                          updatedAt: new Date(),
+                        })),
+                      }}
+                    />
+                  ))
                 }
               </Await>
             </Suspense>

@@ -75,8 +75,6 @@ const RecipePage = () => {
     "md:flex": userPageLayout === "vertical",
   });
 
-  console.log(recipe);
-
   const collapseableStyles = cn("text-2xl font-bold mb-4 rounded collapse-title", {
     "bg-gray-900 text-gray-500": userColorScheme === "dark",
     "bg-gray-100 text-gray-900": userColorScheme === "light",

@@ -99,6 +99,7 @@ export const addRecipe = async ({
           create: {
             name: tag.name,
             id: tag.id,
+            recipeId: item.id,
           },
         })),
       },

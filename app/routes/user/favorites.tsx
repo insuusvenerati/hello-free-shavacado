@@ -43,7 +43,14 @@ const UserFavoritesPage = () => {
       {gridLayout === "list" && (
         <ul className="flex flex-col lg:max-h-96 flex-wrap gap-4">
           {favoriteRecipes.map((recipe) => (
-            <RecipeListItem key={recipe.id} recipe={recipe.recipe} />
+            <RecipeListItem
+              key={recipe.id}
+              recipe={{
+                ...recipe.recipe,
+                createdAt: new Date(recipe.recipe.createdAt),
+                updatedAt: new Date(recipe.recipe.updatedAt),
+              }}
+            />
           ))}
         </ul>
       )}

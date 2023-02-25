@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import type { Params } from "@remix-run/react";
 import type { UploadHandler } from "@remix-run/server-runtime";
@@ -102,7 +103,6 @@ export const createRecipe = async (request: Request) => {
     }
   }
 
-  console.log(fields);
   try {
     const response = await prisma.createdRecipe.create({
       data: {
@@ -166,29 +166,31 @@ export const getAllDbRecipes = async ({
   skip,
   take,
   search,
+  select = { id: true, name: true, tags: true, imagePath: true },
 }: {
   skip?: number;
   take?: number;
   search?: string | null;
+  select?: Prisma.RecipeSelect;
 }) => {
-  try {
-    if (search) {
-      return await prisma.recipe.findMany({
-        where: {
-          name: {
-            contains: search,
-          },
-        },
-        skip,
-        take,
-      });
-    }
+  if (search) {
     return await prisma.recipe.findMany({
+      where: {
+        name: {
+          contains: search,
+        },
+      },
       skip,
       take,
-      orderBy: {
-        averageRating: "desc",
-      },
+      select,
     });
-  } catch (error) {}
+  }
+  return await prisma.recipe.findMany({
+    skip,
+    take,
+    orderBy: {
+      averageRating: "desc",
+    },
+    select,
+  });
 };

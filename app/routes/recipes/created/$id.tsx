@@ -10,7 +10,6 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 const CreatedRecipePage = () => {
   const data = useTypedLoaderData<typeof loader>();
-  console.log(data);
   return (
     <Container>
       <h1 className="text-3xl font-bold">Created Recipes</h1>

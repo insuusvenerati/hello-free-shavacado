@@ -45,30 +45,27 @@ model FavoriteRecipe {
 }
 
 model ImportedRecipeCategory {
-  id               String           @id @default(cuid())
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  name             String           @unique
-  ImportedRecipe   ImportedRecipe[]
-  importedRecipeId String
+  id             String           @id @default(cuid())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  name           String           @unique
+  ImportedRecipe ImportedRecipe[]
 }
 
 model ImportedRecipeCuisine {
-  id               String           @id @default(cuid())
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  name             String           @unique
-  ImportedRecipe   ImportedRecipe[]
-  importedRecipeId String
+  id             String           @id @default(cuid())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  name           String           @unique
+  ImportedRecipe ImportedRecipe[]
 }
 
 model ImportedRecipeIngredient {
-  id               String           @id @default(cuid())
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  name             String           @unique
-  ImportedRecipe   ImportedRecipe[]
-  importedRecipeId String
+  id             String           @id @default(cuid())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  name           String           @unique
+  ImportedRecipe ImportedRecipe[]
 }
 
 model ImportedRecipeStep {
@@ -83,12 +80,11 @@ model ImportedRecipeStep {
 }
 
 model ImportedRecipeKeyword {
-  id               String           @id @default(cuid())
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  name             String           @unique
-  ImportedRecipe   ImportedRecipe[]
-  importedRecipeId String
+  id             String           @id @default(cuid())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  name           String           @unique
+  ImportedRecipe ImportedRecipe[]
 }
 
 model ImportedRecipe {
