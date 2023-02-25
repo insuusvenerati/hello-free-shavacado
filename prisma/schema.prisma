@@ -45,33 +45,30 @@ model FavoriteRecipe {
 }
 
 model ImportedRecipeCategory {
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  name             String         @unique
-  ImportedRecipe   ImportedRecipe @relation(fields: [importedRecipeId], references: [id], onDelete: Cascade)
+  id               String           @id @default(cuid())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  name             String           @unique
+  ImportedRecipe   ImportedRecipe[]
   importedRecipeId String
-
-  @@id([importedRecipeId, name])
 }
 
 model ImportedRecipeCuisine {
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  name             String         @unique
-  ImportedRecipe   ImportedRecipe @relation(fields: [importedRecipeId], references: [id], onDelete: Cascade)
+  id               String           @id @default(cuid())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  name             String           @unique
+  ImportedRecipe   ImportedRecipe[]
   importedRecipeId String
-
-  @@id([importedRecipeId, name])
 }
 
 model ImportedRecipeIngredient {
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  name             String         @unique
-  ImportedRecipe   ImportedRecipe @relation(fields: [importedRecipeId], references: [id], onDelete: Cascade)
+  id               String           @id @default(cuid())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  name             String           @unique
+  ImportedRecipe   ImportedRecipe[]
   importedRecipeId String
-
-  @@id([importedRecipeId, name])
 }
 
 model ImportedRecipeStep {
@@ -86,13 +83,12 @@ model ImportedRecipeStep {
 }
 
 model ImportedRecipeKeyword {
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  name             String         @unique
-  ImportedRecipe   ImportedRecipe @relation(fields: [importedRecipeId], references: [id], onDelete: Cascade)
+  id               String           @id @default(cuid())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  name             String           @unique
+  ImportedRecipe   ImportedRecipe[]
   importedRecipeId String
-
-  @@id([importedRecipeId, name])
 }
 
 model ImportedRecipe {
@@ -169,7 +165,7 @@ model Ingredient {
   description  String?
   imageLink    String?
   imagePath    String?
-  Recipe       Recipe?  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  Recipe       Recipe[]
   recipeId     String?
   stepRecipeId String?
   stepIndex    Int?
@@ -180,7 +176,7 @@ model Tag {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String   @unique
-  Recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  Recipe    Recipe[]
   recipeId  String
 }
 
@@ -212,7 +208,7 @@ model Cuisine {
   updatedAt DateTime @updatedAt
   name      String   @unique
   iconPath  String?
-  Recipe    Recipe?  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  Recipe    Recipe[]
   recipeId  String?
 }
 
@@ -222,6 +218,6 @@ model Allergen {
   updatedAt DateTime @updatedAt
   name      String   @unique
   iconPath  String?
-  Recipe    Recipe?  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  Recipe    Recipe[]
   recipeId  String?
 }

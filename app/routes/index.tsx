@@ -14,32 +14,35 @@ import { RecipeCard } from "~/components/RecipeCard";
 import { RecipeListItem } from "~/components/RecipeListItem";
 import { prisma } from "~/db.server";
 import { usePullRefresh } from "~/hooks/usePullRefresh";
-import { getAllRecipes } from "~/models/recipe.server";
+import { getAllDbRecipes, getAllRecipes } from "~/models/recipe.server";
 import { getTokenFromDatabase } from "~/models/token.server";
 import { filterRecipeResults, useMatchesData } from "~/utils";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
-  const search = new URLSearchParams(url.search);
+  const search = new URLSearchParams(url.search).get("search");
   const page = url.searchParams.get("page") || 1;
   const take = Number(url.searchParams.get("take")) || 20;
   const skip = (Number(page) - 1) * take;
-  const token = await getTokenFromDatabase();
+  console.log(search);
+  // const token = await getTokenFromDatabase();
 
-  if (typeof token !== "string") {
-    throw new Response(`Unable to get recipes from API. Try again later.\nReason: ${token}`, {
-      status: 401,
-    });
-  }
+  // if (typeof token !== "string") {
+  //   throw new Response(`Unable to get recipes from API. Try again later.\nReason: ${token}`, {
+  //     status: 401,
+  //   });
+  // }
 
-  const results = getAllRecipes({
-    take,
-    skip,
-    token,
-    search: search.get("search") ?? "",
-  });
+  // const results = getAllRecipes({
+  //   take,
+  //   skip,
+  //   token,
+  //   search: search.get("search") ?? "",
+  // });
 
-  const filteredResults = filterRecipeResults((await results).items);
+  // const filteredResults = filterRecipeResults((await results).items);
+
+  const results = await getAllDbRecipes({ skip, take, search });
 
   const totalRecipes = await prisma.recipe.count();
   const totalPages = Math.ceil(totalRecipes / take);
@@ -47,12 +50,12 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   return defer(
     {
-      results: filteredResults ?? [],
+      results,
       totalRecipes,
       page: Number(page),
       totalPages,
       // totalRecipeResults,
-      token,
+      // token,
     },
     {
       headers: {
@@ -119,6 +122,11 @@ export default function Index() {
 
               <span className="flex flex-col gap-1 justify-center items-start">
                 Grid Layout
+                <GridLayoutSwitcher />
+              </span>
+
+              <span className="flex flex-col gap-1 justify-center items-start">
+                Sort By
                 <GridLayoutSwitcher />
               </span>
             </div>

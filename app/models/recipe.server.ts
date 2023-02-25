@@ -161,3 +161,34 @@ export const getCreatedRecipes = async (request: Request) => {
     return { success: "false", error: "Unknown error occured", result: [] };
   }
 };
+
+export const getAllDbRecipes = async ({
+  skip,
+  take,
+  search,
+}: {
+  skip?: number;
+  take?: number;
+  search?: string | null;
+}) => {
+  try {
+    if (search) {
+      return await prisma.recipe.findMany({
+        where: {
+          name: {
+            contains: search,
+          },
+        },
+        skip,
+        take,
+      });
+    }
+    return await prisma.recipe.findMany({
+      skip,
+      take,
+      orderBy: {
+        averageRating: "desc",
+      },
+    });
+  } catch (error) {}
+};

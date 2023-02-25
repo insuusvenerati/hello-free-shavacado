@@ -68,95 +68,98 @@ async function seed() {
       // const categories = recipes.items.map((item) => item.category).flat();
 
       await prisma.$transaction(
-        recipes.items.map((item) => {
-          return prisma.recipe.create({
-            data: {
-              id: item.id,
-              name: item.name,
-              description: item.description,
-              difficulty: item.difficulty,
-              imagePath: item.imagePath,
-              seoDescription: item.seoDescription,
-              averageRating: item.averageRating,
-              ratingsCount: item.ratingsCount,
-              slug: item.slug,
-              favoritesCount: item.favoritesCount,
-              nutrition: JSON.stringify(item.nutrition),
-              totalTime: item.totalTime,
-              prepTime: item.prepTime,
-              ingredients: {
-                connectOrCreate: item.ingredients.map((ingredient) => ({
-                  where: { name: ingredient.name },
-                  create: {
-                    name: ingredient.name,
-                    id: ingredient.id,
-                    slug: ingredient.slug,
-                    description: ingredient.description,
-                    imagePath: ingredient.imagePath,
-                    imageLink: ingredient.imageLink,
-                    type: ingredient.type,
-                  },
-                })),
-              },
-              allergens: {
-                connectOrCreate: item.allergens.map((allergen) => ({
-                  where: { name: allergen.name },
-                  create: {
-                    name: allergen.name,
-                    id: allergen.id,
-                    iconPath: allergen.iconPath,
-                  },
-                })),
-              },
-              cuisines: {
-                connectOrCreate: item.cuisines.map((cuisine) => ({
-                  where: { name: cuisine.name },
-                  create: {
-                    name: cuisine.name,
-                    id: cuisine.id,
-                    iconPath: cuisine.iconPath,
-                  },
-                })),
-              },
-              category: item.category
-                ? {
-                    connectOrCreate: {
-                      where: { name: item.category.name },
-                      create: {
-                        name: item.category.name,
-                        id: item.category.id,
-                        iconPath: item.category.iconPath,
-                      },
+        recipes.items
+          .filter((item) => !itemNotValidForImport(item))
+          .map((item) => {
+            return prisma.recipe.create({
+              data: {
+                id: item.id,
+                name: item.name,
+                description: item.description,
+                difficulty: item.difficulty,
+                imagePath: item.imagePath,
+                seoDescription: item.seoDescription,
+                averageRating: item.averageRating,
+                ratingsCount: item.ratingsCount,
+                slug: item.slug,
+                favoritesCount: item.favoritesCount,
+                nutrition: JSON.stringify(item.nutrition),
+                totalTime: item.totalTime,
+                prepTime: item.prepTime,
+                ingredients: {
+                  connectOrCreate: item.ingredients.map((ingredient) => ({
+                    where: { name: ingredient.name },
+                    create: {
+                      name: ingredient.name,
+                      id: ingredient.id,
+                      slug: ingredient.slug,
+                      description: ingredient.description,
+                      imagePath: ingredient.imagePath,
+                      imageLink: ingredient.imageLink,
+                      type: ingredient.type,
                     },
-                  }
-                : {},
-              steps: {
-                connectOrCreate: item.steps.map((step) => ({
-                  where: { recipeId_index: { recipeId: item.id, index: step.index } },
-                  create: {
-                    index: step.index,
-                    instructions: step.instructions,
-                    instructionsHTML: step.instructionsHTML,
-                    instructionsMarkdown: step.instructionsMarkdown,
-                  },
-                })),
+                  })),
+                },
+                allergens: {
+                  connectOrCreate: item.allergens.map((allergen) => ({
+                    where: { name: allergen.name },
+                    create: {
+                      name: allergen.name,
+                      id: allergen.id,
+                      iconPath: allergen.iconPath,
+                    },
+                  })),
+                },
+                cuisines: {
+                  connectOrCreate: item.cuisines.map((cuisine) => ({
+                    where: { name: cuisine.name },
+                    create: {
+                      name: cuisine.name,
+                      id: cuisine.id,
+                      iconPath: cuisine.iconPath,
+                    },
+                  })),
+                },
+                category: item.category
+                  ? {
+                      connectOrCreate: {
+                        where: { name: item.category.name },
+                        create: {
+                          name: item.category.name,
+                          id: item.category.id,
+                          iconPath: item.category.iconPath,
+                        },
+                      },
+                    }
+                  : {},
+                steps: {
+                  connectOrCreate: item.steps.map((step) => ({
+                    where: { recipeId_index: { recipeId: item.id, index: step.index } },
+                    create: {
+                      index: step.index,
+                      instructions: step.instructions,
+                      instructionsHTML: step.instructionsHTML,
+                      instructionsMarkdown: step.instructionsMarkdown,
+                    },
+                  })),
+                },
+                tags: {
+                  connectOrCreate: item.tags.map((tag) => ({
+                    where: { name: tag.name },
+                    create: {
+                      name: tag.name,
+                      id: tag.id,
+                      recipeId: item.id,
+                    },
+                  })),
+                },
               },
-              tags: {
-                connectOrCreate: item.tags.map((tag) => ({
-                  where: { name: tag.name },
-                  create: {
-                    name: tag.name,
-                    id: tag.id,
-                  },
-                })),
-              },
-            },
-          });
-        }),
+            });
+          }),
       );
     } catch (error) {
       console.error(error);
-      continue;
+      // continue;
     }
   }
 
