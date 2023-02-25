@@ -142,7 +142,8 @@
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
       "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-      "prettier --write"
+      "prettier --write",
+      "pnpm typecheck"
     ]
   },
   "pnpm": {
