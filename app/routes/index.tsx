@@ -136,21 +136,7 @@ export default function Index() {
             <Suspense fallback={<Loader />}>
               <Await resolve={recipes.results}>
                 {(results) =>
-                  results.map((recipe) => (
-                    <RecipeCard
-                      key={recipe.id}
-                      recipe={{
-                        ...recipe,
-                        createdAt: new Date(recipe.createdAt),
-                        updatedAt: new Date(recipe.updatedAt),
-                        tags: recipe.tags.map((tag) => ({
-                          ...tag,
-                          createdAt: new Date(),
-                          updatedAt: new Date(),
-                        })),
-                      }}
-                    />
-                  ))
+                  results.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)
                 }
               </Await>
             </Suspense>

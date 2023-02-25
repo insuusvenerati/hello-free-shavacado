@@ -7,8 +7,8 @@ import { cn, useMatchesData } from "~/utils";
 import { TrashIcon } from "./TrashIcon";
 
 type Props = {
-  id: string;
-  name: string;
+  id: string | undefined;
+  name: string | undefined;
   onlyIcon?: boolean;
 };
 
@@ -50,6 +50,8 @@ export const AddToFavoritesButton = ({ id, name, onlyIcon = false, ...props }: P
     if (isFavorite) return "Added";
     return "Add to favorites";
   }, [isFavorite]);
+
+  if (!id || !name) return null;
 
   return (
     <div className="btn-group flex">

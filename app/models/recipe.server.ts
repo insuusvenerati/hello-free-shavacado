@@ -1,4 +1,3 @@
-import type { Prisma } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import type { Params } from "@remix-run/react";
 import type { UploadHandler } from "@remix-run/server-runtime";
@@ -166,12 +165,10 @@ export const getAllDbRecipes = async ({
   skip,
   take,
   search,
-  select = { id: true, name: true, tags: true, imagePath: true },
 }: {
   skip?: number;
   take?: number;
   search?: string | null;
-  select?: Prisma.RecipeSelect;
 }) => {
   if (search) {
     return await prisma.recipe.findMany({
@@ -182,7 +179,13 @@ export const getAllDbRecipes = async ({
       },
       skip,
       take,
-      select,
+      select: {
+        id: true,
+        name: true,
+        tags: { select: { id: true, name: true } },
+        imagePath: true,
+        description: true,
+      },
     });
   }
   return await prisma.recipe.findMany({
@@ -191,6 +194,12 @@ export const getAllDbRecipes = async ({
     orderBy: {
       averageRating: "desc",
     },
-    select,
+    select: {
+      id: true,
+      name: true,
+      tags: { select: { id: true, name: true } },
+      imagePath: true,
+      description: true,
+    },
   });
 };

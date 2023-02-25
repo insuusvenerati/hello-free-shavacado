@@ -1,17 +1,14 @@
-import type { Recipe, Tag } from "@prisma/client";
 import { Link } from "@remix-run/react";
-import type { SerializeFrom } from "@remix-run/server-runtime";
 import { HF_CARD_IMAGE_URL } from "~/constants";
-import type { Item } from "~/types/recipe";
+import type { getUserFavorites } from "~/db/getUserFavorites.server";
+import type { getAllDbRecipes } from "~/models/recipe.server";
 import { AddToFavoritesButton } from "./AddToFavoritesButton";
 import { RemixImage } from "./RemixImage";
 
-type RecipeWithTags = Recipe & {
-  tags: Tag[];
-};
-
 type Props = {
-  recipe: SerializeFrom<Item> | RecipeWithTags;
+  recipe:
+    | Awaited<ReturnType<typeof getUserFavorites>>[number]["recipe"]
+    | Awaited<ReturnType<typeof getAllDbRecipes>>[number];
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const RecipeCard = ({ recipe, ...props }: Props) => {
