@@ -7,39 +7,26 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <Navbar />
-      {/* {matches && isHome ? (
-        <Sidebar className="hidden max-h-full p-5 lg:grid absolute overflow-y-auto left-0 w-72 auto-rows-max gap-10" />
-      ) : null} */}
       {children}
       <div className="btm-nav h-20 lg:hidden items-start fixed bottom-0 overflow-hidden">
         <NavLink className="h-3/4" to="/">
-          <button title="Home" type="button">
-            <Home />
-          </button>
+          {({ isActive }) => <Home className={isActive ? "fill-cyan-300 h-3/4" : "h-3/4"} />}
         </NavLink>
 
         <NavLink className="h-3/4" to="/user/favorites">
-          <button title="Favorites" type="button">
-            <Star />
-          </button>
+          {({ isActive }) => <Star className={isActive ? "fill-cyan-300 h-3/4" : "h-3/4"} />}
         </NavLink>
 
         <NavLink className="h-3/4" to="/user/imported">
-          <button title="Imported" type="button">
-            <Import />
-          </button>
+          {({ isActive }) => <Import className={isActive ? "fill-cyan-300 h-3/4" : "h-3/4"} />}
         </NavLink>
 
         <NavLink className="h-3/4" to="/user/created">
-          <button title="Created" type="button">
-            <FilePlus />
-          </button>
+          {({ isActive }) => <FilePlus className={isActive ? "fill-cyan-300 h-3/4" : "h-3/4"} />}
         </NavLink>
 
         <NavLink className="h-3/4" to="/user/settings">
-          <button title="Settings" type="button">
-            <Settings />
-          </button>
+          {({ isActive }) => <Settings className={isActive ? "fill-cyan-300 h-3/4" : "h-3/4"} />}
         </NavLink>
       </div>
     </>

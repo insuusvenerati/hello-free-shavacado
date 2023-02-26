@@ -1,3 +1,4 @@
+import type { User } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import type { Params } from "@remix-run/react";
 import type { UploadHandler } from "@remix-run/server-runtime";
@@ -165,10 +166,14 @@ export const getAllDbRecipes = async ({
   skip,
   take,
   search,
+  sort,
+  direction,
 }: {
   skip?: number;
   take?: number;
   search?: string | null;
+  sort: string;
+  direction: string;
 }) => {
   if (search) {
     return await prisma.recipe.findMany({
@@ -186,13 +191,16 @@ export const getAllDbRecipes = async ({
         imagePath: true,
         description: true,
       },
+      orderBy: {
+        [sort]: direction,
+      },
     });
   }
   return await prisma.recipe.findMany({
     skip,
     take,
     orderBy: {
-      averageRating: "desc",
+      [sort]: direction,
     },
     select: {
       id: true,
@@ -200,6 +208,38 @@ export const getAllDbRecipes = async ({
       tags: { select: { id: true, name: true } },
       imagePath: true,
       description: true,
+    },
+  });
+};
+
+export const getDbRecipeById = async (id: string) => {
+  return await prisma.recipe.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      name: true,
+      tags: { select: { id: true, name: true } },
+      imagePath: true,
+      description: true,
+      ingredients: true,
+      steps: true,
+      averageRating: true,
+      cuisines: true,
+      allergens: true,
+      category: true,
+      totalTime: true,
+      nutrition: true,
+    },
+  });
+};
+
+export const addFavorite = async (user: User, recipeId: string) => {
+  return await prisma.favoriteRecipe.create({
+    data: {
+      user: { connect: { id: user.id } },
+      recipe: { connect: { id: recipeId } },
     },
   });
 };

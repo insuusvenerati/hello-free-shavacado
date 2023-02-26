@@ -17,27 +17,25 @@ import {
   HF_COVER_IMAGE_URL,
   INGREDIENT_PLACEHOLDER_URL,
 } from "~/constants";
-import { getRecipeByName } from "~/models/recipe.server";
-import { getTokenFromDatabase } from "~/models/token.server";
+import { getDbRecipeById } from "~/models/recipe.server";
 import { cn, useMatchesData } from "~/utils";
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const id = params.id;
   invariant(id, "id is required");
   const url = new URL(request.url);
-  const token = await getTokenFromDatabase();
 
-  if (typeof token !== "string") {
-    throw new Response("Unable to get recipe from API. Try again later", { status: 401 });
-  }
+  // if (typeof token !== "string") {
+  //   throw new Response("Unable to get recipe from API. Try again later", { status: 401 });
+  // }
 
   try {
-    const recipe = await getRecipeByName({ name: id, token: token });
+    const recipe = await getDbRecipeById(id);
     if (!recipe) {
       throw new Response("Recipe not found", { status: 404 });
     }
     return typedjson(
-      { recipe: recipe.items[0], url },
+      { recipe, url },
       {
         headers: {
           "Cache-Control": "public, max-age=60, s-maxage=3600",
@@ -81,6 +79,8 @@ const RecipePage = () => {
     "bg-primary-content": userColorScheme === "halloween",
     "bg-accent": userColorScheme === "cream",
   });
+
+  const nutrition = JSON.parse(recipe.nutrition);
 
   return (
     <div className={pageLayout}>
@@ -132,7 +132,7 @@ const RecipePage = () => {
           </div>
           <div className="flex flex-col">
             <h2 className="text-2xl font-bold">Nutrition</h2>
-            {recipe.nutrition.map((n) => (
+            {nutrition.map((n: any) => (
               <span key={n.name}>
                 {n.name}: {n.amount} {n.unit}
               </span>

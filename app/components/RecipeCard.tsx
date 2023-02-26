@@ -17,7 +17,7 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
       className="overflow-hidden card-compact card h-auto shadow-md w-auto bg-base-300 rounded-md duration-300 hover:-translate-y-1"
       {...props}
     >
-      <Link to={`/recipes/${recipe.name}`}>
+      <Link to={`/recipes/${recipe.id}`}>
         <figure className="cursor-pointer">
           <RemixImage
             src={`${HF_CARD_IMAGE_URL}${recipe.imagePath}`}

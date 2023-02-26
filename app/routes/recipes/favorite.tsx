@@ -6,6 +6,7 @@ import { prisma } from "~/db.server";
 import { addRecipe } from "~/db/addRecipe.server";
 import { getRecipeById } from "~/db/getRecipeById.server";
 import { getUserFavorites } from "~/db/getUserFavorites.server";
+import { addFavorite } from "~/models/recipe.server";
 import { requireUser } from "~/session.server";
 
 export const action = async ({ request }: ActionArgs) => {
@@ -28,39 +29,38 @@ export const action = async ({ request }: ActionArgs) => {
       return typedjson({ result, ok: "true", method });
     }
     const existingFavorites = await getUserFavorites(user.id);
-    const recipe = await getRecipeById(id);
 
     if (existingFavorites.some((favorite) => favorite.recipeId === id)) {
       return typedjson({ result: "Already favorited", ok: "error", method });
     }
-    if (recipe) {
-      const result = await prisma.favoriteRecipe.upsert({
-        where: {
-          recipeId: id,
-        },
-        update: {
-          user: {
-            connect: {
-              id: user.id,
-            },
-          },
-        },
-        create: {
-          user: {
-            connect: {
-              id: user.id,
-            },
-          },
-          recipe: {
-            connect: {
-              id,
-            },
-          },
-        },
-      });
-      return typedjson({ result, ok: "true", method });
-    }
-    return await addRecipe({ name, id, userId: user.id });
+
+    const result = await addFavorite(user, id);
+
+    // const result = await prisma.favoriteRecipe.upsert({
+    //   where: {
+    //     recipeId: id,
+    //   },
+    //   update: {
+    //     user: {
+    //       connect: {
+    //         id: user.id,
+    //       },
+    //     },
+    //   },
+    //   create: {
+    //     user: {
+    //       connect: {
+    //         id: user.id,
+    //       },
+    //     },
+    //     recipe: {
+    //       connect: {
+    //         id,
+    //       },
+    //     },
+    //   },
+    // });
+    return typedjson({ result, ok: "true", method });
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
       return typedjson({ result: error.message, ok: "false", method });
