@@ -1,11 +1,12 @@
-import { Form } from "@remix-run/react";
+import { Form, useSearchParams } from "@remix-run/react";
 
 export const Sort = () => {
+  const [searchParams] = useSearchParams();
+  const orderBy = searchParams.get("orderBy") || "averageRating";
   return (
     <Form className="flex gap-2" method="get" action="/">
       <select
-        // onChange={handleSelect}
-        // defaultValue="averageRating"
+        defaultValue={orderBy}
         title="sort by"
         name="orderBy"
         className="select select-accent select-sm max-w-xs"
@@ -18,7 +19,6 @@ export const Sort = () => {
         title="Direction"
         className="select select-accent select-sm max-w-xs"
         name="direction"
-        // onChange={handleDirectionSelect}
       >
         <option value="asc">Ascending</option>
         <option value="desc">Descending</option>

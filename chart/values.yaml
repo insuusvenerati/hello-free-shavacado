@@ -98,7 +98,7 @@ automountServiceAccountToken: true
 # @default -- See below
 secrets:
   config:
-    enabled: false
+    enabled: true
     stringData:
       SESSION_SECRET: ""
       CLOUD_NAME: ""

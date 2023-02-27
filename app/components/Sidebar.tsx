@@ -1,5 +1,5 @@
 import type { ImportedRecipe } from "@prisma/client";
-import type { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import type { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import clsx from "clsx";
 import { useTypedFetcher } from "remix-typedjson";
 

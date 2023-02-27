@@ -1,5 +1,5 @@
 import type { User } from "@prisma/client";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import type { Params } from "@remix-run/react";
 import type { UploadHandler } from "@remix-run/server-runtime";
 import {
@@ -231,6 +231,7 @@ export const getDbRecipeById = async (id: string) => {
       category: true,
       totalTime: true,
       nutrition: true,
+      difficulty: true,
     },
   });
 };

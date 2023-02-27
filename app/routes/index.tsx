@@ -1,6 +1,6 @@
 import { useMediaQuery } from "@mantine/hooks";
 import type { User } from "@prisma/client";
-import { Await, Link, useCatch, useLoaderData } from "@remix-run/react";
+import { Await, Link, useCatch, useLoaderData, useSearchParams } from "@remix-run/react";
 import type { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
@@ -48,6 +48,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function Index() {
+  const [searchParams] = useSearchParams();
   const matches = useMediaQuery("(min-width: 900px)", true, { getInitialValueInEffect: false });
   const { user } = useMatchesData<{ user: User | null }>("root");
   const gridLayout = user?.gridLayout ?? "grid";

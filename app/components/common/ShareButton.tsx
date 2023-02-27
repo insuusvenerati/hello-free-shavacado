@@ -14,8 +14,8 @@ export const ShareButton = ({ children, text, files, url, title, ...props }: Sha
 
   return (
     <button onClick={() => webShare({ ...share })} {...props}>
-      <div className="inline-flex items-center justify-center">
-        <Share />
+      <div className="inline-flex items-center justify-center gap-1">
+        <Share className="h-4 w-4" height={4} width={4} />
         {children}
       </div>
     </button>

@@ -47,13 +47,17 @@ const ImportedRecipePage = () => {
             <div className="flex">Prep time: {recipe.prepTime}</div>
             <div className="flex">Total time: {recipe.totalTime}</div>
             <ShareButton
-              className="btn"
+              className="btn btn-sm"
               title={recipe.name}
               text={recipe.description ?? "Probably a good recipe but with no description"}
               url={url}
             >
               Share
             </ShareButton>
+
+            <a target="_blank" className="link" href={recipe.url} rel="noreferrer">
+              Link
+            </a>
           </div>
 
           <div className="mt-6 mb-20">

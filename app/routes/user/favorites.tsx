@@ -36,8 +36,14 @@ const UserFavoritesPage = () => {
           You currently have <strong> {count} </strong> favorite recipes!
         </div>
 
-        <GridSizeSelect className="ml-2" />
-        <GridLayoutSwitcher />
+        <span className="flex flex-col gap-1 justify-center items-start">
+          Grid Size
+          <GridSizeSelect />
+        </span>
+        <span className="flex flex-col gap-1 justify-center items-start">
+          Grid Layout
+          <GridLayoutSwitcher />
+        </span>
       </div>
 
       {gridLayout === "list" && (

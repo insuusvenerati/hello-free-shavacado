@@ -126,8 +126,16 @@ const RecipePage = () => {
               {recipe.totalTime ?? 0} min
             </div>
             <div className="flex items-center">
-              <Star className="w-4 h-4 mr-1" />
-              {recipe.averageRating ?? "No ratings yet"}
+              <h2 className="font-semibold mr-1">Rating:</h2>
+              {recipe.averageRating &&
+                Array.from({ length: recipe.averageRating }).map((_, i) => (
+                  <Star key={i} className="w-4 h-4 mr-1" />
+                ))}
+            </div>
+
+            <div className="flex gap-4">
+              <h2 className="font-semibold">Difficulty:</h2>
+              {recipe.difficulty}
             </div>
           </div>
           <div className="flex flex-col">
