@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useLocalStorage } from "@mantine/hooks";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useWorker } from "~/hooks/useWorker";
 
 interface AutoCompleteProps<T> {
   items: T[];
@@ -20,14 +21,8 @@ export const AutoComplete = <T extends { id: string }>({
     defaultValue: [],
   });
   const [isInputFocused, setIsInputFocused] = useState(false);
-  const workerRef = useRef<Worker | null>(null);
+  const workerRef = useWorker({ workerUrl: "worker.js" });
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    workerRef.current = new Worker("worker.js", { type: "module" });
-
-    return () => workerRef.current?.terminate();
-  }, []);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // setInputValue(event.target.value);
@@ -81,7 +76,7 @@ export const AutoComplete = <T extends { id: string }>({
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
       />
-      <ul className="absolute menu block z-10 max-w-xs bg-accent max-h-80 overflow-y-scroll mt-1 shadow-md border-t-0 border">
+      <ul className="absolute menu block z-10 bg-base-100 max-w-xs max-h-80 overflow-y-scroll mt-1 shadow-md border-t-0 border">
         {isInputFocused &&
           !!suggestions.length &&
           suggestions.map((suggestion) => (

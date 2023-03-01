@@ -15,6 +15,7 @@ node_modules
 /playwright-report/
 /playwright/.cache/
 /public/entry.worker.js
+/public/worker.js
 /.cache
 .sentryclirc
 .cache_ggshield
