@@ -1,31 +1,30 @@
-import { Form, useSearchParams } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
+import { ChevronUp } from "lucide-react";
+import { getFilterOptions } from "~/hooks/useFilterOptions";
 
 export const Sort = () => {
-  const [searchParams] = useSearchParams();
-  const orderBy = searchParams.get("orderBy") || "averageRating";
+  const location = useLocation();
+
   return (
-    <Form className="flex gap-2" method="get" action="/">
-      <select
-        defaultValue={orderBy}
-        title="sort by"
-        name="orderBy"
-        className="select select-accent select-sm max-w-xs"
-      >
-        <option value="averageRating">Rating</option>
-        <option value="difficulty">Difficulty</option>
-        <option value="name">Name</option>
-      </select>
-      <select
-        title="Direction"
-        className="select select-accent select-sm max-w-xs"
-        name="direction"
-      >
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
-      </select>
-      <button className="btn btn-sm" type="submit">
-        Sort
-      </button>
-    </Form>
+    <div className="flex gap-2">
+      <Link to={getFilterOptions("orderBy", "averageRating", location)}>
+        <button type="button" className="btn btn-sm">
+          Average Rating
+          <ChevronUp />
+        </button>
+      </Link>
+      <Link to={getFilterOptions("orderBy", "difficulty", location)}>
+        <button type="button" className="btn btn-sm">
+          Difficulty
+          <ChevronUp />
+        </button>
+      </Link>
+      <Link to={getFilterOptions("orderBy", "name", location)}>
+        <button type="button" className="btn btn-sm">
+          Name
+          <ChevronUp />
+        </button>
+      </Link>
+    </div>
   );
 };

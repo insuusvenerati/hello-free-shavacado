@@ -1,21 +1,25 @@
 import { useMediaQuery } from "@mantine/hooks";
 import type { User } from "@prisma/client";
-import { Await, Link, useCatch, useLoaderData, useSearchParams } from "@remix-run/react";
+import { Await, Link, useCatch, useLoaderData, useLocation } from "@remix-run/react";
 import type { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
 import { Suspense, useMemo } from "react";
+import { AutoComplete } from "~/components/AutoComplete";
 import { Container } from "~/components/common/Container";
 import { Loader } from "~/components/common/loader/Loader";
 import { RecipeGrid } from "~/components/common/RecipeGrid";
+import { FilterTags } from "~/components/FilterTags";
 import { GridLayoutSwitcher } from "~/components/GridLayoutSwitcher";
 import { GridSizeSelect } from "~/components/GridSizeSelect";
 import { RecipeCard } from "~/components/RecipeCard";
 import { RecipeListItem } from "~/components/RecipeListItem";
 import { Sort } from "~/components/Sort";
+import { HF_AVATAR_IMAGE_URL } from "~/constants";
 import { prisma } from "~/db.server";
+import { getFilterOptions } from "~/hooks/useFilterOptions";
 import { usePullRefresh } from "~/hooks/usePullRefresh";
-import { getAllDbRecipes } from "~/models/recipe.server";
+import { getAllDbRecipes, getDbIngredients, getDbTags } from "~/models/recipe.server";
 import { cn, useMatchesData } from "~/utils";
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -24,10 +28,14 @@ export const loader = async ({ request }: LoaderArgs) => {
   const page = url.searchParams.get("page") || 1;
   const take = Number(url.searchParams.get("take")) || 20;
   const sort = url.searchParams.get("orderBy") || "averageRating";
+  const tag = url.searchParams.get("tag");
+  const ingredient = url.searchParams.get("ingredient");
   const direction = url.searchParams.get("direction") || "desc";
   const skip = (Number(page) - 1) * take;
 
-  const results = getAllDbRecipes({ skip, take, search, sort, direction });
+  const results = getAllDbRecipes({ skip, take, search, sort, direction, tag, ingredient });
+  const tags = await getDbTags();
+  const ingredients = await getDbIngredients();
 
   const totalRecipes = await prisma.recipe.count();
   const totalPages = Math.ceil(totalRecipes / take);
@@ -35,6 +43,8 @@ export const loader = async ({ request }: LoaderArgs) => {
   return defer(
     {
       results,
+      ingredients,
+      tags,
       totalRecipes,
       page: Number(page),
       totalPages,
@@ -48,7 +58,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function Index() {
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const matches = useMediaQuery("(min-width: 900px)", true, { getInitialValueInEffect: false });
   const { user } = useMatchesData<{ user: User | null }>("root");
   const gridLayout = user?.gridLayout ?? "grid";
@@ -85,27 +95,66 @@ export default function Index() {
           style={{ marginTop: pullChange ? pullChange / 3.118 : "" }}
           ref={refreshContainer}
         >
-          {isLoading ? "Loading..." : "Pull to refresh"}
+          {isLoading ? <Loader /> : "Pull to refresh"}
         </div>
       )}
       <Container className="items-start">
         <aside className={asideStyles}>
           <div className="btn-group flex justify-center items-center mb-4">
-            <Link to={`/?page=1`} className="btn btn-ghost max-w-xs">
+            <Link to={getFilterOptions("page", "1", location)} className="btn btn-ghost max-w-xs">
               First
             </Link>
-            <Link to={`/?page=${pagination.prevPage}`} className="btn max-w-xs">
+            <Link
+              to={getFilterOptions("page", `${pagination.prevPage}`, location)}
+              className="btn max-w-xs"
+            >
               Prev
             </Link>
-            <Link prefetch="intent" to={`/?page=${pagination.nextPage}`} className="btn max-w-xs">
+            <Link
+              prefetch="intent"
+              to={getFilterOptions("page", `${pagination.nextPage}`, location)}
+              className="btn max-w-xs"
+            >
               Next
             </Link>
-            <Link to={`/?page=${recipes.totalPages}`} className="btn btn-ghost max-w-xs">
+            <Link
+              to={getFilterOptions("page", `${recipes.totalPages}`, location)}
+              className="btn btn-ghost max-w-xs"
+            >
               Last
             </Link>
           </div>
 
           <div className={selectStyles}>
+            <span className="flex flex-col gap-1 justify-center items-start">
+              Ingredients
+              <AutoComplete
+                items={recipes.ingredients}
+                getItemLabel={(item) => item.name}
+                renderItem={(item) => (
+                  <Link to={getFilterOptions("ingredient", item.name, location)}>
+                    <img
+                      width={50}
+                      height={50}
+                      className="h-8 w-8 rounded-full"
+                      src={
+                        item.imagePath
+                          ? `${HF_AVATAR_IMAGE_URL}${item.imagePath}`
+                          : "https://via.placeholder.com/50"
+                      }
+                      alt={item.name}
+                    />
+                    {item.name}
+                  </Link>
+                )}
+              />
+            </span>
+
+            <span className="flex flex-col gap-1 justify-center items-start">
+              Tags
+              <FilterTags />
+            </span>
+
             <span className="flex flex-col gap-1 justify-center items-start">
               Grid Size
               <GridSizeSelect />

@@ -14,7 +14,7 @@ type Props = {
 export const RecipeCard = ({ recipe, ...props }: Props) => {
   return (
     <div
-      className="overflow-hidden card-compact card h-auto shadow-md w-auto bg-base-300 rounded-md duration-300 hover:-translate-y-1"
+      className="overflow-hidden card-compact card h-auto shadow-md w-auto bg-base-300 rounded-md duration-200 transition-all hover:scale-105"
       {...props}
     >
       <Link to={`/recipes/${recipe.id}`}>
@@ -43,9 +43,9 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
         <div className="btn-group">
           {recipe.tags
             ?.map((tag) => (
-              <button key={tag.id} className="btn btn-xs">
+              <Link to={`?tag=${tag.name}`} key={tag.id} className="btn btn-xs">
                 {tag.name}
-              </button>
+              </Link>
             ))
             .slice(0, 2)}
         </div>

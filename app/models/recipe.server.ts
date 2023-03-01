@@ -168,13 +168,65 @@ export const getAllDbRecipes = async ({
   search,
   sort,
   direction,
+  tag,
+  ingredient,
 }: {
   skip?: number;
   take?: number;
   search?: string | null;
   sort: string;
   direction: string;
+  tag: string | null;
+  ingredient: string | null;
 }) => {
+  if (ingredient) {
+    return await prisma.recipe.findMany({
+      where: {
+        ingredients: {
+          some: {
+            name: ingredient,
+          },
+        },
+      },
+      take,
+      skip,
+      select: {
+        id: true,
+        name: true,
+        tags: { select: { id: true, name: true } },
+        imagePath: true,
+        description: true,
+      },
+      orderBy: {
+        [sort]: direction,
+      },
+    });
+  }
+
+  if (tag) {
+    return await prisma.recipe.findMany({
+      where: {
+        tags: {
+          some: {
+            name: tag,
+          },
+        },
+      },
+      take,
+      skip,
+      select: {
+        id: true,
+        name: true,
+        tags: { select: { id: true, name: true } },
+        imagePath: true,
+        description: true,
+      },
+      orderBy: {
+        [sort]: direction,
+      },
+    });
+  }
+
   if (search) {
     return await prisma.recipe.findMany({
       where: {
@@ -241,6 +293,25 @@ export const addFavorite = async (user: User, recipeId: string) => {
     data: {
       user: { connect: { id: user.id } },
       recipe: { connect: { id: recipeId } },
+    },
+  });
+};
+
+export const getDbTags = async () => {
+  return await prisma.tag.findMany({
+    select: {
+      name: true,
+      id: true,
+    },
+  });
+};
+
+export const getDbIngredients = async () => {
+  return await prisma.ingredient.findMany({
+    select: {
+      name: true,
+      id: true,
+      imagePath: true,
     },
   });
 };

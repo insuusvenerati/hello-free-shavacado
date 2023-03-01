@@ -3,8 +3,6 @@ import type { ActionArgs } from "@remix-run/server-runtime";
 import { typedjson } from "remix-typedjson";
 import invariant from "tiny-invariant";
 import { prisma } from "~/db.server";
-import { addRecipe } from "~/db/addRecipe.server";
-import { getRecipeById } from "~/db/getRecipeById.server";
 import { getUserFavorites } from "~/db/getUserFavorites.server";
 import { addFavorite } from "~/models/recipe.server";
 import { requireUser } from "~/session.server";

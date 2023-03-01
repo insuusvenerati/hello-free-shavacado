@@ -7,7 +7,7 @@ module.exports = {
   serverDependenciesToBundle: ["recipe-data-scraper"],
   future: {
     unstable_dev: false,
-    unstable_cssModules: true,
+    unstable_cssModules: false,
     unstable_postcss: true,
     unstable_tailwind: true,
   },
