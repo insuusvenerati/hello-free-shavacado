@@ -35,54 +35,22 @@ export const action = async ({ request }: ActionArgs) => {
         invariant(typeof url === "string", "Missing url");
         invariant(typeof recipeId === "string", "Invalid RecipeID");
         const recipe = await recipeDataScraper(url);
-        // debug(recipe);
         const importedRecipe = await prisma.importedRecipe.create({
           data: {
-            ...recipe,
-            image: typeof recipe.image === "object" ? recipe.image.url : recipe.image,
-            description: recipe.description ?? null,
-            keywords: {
-              connectOrCreate: recipe.keywords?.map((keyword) => ({
-                where: { name: keyword },
+            name: recipe.name,
+            description: recipe.description,
+            recipeYield: recipe.recipeYield,
+            totalTime: recipe.totalTime,
+            image: typeof recipe.image === "string" ? recipe.image : JSON.stringify(recipe.image),
+            url,
+            cookTime: recipe.cookTime,
+            prepTime: recipe.prepTime,
+            recipeCategories: {
+              connectOrCreate: recipe.recipeCategories.map((category) => ({
                 create: {
-                  name: keyword,
-                },
-              })),
-            },
-            recipeInstructions: {
-              connectOrCreate: recipe.recipeInstructions?.map((instruction, index) => ({
-                create: {
-                  caption: instruction ?? null,
-                  index: index,
+                  name: category,
                 },
                 where: {
-                  importedRecipeId_index: {
-                    importedRecipeId: recipeId,
-                    index,
-                  },
-                },
-              })),
-            },
-            recipeIngredients: {
-              connectOrCreate: recipe.recipeIngredients?.map((ingredient) => ({
-                where: { name: ingredient },
-                create: {
-                  name: ingredient,
-                },
-              })),
-            },
-            recipeCuisines: {
-              connectOrCreate: recipe.recipeCuisines?.map((cuisine) => ({
-                where: { name: cuisine },
-                create: {
-                  name: cuisine,
-                },
-              })),
-            },
-            recipeCategories: {
-              connectOrCreate: recipe.recipeCategories?.map((category) => ({
-                where: { name: category },
-                create: {
                   name: category,
                 },
               })),
@@ -136,6 +104,8 @@ const UserImportedPage = () => {
     if (inputRef.current) inputRef.current.value = "";
     fetcher.load("/resource/imported");
   }
+
+  console.log(fetcher.data?.error);
 
   useEffect(() => {
     if (isError)

@@ -25,7 +25,6 @@ export const AutoComplete = <T extends { id: string }>({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // setInputValue(event.target.value);
     const value = event.target.value;
     inputRef.current!.value = value;
 
@@ -46,7 +45,6 @@ export const AutoComplete = <T extends { id: string }>({
     const label = getItemLabel(item);
 
     inputRef.current!.value = label;
-    // setInputValue(label);
     setRecentItems([item, ...recentItems.filter((recentItem: any) => recentItem.id !== item.id)]);
     setSuggestions([]);
   };

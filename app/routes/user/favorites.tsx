@@ -23,7 +23,6 @@ const UserFavoritesPage = () => {
   const matches = useMediaQuery("(min-width: 768px)", true, { getInitialValueInEffect: false });
   const { favoriteRecipes } = useTypedLoaderData<typeof loader>();
   const { user } = useMatchesData<{ user: User }>("root");
-  const count = favoriteRecipes.length;
   const gridLayout = user?.gridLayout ?? "list";
   const selectorsStyles = cn("flex gap-4 mb-4", {
     "flex-col": !matches,
@@ -32,18 +31,14 @@ const UserFavoritesPage = () => {
   return (
     <Container className="items-start">
       <div className={selectorsStyles}>
-        <div className="text-xl mb-4">
-          You currently have <strong> {count} </strong> favorite recipes!
-        </div>
-
-        <span className="flex flex-col gap-1 justify-center items-start">
+        <div className="flex flex-col gap-1 justify-center items-start">
           Grid Size
           <GridSizeSelect />
-        </span>
-        <span className="flex flex-col gap-1 justify-center items-start">
+        </div>
+        <div className="flex flex-col gap-1 justify-center items-start">
           Grid Layout
           <GridLayoutSwitcher />
-        </span>
+        </div>
       </div>
 
       {gridLayout === "list" && (

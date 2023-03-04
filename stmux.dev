@@ -1,0 +1,1 @@
+[ [ "pnpm dev:remix" : "pnpm dev:server" ] .. "pnpm workers" ]

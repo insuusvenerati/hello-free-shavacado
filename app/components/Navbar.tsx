@@ -4,6 +4,7 @@ import { Link, useFetcher } from "@remix-run/react";
 import { useMatchesData } from "~/utils";
 import { ColorSchemeSwitcher } from "./ColorSchemeSwitcher";
 import { SearchForm } from "./SearchForm";
+import { WeatherCard } from "~/routes/resource/weather";
 
 export const Navbar = () => {
   const matchesData = useMatchesData<{ user: User }>("root");
@@ -13,10 +14,11 @@ export const Navbar = () => {
   return (
     <nav className="navbar justify-between border-b-2 border-b-primary">
       {matches && (
-        <div className="navbar-start max-w-sm">
+        <div className="navbar-start gap-2 max-w-md">
           <Link to="/" className="btn-ghost btn text-xl normal-case">
             Hello Free Shavacado
           </Link>
+          <WeatherCard />
         </div>
       )}
 

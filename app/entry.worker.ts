@@ -5,15 +5,15 @@ import { json } from "@remix-run/server-runtime";
 export type {};
 declare let self: ServiceWorkerGlobalScope;
 
-let STATIC_ASSETS = ["/build/", "/icons/"];
+const STATIC_ASSETS = ["/build/", "/fonts/", "/ios/", "/android/", "/splash_screens/"];
 
-let ASSET_CACHE = "asset-cache";
-let DATA_CACHE = "data-cache";
-let DOCUMENT_CACHE = "document-cache";
+const ASSET_CACHE = "asset-cache";
+const DATA_CACHE = "data-cache";
+const DOCUMENT_CACHE = "document-cache";
 
 function debug(...messages: any[]) {
   if (process.env.NODE_ENV === "development") {
-    console.debug(...messages);
+    console.log(...messages);
   }
 }
 
@@ -26,13 +26,13 @@ async function handleActivate(event: ExtendableEvent) {
 }
 
 async function handleMessage(event: ExtendableMessageEvent) {
-  let cachePromises: Map<string, Promise<void>> = new Map();
+  const cachePromises: Map<string, Promise<void>> = new Map();
 
   if (event.data.type === "REMIX_NAVIGATION") {
-    let { isMount, location, matches, manifest } = event.data;
-    let documentUrl = location.pathname + location.search + location.hash;
+    const { isMount, location, matches, manifest } = event.data;
+    const documentUrl = location.pathname + location.search + location.hash;
 
-    let [dataCache, documentCache, existingDocument] = await Promise.all([
+    const [dataCache, documentCache, existingDocument] = await Promise.all([
       caches.open(DATA_CACHE),
       caches.open(DOCUMENT_CACHE),
       caches.match(documentUrl),
@@ -49,13 +49,13 @@ async function handleMessage(event: ExtendableMessageEvent) {
     }
 
     if (isMount) {
-      for (let match of matches) {
+      for (const match of matches) {
         if (manifest.routes[match.id].hasLoader) {
-          let params = new URLSearchParams(location.search);
+          const params = new URLSearchParams(location.search);
           params.set("_data", match.id);
           let search = params.toString();
           search = search ? `?${search}` : "";
-          let url = location.pathname + search + location.hash;
+          const url = location.pathname + search + location.hash;
           if (!cachePromises.has(url)) {
             debug("Caching data for", url);
             cachePromises.set(
@@ -74,10 +74,10 @@ async function handleMessage(event: ExtendableMessageEvent) {
 }
 
 async function handleFetch(event: FetchEvent): Promise<Response> {
-  let url = new URL(event.request.url);
+  const url = new URL(event.request.url);
 
   if (isAssetRequest(event.request)) {
-    let cached = await caches.match(event.request, {
+    const cached = await caches.match(event.request, {
       cacheName: ASSET_CACHE,
       ignoreVary: true,
       ignoreSearch: true,
@@ -88,9 +88,9 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
     }
 
     debug("Serving asset from network", url.pathname);
-    let response = await fetch(event.request);
+    const response = await fetch(event.request);
     if (response.status === 200) {
-      let cache = await caches.open(ASSET_CACHE);
+      const cache = await caches.open(ASSET_CACHE);
       await cache.put(event.request, response.clone());
     }
     return response;
@@ -99,13 +99,13 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
   if (isLoaderRequest(event.request)) {
     try {
       debug("Serving data from network", url.pathname + url.search);
-      let response = await fetch(event.request.clone());
-      let cache = await caches.open(DATA_CACHE);
+      const response = await fetch(event.request.clone());
+      const cache = await caches.open(DATA_CACHE);
       await cache.put(event.request, response.clone());
       return response;
     } catch (error) {
       debug("Serving data from network failed, falling back to cache", url.pathname + url.search);
-      let response = await caches.match(event.request);
+      const response = await caches.match(event.request);
       if (response) {
         response.headers.set("X-Remix-Worker", "yes");
         return response;
@@ -124,13 +124,13 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
   if (isDocumentGetRequest(event.request)) {
     try {
       debug("Serving document from network", url.pathname);
-      let response = await fetch(event.request);
-      let cache = await caches.open(DOCUMENT_CACHE);
+      const response = await fetch(event.request);
+      const cache = await caches.open(DOCUMENT_CACHE);
       await cache.put(event.request, response.clone());
       return response;
     } catch (error) {
       debug("Serving document from network failed, falling back to cache", url.pathname);
-      let response = await caches.match(event.request);
+      const response = await caches.match(event.request);
       if (response) {
         return response;
       }
@@ -140,6 +140,24 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
 
   return fetch(event.request.clone());
 }
+
+const handlePush = async (event: PushEvent) => {
+  const data = JSON.parse(event?.data!.text());
+  const title = data.title ? data.title : "Remix PWA";
+
+  const options = {
+    body: data.body ? data.body : "Notification Body Text",
+    icon: data.icon ? data.icon : "/icons/android-icon-192x192.png",
+    badge: data.badge ? data.badge : "/icons/android-icon-48x48.png",
+    dir: data.dir ? data.dir : "auto",
+    image: data.image ? data.image : undefined,
+    silent: data.silent ? data.silent : false,
+  };
+
+  self.registration.showNotification(title, {
+    ...options,
+  });
+};
 
 function isMethod(request: Request, methods: string[]) {
   return methods.includes(request.method.toLowerCase());
@@ -153,7 +171,7 @@ function isAssetRequest(request: Request) {
 }
 
 function isLoaderRequest(request: Request) {
-  let url = new URL(request.url);
+  const url = new URL(request.url);
   return isMethod(request, ["get"]) && url.searchParams.get("_data");
 }
 
@@ -173,11 +191,21 @@ self.addEventListener("message", (event) => {
   event.waitUntil(handleMessage(event));
 });
 
+self.addEventListener("push", (event) => {
+  // self.clients.matchAll().then(function (c) {
+  // if (c.length === 0) {
+  event.waitUntil(handlePush(event));
+  // } else {
+  //   console.log("Application is already open!");
+  // }
+  // });
+});
+
 self.addEventListener("fetch", (event) => {
   event.respondWith(
     (async () => {
-      let result = {} as
-        | { error: unknown; response: undefined }
+      const result = {} as
+        | { error: unknown; response: Response }
         | { error: undefined; response: Response };
       try {
         result.response = await handleFetch(event);
@@ -195,7 +223,7 @@ async function appHandleFetch(
   {
     error,
     response,
-  }: { error: unknown; response: undefined } | { error: undefined; response: Response },
+  }: { error: unknown; response: Response } | { error: undefined; response: Response },
 ): Promise<Response> {
-  return response as Response;
+  return response;
 }

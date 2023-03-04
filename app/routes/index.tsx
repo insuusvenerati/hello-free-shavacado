@@ -33,19 +33,34 @@ export const loader = async ({ request }: LoaderArgs) => {
   const direction = url.searchParams.get("direction") || "desc";
   const skip = (Number(page) - 1) * take;
 
-  const results = getAllDbRecipes({ skip, take, search, sort, direction, tag, ingredient });
+  const results = await getAllDbRecipes({ skip, take, search, sort, direction, tag, ingredient });
   const tags = await getDbTags();
   const ingredients = await getDbIngredients();
+  const resultsCount = await prisma.recipe.count({
+    where: {
+      name: {
+        contains: search ?? undefined,
+      },
+      tags: {
+        some: {
+          name: tag ?? undefined,
+        },
+      },
+      ingredients: {
+        some: {
+          name: ingredient ?? undefined,
+        },
+      },
+    },
+  });
 
-  const totalRecipes = await prisma.recipe.count();
-  const totalPages = Math.ceil(totalRecipes / take);
+  const totalPages = Math.ceil(resultsCount / take);
 
   return defer(
     {
       results,
       ingredients,
       tags,
-      totalRecipes,
       page: Number(page),
       totalPages,
     },
@@ -174,13 +189,11 @@ export default function Index() {
 
         {gridLayout === "grid" && (
           <RecipeGrid className="lg:grid-cols-5">
-            <Suspense fallback={<Loader />}>
-              <Await resolve={recipes.results}>
-                {(results) =>
-                  results.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)
-                }
-              </Await>
-            </Suspense>
+            {recipes.results.length > 0 ? (
+              recipes.results.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)
+            ) : (
+              <h1 className="text-center text-2xl">No recipes found</h1>
+            )}
           </RecipeGrid>
         )}
 
@@ -189,7 +202,11 @@ export default function Index() {
             <Suspense fallback={<Loader />}>
               <Await resolve={recipes.results}>
                 {(results) =>
-                  results.map((recipe) => <RecipeListItem key={recipe.id} recipe={recipe} />)
+                  results.length > 0 ? (
+                    results.map((recipe) => <RecipeListItem key={recipe.id} recipe={recipe} />)
+                  ) : (
+                    <h1 className="text-center text-2xl">No recipes found</h1>
+                  )
                 }
               </Await>
             </Suspense>

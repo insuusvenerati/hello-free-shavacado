@@ -16,7 +16,11 @@ export const FilterTags = () => {
       <label tabIndex={0} className="btn btn-sm m-1">
         Tags
       </label>
-      <ul tabIndex={0} defaultValue={tag} className="menu p-2 bg-base-100 dropdown-content w-52">
+      <ul
+        tabIndex={0}
+        defaultValue={tag}
+        className="menu block max-h-80 p-2 overflow-y-scroll bg-base-100 dropdown-content w-52"
+      >
         {tags.map((tag) => (
           <li key={tag.id}>
             <Link to={getFilterOptions("tag", tag.name, location)}>{tag.name}</Link>

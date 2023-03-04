@@ -6,8 +6,11 @@ module.exports = {
   ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
   serverDependenciesToBundle: ["recipe-data-scraper"],
   future: {
-    unstable_dev: false,
+    unstable_dev: true,
     unstable_cssModules: false,
+    v2_routeConvention: true,
+    v2_meta: true,
+    v2_errorBoundary: true,
     unstable_postcss: true,
     unstable_tailwind: true,
   },

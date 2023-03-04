@@ -9,9 +9,14 @@ import {
   ScrollRestoration,
   useCatch,
   useFetchers,
+  useLocation,
+  useMatches,
   useTransition,
 } from "@remix-run/react";
-import type { CatchBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
+import type {
+  CatchBoundaryComponent,
+  V2_MetaFunction,
+} from "@remix-run/server-runtime/dist/routeModules";
 import { withSentry } from "@sentry/remix";
 import NProgress from "nprogress";
 import nProgressStyles from "nprogress/nprogress.css";
@@ -172,23 +177,42 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const meta: TypedMetaFunction<typeof loader> = () => ({
-  charset: "utf-8",
-  title: "Hello Free Shavacado",
-  viewport: "width=device-width,initial-scale=1",
-  description: "Delicious!",
-  "og:url": "https://hello-free-shavacado-new.fly.dev/",
-  "og:type": "website",
-  "og:image": "/logo.jpg",
-  "og:title": "Hello Free Shavacado",
-  "og:description": "Delicious!",
-  "twitter:card": "summary_large_image",
-  "twitter:domain": "hello-free-shavacado-new-staging.fly.dev",
-  "twitter:url": "https://hello-free-shavacado-new-staging.fly.dev/",
-  "twitter:title": "Hello Free Shavacado",
-  "twitter:description": "Delicious!",
-  "twitter:image": "/logo.jpg",
-});
+export const meta: V2_MetaFunction<typeof loader> = () => [
+  {
+    charset: "utf-8",
+    title: "Hello Free Shavacado",
+    viewport: "width=device-width,initial-scale=1",
+    description: "Delicious!",
+    "og:url": "https://hello-free-shavacado-new.fly.dev/",
+    "og:type": "website",
+    "og:image": "/logo.jpg",
+    "og:title": "Hello Free Shavacado",
+    "og:description": "Delicious!",
+    "twitter:card": "summary_large_image",
+    "twitter:domain": "hello-free-shavacado-new-staging.fly.dev",
+    "twitter:url": "https://hello-free-shavacado-new-staging.fly.dev/",
+    "twitter:title": "Hello Free Shavacado",
+    "twitter:description": "Delicious!",
+    "twitter:image": "/logo.jpg",
+  },
+];
+// ({
+//   charset: "utf-8",
+//   title: "Hello Free Shavacado",
+//   viewport: "width=device-width,initial-scale=1",
+//   description: "Delicious!",
+//   "og:url": "https://hello-free-shavacado-new.fly.dev/",
+//   "og:type": "website",
+//   "og:image": "/logo.jpg",
+//   "og:title": "Hello Free Shavacado",
+//   "og:description": "Delicious!",
+//   "twitter:card": "summary_large_image",
+//   "twitter:domain": "hello-free-shavacado-new-staging.fly.dev",
+//   "twitter:url": "https://hello-free-shavacado-new-staging.fly.dev/",
+//   "twitter:title": "Hello Free Shavacado",
+//   "twitter:description": "Delicious!",
+//   "twitter:image": "/logo.jpg",
+// });
 
 type FavoriteRecipes = (FavoriteRecipe & {
   recipe: Recipe & {
@@ -232,8 +256,10 @@ export async function loader({ request }: LoaderArgs) {
     throw new Error("Something went wrong");
   }
 }
-
+let isMount = true;
 function App() {
+  const location = useLocation();
+  const matches = useMatches();
   const { colorScheme } = useTypedLoaderData<typeof loader>();
   const transition = useTransition();
   const fetchers = useFetchers();
@@ -248,6 +274,37 @@ function App() {
   );
 
   useEffect(() => {
+    let mounted = isMount;
+    isMount = false;
+    if ("serviceWorker" in navigator) {
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller?.postMessage({
+          type: "REMIX_NAVIGATION",
+          isMount: mounted,
+          location,
+          matches,
+          manifest: window.__remixManifest,
+        });
+      } else {
+        let listener = async () => {
+          await navigator.serviceWorker.ready;
+          navigator.serviceWorker.controller?.postMessage({
+            type: "REMIX_NAVIGATION",
+            isMount: mounted,
+            location,
+            matches,
+            manifest: window.__remixManifest,
+          });
+        };
+        navigator.serviceWorker.addEventListener("controllerchange", listener);
+        return () => {
+          navigator.serviceWorker.removeEventListener("controllerchange", listener);
+        };
+      }
+    }
+  }, [location]);
+
+  useEffect(() => {
     NProgress.configure({ showSpinner: false });
     if (state === "loading") NProgress.start();
     if (state === "idle") NProgress.done();
@@ -260,7 +317,7 @@ function App() {
         <link href="/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />
         <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
         <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
-        <link href="/site.webmanifest" rel="manifest" />
+        <link rel="manifest" href="/resource/manifest.webmanifest" />
         <link href="/safari-pinned-tab.svg" rel="mask-icon" />
         <meta content="#da532c" name="msapplication-TileColor" />
         <meta content="#f69435" name="theme-color"></meta>
@@ -275,7 +332,7 @@ function App() {
         <ToastContainer theme={colorScheme === "dark" ? "dark" : "light"} />
         <ScrollRestoration />
         <Scripts />
-        {process.env.NODE_ENV === "development" && <LiveReload />}
+        <LiveReload />
       </body>
     </html>
   );

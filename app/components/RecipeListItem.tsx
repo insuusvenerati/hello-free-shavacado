@@ -21,8 +21,8 @@ export const RecipeListItem = ({ recipe, ...props }: RecipeListItemProps) => {
             className="w-12 h-12 rounded-full hover:scale-110 cursor-pointer"
             src={`${HF_AVATAR_IMAGE_URL}${recipe.imagePath}`}
             alt={recipe.name}
-            onClick={() => navigate(`/recipes/${recipe.name}`)}
-            onKeyDown={() => navigate(`/recipes/${recipe.name}`)}
+            onClick={() => navigate(`/recipes/${recipe.id}`)}
+            onKeyDown={() => navigate(`/recipes/${recipe.id}`)}
           />
         </div>
         <div className="flex-1 min-w-0">
