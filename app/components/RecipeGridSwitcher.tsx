@@ -1,6 +1,6 @@
 import type { User } from "@prisma/client";
 import { useTypedFetcher } from "remix-typedjson";
-import type { action } from "~/routes/resource/user-options";
+import type { action } from "~/routes/resource.user-options";
 import { useMatchesData } from "~/utils";
 
 export const RecipeGridSwitcher = () => {

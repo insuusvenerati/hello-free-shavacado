@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import { useTypedFetcher } from "remix-typedjson";
-import type { action } from "~/routes/recipes/favorite";
+import type { action } from "~/routes/recipes.favorite";
 import type { FavoritesWithRecipeAndId } from "~/types/favorites";
 import { cn, useMatchesData } from "~/utils";
 import { TrashIcon } from "./TrashIcon";
