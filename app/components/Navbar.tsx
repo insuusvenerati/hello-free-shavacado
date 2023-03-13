@@ -4,7 +4,7 @@ import { Link, useFetcher } from "@remix-run/react";
 import { useMatchesData } from "~/utils";
 import { ColorSchemeSwitcher } from "./ColorSchemeSwitcher";
 import { SearchForm } from "./SearchForm";
-import { WeatherCard } from "~/routes/resource/weather";
+import { WeatherCard } from "~/routes/resource.weather";
 
 export const Navbar = () => {
   const matchesData = useMatchesData<{ user: User }>("root");

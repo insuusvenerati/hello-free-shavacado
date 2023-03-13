@@ -8,7 +8,7 @@ import { useMatchesData } from "~/utils";
 export const FilterTags = () => {
   const [searchParams] = useSearchParams();
   const tag = searchParams.get("tag") ?? "New";
-  const { tags } = useMatchesData<{ tags: Tag[] }>("routes/index");
+  const data = useMatchesData<{ tags: Tag[] }>("routes/index");
   const location = useLocation();
 
   return (
@@ -21,7 +21,7 @@ export const FilterTags = () => {
         defaultValue={tag}
         className="menu block max-h-80 p-2 overflow-y-scroll bg-base-100 dropdown-content w-52"
       >
-        {tags.map((tag) => (
+        {data?.tags?.map((tag) => (
           <li key={tag.id}>
             <Link to={getFilterOptions("tag", tag.name, location)}>{tag.name}</Link>
           </li>

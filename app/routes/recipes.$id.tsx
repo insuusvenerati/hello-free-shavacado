@@ -2,9 +2,11 @@ import type { User } from "@prisma/client";
 import { Response } from "@remix-run/node";
 import { useCatch } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
-import type { CatchBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
+import type {
+  CatchBoundaryComponent,
+  V2_MetaFunction,
+} from "@remix-run/server-runtime/dist/routeModules";
 import { Clock, Star } from "lucide-react";
-import type { TypedMetaFunction } from "remix-typedjson";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import invariant from "tiny-invariant";
 import { AddToFavoritesButton } from "~/components/AddToFavoritesButton";
@@ -48,8 +50,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 };
 
-export const meta: TypedMetaFunction<typeof loader> = ({ data }) => {
-  return {
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
+  {
     title: data.recipe.name,
     description: data.recipe.description,
     "og:description": data.recipe.description,
@@ -61,8 +63,8 @@ export const meta: TypedMetaFunction<typeof loader> = ({ data }) => {
     "twitter:title": data.recipe.name,
     "twitter:description": data.recipe.description,
     "twitter:image": `${HF_CARD_IMAGE_URL}${data.recipe.imagePath}`,
-  };
-};
+  },
+];
 
 const RecipePage = () => {
   const { recipe, url } = useTypedLoaderData<typeof loader>();

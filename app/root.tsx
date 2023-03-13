@@ -11,7 +11,7 @@ import {
   useFetchers,
   useLocation,
   useMatches,
-  useTransition,
+  useNavigation,
 } from "@remix-run/react";
 import type {
   CatchBoundaryComponent,
@@ -24,7 +24,6 @@ import { useEffect, useMemo } from "react";
 import { ToastContainer } from "react-toastify";
 import toastStyles from "react-toastify/dist/ReactToastify.css";
 import remixImageStyles from "remix-image/remix-image.css";
-import type { TypedMetaFunction } from "remix-typedjson";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { Layout } from "./components/Layout";
 import { prisma } from "./db.server";
@@ -261,7 +260,7 @@ function App() {
   const location = useLocation();
   const matches = useMatches();
   const { colorScheme } = useTypedLoaderData<typeof loader>();
-  const transition = useTransition();
+  const transition = useNavigation();
   const fetchers = useFetchers();
 
   const state = useMemo<"idle" | "loading">(
@@ -332,7 +331,7 @@ function App() {
         <ToastContainer theme={colorScheme === "dark" ? "dark" : "light"} />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
+        <LiveReload port={3001} />
       </body>
     </html>
   );

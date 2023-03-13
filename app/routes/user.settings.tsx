@@ -1,6 +1,7 @@
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { redirect } from "remix-typedjson";
 import { ColorSchemeSwitcher } from "~/components/ColorSchemeSwitcher";
+import { GridLayoutSwitcher } from "~/components/GridLayoutSwitcher";
 import { RecipeGridSwitcher } from "~/components/RecipeGridSwitcher";
 import { requireUser } from "~/session.server";
 
@@ -25,7 +26,7 @@ const SettingsPage = () => {
           Recipe Grid Layout: <RecipeGridSwitcher />
         </div>
         <div className="flex items-center gap-4 text-xl font-bold">
-          Recipe Page Layout: <ColorSchemeSwitcher />
+          Recipe Page Layout: <GridLayoutSwitcher />
         </div>
       </main>
     </div>
