@@ -1,12 +1,10 @@
 import type { User } from "@prisma/client";
 import { Response } from "@remix-run/node";
+import type { CatchBoundaryComponent } from "@remix-run/react";
 import { useCatch } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/server-runtime";
-import type {
-  CatchBoundaryComponent,
-  V2_MetaFunction,
-} from "@remix-run/server-runtime/dist/routeModules";
-import { Clock, Star } from "lucide-react";
+import type { LoaderArgs, MetaFunction } from "@remix-run/server-runtime";
+import { Clock, Flame, Star } from "lucide-react";
+import { useMemo } from "react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import invariant from "tiny-invariant";
 import { AddToFavoritesButton } from "~/components/AddToFavoritesButton";
@@ -50,8 +48,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 };
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
-  {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return {
     title: data.recipe.name,
     description: data.recipe.description,
     "og:description": data.recipe.description,
@@ -63,8 +61,8 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
     "twitter:title": data.recipe.name,
     "twitter:description": data.recipe.description,
     "twitter:image": `${HF_CARD_IMAGE_URL}${data.recipe.imagePath}`,
-  },
-];
+  };
+};
 
 const RecipePage = () => {
   const { recipe, url } = useTypedLoaderData<typeof loader>();
@@ -82,12 +80,17 @@ const RecipePage = () => {
     "bg-accent": userColorScheme === "cream",
   });
 
-  const nutrition = JSON.parse(recipe.nutrition);
+  const nutrition = useMemo(() => JSON.parse(recipe.nutrition), [recipe.nutrition]);
+
+  const difficulty = useMemo(
+    () => new Array(recipe.difficulty).fill(<Flame className="mr-1 h-4 w-4" />),
+    [recipe.difficulty],
+  );
 
   return (
     <div className={pageLayout}>
       <div
-        className="hero h-auto"
+        className="hero min-h-[450px]"
         style={{ backgroundImage: `url(${HF_COVER_IMAGE_URL}${recipe.imagePath})` }}
       >
         <div className="hero-overlay bg-opacity-60"></div>
@@ -98,8 +101,8 @@ const RecipePage = () => {
           </div>
         </div>
       </div>
-      <main className="container mx-auto mt-4 gap-8 flex flex-col p-4">
-        <div className="flex flex-col lg:flex-row justify-between gap-2">
+      <main className="container mx-auto mt-4 flex flex-col gap-8 p-4">
+        <div className="flex flex-col justify-between gap-2 lg:flex-row">
           <div className="flex flex-col">
             <h2 className="text-2xl font-bold">Allergens</h2>
             <ul>
@@ -122,39 +125,41 @@ const RecipePage = () => {
           </div>
           <div className="flex flex-col gap-4">
             <h2 className="text-2xl font-bold">Data</h2>
-            <div className="flex gap-1 items-center">
+            <div className="flex items-center gap-1">
               <h2 className="font-semibold">Total Time:</h2>
-              <Clock className="w-4 h-4 mr-1" />
+              <Clock className="mr-1 h-4 w-4" />
               {recipe.totalTime ?? 0} min
             </div>
             <div className="flex items-center">
-              <h2 className="font-semibold mr-1">Rating:</h2>
+              <h2 className="mr-1 font-semibold">Rating:</h2>
               {recipe.averageRating &&
                 Array.from({ length: recipe.averageRating }).map((_, i) => (
-                  <Star key={i} className="w-4 h-4 mr-1" />
+                  <Star key={i} className="mr-1 h-4 w-4" />
                 ))}
             </div>
 
-            <div className="flex gap-4">
-              <h2 className="font-semibold">Difficulty:</h2>
-              {recipe.difficulty}
+            <div className="flex items-center">
+              <h2 className="mr-2 font-semibold">Difficulty:</h2>
+              {difficulty.map((d, i) => (
+                <div key={i}>{d}</div>
+              ))}
             </div>
           </div>
           <div className="flex flex-col">
             <h2 className="text-2xl font-bold">Nutrition</h2>
             {nutrition.map((n: any) => (
               <span key={n.name}>
-                {n.name}: {n.amount} {n.unit}
+                {n.name}: {n.amount ?? 0} {n.unit}
               </span>
             ))}
           </div>
-          <div className="flex flex-col gap-4 max-w-xs">
+          <div className="flex max-w-xs flex-col gap-4">
             <AddToFavoritesButton id={recipe.id} name={recipe.name} />
             <ShareButton
               text={recipe.description.slice(0, 64)}
               title={recipe.name}
               url={url.href}
-              className="btn btn-sm"
+              className="btn-sm btn"
             >
               Share Recipe
             </ShareButton>
@@ -162,10 +167,10 @@ const RecipePage = () => {
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold mb-4">Tags</h2>
+          <h2 className="mb-4 text-2xl font-bold">Tags</h2>
           <ul className="flex gap-2">
             {recipe.tags.map((tag) => (
-              <li className="badge badge-accent" key={tag.id}>
+              <li className="badge-accent badge" key={tag.id}>
                 {tag.name}
               </li>
             ))}
@@ -173,12 +178,12 @@ const RecipePage = () => {
         </div>
 
         {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
-        <div tabIndex={0} className="collapse collapse-plus">
+        <div tabIndex={0} className="collapse-plus collapse">
           <input defaultChecked type="checkbox" />
           <h2 className={collapseableStyles}>Ingredients</h2>
-          <ul className="lg:flex lg:flex-col lg:flex-wrap lg:h-96 gap-4 collapse-content">
+          <ul className="collapse-content gap-4 lg:flex lg:h-96 lg:flex-col lg:flex-wrap">
             {recipe.ingredients.map((ingredient) => (
-              <li className="flex gap-2 items-center" key={ingredient.id}>
+              <li className="flex items-center gap-2" key={ingredient.id}>
                 <div className="avatar">
                   <div className="w-[50px] rounded-full">
                     <RemixImage
@@ -210,10 +215,10 @@ const RecipePage = () => {
         </div>
 
         {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
-        <div tabIndex={0} className="collapse collapse-plus mb-20">
+        <div tabIndex={0} className="collapse-plus collapse mb-20">
           <input type="checkbox" />
           <h2 className={collapseableStyles}>Steps</h2>
-          <ol className="ml-4 steps steps-vertical collapse-content items-center p-0">
+          <ol className="collapse-content steps steps-vertical ml-4 items-center p-0">
             {recipe.steps.map((step) => (
               <li className="step" key={step.index}>
                 {step.instructions}

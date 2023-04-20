@@ -14,20 +14,20 @@ type RecipeListItemProps = {
 export const RecipeListItem = ({ recipe, ...props }: RecipeListItemProps) => {
   const navigate = useNavigate();
   return (
-    <li className="p-3 max-w-sm sm:py-4 shadow-md rounded-md bg-secondary" {...props}>
+    <li className="max-w-sm rounded-md bg-secondary p-3 shadow-md sm:py-4" {...props}>
       <div className="flex items-center space-x-4">
         <div className="flex-shrink-0">
           <img
-            className="w-12 h-12 rounded-full hover:scale-110 cursor-pointer"
+            className="h-12 w-12 cursor-pointer rounded-full hover:scale-110"
             src={`${HF_AVATAR_IMAGE_URL}${recipe.imagePath}`}
             alt={recipe.name}
             onClick={() => navigate(`/recipes/${recipe.id}`)}
             onKeyDown={() => navigate(`/recipes/${recipe.id}`)}
           />
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium truncate">{recipe.name}</p>
-          <p className="text-sm text-gray-500 truncate text-ellipsis">{recipe.description}</p>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium">{recipe.name}</p>
+          <p className="truncate text-ellipsis text-sm text-gray-500">{recipe.description}</p>
         </div>
         <div className="inline-flex items-center text-base font-semibold">
           <AddToFavoritesButton onlyIcon name={recipe.name} id={recipe.id} />

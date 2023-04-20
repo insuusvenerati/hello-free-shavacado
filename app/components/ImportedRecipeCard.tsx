@@ -13,7 +13,7 @@ export const ImportedRecipeCard = ({ recipe }: Props) => {
   const fetcher = useTypedFetcher<typeof action>();
 
   return (
-    <div className="card-compact card h-auto w-auto bg-transparent max-w-md">
+    <div className="card card-compact h-auto w-auto max-w-md bg-transparent">
       <Link to={`/recipes/imported/${recipe.id}`}>
         <figure className="cursor-pointer">
           <RemixImage
@@ -39,7 +39,7 @@ export const ImportedRecipeCard = ({ recipe }: Props) => {
         <div className="card-actions">
           <fetcher.Form method="delete" action="/user/imported">
             <input type="hidden" name="recipeId" value={recipe.id} />
-            <button type="submit" className="btn btn-error gap-2">
+            <button type="submit" className="btn-error btn gap-2">
               <TrashIcon /> <span>Delete</span>
             </button>
           </fetcher.Form>

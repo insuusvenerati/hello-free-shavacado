@@ -31,7 +31,7 @@ export const Accordion = <T extends React.ElementType = "div">({
   });
 
   return (
-    <div className="collapse collapse-plus">
+    <div className="collapse-plus collapse">
       <input type="checkbox" defaultChecked={defaultChecked} />
       <h2 className={collapseableStyles}>{title}</h2>
       <div className={classList}>{children}</div>

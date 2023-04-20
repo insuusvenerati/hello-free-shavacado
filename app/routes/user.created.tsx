@@ -15,8 +15,8 @@ const CreatedRecipesPage = () => {
   return (
     <div className="flex h-full min-h-screen flex-col">
       <main className="flex h-full min-h-screen">
-        <div className="h-full w-80 bg-secondary-focus min-h-screen hidden lg:flex lg:flex-col">
-          <Link className="block p-4 text-xl link" to="new">
+        <div className="hidden h-full min-h-screen w-80 bg-secondary-focus lg:flex lg:flex-col">
+          <Link className="link block p-4 text-xl" to="new">
             Add New
           </Link>
 
@@ -24,18 +24,18 @@ const CreatedRecipesPage = () => {
 
           <ol>
             {data.result.map((recipe) => (
-              <li className="p-3 max-w-sm sm:py-4 shadow-md bg-secondary" key={recipe.id}>
+              <li className="max-w-sm bg-secondary p-3 shadow-md sm:py-4" key={recipe.id}>
                 <div className="flex items-center space-x-4">
                   <div className="flex-shrink-0">
                     <RemixImage
-                      className="w-12 h-12 rounded-full"
+                      className="h-12 w-12 rounded-full"
                       src={recipe.imageUrl ?? "https://via.placeholder.com/50"}
                       alt={recipe.name}
                     />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate"> {recipe.name} </p>
-                    <p className="text-sm text-gray-500 truncate text-ellipsis">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium"> {recipe.name} </p>
+                    <p className="truncate text-ellipsis text-sm text-gray-500">
                       {recipe.description}
                     </p>
                   </div>

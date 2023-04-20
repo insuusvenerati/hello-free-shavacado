@@ -8,7 +8,7 @@ type RecipeGridProps = {
 export const RecipeGrid = ({ children, ...props }: RecipeGridProps) => {
   const { user } = useMatchesData<{ user: User }>("root");
   const userGridSize = user?.gridSize ?? "md";
-  const className = cn("grid grid-cols-1 gap-4 mb-20", props.className);
+  const className = cn("grid grid-cols-1 gap-4 mb-20 h-full", props.className);
   const gridSizeClass = cn({
     [className]: true,
     "lg:grid-cols-3": userGridSize === "sm",

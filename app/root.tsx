@@ -1,5 +1,11 @@
 import type { FavoriteRecipe, Recipe, Tag } from "@prisma/client";
-import type { ErrorBoundaryComponent, LinksFunction, LoaderArgs } from "@remix-run/node";
+import type {
+  ErrorBoundaryComponent,
+  LinksFunction,
+  LoaderArgs,
+  MetaFunction,
+} from "@remix-run/node";
+import type { CatchBoundaryComponent } from "@remix-run/react";
 import {
   Links,
   LiveReload,
@@ -13,10 +19,6 @@ import {
   useMatches,
   useNavigation,
 } from "@remix-run/react";
-import type {
-  CatchBoundaryComponent,
-  V2_MetaFunction,
-} from "@remix-run/server-runtime/dist/routeModules";
 import { withSentry } from "@sentry/remix";
 import NProgress from "nprogress";
 import nProgressStyles from "nprogress/nprogress.css";
@@ -176,8 +178,8 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const meta: V2_MetaFunction<typeof loader> = () => [
-  {
+export const meta: MetaFunction<typeof loader> = () => {
+  return {
     charset: "utf-8",
     title: "Hello Free Shavacado",
     viewport: "width=device-width,initial-scale=1",
@@ -193,25 +195,8 @@ export const meta: V2_MetaFunction<typeof loader> = () => [
     "twitter:title": "Hello Free Shavacado",
     "twitter:description": "Delicious!",
     "twitter:image": "/logo.jpg",
-  },
-];
-// ({
-//   charset: "utf-8",
-//   title: "Hello Free Shavacado",
-//   viewport: "width=device-width,initial-scale=1",
-//   description: "Delicious!",
-//   "og:url": "https://hello-free-shavacado-new.fly.dev/",
-//   "og:type": "website",
-//   "og:image": "/logo.jpg",
-//   "og:title": "Hello Free Shavacado",
-//   "og:description": "Delicious!",
-//   "twitter:card": "summary_large_image",
-//   "twitter:domain": "hello-free-shavacado-new-staging.fly.dev",
-//   "twitter:url": "https://hello-free-shavacado-new-staging.fly.dev/",
-//   "twitter:title": "Hello Free Shavacado",
-//   "twitter:description": "Delicious!",
-//   "twitter:image": "/logo.jpg",
-// });
+  };
+};
 
 type FavoriteRecipes = (FavoriteRecipe & {
   recipe: Recipe & {
@@ -272,36 +257,36 @@ function App() {
     [transition.state, fetchers],
   );
 
-  useEffect(() => {
-    let mounted = isMount;
-    isMount = false;
-    if ("serviceWorker" in navigator) {
-      if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller?.postMessage({
-          type: "REMIX_NAVIGATION",
-          isMount: mounted,
-          location,
-          matches,
-          manifest: window.__remixManifest,
-        });
-      } else {
-        let listener = async () => {
-          await navigator.serviceWorker.ready;
-          navigator.serviceWorker.controller?.postMessage({
-            type: "REMIX_NAVIGATION",
-            isMount: mounted,
-            location,
-            matches,
-            manifest: window.__remixManifest,
-          });
-        };
-        navigator.serviceWorker.addEventListener("controllerchange", listener);
-        return () => {
-          navigator.serviceWorker.removeEventListener("controllerchange", listener);
-        };
-      }
-    }
-  }, [location]);
+  // useEffect(() => {
+  //   let mounted = isMount;
+  //   isMount = false;
+  //   if ("serviceWorker" in navigator) {
+  //     if (navigator.serviceWorker.controller) {
+  //       navigator.serviceWorker.controller?.postMessage({
+  //         type: "REMIX_NAVIGATION",
+  //         isMount: mounted,
+  //         location,
+  //         matches,
+  //         manifest: window.__remixManifest,
+  //       });
+  //     } else {
+  //       let listener = async () => {
+  //         await navigator.serviceWorker.ready;
+  //         navigator.serviceWorker.controller?.postMessage({
+  //           type: "REMIX_NAVIGATION",
+  //           isMount: mounted,
+  //           location,
+  //           matches,
+  //           manifest: window.__remixManifest,
+  //         });
+  //       };
+  //       navigator.serviceWorker.addEventListener("controllerchange", listener);
+  //       return () => {
+  //         navigator.serviceWorker.removeEventListener("controllerchange", listener);
+  //       };
+  //     }
+  //   }
+  // }, [location]);
 
   useEffect(() => {
     NProgress.configure({ showSpinner: false });
@@ -310,7 +295,7 @@ function App() {
   }, [transition.state]);
 
   return (
-    <html className="min-h-screen" lang="en">
+    <html lang="en">
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <link href="/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />
@@ -331,7 +316,7 @@ function App() {
         <ToastContainer theme={colorScheme === "dark" ? "dark" : "light"} />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload port={3001} />
+        <LiveReload />
       </body>
     </html>
   );

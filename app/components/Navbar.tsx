@@ -4,17 +4,17 @@ import { Link, useFetcher } from "@remix-run/react";
 import { useMatchesData } from "~/utils";
 import { ColorSchemeSwitcher } from "./ColorSchemeSwitcher";
 import { SearchForm } from "./SearchForm";
-import { WeatherCard } from "~/routes/resource.weather";
+import { WeatherCard } from "./WeatherCard";
 
 export const Navbar = () => {
   const matchesData = useMatchesData<{ user: User }>("root");
-  const matches = useMediaQuery("(min-width: 900px)");
+  const matches = useMediaQuery("(min-width: 1024px)", false, { getInitialValueInEffect: false });
   const fetcher = useFetcher();
 
   return (
     <nav className="navbar justify-between border-b-2 border-b-primary">
       {matches && (
-        <div className="navbar-start gap-2 max-w-md">
+        <div className="navbar-start max-w-md gap-2">
           <Link to="/" className="btn-ghost btn text-xl normal-case">
             Hello Free Shavacado
           </Link>
@@ -22,13 +22,13 @@ export const Navbar = () => {
         </div>
       )}
 
-      <div className="navbar-center w-full max-w-md">
-        <SearchForm placeholder="Search" className="input input-bordered w-full" />
+      <div className="navbar-center w-full lg:max-w-md">
+        <SearchForm placeholder="Search" className="input-bordered input w-full" />
       </div>
-      <div className="navbar-end max-w-sm gap-2">
-        {matches ? <ColorSchemeSwitcher /> : null}
-        {matches && matchesData?.user ? (
-          <div className="dropdown-end dropdown">
+      {matches && matchesData?.user ? (
+        <div className="navbar-end max-w-sm gap-2">
+          <ColorSchemeSwitcher />
+          <div className="dropdown dropdown-end">
             <button type="button" className="btn-ghost btn-circle avatar btn">
               <img
                 className="w-10 rounded-full"
@@ -72,14 +72,14 @@ export const Navbar = () => {
               </li>
             </ul>
           </div>
-        ) : (
-          matches && (
-            <Link to="/login" className="btn-ghost btn">
-              Login
-            </Link>
-          )
-        )}
-      </div>
+        </div>
+      ) : (
+        matches && (
+          <Link to="/login" className="btn-ghost btn">
+            Login
+          </Link>
+        )
+      )}
     </nav>
   );
 };

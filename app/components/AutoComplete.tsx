@@ -66,7 +66,7 @@ export const AutoComplete = <T extends { id: string }>({
   return (
     <div>
       <input
-        className="input input-accent input-sm"
+        className="input-accent input input-sm"
         type="text"
         ref={inputRef}
         onChange={handleInputChange}
@@ -74,7 +74,7 @@ export const AutoComplete = <T extends { id: string }>({
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
       />
-      <ul className="absolute menu block z-10 bg-base-100 max-w-xs max-h-80 overflow-y-scroll mt-1 shadow-md border-t-0 border">
+      <ul className="menu absolute z-10 mt-1 block max-h-80 max-w-xs overflow-y-scroll border border-t-0 bg-base-100 shadow-md">
         {isInputFocused &&
           !!suggestions.length &&
           suggestions.map((suggestion) => (

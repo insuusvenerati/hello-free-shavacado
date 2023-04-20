@@ -29,20 +29,20 @@ const UserFavoritesPage = () => {
   });
 
   return (
-    <Container className="items-start">
+    <Container className="container mx-auto mt-4">
       <div className={selectorsStyles}>
-        <div className="flex flex-col gap-1 justify-center items-start">
+        <div className="flex flex-col items-start justify-center gap-1">
           Grid Size
           <GridSizeSelect />
         </div>
-        <div className="flex flex-col gap-1 justify-center items-start">
+        <div className="flex flex-col items-start justify-center gap-1">
           Grid Layout
           <GridLayoutSwitcher />
         </div>
       </div>
 
       {gridLayout === "list" && (
-        <ul className="flex flex-col lg:max-h-96 flex-wrap gap-4">
+        <ul className="flex flex-col flex-wrap gap-4 lg:max-h-96">
           {favoriteRecipes.map((recipe) => (
             <RecipeListItem key={recipe.id} recipe={recipe.recipe} />
           ))}

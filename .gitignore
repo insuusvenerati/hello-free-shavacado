@@ -21,3 +21,5 @@ node_modules
 .cache_ggshield
 
 docker-compose.yml
+.flaskenv*
+!.env.project

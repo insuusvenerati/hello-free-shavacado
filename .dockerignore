@@ -9,3 +9,6 @@
 prisma/data.db
 .sentryclirc
 docker-compose.yml
+.flaskenv*
+!.env.project
+!.env.vault

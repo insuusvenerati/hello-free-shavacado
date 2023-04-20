@@ -15,8 +15,8 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 const SettingsPage = () => {
   return (
-    <div className="flex flex-col items-center justify-start py-2 h-screen">
-      <main className="container mx-auto flex flex-col items-center justify-start w-full flex-1 text-center gap-4">
+    <div className="flex h-screen flex-col items-center justify-start py-2">
+      <main className="container mx-auto flex w-full flex-1 flex-col items-center justify-start gap-4 text-center">
         <h1 className="text-6xl font-bold">Settings</h1>
 
         <div className="flex items-center gap-4 text-xl font-bold">

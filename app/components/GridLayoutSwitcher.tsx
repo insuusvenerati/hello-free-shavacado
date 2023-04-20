@@ -16,7 +16,7 @@ export const GridLayoutSwitcher = () => {
           { method: "post", action: "/resource/user-options" },
         );
       }}
-      className="select select-accent max-w-xs select-sm"
+      className="select-accent select select-sm max-w-xs"
       name="gridLayout"
       title="Grid Layout"
     >

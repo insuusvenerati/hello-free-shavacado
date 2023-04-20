@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
@@ -47,11 +47,11 @@ export async function action({ request }: ActionArgs) {
   });
 }
 
-export const meta: V2_MetaFunction = () => [
-  {
+export const meta: MetaFunction = () => {
+  return {
     title: "Login",
-  },
-];
+  };
+};
 
 export default function LoginPage() {
   const [searchParams] = useSearchParams();
@@ -120,7 +120,7 @@ export default function LoginPage() {
           </div>
 
           <input type="hidden" name="redirectTo" value={redirectTo} />
-          <button type="submit" className="btn-primary btn w-full rounded py-2 px-4">
+          <button type="submit" className="btn-primary btn w-full rounded px-4 py-2">
             Log in
           </button>
           <div className="flex items-center justify-between">

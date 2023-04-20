@@ -1,6 +1,6 @@
 # fly.toml file generated for hello-free-shavacado-new on 2022-10-30T17:24:32-05:00
 
-app = "hello-free-shavacado-new"
+app = "hello-free-shavacado-new-staging"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []

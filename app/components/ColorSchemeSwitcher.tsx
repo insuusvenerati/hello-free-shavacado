@@ -9,7 +9,7 @@ export const ColorSchemeSwitcher = () => {
   return (
     <select
       value={matches?.colorScheme || "dark"}
-      className="select select-accent max-w-xs"
+      className="select-accent select max-w-xs"
       onChange={(value) =>
         themeFetcher.submit(
           { theme: value.currentTarget.value },

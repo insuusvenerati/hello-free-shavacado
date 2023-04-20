@@ -56,6 +56,34 @@ export const getRecipeByName = async ({ name, token }: { name: string; token: st
   return recipe;
 };
 
+export const getRecipeCount = async ({
+  search,
+  tag,
+  ingredient,
+}: {
+  search: string | null;
+  tag: string | null;
+  ingredient: string | null;
+}) => {
+  return await prisma.recipe.count({
+    where: {
+      name: {
+        contains: search ?? undefined,
+      },
+      tags: {
+        some: {
+          name: tag ?? undefined,
+        },
+      },
+      ingredients: {
+        some: {
+          name: ingredient ?? undefined,
+        },
+      },
+    },
+  });
+};
+
 type CreateRecipeInput = {
   name: string;
   description: string;

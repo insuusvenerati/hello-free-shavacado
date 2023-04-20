@@ -30,7 +30,7 @@ export const GridSizeSelect = ({ className, ...props }: GridSizeSelectProps) => 
         onChange={handleSelect}
         name="gridSize"
         defaultValue={userGridSize}
-        className="select select-accent select-sm max-w-xs"
+        className="select-accent select select-sm max-w-xs"
       >
         <option className="text-xl" disabled>
           Grid Size

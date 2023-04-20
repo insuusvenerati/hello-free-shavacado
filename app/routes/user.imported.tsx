@@ -118,13 +118,13 @@ const UserImportedPage = () => {
   return (
     <>
       <Container>
-        <div className="text-xl mb-5">
+        <div className="mb-5 text-xl">
           You currently have <strong> {count} </strong> imported recipes!
         </div>
         <GridSizeSelect />
         <fetcher.Form className="mb-4 w-full max-w-md" method="post" action="/resource/imported">
-          <label className="label input-group">
-            <button type="button" className="btn btn-square" title="Clear" onClick={clearInput}>
+          <label className="input-group label">
+            <button type="button" className="btn-square btn" title="Clear" onClick={clearInput}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -150,7 +150,7 @@ const UserImportedPage = () => {
               disabled={isLoading}
               required
             />
-            <button type="submit" className="btn btn-primary" disabled={isLoading}>
+            <button type="submit" className="btn-primary btn" disabled={isLoading}>
               Import
             </button>
           </label>
@@ -175,7 +175,7 @@ export const CatchBoundary = () => {
   console.log(caught);
 
   return (
-    <div className="container mx-auto max-w-2xl min-h-screen">
+    <div className="container mx-auto min-h-screen max-w-2xl">
       <h1>Oh no</h1>
       <pre>{JSON.stringify(caught, null, 2)}</pre>
     </div>
@@ -185,7 +185,7 @@ export const CatchBoundary = () => {
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   console.log(error);
   return (
-    <div className="container mx-auto max-w-2xl min-h-screen">
+    <div className="container mx-auto min-h-screen max-w-2xl">
       <h1>Oh no</h1>
       <pre>{JSON.stringify(error, null, 2)}</pre>
     </div>

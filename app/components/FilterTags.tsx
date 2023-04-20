@@ -13,13 +13,13 @@ export const FilterTags = () => {
 
   return (
     <div className="dropdown">
-      <label tabIndex={0} className="btn btn-sm m-1">
+      <label tabIndex={0} className="btn-sm btn m-1">
         Tags
       </label>
       <ul
         tabIndex={0}
         defaultValue={tag}
-        className="menu block max-h-80 p-2 overflow-y-scroll bg-base-100 dropdown-content w-52"
+        className="dropdown-content menu block max-h-80 w-52 overflow-y-scroll bg-base-100 p-2"
       >
         {data?.tags?.map((tag) => (
           <li key={tag.id}>

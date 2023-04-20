@@ -14,7 +14,7 @@ type Props = {
 export const RecipeCard = ({ recipe, ...props }: Props) => {
   return (
     <div
-      className="overflow-hidden card-compact card h-auto shadow-md w-auto bg-base-300 rounded-md duration-200 transition-all hover:scale-105"
+      className="card-compact card h-auto w-auto overflow-hidden rounded-md bg-base-300 shadow-md transition-all duration-200 hover:scale-105"
       {...props}
     >
       <Link to={`/recipes/${recipe.id}`}>
@@ -23,7 +23,7 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
             src={`${HF_CARD_IMAGE_URL}${recipe.imagePath}`}
             transformOptions={{ fit: "cover", quality: 20 }}
             alt={recipe.name}
-            className="w-full object-cover rounded-t-md"
+            className="w-full rounded-t-md object-cover"
             width={600}
             height={340}
             responsive={[
@@ -43,7 +43,7 @@ export const RecipeCard = ({ recipe, ...props }: Props) => {
         <div className="btn-group">
           {recipe.tags
             ?.map((tag) => (
-              <Link to={`?tag=${tag.name}`} key={tag.id} className="btn btn-xs">
+              <Link to={`?tag=${tag.name}`} key={tag.id} className="btn-xs btn">
                 {tag.name}
               </Link>
             ))

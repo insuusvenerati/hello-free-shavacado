@@ -10,7 +10,7 @@ export const RecipeGridSwitcher = () => {
   return (
     <select
       value={user?.recipePageLayout || "horizontal"}
-      className="select select-accent max-w-xs"
+      className="select-accent select max-w-xs"
       onChange={(value) =>
         fetcher.submit(
           { recipePageLayout: value.currentTarget.value },

@@ -25,7 +25,7 @@ export const SearchForm = ({ label, ...rest }: SearchFromProps) => {
             <button
               title="clear"
               type="button"
-              className="btn btn-square"
+              className="btn-square btn"
               onClick={() => {
                 setParams(new URLSearchParams());
                 formRef.current?.reset();
@@ -49,7 +49,7 @@ export const SearchForm = ({ label, ...rest }: SearchFromProps) => {
           </>
         )}
         <input ref={inputRef} defaultValue={search} name="search" type="text" {...rest} />
-        <button title="submit" type="submit" className="btn btn-square">
+        <button title="submit" type="submit" className="btn-square btn">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"

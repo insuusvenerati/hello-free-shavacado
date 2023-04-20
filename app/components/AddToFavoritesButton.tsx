@@ -71,7 +71,7 @@ export const AddToFavoritesButton = ({ id, name, onlyIcon = false, ...props }: P
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="h-6 w-6"
             >
               <path
                 strokeLinecap="round"
@@ -90,7 +90,7 @@ export const AddToFavoritesButton = ({ id, name, onlyIcon = false, ...props }: P
           onClick={() =>
             addToFavorites.submit({ id, name }, { method: "delete", action: "/recipes/favorite" })
           }
-          className="btn btn-error btn-sm"
+          className="btn-error btn-sm btn"
         >
           <TrashIcon />
         </button>

@@ -42,7 +42,7 @@ const CreateRecipePage = () => {
   };
   return (
     <Container className="items-start">
-      <h1 className="text-xl font-bold mb-4">Create Recipe</h1>
+      <h1 className="mb-4 text-xl font-bold">Create Recipe</h1>
       <Form encType="multipart/form-data" className="flex flex-col gap-4 lg:flex-row" method="post">
         <div className="flex flex-col gap-4">
           <label className="input-group">
@@ -51,7 +51,7 @@ const CreateRecipePage = () => {
               name="name"
               type="text"
               placeholder="Lightly fried fish filets"
-              className="input input-bordered"
+              className="input-bordered input"
             />
           </label>
 
@@ -61,7 +61,7 @@ const CreateRecipePage = () => {
               name="description"
               type="text"
               placeholder="Great for a 3am snack"
-              className="input input-bordered"
+              className="input-bordered input"
             />
           </label>
 
@@ -71,7 +71,7 @@ const CreateRecipePage = () => {
               name="difficulty"
               type="text"
               placeholder="It's pretty easy"
-              className="input input-bordered"
+              className="input-bordered input"
             />
           </label>
 
@@ -80,7 +80,7 @@ const CreateRecipePage = () => {
               accept="imaage/*"
               type="file"
               name="imageUrl"
-              className="file-input file-input-bordered"
+              className="file-input-bordered file-input"
             />
           </label>
 
@@ -103,11 +103,11 @@ const CreateRecipePage = () => {
             <label key={index} className="input-group">
               <span>Ingredient</span>
               <input
-                className="input input-bordered w-full max-w-md"
+                className="input-bordered input w-full max-w-md"
                 type="text"
                 name={`ingredients[${index}]`}
               />
-              <button type="button" onClick={handleAddIngredientField} className="btn btn-square">
+              <button type="button" onClick={handleAddIngredientField} className="btn-square btn">
                 <Plus />
               </button>
             </label>
@@ -119,11 +119,11 @@ const CreateRecipePage = () => {
             <label key={index} className="input-group">
               <span>Step</span>
               <input
-                className="input input-bordered w-full max-w-md"
+                className="input-bordered input w-full max-w-md"
                 type="text"
                 name={`steps[${index}]`}
               />
-              <button type="button" onClick={handleAddStepField} className="btn btn-square">
+              <button type="button" onClick={handleAddStepField} className="btn-square btn">
                 <Plus />
               </button>
             </label>

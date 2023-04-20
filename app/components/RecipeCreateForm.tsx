@@ -27,7 +27,7 @@ export const RecipeCreateForm = () => {
             name="name"
             type="text"
             placeholder="Lightly fried fish filets"
-            className="input input-bordered"
+            className="input-bordered input"
           />
         </label>
 
@@ -37,7 +37,7 @@ export const RecipeCreateForm = () => {
             name="description"
             type="text"
             placeholder="Great for a 3am snack"
-            className="input input-bordered"
+            className="input-bordered input"
           />
         </label>
 
@@ -47,18 +47,18 @@ export const RecipeCreateForm = () => {
             name="difficulty"
             type="text"
             placeholder="It's pretty easy"
-            className="input input-bordered"
+            className="input-bordered input"
           />
         </label>
       </div>
 
       <div className="flex flex-col gap-2">
-        <h2 className="font-bold text-lg">Ingredients</h2>
+        <h2 className="text-lg font-bold">Ingredients</h2>
         {ingredientsFields.map((field, index) => (
           <label key={index} className="input-group">
             <span>Ingredient</span>
-            <input className="input input-bordered w-full max-w-md" type="text" name={field.name} />
-            <button type="button" onClick={handleAddIngredientField} className="btn btn-square">
+            <input className="input-bordered input w-full max-w-md" type="text" name={field.name} />
+            <button type="button" onClick={handleAddIngredientField} className="btn-square btn">
               <Plus />
             </button>
           </label>
@@ -66,12 +66,12 @@ export const RecipeCreateForm = () => {
       </div>
 
       <div className="flex flex-col gap-2">
-        <h2 className="font-bold text-lg">Steps</h2>
+        <h2 className="text-lg font-bold">Steps</h2>
         {stepsFields.map((field, index) => (
           <label key={index} className="input-group">
             <span>Step</span>
-            <input className="input input-bordered w-full max-w-md" type="text" name={field.name} />
-            <button type="button" onClick={handleAddStepField} className="btn btn-square">
+            <input className="input-bordered input w-full max-w-md" type="text" name={field.name} />
+            <button type="button" onClick={handleAddStepField} className="btn-square btn">
               <Plus />
             </button>
           </label>

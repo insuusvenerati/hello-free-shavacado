@@ -40,14 +40,14 @@ const ImportedRecipePage = () => {
           </div>
         </div>
       </div>
-      <div className="max-w-4xl m-auto flex">
+      <div className="m-auto flex max-w-4xl">
         <div className="flex-1">
-          <div className="flex justify-between items-center mt-6">
+          <div className="mt-6 flex items-center justify-between">
             <div className="flex">Cook time: {recipe.cookTime}</div>
             <div className="flex">Prep time: {recipe.prepTime}</div>
             <div className="flex">Total time: {recipe.totalTime}</div>
             <ShareButton
-              className="btn btn-sm"
+              className="btn-sm btn"
               title={recipe.name}
               text={recipe.description ?? "Probably a good recipe but with no description"}
               url={url}
@@ -60,16 +60,16 @@ const ImportedRecipePage = () => {
             </a>
           </div>
 
-          <div className="mt-6 mb-20">
+          <div className="mb-20 mt-6">
             <h2 className="text-2xl font-bold">Ingredients</h2>
-            <ul className="list-disc list-inside">
+            <ul className="list-inside list-disc">
               {recipe.recipeIngredients.map((ingredient) => (
                 <li key={ingredient.name}>{ingredient.name}</li>
               ))}
             </ul>
 
-            <h2 className="text-2xl font-bold mt-6">Instructions</h2>
-            <ol className="list-decimal list-inside">
+            <h2 className="mt-6 text-2xl font-bold">Instructions</h2>
+            <ol className="list-inside list-decimal">
               {recipe.recipeInstructions.map((instruction) => (
                 <li key={instruction.index}>{instruction.caption}</li>
               ))}
