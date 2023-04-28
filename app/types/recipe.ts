@@ -125,11 +125,7 @@ export interface Label {
   foregroundColor: ForegroundColor;
 }
 
-export enum ForegroundColor {
-  Ffffff = "#FFFFFF",
-  ForegroundColorFfffff = "#ffffff",
-  The000000 = "#000000",
-}
+export type ForegroundColor = string;
 
 export interface Nutrition {
   name: NutritionName;
@@ -151,18 +147,7 @@ export enum NutritionName {
   Sugar = "Sugar",
 }
 
-export enum NutritionType {
-  The57B42A48B7E8697D4B305304 = "57b42a48b7e8697d4b305304",
-  The57B42A48B7E8697D4B305305 = "57b42a48b7e8697d4b305305",
-  The57B42A48B7E8697D4B305306 = "57b42a48b7e8697d4b305306",
-  The57B42A48B7E8697D4B305307 = "57b42a48b7e8697d4b305307",
-  The57B42A48B7E8697D4B305308 = "57b42a48b7e8697d4b305308",
-  The57B42A48B7E8697D4B305309 = "57b42a48b7e8697d4b305309",
-  The57B42A48B7E8697D4B30530A = "57b42a48b7e8697d4b30530a",
-  The57B42A48B7E8697D4B30530B = "57b42a48b7e8697d4b30530b",
-  The57B42A48B7E8697D4B30530C = "57b42a48b7e8697d4b30530c",
-  The57B42A48B7E8697D4B30530D = "57b42a48b7e8697d4b30530d",
-}
+export type NutritionType = string;
 
 export enum NutritionUnit {
   G = "g",
@@ -211,18 +196,9 @@ export interface Tag {
   numberOfRecipesByCountry: { [key: string]: number };
 }
 
-export enum Preference {
-  CalorieSmart = "Calorie Smart",
-  EasyPlate = "EasyPlate",
-  FitWholesome = "Fit & Wholesome",
-  QuickEasy = "Quick & Easy",
-}
+export type Preference = string;
 
-export enum TotalTime {
-  Pt05M = "PT05M",
-  Pt10M = "PT10M",
-  Pt15M = "PT15M",
-}
+export type TotalTime = string;
 
 export interface Utensil {
   id: string;

@@ -3,7 +3,6 @@ import { HF_CARD_IMAGE_URL } from "~/constants";
 import type { getUserFavorites } from "~/db/getUserFavorites.server";
 import type { getAllDbRecipes } from "~/models/recipe.server";
 import { AddToFavoritesButton } from "./AddToFavoritesButton";
-import { RemixImage } from "./RemixImage";
 
 type Props = {
   recipe:
@@ -14,27 +13,17 @@ type Props = {
 export const RecipeCard = ({ recipe, ...props }: Props) => {
   return (
     <div
-      className="card-compact card h-auto w-auto overflow-hidden rounded-md bg-base-300 shadow-md transition-all duration-200 hover:scale-105"
+      className="card-compact card h-auto w-auto overflow-hidden rounded-md bg-base-300"
       {...props}
     >
       <Link to={`/recipes/${recipe.id}`}>
         <figure className="cursor-pointer">
-          <RemixImage
+          <img
             src={`${HF_CARD_IMAGE_URL}${recipe.imagePath}`}
-            transformOptions={{ fit: "cover", quality: 20 }}
             alt={recipe.name}
             className="w-full rounded-t-md object-cover"
             width={600}
             height={340}
-            responsive={[
-              {
-                size: {
-                  width: 600,
-                  height: 340,
-                },
-                maxWidth: 600,
-              },
-            ]}
           />
         </figure>
       </Link>

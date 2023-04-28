@@ -1,8 +1,7 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import { useTypedFetcher } from "remix-typedjson";
 import type { action } from "~/routes/recipes.favorite";
-import type { FavoritesWithRecipeAndId } from "~/types/favorites";
 import { cn, useMatchesData } from "~/utils";
 import { TrashIcon } from "./TrashIcon";
 
@@ -12,46 +11,49 @@ type Props = {
   onlyIcon?: boolean;
 };
 
-export const AddToFavoritesButton = ({ id, name, onlyIcon = false, ...props }: Props) => {
-  const favorites = useMatchesData<{ favoriteRecipes: FavoritesWithRecipeAndId }>(
-    "root",
-  )?.favoriteRecipes;
+type FavoritesLoaderData = {
+  favorites:
+    | {
+        recipe: {
+          id: string;
+        };
+      }[]
+    | undefined;
+};
+
+export const AddToFavoritesButton = ({ id, name, onlyIcon = false }: Props) => {
+  const { favorites } = useMatchesData<FavoritesLoaderData>("root");
+  const { state, submit, data } = useTypedFetcher<typeof action>();
 
   const isFavorite = useMemo(() => {
-    if (typeof favorites === "undefined") return false;
-    if (favorites.length === 0) return false;
-    return favorites.some((favorite) => favorite.recipe.id === id);
+    return favorites?.some((favorite) => favorite.recipe.id === id);
   }, [favorites, id]);
 
-  const addToFavorites = useTypedFetcher<typeof action>();
-  const loading = addToFavorites.state === "submitting";
-  const isError = addToFavorites.data?.ok === "false";
-  const isDeletedSuccess =
-    addToFavorites.data?.method === "DELETE" && addToFavorites.data?.ok === "true";
-  const isSuccess =
-    addToFavorites.type === "done" &&
-    addToFavorites.data?.ok === "true" &&
-    !isError &&
-    addToFavorites.data?.method !== "DELETE";
+  const isDone = state === "idle" && data != null;
+  const isError = isDone && data.ok === "false";
 
   const buttonStyles = cn("btn btn-primary w-full btn-sm", {
     "btn-success": isFavorite,
-    loading,
+    loading: state === "submitting",
     "btn-error": isError,
   });
 
-  useEffect(() => {
-    isError && toast("Error adding to favorites", { theme: "dark" });
-    isSuccess && toast("Added to favorites", { theme: "dark" });
-    isDeletedSuccess && toast("Removed from favorites", { theme: "dark" });
-  }, [isDeletedSuccess, isError, isSuccess]);
+  const buttonText = isFavorite ? "Added" : "Add to favorites";
+  const handleToast = useCallback(() => {
+    if (isError) toast("Error adding to favorites", { theme: "dark" });
+    if (isDone)
+      toast(isFavorite ? "Added to favorites" : "Removed from favorites", { theme: "dark" });
+  }, [isDone, isError, isFavorite]);
 
-  const buttonText = useMemo(() => {
-    if (isFavorite) return "Added";
-    return "Add to favorites";
-  }, [isFavorite]);
+  useEffect(() => {
+    handleToast();
+  }, [handleToast, state]);
 
   if (!id || !name) return null;
+
+  const handleAddToFavorites = (method: "POST" | "DELETE") => {
+    submit({ id, name }, { method, action: "/recipes/favorite" });
+  };
 
   return (
     <div className="btn-group flex">
@@ -59,9 +61,7 @@ export const AddToFavoritesButton = ({ id, name, onlyIcon = false, ...props }: P
         <button
           type="button"
           disabled={isFavorite}
-          onClick={() =>
-            addToFavorites.submit({ id, name }, { method: "post", action: "/recipes/favorite" })
-          }
+          onClick={() => handleAddToFavorites("POST")}
           className={buttonStyles}
         >
           <span>
@@ -87,9 +87,7 @@ export const AddToFavoritesButton = ({ id, name, onlyIcon = false, ...props }: P
         <button
           title="Remove from favorites"
           type="button"
-          onClick={() =>
-            addToFavorites.submit({ id, name }, { method: "delete", action: "/recipes/favorite" })
-          }
+          onClick={() => handleAddToFavorites("DELETE")}
           className="btn-error btn-sm btn"
         >
           <TrashIcon />

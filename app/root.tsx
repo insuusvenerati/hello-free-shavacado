@@ -1,4 +1,3 @@
-import type { FavoriteRecipe, Recipe, Tag } from "@prisma/client";
 import type {
   ErrorBoundaryComponent,
   LinksFunction,
@@ -28,11 +27,12 @@ import toastStyles from "react-toastify/dist/ReactToastify.css";
 import remixImageStyles from "remix-image/remix-image.css";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { Layout } from "./components/Layout";
-import { prisma } from "./db.server";
 import { getUserColorScheme } from "./db/getUserColorScheme.server";
+import { getUserFavorites } from "./models/recipe.server";
 import { getThemeSession } from "./models/theme.server";
 import { getUser } from "./session.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
+import { isPromise } from "./utils";
 
 const SplashScreens = () => (
   <>
@@ -184,54 +184,32 @@ export const meta: MetaFunction<typeof loader> = () => {
     title: "Hello Free Shavacado",
     viewport: "width=device-width,initial-scale=1",
     description: "Delicious!",
-    "og:url": "https://hello-free-shavacado-new.fly.dev/",
+    "og:url": "https://hf-staging.stiforr.com/",
     "og:type": "website",
     "og:image": "/logo.jpg",
     "og:title": "Hello Free Shavacado",
     "og:description": "Delicious!",
     "twitter:card": "summary_large_image",
-    "twitter:domain": "hello-free-shavacado-new-staging.fly.dev",
-    "twitter:url": "https://hello-free-shavacado-new-staging.fly.dev/",
+    "twitter:domain": "hf-staging.stiforr.com",
+    "twitter:url": "https://hf-staging.stiforr.com/",
     "twitter:title": "Hello Free Shavacado",
     "twitter:description": "Delicious!",
     "twitter:image": "/logo.jpg",
   };
 };
 
-type FavoriteRecipes = (FavoriteRecipe & {
-  recipe: Recipe & {
-    tags: Tag[];
-  };
-})[];
-
 export async function loader({ request }: LoaderArgs) {
   try {
     const user = await getUser(request);
-    let favoriteRecipes: FavoriteRecipes = [];
-    if (user) {
-      favoriteRecipes = await prisma.favoriteRecipe.findMany({
-        where: {
-          user: {
-            some: {
-              id: user.id,
-            },
-          },
-        },
-        include: {
-          recipe: {
-            include: {
-              tags: true,
-            },
-          },
-        },
-      });
-    }
 
-    const themeSession = await getThemeSession(request);
-    const colorScheme = await getUserColorScheme(user);
+    const [themeSession, colorScheme, favorites] = await Promise.all([
+      getThemeSession(request),
+      getUserColorScheme(user),
+      getUserFavorites(user?.id),
+    ]);
 
     return typedjson({
-      favoriteRecipes,
+      favorites,
       user,
       colorScheme: colorScheme ?? themeSession.getTheme(),
     });
@@ -257,36 +235,55 @@ function App() {
     [transition.state, fetchers],
   );
 
-  // useEffect(() => {
-  //   let mounted = isMount;
-  //   isMount = false;
-  //   if ("serviceWorker" in navigator) {
-  //     if (navigator.serviceWorker.controller) {
-  //       navigator.serviceWorker.controller?.postMessage({
-  //         type: "REMIX_NAVIGATION",
-  //         isMount: mounted,
-  //         location,
-  //         matches,
-  //         manifest: window.__remixManifest,
-  //       });
-  //     } else {
-  //       let listener = async () => {
-  //         await navigator.serviceWorker.ready;
-  //         navigator.serviceWorker.controller?.postMessage({
-  //           type: "REMIX_NAVIGATION",
-  //           isMount: mounted,
-  //           location,
-  //           matches,
-  //           manifest: window.__remixManifest,
-  //         });
-  //       };
-  //       navigator.serviceWorker.addEventListener("controllerchange", listener);
-  //       return () => {
-  //         navigator.serviceWorker.removeEventListener("controllerchange", listener);
-  //       };
-  //     }
-  //   }
-  // }, [location]);
+  useEffect(() => {
+    let mounted = isMount;
+    isMount = false;
+
+    if ("serviceWorker" in navigator) {
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller?.postMessage({
+          type: "REMIX_NAVIGATION",
+          isMount: mounted,
+          location,
+          matches: matches.filter((route) => {
+            if (route.data) {
+              return (
+                Object.values(route.data!).filter((elem) => {
+                  return isPromise(elem);
+                }).length === 0
+              );
+            }
+            return true;
+          }),
+          manifest: window.__remixManifest,
+        });
+      } else {
+        let listener = async () => {
+          await navigator.serviceWorker.ready;
+          navigator.serviceWorker.controller?.postMessage({
+            type: "REMIX_NAVIGATION",
+            isMount: mounted,
+            location,
+            matches: matches.filter((route) => {
+              if (route.data) {
+                return (
+                  Object.values(route.data!).filter((elem) => {
+                    return isPromise(elem);
+                  }).length === 0
+                );
+              }
+              return true;
+            }),
+            manifest: window.__remixManifest,
+          });
+        };
+        navigator.serviceWorker.addEventListener("controllerchange", listener);
+        return () => {
+          navigator.serviceWorker.removeEventListener("controllerchange", listener);
+        };
+      }
+    }
+  }, [location, matches]);
 
   useEffect(() => {
     NProgress.configure({ showSpinner: false });

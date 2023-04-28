@@ -11,6 +11,7 @@ import { HF_BASE_URL } from "~/constants";
 import { prisma } from "~/db.server";
 import { requireUser } from "~/session.server";
 import type { Recipes } from "~/types/recipe";
+import { recipesSchema } from "~/types/recipe.schema";
 import { uploadImage } from "~/utils/cloudinary.server";
 
 export const getAllRecipes = async ({
@@ -39,9 +40,9 @@ export const getAllRecipes = async ({
       },
     },
   );
-  const recipes = (await response.json()) as Recipes;
+  const recipes = await response.json();
 
-  return recipes;
+  return recipesSchema.safeParse(recipes);
 };
 
 export const getRecipeByName = async ({ name, token }: { name: string; token: string }) => {
@@ -56,15 +57,12 @@ export const getRecipeByName = async ({ name, token }: { name: string; token: st
   return recipe;
 };
 
-export const getRecipeCount = async ({
-  search,
-  tag,
-  ingredient,
-}: {
-  search: string | null;
-  tag: string | null;
-  ingredient: string | null;
-}) => {
+export const getRecipeCount = async (request: Request) => {
+  const url = new URL(request.url);
+  const search = new URLSearchParams(url.search).get("search");
+  const tag = url.searchParams.get("tag");
+  const ingredient = url.searchParams.get("ingredient");
+
   return await prisma.recipe.count({
     where: {
       name: {
@@ -113,10 +111,10 @@ export const createRecipe = async (request: Request) => {
       const value = fields[key];
       if (key.startsWith("ingredients[")) {
         const index = key.match(/\d+/);
-        if (index) ingredients[index[0]] = value;
+        if (index) ingredients[parseInt(index[0])] = value;
       } else if (key.startsWith("steps[")) {
         const index = key.match(/\d+/);
-        if (index) steps[index[0]] = value;
+        if (index) steps[parseInt(index[0])] = value;
       }
     }
   }
@@ -190,24 +188,18 @@ export const getCreatedRecipes = async (request: Request) => {
   }
 };
 
-export const getAllDbRecipes = async ({
-  skip,
-  take,
-  search,
-  sort,
-  direction,
-  tag,
-  ingredient,
-}: {
-  skip?: number;
-  take?: number;
-  search?: string | null;
-  sort: string;
-  direction: string;
-  tag: string | null;
-  ingredient: string | null;
-}) => {
-  return await prisma.recipe.findMany({
+export const getAllDbRecipes = async (request: Request) => {
+  const url = new URL(request.url);
+  const search = new URLSearchParams(url.search).get("search");
+  const page = url.searchParams.get("page") || 1;
+  const take = Number(url.searchParams.get("take")) || 20;
+  const sort = url.searchParams.get("orderBy") || "averageRating";
+  const tag = url.searchParams.get("tag");
+  const ingredient = url.searchParams.get("ingredient");
+  const direction = url.searchParams.get("direction") || "desc";
+  const skip = (Number(page) - 1) * take;
+
+  const recipes = await prisma.recipe.findMany({
     where: {
       name: {
         contains: search ?? undefined,
@@ -236,6 +228,8 @@ export const getAllDbRecipes = async ({
       description: true,
     },
   });
+
+  return recipes;
 };
 
 export const getDbRecipeById = async (id: string) => {
@@ -286,6 +280,25 @@ export const getDbIngredients = async () => {
       name: true,
       id: true,
       imagePath: true,
+    },
+  });
+};
+
+export const getUserFavorites = async (id: string | undefined) => {
+  return await prisma.favoriteRecipe.findMany({
+    where: {
+      user: {
+        every: {
+          id,
+        },
+      },
+    },
+    select: {
+      recipe: {
+        select: {
+          id: true,
+        },
+      },
     },
   });
 };

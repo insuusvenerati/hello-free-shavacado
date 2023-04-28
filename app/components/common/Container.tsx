@@ -5,7 +5,7 @@ type ContainerProps = {
 } & React.HTMLAttributes<HTMLElement>;
 
 export const Container = ({ children, ...props }: ContainerProps) => {
-  const className = cn(props.className);
+  const className = cn("container mx-auto", props.className);
   return (
     <main {...props} className={className}>
       {children}

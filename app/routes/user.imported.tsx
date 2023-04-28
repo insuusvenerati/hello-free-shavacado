@@ -105,8 +105,6 @@ const UserImportedPage = () => {
     fetcher.load("/resource/imported");
   }
 
-  console.log(fetcher.data?.error);
-
   useEffect(() => {
     if (isError)
       toast(
@@ -117,7 +115,7 @@ const UserImportedPage = () => {
 
   return (
     <>
-      <Container>
+      <Container className="container mx-auto p-2 pb-20 lg:pb-2">
         <div className="mb-5 text-xl">
           You currently have <strong> {count} </strong> imported recipes!
         </div>

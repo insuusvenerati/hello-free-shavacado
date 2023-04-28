@@ -15,7 +15,7 @@ import { defer } from "@remix-run/server-runtime";
 import { Suspense, useMemo } from "react";
 import { AutoComplete } from "~/components/AutoComplete";
 import { Container } from "~/components/common/Container";
-import { Loader } from "~/components/common/loader/Loader";
+import { Loader } from "~/components/common/Loader";
 import { RecipeGrid } from "~/components/common/RecipeGrid";
 import { FilterTags } from "~/components/FilterTags";
 import { GridLayoutSwitcher } from "~/components/GridLayoutSwitcher";
@@ -26,23 +26,23 @@ import { Sort } from "~/components/Sort";
 import { HF_AVATAR_IMAGE_URL } from "~/constants";
 import { getFilterOptions } from "~/hooks/useFilterOptions";
 import { usePullRefresh } from "~/hooks/usePullRefresh";
-import { getAllDbRecipes, getDbIngredients, getRecipeCount } from "~/models/recipe.server";
+import {
+  getAllDbRecipes,
+  getDbIngredients,
+  getDbTags,
+  getRecipeCount,
+} from "~/models/recipe.server";
 import { useMatchesData } from "~/utils";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
-  const search = new URLSearchParams(url.search).get("search");
   const page = url.searchParams.get("page") || 1;
   const take = Number(url.searchParams.get("take")) || 20;
-  const sort = url.searchParams.get("orderBy") || "averageRating";
-  const tag = url.searchParams.get("tag");
-  const ingredient = url.searchParams.get("ingredient");
-  const direction = url.searchParams.get("direction") || "desc";
-  const skip = (Number(page) - 1) * take;
 
-  const results = getAllDbRecipes({ skip, take, search, sort, direction, tag, ingredient });
+  const results = getAllDbRecipes(request);
   const ingredients = getDbIngredients();
-  const resultsCount = getRecipeCount({ search, tag, ingredient });
+  const resultsCount = getRecipeCount(request);
+  const tags = getDbTags();
 
   const totalPages = Math.ceil((await resultsCount) / take);
 
@@ -51,13 +51,14 @@ export const loader = async ({ request }: LoaderArgs) => {
     ingredients,
     page: Number(page),
     totalPages,
+    tags,
   });
 };
 
 export default function Index() {
   const location = useLocation();
   const { user } = useMatchesData<{ user: User | null }>("root");
-  const matches = useMediaQuery("(min-width: 1024px)", false, { getInitialValueInEffect: true });
+  const matches = useMediaQuery("(min-width: 1024px)", true, { getInitialValueInEffect: true });
   const gridLayout = user?.gridLayout ?? "grid";
   const recipes = useLoaderData<typeof loader>();
   const transition = useNavigation();
@@ -70,7 +71,7 @@ export default function Index() {
     return "loading";
   }, [fetchers, transition.state]);
 
-  const isLoading = useMemo(() => state !== "idle", [state]);
+  const isLoading = state !== "idle";
 
   const pagination = useMemo(() => {
     const prevPage = recipes.page - 1 || 1;
@@ -86,7 +87,7 @@ export default function Index() {
     <>
       {!matches && (
         <div
-          className="m-auto my-2 w-fit"
+          className="m-auto my-2"
           style={{ marginTop: pullChange ? pullChange / 3.118 : "" }}
           ref={refreshContainer}
         >
@@ -97,7 +98,7 @@ export default function Index() {
           ) : null}
         </div>
       )}
-      <Container className="container mx-auto">
+      <Container className="p-2 pb-20 lg:pb-2">
         <aside className="flex flex-col items-center lg:flex-row lg:justify-between">
           <div className="btn-group flex items-center lg:justify-center">
             <Link to={getFilterOptions("page", "1", location)} className="btn-ghost btn max-w-xs">
@@ -124,8 +125,8 @@ export default function Index() {
             </Link>
           </div>
 
-          <div className="flex-0 flex flex-col gap-2 lg:flex-row">
-            <span className="flex flex-col items-start justify-center gap-1">
+          <div className="flex-0 flex flex-col gap-2 lg:flex-row pb-2">
+            <div className="flex flex-col items-start justify-center gap-1">
               Ingredients
               <Suspense>
                 <Await resolve={recipes.ingredients}>
@@ -153,27 +154,27 @@ export default function Index() {
                   )}
                 </Await>
               </Suspense>
-            </span>
+            </div>
 
-            <span className="flex flex-col items-start justify-center gap-1">
+            <div className="flex flex-col justify-center gap-1">
               Tags
               <FilterTags />
-            </span>
+            </div>
 
-            <span className="flex flex-col items-start justify-center gap-1">
+            <div className="flex flex-col justify-center gap-1">
               Grid Size
               <GridSizeSelect />
-            </span>
+            </div>
 
-            <span className="flex flex-col items-start justify-center gap-1">
+            <div className="flex flex-col justify-center gap-1">
               Grid Layout
               <GridLayoutSwitcher />
-            </span>
+            </div>
 
-            <span className="flex flex-col items-start justify-center gap-1">
+            <div className="flex flex-col justify-center gap-1">
               Sort By
               <Sort />
-            </span>
+            </div>
           </div>
         </aside>
 

@@ -136,3 +136,7 @@ export const filterRecipeResults = (recipes: Item[] = []): Promise<Item[]> => {
     }
   });
 };
+
+export const isPromise = (value: any): value is Promise<any> => {
+  return value && typeof value.then === "function";
+};

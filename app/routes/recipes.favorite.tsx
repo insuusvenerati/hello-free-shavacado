@@ -3,7 +3,6 @@ import type { ActionArgs } from "@remix-run/server-runtime";
 import { typedjson } from "remix-typedjson";
 import invariant from "tiny-invariant";
 import { prisma } from "~/db.server";
-import { getUserFavorites } from "~/db/getUserFavorites.server";
 import { addFavorite } from "~/models/recipe.server";
 import { requireUser } from "~/session.server";
 
@@ -26,38 +25,9 @@ export const action = async ({ request }: ActionArgs) => {
       });
       return typedjson({ result, ok: "true", method });
     }
-    const existingFavorites = await getUserFavorites(user.id);
-
-    if (existingFavorites.some((favorite) => favorite.recipeId === id)) {
-      return typedjson({ result: "Already favorited", ok: "error", method });
-    }
 
     const result = await addFavorite(user, id);
 
-    // const result = await prisma.favoriteRecipe.upsert({
-    //   where: {
-    //     recipeId: id,
-    //   },
-    //   update: {
-    //     user: {
-    //       connect: {
-    //         id: user.id,
-    //       },
-    //     },
-    //   },
-    //   create: {
-    //     user: {
-    //       connect: {
-    //         id: user.id,
-    //       },
-    //     },
-    //     recipe: {
-    //       connect: {
-    //         id,
-    //       },
-    //     },
-    //   },
-    // });
     return typedjson({ result, ok: "true", method });
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {

@@ -19,6 +19,7 @@ export const meta: TypedMetaFunction<typeof loader> = ({ data }) => {
   return {
     title: data.recipe.name,
     description: data.recipe.description,
+    "og:title": data.recipe.name,
     "og:description": data.recipe.description,
     "og:image": data.recipe.image,
   };

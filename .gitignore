@@ -23,3 +23,4 @@ node_modules
 docker-compose.yml
 .flaskenv*
 !.env.project
+dist/
