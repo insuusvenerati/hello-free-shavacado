@@ -11,7 +11,6 @@ import { HF_BASE_URL } from "~/constants";
 import { prisma } from "~/db.server";
 import { requireUser } from "~/session.server";
 import type { Recipes } from "~/types/recipe";
-import { recipesSchema } from "~/types/recipe.schema";
 import { uploadImage } from "~/utils/cloudinary.server";
 
 export const getAllRecipes = async ({
@@ -42,7 +41,7 @@ export const getAllRecipes = async ({
   );
   const recipes = await response.json();
 
-  return recipesSchema.safeParse(recipes);
+  return recipes;
 };
 
 export const getRecipeByName = async ({ name, token }: { name: string; token: string }) => {

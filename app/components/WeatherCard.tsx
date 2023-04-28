@@ -2,6 +2,7 @@ import { Await, useFetcher } from "@remix-run/react";
 import { Loader2 } from "lucide-react";
 import { Suspense, useEffect } from "react";
 import { useGetLocation } from "~/hooks/useGetLocation";
+import type { Location } from "~/types/location";
 import type { Root } from "~/types/weather";
 
 type FetcherData = {
@@ -17,6 +18,8 @@ export const WeatherCard = () => {
   const [location, error] = useGetLocation();
   const { submit, data, state } = useFetcher<FetcherData>();
   const isLoading = state !== "idle";
+
+  console.log(data);
 
   useEffect(() => {
     if (!location) return;
