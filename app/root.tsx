@@ -24,7 +24,6 @@ import nProgressStyles from "nprogress/nprogress.css";
 import { useEffect, useMemo } from "react";
 import { ToastContainer } from "react-toastify";
 import toastStyles from "react-toastify/dist/ReactToastify.css";
-import remixImageStyles from "remix-image/remix-image.css";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { Layout } from "./components/Layout";
 import { getUserColorScheme } from "./db/getUserColorScheme.server";
@@ -173,7 +172,6 @@ export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: tailwindStylesheetUrl },
     { rel: "stylesheet", href: toastStyles },
-    { rel: "stylesheet", href: remixImageStyles },
     { rel: "stylesheet", href: nProgressStyles },
   ];
 };

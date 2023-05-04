@@ -2,7 +2,6 @@ import { Link, Outlet } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { Trash } from "lucide-react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import { RemixImage } from "~/components/RemixImage";
 import { getCreatedRecipes } from "~/models/recipe.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -27,7 +26,7 @@ const CreatedRecipesPage = () => {
               <li className="max-w-sm bg-secondary p-3 shadow-md sm:py-4" key={recipe.id}>
                 <div className="flex items-center space-x-4">
                   <div className="flex-shrink-0">
-                    <RemixImage
+                    <img
                       className="h-12 w-12 rounded-full"
                       src={recipe.imageUrl ?? "https://via.placeholder.com/50"}
                       alt={recipe.name}

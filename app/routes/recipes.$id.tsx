@@ -10,7 +10,6 @@ import invariant from "tiny-invariant";
 import { AddToFavoritesButton } from "~/components/AddToFavoritesButton";
 import { Container } from "~/components/common/Container";
 import { ShareButton } from "~/components/common/ShareButton";
-import { RemixImage } from "~/components/RemixImage";
 import {
   HF_AVATAR_IMAGE_URL,
   HF_CARD_IMAGE_URL,
@@ -186,25 +185,15 @@ const RecipePage = () => {
               <li className="flex items-center gap-2" key={ingredient.id}>
                 <div className="avatar">
                   <div className="w-[50px] rounded-full">
-                    <RemixImage
+                    <img
                       height={50}
                       width={50}
-                      transformOptions={{ fit: "cover", quality: 20 }}
                       src={
                         ingredient.imagePath
                           ? `${HF_AVATAR_IMAGE_URL}${ingredient.imagePath}`
                           : `${INGREDIENT_PLACEHOLDER_URL}?text=${ingredient.name}`
                       }
                       alt={ingredient.name}
-                      responsive={[
-                        {
-                          size: {
-                            width: 50,
-                            height: 50,
-                          },
-                          maxWidth: 50,
-                        },
-                      ]}
                     />
                   </div>
                 </div>
