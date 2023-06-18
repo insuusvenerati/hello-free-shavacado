@@ -1,9 +1,9 @@
 import type { User } from "@prisma/client";
 import { useTypedFetcher } from "remix-typedjson";
-import type { action } from "~/routes/resource.user-options";
 import { useMatchesData } from "~/utils";
 import type { SelectOption } from "./common/Select";
 import { Select } from "./common/Select";
+import type { action } from "~/routes/resource+/user-options";
 
 const tagsOptions: SelectOption[] = [
   { value: "list", label: "List" },

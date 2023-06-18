@@ -1,5 +1,5 @@
 import { useTypedFetcher } from "remix-typedjson";
-import type { action } from "~/routes/resource.set-theme";
+import type { action } from "~/routes/resource+/set-theme";
 import { useMatchesData } from "~/utils";
 
 export const ColorSchemeSwitcher = () => {

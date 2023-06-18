@@ -93,7 +93,7 @@ export async function WakeLock(): Promise<ResponseObject> {
 
       //@ts-ignore
       const wakelock = navigator.wakeLock.request("screen");
-      if (wakelock) {
+      if (await wakelock) {
         return {
           status: "success",
           message: "WakeLock activated!",

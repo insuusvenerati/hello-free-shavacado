@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import { useTypedFetcher } from "remix-typedjson";
-import type { action } from "~/routes/recipes.favorite";
 import { cn, useMatchesData } from "~/utils";
 import { TrashIcon } from "./TrashIcon";
+import type { action } from "~/routes/recipes+/favorite";
 
 type Props = {
   id: string | undefined;

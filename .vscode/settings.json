@@ -4,5 +4,6 @@
   },
   "editor.formatOnSave": true,
   "github-actions.workflows.pinned.refresh.enabled": true,
-  "github-actions.workflows.pinned.workflows": [".github/workflows/deploy.yml"]
+  "github-actions.workflows.pinned.workflows": [".github/workflows/deploy.yml"],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

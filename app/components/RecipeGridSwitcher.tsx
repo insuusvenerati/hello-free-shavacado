@@ -1,9 +1,9 @@
 import type { User } from "@prisma/client";
 import { useTypedFetcher } from "remix-typedjson";
-import type { action } from "~/routes/resource.user-options";
 import { useMatchesData } from "~/utils";
 import type { SelectOption } from "./common/Select";
 import { Select } from "./common/Select";
+import type { action } from "~/routes/resource+/user-options";
 
 const selectOptions: SelectOption[] = [
   { value: "vertical", label: "Vertical" },
@@ -31,18 +31,5 @@ export const RecipeGridSwitcher = () => {
       onChange={handleSelect}
       title="Recipe Page Layout"
     />
-    // <select
-    //   value={user?.recipePageLayout || "horizontal"}
-    //   className="select-accent select max-w-xs"
-    //   onChange={(value) =>
-    //     fetcher.submit(
-    //       { recipePageLayout: value.currentTarget.value },
-    //       { method: "post", action: "/resource/user-options" },
-    //     )
-    //   }
-    // >
-    //   <option value="vertical">Vertical</option>
-    //   <option value="horizontal">Horizontal</option>
-    // </select>
   );
 };

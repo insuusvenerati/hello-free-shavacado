@@ -24,6 +24,7 @@ Sentry.init({
   // plus for 100% of sessions with an error
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
+  enabled: process.env.NODE_ENV === "production",
 });
 
 const hydrate = () => {

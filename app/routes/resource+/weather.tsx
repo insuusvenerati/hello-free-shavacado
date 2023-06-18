@@ -1,5 +1,4 @@
-import type { LoaderArgs } from "@remix-run/server-runtime";
-import { defer } from "@remix-run/server-runtime";
+import { type LoaderArgs } from "@remix-run/server-runtime";
 import { typedjson } from "remix-typedjson";
 import { getWeather } from "~/models/weather.server";
 
@@ -14,6 +13,6 @@ export const loader = async ({ request }: LoaderArgs) => {
     });
   }
 
-  const data = getWeather(lat, lon);
-  return defer({ data });
+  const data = await getWeather(lat, lon);
+  return typedjson(data);
 };
