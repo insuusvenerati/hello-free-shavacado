@@ -277,8 +277,8 @@ jobs:
 
       - name: Remove sourcemaps
         run: |
-          rm -rf build/**/*.js.map
-          rm -rf public/build/**/*.js.map
+          find ./public/build -type f -name '*.map' -delete
+          find ./build -type f -name '*.map' -delete
 
   deploy:
     name: 🚀 Deploy

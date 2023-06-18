@@ -7,54 +7,11 @@ import {
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
 } from "@remix-run/server-runtime";
-import { HF_BASE_URL } from "~/constants";
+import { cachified } from "cachified";
+import { cache } from "~/cache.server";
 import { prisma } from "~/db.server";
 import { requireUser } from "~/session.server";
-import type { Recipes } from "~/types/recipe";
 import { uploadImage } from "~/utils/cloudinary.server";
-
-export const getAllRecipes = async ({
-  skip,
-  take,
-  token,
-  search,
-  ingredients = "",
-  quick = false,
-}: {
-  skip: number;
-  take: number;
-  token: string;
-  search?: string | undefined;
-  ingredients?: string | undefined;
-  quick?: boolean | undefined;
-}) => {
-  const response = await fetch(
-    `${HF_BASE_URL}skip=${skip}&take=${take}&q=${search}&ingredients=${ingredients}&min-rating=3.3&sort=-favorites&max-prep-time=${
-      quick ? 30 : 9999
-    }`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    },
-  );
-  const recipes = await response.json();
-
-  return recipes;
-};
-
-export const getRecipeByName = async ({ name, token }: { name: string; token: string }) => {
-  const response = await fetch(`${HF_BASE_URL}q=${name}&take=1`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-  const recipe = (await response.json()) as Recipes;
-
-  return recipe;
-};
 
 export const getRecipeCount = async (request: Request) => {
   const url = new URL(request.url);
@@ -198,59 +155,99 @@ export const getAllDbRecipes = async (request: Request) => {
   const direction = url.searchParams.get("direction") || "desc";
   const skip = (Number(page) - 1) * take;
 
-  const recipes = await prisma.recipe.findMany({
-    where: {
-      name: {
-        contains: search ?? undefined,
-      },
-      tags: {
-        some: {
-          name: tag ?? undefined,
+  // const recipes = await prisma.recipe.findMany({
+  //   where: {
+  //     name: {
+  //       contains: search ?? undefined,
+  //     },
+  //     tags: {
+  //       some: {
+  //         name: tag ?? undefined,
+  //       },
+  //     },
+  //     ingredients: {
+  //       some: {
+  //         name: ingredient ?? undefined,
+  //       },
+  //     },
+  //   },
+  //   skip,
+  //   take,
+  //   orderBy: {
+  //     [sort]: direction,
+  //   },
+  //   select: {
+  //     id: true,
+  //     name: true,
+  //     tags: { select: { id: true, name: true } },
+  //     imagePath: true,
+  //     description: true,
+  //   },
+  // });
+
+  return cachified({
+    key: `recipes-${page}-${take}-${sort}-${direction}-${search}-${tag}-${ingredient}`,
+    cache: cache,
+    async getFreshValue() {
+      return await prisma.recipe.findMany({
+        where: {
+          name: {
+            contains: search ?? undefined,
+          },
+          tags: {
+            some: {
+              name: tag ?? undefined,
+            },
+          },
+          ingredients: {
+            some: {
+              name: ingredient ?? undefined,
+            },
+          },
         },
-      },
-      ingredients: {
-        some: {
-          name: ingredient ?? undefined,
+        skip,
+        take,
+        orderBy: {
+          [sort]: direction,
         },
-      },
-    },
-    skip,
-    take,
-    orderBy: {
-      [sort]: direction,
-    },
-    select: {
-      id: true,
-      name: true,
-      tags: { select: { id: true, name: true } },
-      imagePath: true,
-      description: true,
+        select: {
+          id: true,
+          name: true,
+          tags: { select: { id: true, name: true } },
+          imagePath: true,
+          description: true,
+        },
+      });
     },
   });
-
-  return recipes;
 };
 
 export const getDbRecipeById = async (id: string) => {
-  return await prisma.recipe.findUnique({
-    where: {
-      id,
-    },
-    select: {
-      id: true,
-      name: true,
-      tags: { select: { id: true, name: true } },
-      imagePath: true,
-      description: true,
-      ingredients: true,
-      steps: true,
-      averageRating: true,
-      cuisines: true,
-      allergens: true,
-      category: true,
-      totalTime: true,
-      nutrition: true,
-      difficulty: true,
+  return cachified({
+    key: `recipe-${id}`,
+    cache: cache,
+    async getFreshValue() {
+      return await prisma.recipe.findUnique({
+        where: {
+          id,
+        },
+        select: {
+          id: true,
+          name: true,
+          tags: { select: { id: true, name: true } },
+          imagePath: true,
+          description: true,
+          ingredients: true,
+          steps: true,
+          averageRating: true,
+          cuisines: true,
+          allergens: true,
+          category: true,
+          totalTime: true,
+          nutrition: true,
+          difficulty: true,
+        },
+      });
     },
   });
 };

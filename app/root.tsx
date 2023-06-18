@@ -12,11 +12,13 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  isRouteErrorResponse,
   useCatch,
   useFetchers,
   useLocation,
   useMatches,
   useNavigation,
+  useRouteError,
 } from "@remix-run/react";
 import { withSentry } from "@sentry/remix";
 import NProgress from "nprogress";
@@ -213,7 +215,7 @@ export async function loader({ request }: LoaderArgs) {
     });
   } catch (error) {
     if (error instanceof Error) throw new Error(error.message);
-    throw new Error("Something went wrong");
+    throw new Error(`Unknown error: ${JSON.stringify(error)}`);
   }
 }
 let isMount = true;
@@ -319,40 +321,50 @@ function App() {
 
 export default withSentry(App);
 
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
-  console.error(error);
-  return (
-    <html lang="en">
-      <head>
-        <title>Oh no!</title>
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <pre>{JSON.stringify(error.message, null, 2)}</pre>
-        <div className="divider"></div>
-        <code>{JSON.stringify(error.stack, null, 2)}</code>
-        <Scripts />
-      </body>
-    </html>
-  );
-};
+export function ErrorBoundary() {
+  const error = useRouteError();
 
-export const CatchBoundary: CatchBoundaryComponent = () => {
-  const caught = useCatch();
-  console.log(caught);
-  if (!caught.data) throw new Error("No data");
+  // when true, this is what used to go to `CatchBoundary`
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div>
+        <h1>Oops</h1>
+        <p>Status: {error.status}</p>
+        <p>{error.data.message}</p>
+      </div>
+    );
+  }
+
+  // Don't forget to typecheck with your own logic.
+  // Any value can be thrown, not just errors!
+  let errorMessage;
+  if (error instanceof Error) {
+    errorMessage = error.message;
+  }
+
   return (
     <html lang="en">
       <head>
-        <title>Oh no!</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <link href="/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />
+        <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+        <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+        <link rel="manifest" href="/resource/manifest.webmanifest" />
+        <link href="/safari-pinned-tab.svg" rel="mask-icon" />
+        <meta content="#da532c" name="msapplication-TileColor" />
+        <meta content="#f69435" name="theme-color"></meta>
+        <SplashScreens />
         <Meta />
         <Links />
       </head>
-      <body>
-        {caught.statusText}
+      <body className="min-h-screen">
+        <Layout>
+          <pre> {errorMessage} </pre>
+        </Layout>
+        <ScrollRestoration />
         <Scripts />
+        <LiveReload />
       </body>
     </html>
   );
-};
+}

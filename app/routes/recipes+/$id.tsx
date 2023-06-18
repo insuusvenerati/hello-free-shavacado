@@ -24,23 +24,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(id, "id is required");
   const url = new URL(request.url);
 
-  // if (typeof token !== "string") {
-  //   throw new Response("Unable to get recipe from API. Try again later", { status: 401 });
-  // }
-
   try {
     const recipe = await getDbRecipeById(id);
     if (!recipe) {
       throw new Response("Recipe not found", { status: 404 });
     }
-    return typedjson(
-      { recipe, url },
-      {
-        headers: {
-          "Cache-Control": "public, max-age=60, s-maxage=3600",
-        },
-      },
-    );
+    return typedjson({ recipe, url });
   } catch (error) {
     console.log("Failed to retrieve recipe", error);
     throw new Response("Unable to retrieve recipe");

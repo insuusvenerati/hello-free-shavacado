@@ -19,8 +19,6 @@ export const WeatherCard = () => {
   const { submit, data, state } = useFetcher<FetcherData>();
   const isLoading = state !== "idle";
 
-  console.log(data);
-
   useEffect(() => {
     if (!location) return;
     submit(

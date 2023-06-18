@@ -155,7 +155,7 @@ model Ingredient {
   id           String   @id @default(cuid())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  name         String   @unique
+  name         String
   type         String?
   slug         String?
   description  String?
@@ -171,7 +171,7 @@ model Tag {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String   @unique
+  name      String
   Recipe    Recipe[]
   recipeId  String
 }
@@ -193,7 +193,7 @@ model Category {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String   @unique
+  name      String
   iconPath  String?
   Recipe    Recipe[]
 }
@@ -202,7 +202,7 @@ model Cuisine {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String   @unique
+  name      String
   iconPath  String?
   Recipe    Recipe[]
   recipeId  String?
@@ -212,7 +212,7 @@ model Allergen {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String   @unique
+  name      String
   iconPath  String?
   Recipe    Recipe[]
   recipeId  String?

@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import type { Item, Recipes } from "~/types/recipe";
+import recipeDataScraper from "recipe-data-scraper";
+import { recipeUrls } from "./fixtures";
 
 const prisma = new PrismaClient();
 const skipLimit = process.env.CI ? 250 : 4000;
@@ -31,16 +33,12 @@ async function seed() {
   });
   const token = await tokenResponse.json();
 
-  // cleanup the existing database
-  await prisma.user.delete({ where: { email } }).catch(() => {
-    // no worries if it doesn't exist yet
-  });
-
-  await prisma.recipe.deleteMany({});
+  await prisma.user.delete({ where: { email } }).catch(() => {});
+  await prisma.recipe.deleteMany({}).catch(() => {});
 
   const hashedPassword = await bcrypt.hash("racheliscool", 10);
 
-  await prisma.user.create({
+  const user = await prisma.user.create({
     data: {
       email,
       imageUrl: "https://placeimg.com/192/192/people",
@@ -49,6 +47,7 @@ async function seed() {
           hash: hashedPassword,
         },
       },
+      colorScheme: "cream",
     },
   });
 
@@ -60,19 +59,43 @@ async function seed() {
         headers: { authorization: `Bearer ${token.access_token}` },
       });
 
-      const recipes = (await response.json()) as Recipes;
+      const recipes: Recipes = await response.json();
 
-      // const ingredients = recipes.items.map((item) => item.ingredients).flat();
-      // const allergens = recipes.items.map((item) => item.allergens).flat();
-      // const cuisines = recipes.items.map((item) => item.cuisines).flat();
-      // const categories = recipes.items.map((item) => item.category).flat();
+      const ingredients = recipes.items.flatMap((item) => item.ingredients);
+
+      await prisma.$transaction(
+        ingredients.map((ingredient) => {
+          return prisma.ingredient.upsert({
+            where: { id: ingredient.id },
+            update: {
+              id: ingredient.id,
+              name: ingredient.name,
+              description: ingredient.description,
+              imageLink: ingredient.imageLink,
+              imagePath: ingredient.imagePath,
+              slug: ingredient.slug,
+              type: ingredient.type,
+            },
+            create: {
+              id: ingredient.id,
+              name: ingredient.name,
+              description: ingredient.description,
+              imageLink: ingredient.imageLink,
+              imagePath: ingredient.imagePath,
+              slug: ingredient.slug,
+              type: ingredient.type,
+            },
+          });
+        }),
+      );
 
       await prisma.$transaction(
         recipes.items
           .filter((item) => !itemNotValidForImport(item))
           .map((item) => {
-            return prisma.recipe.create({
-              data: {
+            return prisma.recipe.upsert({
+              where: { id: item.id },
+              create: {
                 id: item.id,
                 name: item.name,
                 description: item.description,
@@ -88,7 +111,7 @@ async function seed() {
                 prepTime: item.prepTime,
                 ingredients: {
                   connectOrCreate: item.ingredients.map((ingredient) => ({
-                    where: { name: ingredient.name },
+                    where: { id: ingredient.id },
                     create: {
                       name: ingredient.name,
                       id: ingredient.id,
@@ -102,7 +125,7 @@ async function seed() {
                 },
                 allergens: {
                   connectOrCreate: item.allergens.map((allergen) => ({
-                    where: { name: allergen.name },
+                    where: { id: allergen.id },
                     create: {
                       name: allergen.name,
                       id: allergen.id,
@@ -112,7 +135,7 @@ async function seed() {
                 },
                 cuisines: {
                   connectOrCreate: item.cuisines.map((cuisine) => ({
-                    where: { name: cuisine.name },
+                    where: { id: cuisine.id },
                     create: {
                       name: cuisine.name,
                       id: cuisine.id,
@@ -123,7 +146,7 @@ async function seed() {
                 category: item.category
                   ? {
                       connectOrCreate: {
-                        where: { name: item.category.name },
+                        where: { id: item.category.id },
                         create: {
                           name: item.category.name,
                           id: item.category.id,
@@ -145,7 +168,7 @@ async function seed() {
                 },
                 tags: {
                   connectOrCreate: item.tags.map((tag) => ({
-                    where: { name: tag.name },
+                    where: { id: tag.id },
                     create: {
                       name: tag.name,
                       id: tag.id,
@@ -154,13 +177,61 @@ async function seed() {
                   })),
                 },
               },
+              update: {},
             });
           }),
       );
     } catch (error) {
       console.error(error);
-      // continue;
     }
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    await Promise.all(
+      recipeUrls.map(async (url) => {
+        const recipe = await recipeDataScraper(url);
+
+        return await prisma.importedRecipe.create({
+          data: {
+            ...recipe,
+            image: typeof recipe.image === "object" ? recipe.image.url : recipe.image,
+            description: recipe.description ?? null,
+            recipeYield: recipe.recipeYield.toString() ?? null,
+            keywords: {
+              create: recipe.keywords?.map((keyword) => ({
+                name: keyword,
+              })),
+            },
+            recipeInstructions: {
+              create: recipe.recipeInstructions?.map((instruction, index) => ({
+                caption: instruction,
+                index: index,
+              })),
+            },
+            recipeIngredients: {
+              create: recipe.recipeIngredients?.map((ingredient) => ({
+                name: ingredient,
+              })),
+            },
+            recipeCuisines: {
+              create: recipe.recipeCuisines?.map((cuisine) => ({
+                name: cuisine,
+              })),
+            },
+            recipeCategories: {
+              create: recipe.recipeCategories?.map((category) => ({
+                name: category,
+              })),
+            },
+            user: {
+              connect: {
+                id: user.id,
+              },
+            },
+          },
+        });
+      }),
+    );
   }
 
   console.log(`Database has been seeded. 🌱`);

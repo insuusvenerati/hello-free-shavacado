@@ -5,6 +5,7 @@ import { Await, useLocation, useNavigate, useSearchParams } from "@remix-run/rea
 import { Suspense } from "react";
 import { getFilterOptions } from "~/hooks/useFilterOptions";
 import { useMatchesData } from "~/utils";
+import { Loader } from "./common/Loader";
 import { Select } from "./common/Select";
 
 export const FilterTags = () => {
@@ -22,7 +23,7 @@ export const FilterTags = () => {
   };
 
   return (
-    <Suspense>
+    <Suspense fallback={<Loader color="black" width={24} />}>
       <Await resolve={data?.tags}>
         {(tags) => (
           <Select

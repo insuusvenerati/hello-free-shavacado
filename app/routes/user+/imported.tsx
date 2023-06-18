@@ -35,6 +35,22 @@ export const action = async ({ request }: ActionArgs) => {
         invariant(typeof url === "string", "Missing url");
         invariant(typeof recipeId === "string", "Invalid RecipeID");
         const recipe = await recipeDataScraper(url);
+        const existingRecipe = await prisma.importedRecipe.findUnique({
+          where: { url },
+        });
+        if (existingRecipe) {
+          const importedRecipe = await prisma.importedRecipe.update({
+            where: { url },
+            data: {
+              user: {
+                connect: {
+                  id: user.id,
+                },
+              },
+            },
+          });
+          return redirect(`/recipes/imported/${importedRecipe.id}`);
+        }
         const importedRecipe = await prisma.importedRecipe.create({
           data: {
             name: recipe.name,

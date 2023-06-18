@@ -74,15 +74,15 @@ export const AutoComplete = <T extends { id: string }>({
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
       />
-      <ul className="menu absolute z-10 mt-1 block max-h-80 max-w-xs overflow-y-scroll border border-t-0 bg-base-100 shadow-md">
-        {isInputFocused &&
-          !!suggestions.length &&
-          suggestions.map((suggestion) => (
+      {isInputFocused && !!suggestions.length && (
+        <ul className="menu absolute z-10 mt-1 block max-h-80 max-w-xs overflow-y-scroll border border-t-0 bg-base-100 shadow-md">
+          {suggestions.map((suggestion) => (
             <li onClick={() => handleSelectItem(suggestion)} key={getItemLabel(suggestion)}>
               {renderItem(suggestion)}
             </li>
           ))}
-      </ul>
+        </ul>
+      )}
     </div>
   );
 };

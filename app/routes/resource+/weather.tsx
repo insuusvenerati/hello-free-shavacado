@@ -11,9 +11,6 @@ export const loader = async ({ request }: LoaderArgs) => {
   if (!lat || !lon) {
     return typedjson("Missing lat or lon", {
       status: 200,
-      headers: {
-        "Cache-Control": "private, max-age=3600",
-      },
     });
   }
 

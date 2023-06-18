@@ -24,3 +24,8 @@ docker-compose.yml
 .flaskenv*
 !.env.project
 dist/
+/.cache
+/functions/\[\[path\]\].js
+/functions/\[\[path\]\].js.map
+/public/build
+.dev.vars

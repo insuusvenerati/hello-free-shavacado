@@ -5,15 +5,25 @@ import * as Sentry from "@sentry/remix";
 
 Sentry.init({
   dsn: "https://817080981d014d4aabd1f04063b463ce:8c77d5fccdc24c17a975bad93c7fd766@o122225.ingest.sentry.io/4504671422251008",
-  tracesSampleRate: 1,
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
   integrations: [
     new Sentry.BrowserTracing({
+      // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+      tracePropagationTargets: ["localhost", /^https:\/\/yourserver\.io\/api/],
       routingInstrumentation: Sentry.remixRouterInstrumentation(useEffect, useLocation, useMatches),
     }),
+    // Replay is only available in the client
     new Sentry.Replay(),
   ],
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 0.2,
+
+  // Capture Replay for 10% of all sessions,
+  // plus for 100% of sessions with an error
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
 });
 
 const hydrate = () => {
