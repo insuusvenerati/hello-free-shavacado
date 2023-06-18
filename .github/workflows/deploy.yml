@@ -303,7 +303,7 @@ jobs:
 
       - name: 🚀 Deploy Staging
         if: ${{ github.ref == 'refs/heads/develop' }}
-        uses: superfly/flyctl-actions@1.3
+        uses: superfly/flyctl-actions@v1.4
         with:
           args: "deploy --app ${{ steps.app_name.outputs.value }} --remote-only"
         env:
@@ -311,7 +311,7 @@ jobs:
 
       - name: 🚀 Deploy Production
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: superfly/flyctl-actions@1.3
+        uses: superfly/flyctl-actions@v1.4
         with:
           args: "deploy --app ${{ steps.app_name.outputs.value }} --remote-only"
         env:
