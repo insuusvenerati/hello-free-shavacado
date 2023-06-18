@@ -1,10 +1,4 @@
-import type {
-  ErrorBoundaryComponent,
-  LinksFunction,
-  LoaderArgs,
-  MetaFunction,
-} from "@remix-run/node";
-import type { CatchBoundaryComponent } from "@remix-run/react";
+import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -13,7 +7,6 @@ import {
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
-  useCatch,
   useFetchers,
   useLocation,
   useMatches,
