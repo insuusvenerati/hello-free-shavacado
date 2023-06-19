@@ -186,53 +186,53 @@ async function seed() {
     }
   }
 
-  if (process.env.NODE_ENV !== "production") {
-    await Promise.all(
-      recipeUrls.map(async (url) => {
-        const recipe = await recipeDataScraper(url);
+  // if (process.env.NODE_ENV !== "production") {
+  //   await Promise.all(
+  //     recipeUrls.map(async (url) => {
+  //       const recipe = await recipeDataScraper(url);
 
-        return await prisma.importedRecipe.create({
-          data: {
-            ...recipe,
-            image: typeof recipe.image === "object" ? recipe.image.url : recipe.image,
-            description: recipe.description ?? null,
-            recipeYield: recipe.recipeYield.toString() ?? null,
-            keywords: {
-              create: recipe.keywords?.map((keyword) => ({
-                name: keyword,
-              })),
-            },
-            recipeInstructions: {
-              create: recipe.recipeInstructions?.map((instruction, index) => ({
-                caption: instruction,
-                index: index,
-              })),
-            },
-            recipeIngredients: {
-              create: recipe.recipeIngredients?.map((ingredient) => ({
-                name: ingredient,
-              })),
-            },
-            recipeCuisines: {
-              create: recipe.recipeCuisines?.map((cuisine) => ({
-                name: cuisine,
-              })),
-            },
-            recipeCategories: {
-              create: recipe.recipeCategories?.map((category) => ({
-                name: category,
-              })),
-            },
-            user: {
-              connect: {
-                id: user.id,
-              },
-            },
-          },
-        });
-      }),
-    );
-  }
+  //       return await prisma.importedRecipe.create({
+  //         data: {
+  //           ...recipe,
+  //           image: typeof recipe.image === "object" ? recipe.image.url : recipe.image,
+  //           description: recipe.description ?? null,
+  //           recipeYield: recipe.recipeYield.toString() ?? null,
+  //           keywords: {
+  //             create: recipe.keywords?.map((keyword) => ({
+  //               name: keyword,
+  //             })),
+  //           },
+  //           recipeInstructions: {
+  //             create: recipe.recipeInstructions?.map((instruction, index) => ({
+  //               caption: instruction,
+  //               index: index,
+  //             })),
+  //           },
+  //           recipeIngredients: {
+  //             create: recipe.recipeIngredients?.map((ingredient) => ({
+  //               name: ingredient,
+  //             })),
+  //           },
+  //           recipeCuisines: {
+  //             create: recipe.recipeCuisines?.map((cuisine) => ({
+  //               name: cuisine,
+  //             })),
+  //           },
+  //           recipeCategories: {
+  //             create: recipe.recipeCategories?.map((category) => ({
+  //               name: category,
+  //             })),
+  //           },
+  //           user: {
+  //             connect: {
+  //               id: user.id,
+  //             },
+  //           },
+  //         },
+  //       });
+  //     }),
+  //   );
+  // }
 
   console.log(`Database has been seeded. 🌱`);
 }
