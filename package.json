@@ -107,7 +107,7 @@
     "seed": "npx tsx --experimental-fetch prisma/seed.ts"
   },
   "volta": {
-    "node": "18.16.0",
+    "node": "18.17.1",
     "pnpm": "8.3.0"
   },
   "lint-staged": {
