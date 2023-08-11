@@ -1,5 +1,12 @@
 import type { User } from "@prisma/client";
-import { Await, Link, useCatch, useLoaderData, useLocation } from "@remix-run/react";
+import {
+  Await,
+  Link,
+  useCatch,
+  useLoaderData,
+  useLocation,
+  useSearchParams,
+} from "@remix-run/react";
 import type { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
@@ -16,57 +23,54 @@ import { RecipeListItem } from "~/components/RecipeListItem";
 import { Sort } from "~/components/Sort";
 import { HF_AVATAR_IMAGE_URL } from "~/constants";
 import { getFilterOptions } from "~/hooks/useFilterOptions";
-import {
-  getAllDbRecipes,
-  getDbIngredients,
-  getDbTags,
-  getRecipeCount,
-} from "~/models/recipe.server";
+import { getAllDbRecipes, getDbIngredients, getDbTags } from "~/models/recipe.server";
 import { useMatchesData } from "~/utils";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
   const page = url.searchParams.get("page") || 1;
-  const take = Number(url.searchParams.get("take")) || 20;
 
-  // const results = getAllDbRecipes(request);
-  // const ingredients = getDbIngredients();
-  // const resultsCount = getRecipeCount(request);
-  // const tags = getDbTags();
+  const results = getAllDbRecipes(request);
+  const ingredients = getDbIngredients();
+  const tags = getDbTags();
 
-  const [results, ingredients, resultsCount, tags] = await Promise.all([
-    getAllDbRecipes(request),
-    getDbIngredients(),
-    getRecipeCount(request),
-    getDbTags(),
-  ]);
+  // const dataPromises = Promise.all([results, ingredients, tags]);
 
-  const totalPages = Math.ceil(resultsCount / take);
+  // const [results, ingredients, resultsCount, tags] = await Promise.all([
+  //   getAllDbRecipes(request),
+  //   getDbIngredients(),
+  //   getRecipeCount(request),
+  //   getDbTags(),
+  // ]);
+
+  // const totalPages = Math.ceil((await resultsCount) / take);
 
   return defer({
     results,
     ingredients,
     page: Number(page),
-    totalPages,
+    // totalPages,
     tags,
   });
 };
 
 export default function Index() {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const take = Number(searchParams.get("take")) || 20;
   const { user } = useMatchesData<{ user: User | null }>("root");
   const gridLayout = user?.gridLayout ?? "grid";
-  const recipes = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
 
   const pagination = useMemo(() => {
-    const prevPage = recipes.page - 1 || 1;
-    const nextPage = recipes.page + 1;
+    const prevPage = data.page - 1 || 1;
+    const nextPage = data.page + 1;
 
     return {
       prevPage,
       nextPage,
     };
-  }, [recipes.page]);
+  }, [data.page]);
 
   return (
     <>
@@ -89,25 +93,43 @@ export default function Index() {
             >
               Next
             </Link>
-            <Link
+            <Suspense>
+              <Await resolve={data.results}>
+                {(recipes) => {
+                  const totalPages = Math.ceil(recipes.length / take);
+                  return (
+                    <Link
+                      to={getFilterOptions("page", `${totalPages}`, location)}
+                      className="btn-ghost btn max-w-xs"
+                    >
+                      Last
+                    </Link>
+                  );
+                }}
+              </Await>
+            </Suspense>
+            {/* <Link
               to={getFilterOptions("page", `${recipes.totalPages}`, location)}
               className="btn-ghost btn max-w-xs"
             >
               Last
-            </Link>
+            </Link> */}
           </div>
 
           <div className="flex-0 flex flex-col gap-2 lg:flex-row pb-2">
             <div className="flex flex-col items-start justify-center gap-1">
               Ingredients
               <Suspense>
-                <Await resolve={recipes.ingredients}>
+                <Await resolve={data.ingredients}>
                   {(ingredients) => (
                     <AutoComplete
                       items={ingredients}
                       getItemLabel={(item) => item.name}
                       renderItem={(item) => (
-                        <Link to={getFilterOptions("ingredient", item.name, location)}>
+                        <Link
+                          prefetch="viewport"
+                          to={getFilterOptions("ingredient", item.name, location)}
+                        >
                           <img
                             width={50}
                             height={50}
@@ -153,7 +175,7 @@ export default function Index() {
         {gridLayout === "grid" && (
           <RecipeGrid className="lg:grid-cols-5">
             <Suspense>
-              <Await resolve={recipes.results}>
+              <Await resolve={data.results}>
                 {(results) =>
                   results.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)
                 }
@@ -165,7 +187,7 @@ export default function Index() {
         {gridLayout === "list" && (
           <ul className="flex flex-col flex-wrap gap-4 lg:max-h-96">
             <Suspense fallback={<Loader />}>
-              <Await resolve={recipes.results}>
+              <Await resolve={data.results}>
                 {(results) =>
                   results.length > 0 ? (
                     results.map((recipe) => <RecipeListItem key={recipe.id} recipe={recipe} />)
