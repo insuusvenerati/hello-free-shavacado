@@ -196,7 +196,7 @@ export const CatchBoundary = () => {
   );
 };
 
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }: { error: Error }) => {
   console.log(error);
   return (
     <div className="container mx-auto min-h-screen max-w-2xl">

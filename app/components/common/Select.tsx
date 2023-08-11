@@ -1,8 +1,8 @@
-import { type ReactNode, type SelectHTMLAttributes } from "react";
+import { type SelectHTMLAttributes } from "react";
 
 export type SelectOption = {
   value: string;
-  label: string | ReactNode;
+  label: string;
 };
 
 export type SelectProps = {

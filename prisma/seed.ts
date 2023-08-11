@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import type { Item, Recipes } from "~/types/recipe";
 
 const prisma = new PrismaClient();
-const skipLimit = process.env.CI ? 250 : 14000;
+const skipLimit = process.env.CI ? 250 : 4000;
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 
 const TOKEN_URL =

@@ -1,14 +1,5 @@
-import { useMediaQuery } from "@mantine/hooks";
 import type { User } from "@prisma/client";
-import {
-  Await,
-  Link,
-  useCatch,
-  useFetchers,
-  useLoaderData,
-  useLocation,
-  useNavigation,
-} from "@remix-run/react";
+import { Await, Link, useCatch, useLoaderData, useLocation } from "@remix-run/react";
 import type { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
@@ -25,7 +16,6 @@ import { RecipeListItem } from "~/components/RecipeListItem";
 import { Sort } from "~/components/Sort";
 import { HF_AVATAR_IMAGE_URL } from "~/constants";
 import { getFilterOptions } from "~/hooks/useFilterOptions";
-import { usePullRefresh } from "~/hooks/usePullRefresh";
 import {
   getAllDbRecipes,
   getDbIngredients,
@@ -65,20 +55,8 @@ export const loader = async ({ request }: LoaderArgs) => {
 export default function Index() {
   const location = useLocation();
   const { user } = useMatchesData<{ user: User | null }>("root");
-  const matches = useMediaQuery("(min-width: 1024px)", true, { getInitialValueInEffect: true });
   const gridLayout = user?.gridLayout ?? "grid";
   const recipes = useLoaderData<typeof loader>();
-  const transition = useNavigation();
-  const fetchers = useFetchers();
-  const { pullChange, refreshContainer } = usePullRefresh();
-
-  const state = useMemo<"idle" | "loading">(() => {
-    const states = [transition.state, ...fetchers.map((fetcher) => fetcher.state)];
-    if (states.every((state) => state === "idle")) return "idle";
-    return "loading";
-  }, [fetchers, transition.state]);
-
-  const isLoading = state !== "idle";
 
   const pagination = useMemo(() => {
     const prevPage = recipes.page - 1 || 1;
@@ -92,19 +70,6 @@ export default function Index() {
 
   return (
     <>
-      {!matches && (
-        <div
-          className="m-auto my-2"
-          style={{ marginTop: pullChange ? pullChange / 3.118 : "" }}
-          ref={refreshContainer}
-        >
-          {isLoading ? (
-            <Loader />
-          ) : pullChange!! > 75 ? (
-            <span className="font-semibold">Pull to refresh</span>
-          ) : null}
-        </div>
-      )}
       <Container className="p-2 pb-20 lg:pb-2">
         <aside className="flex flex-col items-center lg:flex-row lg:justify-between">
           <div className="btn-group flex items-center lg:justify-center">

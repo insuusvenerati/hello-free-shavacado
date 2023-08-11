@@ -1,8 +1,9 @@
 import { NavLink } from "@remix-run/react";
+import type { LucideIcon } from "lucide-react";
 
 export type BottomNavItemProps = {
   to: string;
-  icon: React.ComponentType<{ className: string }>;
+  icon: LucideIcon;
 };
 
 export const BottomNavItem = ({ to, icon: Icon }: BottomNavItemProps) => {

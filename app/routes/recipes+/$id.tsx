@@ -68,7 +68,7 @@ const RecipePage = () => {
     "bg-accent": userColorScheme === "cream",
   });
 
-  const nutrition = useMemo(() => JSON.parse(recipe.nutrition), [recipe.nutrition]);
+  const nutrition = JSON.parse(String(recipe.nutrition));
 
   const difficulty = useMemo(
     () => new Array(recipe.difficulty).fill(<Flame className="mr-1 h-4 w-4" />),
