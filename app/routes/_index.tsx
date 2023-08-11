@@ -39,12 +39,19 @@ export const loader = async ({ request }: LoaderArgs) => {
   const page = url.searchParams.get("page") || 1;
   const take = Number(url.searchParams.get("take")) || 20;
 
-  const results = getAllDbRecipes(request);
-  const ingredients = getDbIngredients();
-  const resultsCount = getRecipeCount(request);
-  const tags = getDbTags();
+  // const results = getAllDbRecipes(request);
+  // const ingredients = getDbIngredients();
+  // const resultsCount = getRecipeCount(request);
+  // const tags = getDbTags();
 
-  const totalPages = Math.ceil((await resultsCount) / take);
+  const [results, ingredients, resultsCount, tags] = await Promise.all([
+    getAllDbRecipes(request),
+    getDbIngredients(),
+    getRecipeCount(request),
+    getDbTags(),
+  ]);
+
+  const totalPages = Math.ceil(resultsCount / take);
 
   return defer({
     results,
@@ -220,7 +227,7 @@ export const CatchBoundary: CatchBoundaryComponent = () => {
   );
 };
 
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }: { error: Error }) => {
   return (
     <main className="container mx-auto h-screen p-1 lg:p-5">
       <h1>Something went wrong</h1>

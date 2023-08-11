@@ -11,8 +11,9 @@ module.exports = {
   ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
   serverDependenciesToBundle: ["recipe-data-scraper"],
   tailwind: true,
+  serverModuleFormat: "cjs",
   future: {
-    unstable_dev: true,
+    v2_dev: true,
     v2_routeConvention: true,
     v2_meta: false,
     v2_errorBoundary: true,

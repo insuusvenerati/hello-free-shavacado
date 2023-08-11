@@ -1,11 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import type { Item, Recipes } from "~/types/recipe";
-import recipeDataScraper from "recipe-data-scraper";
-import { recipeUrls } from "./fixtures";
 
 const prisma = new PrismaClient();
-const skipLimit = process.env.CI ? 250 : 4000;
+const skipLimit = process.env.CI ? 250 : 14000;
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 
 const TOKEN_URL =
@@ -38,7 +36,7 @@ async function seed() {
 
   const hashedPassword = await bcrypt.hash("racheliscool", 10);
 
-  const user = await prisma.user.create({
+  await prisma.user.create({
     data: {
       email,
       imageUrl: "https://placeimg.com/192/192/people",
@@ -51,11 +49,11 @@ async function seed() {
     },
   });
 
-  for (let skip = 0; skip <= skipLimit; skip += 250) {
-    console.log(`Fetching recipes ${skip} to ${skip + 250} with a max of ${skipLimit}...`);
+  for (let skip = 0; skip <= skipLimit; skip += 50) {
+    console.log(`Fetching recipes ${skip} to ${skip + 50} with a max of ${skipLimit}...`);
 
     try {
-      const response = await fetch(`${BASE_URL}take=250&skip=${skip}`, {
+      const response = await fetch(`${BASE_URL}take=50&skip=${skip}`, {
         headers: { authorization: `Bearer ${token.access_token}` },
       });
 

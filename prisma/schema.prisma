@@ -1,6 +1,7 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 generator client {
@@ -76,6 +77,7 @@ model ImportedRecipeStep {
   importedRecipeId String
 
   @@id([importedRecipeId, index])
+  @@index([importedRecipeId])
 }
 
 model ImportedRecipeKeyword {
@@ -108,6 +110,8 @@ model ImportedRecipe {
   url                     String                     @unique
   user                    User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                  String
+
+  @@index([userId])
 }
 
 model CreatedRecipe {
@@ -122,6 +126,8 @@ model CreatedRecipe {
   imageUrl    String?
   user        User     @relation(fields: [userId], references: [id])
   userId      String
+
+  @@index([userId])
 }
 
 model Recipe {
@@ -129,9 +135,9 @@ model Recipe {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   name           String
-  description    String
+  description    String           @db.Text
   difficulty     Int
-  seoDescription String?
+  seoDescription String?          @db.Text
   imagePath      String
   ratingsCount   Int?
   averageRating  Float?
@@ -141,13 +147,16 @@ model Recipe {
   slug           String
   allergens      Allergen[]
   ingredients    Ingredient[]
-  nutrition      String
+  nutrition      Json
   tags           Tag[]
   steps          Step[]
   category       Category?        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   cuisines       Cuisine[]
   categoryId     String?
   favoriteRecipe FavoriteRecipe[]
+
+  @@index([categoryId])
+  @@index([name])
 }
 
 model Ingredient {
@@ -164,6 +173,8 @@ model Ingredient {
   recipeId     String?
   stepRecipeId String?
   stepIndex    Int?
+
+  @@index([name])
 }
 
 model Tag {
@@ -173,19 +184,22 @@ model Tag {
   name      String
   Recipe    Recipe[]
   recipeId  String
+
+  @@index([name])
 }
 
 model Step {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   index                Int
-  instructions         String
-  instructionsHTML     String?
-  instructionsMarkdown String?
+  instructions         String   @db.Text
+  instructionsHTML     String?  @db.Text
+  instructionsMarkdown String?  @db.Text
   Recipe               Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId             String
 
   @@id(fields: [recipeId, index])
+  @@index([recipeId])
 }
 
 model Category {
