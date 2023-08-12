@@ -1,5 +1,5 @@
 import { PassThrough } from "stream";
-import type { EntryContext } from "@remix-run/node";
+import type { DataFunctionArgs, EntryContext } from "@remix-run/node";
 import { Response } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
@@ -13,7 +13,17 @@ Sentry.init({
   dsn: "https://817080981d014d4aabd1f04063b463ce:8c77d5fccdc24c17a975bad93c7fd766@o122225.ingest.sentry.io/4504671422251008",
   tracesSampleRate: 1,
   integrations: [new Sentry.Integrations.Prisma({ client: prisma })],
+  environment: process.env.NODE_ENV,
 });
+
+export function handleError(error: unknown, { request }: DataFunctionArgs): void {
+  if (error instanceof Error) {
+    Sentry.captureRemixServerException(error, "remix.server", request);
+  } else {
+    // Optionally capture non-Error objects
+    Sentry.captureException(error);
+  }
+}
 
 export default function handleRequest(
   request: Request,

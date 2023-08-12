@@ -13,7 +13,7 @@ import {
   useNavigation,
   useRouteError,
 } from "@remix-run/react";
-import { withSentry } from "@sentry/remix";
+import { captureRemixErrorBoundaryError, withSentry } from "@sentry/remix";
 import NProgress from "nprogress";
 import nProgressStyles from "nprogress/nprogress.css";
 import { useEffect, useMemo } from "react";
@@ -316,6 +316,8 @@ export default withSentry(App);
 
 export function ErrorBoundary() {
   const error = useRouteError();
+
+  captureRemixErrorBoundaryError(error);
 
   // when true, this is what used to go to `CatchBoundary`
   if (isRouteErrorResponse(error)) {
