@@ -1,3 +1,4 @@
+import { useSWEffect } from "@remix-pwa/sw";
 import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
 import {
   Links,
@@ -7,26 +8,22 @@ import {
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
-  useFetchers,
-  useLocation,
-  useMatches,
-  useNavigation,
   useRouteError,
 } from "@remix-run/react";
 import { captureRemixErrorBoundaryError, withSentry } from "@sentry/remix";
 import NProgress from "nprogress";
 import nProgressStyles from "nprogress/nprogress.css";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import toastStyles from "react-toastify/dist/ReactToastify.css";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { useGlobalTransitionStates } from "remix-utils";
 import { Layout } from "./components/Layout";
 import { getUserColorScheme } from "./db/getUserColorScheme.server";
 import { getUserFavorites } from "./models/recipe.server";
 import { getThemeSession } from "./models/theme.server";
 import { getUser } from "./session.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import { isPromise } from "./utils";
 
 const SplashScreens = () => (
   <>
@@ -211,88 +208,27 @@ export async function loader({ request }: LoaderArgs) {
     throw new Error(`Unknown error: ${JSON.stringify(error)}`);
   }
 }
-let isMount = true;
 function App() {
-  const location = useLocation();
-  const matches = useMatches();
   const { colorScheme } = useTypedLoaderData<typeof loader>();
-  const transition = useNavigation();
-  const fetchers = useFetchers();
+  const [state] = useGlobalTransitionStates();
 
-  const state = useMemo<"idle" | "loading">(
-    function getGlobalState() {
-      const states = [transition.state, ...fetchers.map((fetcher) => fetcher.state)];
-      if (states.every((state) => state === "idle")) return "idle";
-      return "loading";
-    },
-    [transition.state, fetchers],
-  );
-
-  useEffect(() => {
-    let mounted = isMount;
-    isMount = false;
-
-    if ("serviceWorker" in navigator) {
-      if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller?.postMessage({
-          type: "REMIX_NAVIGATION",
-          isMount: mounted,
-          location,
-          matches: matches.filter((route) => {
-            if (route.data) {
-              return (
-                Object.values(route.data!).filter((elem) => {
-                  return isPromise(elem);
-                }).length === 0
-              );
-            }
-            return true;
-          }),
-          manifest: window.__remixManifest,
-        });
-      } else {
-        let listener = async () => {
-          await navigator.serviceWorker.ready;
-          navigator.serviceWorker.controller?.postMessage({
-            type: "REMIX_NAVIGATION",
-            isMount: mounted,
-            location,
-            matches: matches.filter((route) => {
-              if (route.data) {
-                return (
-                  Object.values(route.data!).filter((elem) => {
-                    return isPromise(elem);
-                  }).length === 0
-                );
-              }
-              return true;
-            }),
-            manifest: window.__remixManifest,
-          });
-        };
-        navigator.serviceWorker.addEventListener("controllerchange", listener);
-        return () => {
-          navigator.serviceWorker.removeEventListener("controllerchange", listener);
-        };
-      }
-    }
-  }, [location, matches]);
+  useSWEffect();
 
   useEffect(() => {
     NProgress.configure({ showSpinner: false });
     if (state === "loading") NProgress.start();
     if (state === "idle") NProgress.done();
-  }, [transition.state]);
+  }, [state]);
 
   return (
     <html lang="en">
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <link href="/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />
-        <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
-        <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+        <link href="/icons/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />
+        <link href="/icons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+        <link href="/icons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
         <link rel="manifest" href="/resource/manifest.webmanifest" />
-        <link href="/safari-pinned-tab.svg" rel="mask-icon" />
+        <link href="/icons/safari-pinned-tab.svg" rel="mask-icon" />
         <meta content="#da532c" name="msapplication-TileColor" />
         <meta content="#f69435" name="theme-color"></meta>
         <SplashScreens />

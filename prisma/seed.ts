@@ -59,33 +59,33 @@ async function seed() {
 
       const recipes: Recipes = await response.json();
 
-      const ingredients = recipes.items.flatMap((item) => item.ingredients);
+      // const ingredients = recipes.items.flatMap((item) => item.ingredients);
 
-      await prisma.$transaction(
-        ingredients.map((ingredient) => {
-          return prisma.ingredient.upsert({
-            where: { id: ingredient.id },
-            update: {
-              id: ingredient.id,
-              name: ingredient.name,
-              description: ingredient.description,
-              imageLink: ingredient.imageLink,
-              imagePath: ingredient.imagePath,
-              slug: ingredient.slug,
-              type: ingredient.type,
-            },
-            create: {
-              id: ingredient.id,
-              name: ingredient.name,
-              description: ingredient.description,
-              imageLink: ingredient.imageLink,
-              imagePath: ingredient.imagePath,
-              slug: ingredient.slug,
-              type: ingredient.type,
-            },
-          });
-        }),
-      );
+      // await prisma.$transaction(
+      //   ingredients.map((ingredient) => {
+      //     return prisma.ingredient.upsert({
+      //       where: { id: ingredient.id },
+      //       update: {
+      //         id: ingredient.id,
+      //         name: ingredient.name,
+      //         description: ingredient.description,
+      //         imageLink: ingredient.imageLink,
+      //         imagePath: ingredient.imagePath,
+      //         slug: ingredient.slug,
+      //         type: ingredient.type,
+      //       },
+      //       create: {
+      //         id: ingredient.id,
+      //         name: ingredient.name,
+      //         description: ingredient.description,
+      //         imageLink: ingredient.imageLink,
+      //         imagePath: ingredient.imagePath,
+      //         slug: ingredient.slug,
+      //         type: ingredient.type,
+      //       },
+      //     });
+      //   }),
+      // );
 
       await prisma.$transaction(
         recipes.items

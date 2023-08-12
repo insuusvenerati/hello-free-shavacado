@@ -14,7 +14,7 @@ node_modules
 /test-results/
 /playwright-report/
 /playwright/.cache/
-/public/entry.worker.js
+/public/entry.workbox.js
 /public/worker.js
 /.cache
 .sentryclirc

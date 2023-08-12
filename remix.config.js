@@ -9,7 +9,7 @@ module.exports = {
   },
   cacheDirectory: "./node_modules/.cache/remix",
   ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
-  serverDependenciesToBundle: ["recipe-data-scraper"],
+  serverDependenciesToBundle: ["recipe-data-scraper", "@remix-pwa/sw"],
   tailwind: true,
   serverModuleFormat: "cjs",
   future: {
