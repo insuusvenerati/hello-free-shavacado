@@ -1,14 +1,14 @@
 import { Prisma } from "@prisma/client";
-import type { ActionArgs } from "@remix-run/server-runtime";
+import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime";
 import recipeDataScraper from "recipe-data-scraper";
 import { redirect, typedjson } from "remix-typedjson";
 import invariant from "tiny-invariant";
 import { prisma } from "~/db.server";
 import { requireUser } from "~/session.server";
 
-// export const loader = async ({ request }: LoaderArgs) => {
-//   if (request.method !== "POST") return redirect("/", { status: 405 });
-// };
+export const loader = async ({ request }: LoaderArgs) => {
+  if (request.method !== "POST") return redirect("/", { status: 405, headers: { Allow: "POST" } });
+};
 
 export const action = async ({ request }: ActionArgs) => {
   const user = await requireUser(request);

@@ -1,11 +1,16 @@
-import type { ActionArgs, UploadHandler } from "@remix-run/server-runtime";
+import type { ActionArgs, LoaderArgs, UploadHandler } from "@remix-run/server-runtime";
 import {
+  redirect,
   unstable_composeUploadHandlers,
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
 } from "@remix-run/server-runtime";
 import { typedjson } from "remix-typedjson";
 import { uploadImage } from "~/utils/cloudinary.server";
+
+export const loader = async ({ request }: LoaderArgs) => {
+  if (request.method !== "POST") return redirect("/", { status: 405, headers: { Allow: "POST" } });
+};
 
 export const action = async ({ request }: ActionArgs) => {
   const uploadHandler: UploadHandler = unstable_composeUploadHandlers(async ({ name, data }) => {

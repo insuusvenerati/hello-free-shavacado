@@ -1,10 +1,14 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import type { ActionArgs } from "@remix-run/server-runtime";
+import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/server-runtime";
 import { typedjson } from "remix-typedjson";
 import invariant from "tiny-invariant";
 import { prisma } from "~/db.server";
 import { addFavorite } from "~/models/recipe.server";
 import { requireUser } from "~/session.server";
+
+export const loader = async ({ request }: LoaderArgs) => {
+  if (request.method !== "POST") return redirect("/", { status: 405, headers: { Allow: "POST" } });
+};
 
 export const action = async ({ request }: ActionArgs) => {
   const method = request.method;

@@ -8,7 +8,8 @@ import {
   remixLoaderPlugin,
 } from "@remix-pwa/sw";
 import { registerRoute, setDefaultHandler } from "workbox-routing";
-import { CacheFirst, NetworkFirst } from "workbox-strategies";
+import { CacheFirst, NetworkFirst, NetworkOnly } from "workbox-strategies";
+import { BackgroundSyncPlugin } from "workbox-background-sync";
 
 declare let self: ServiceWorkerGlobalScope;
 
@@ -24,11 +25,24 @@ const staticAssets = [
   "/oops.html",
 ];
 
+const bgSyncPlugin = new BackgroundSyncPlugin("bgQueue", {
+  maxRetentionTime: 24 * 60, // Retry for a maximum of 24 Hours (specified in minutes)
+});
+
 const messageHandler = new PrecacheHandler({
   dataCacheName: DATA,
   documentCacheName: PAGES,
   assetCacheName: ASSETS,
 });
+
+// Background Sync
+registerRoute(
+  /\/api\/.*\/*.json/,
+  new NetworkOnly({
+    plugins: [bgSyncPlugin],
+  }),
+  "GET",
+);
 
 // Assets
 registerRoute(
