@@ -4,7 +4,6 @@ import type { CatchBoundaryComponent } from "@remix-run/react";
 import { useCatch } from "@remix-run/react";
 import type { LoaderArgs, MetaFunction } from "@remix-run/server-runtime";
 import { Clock, Flame, Star } from "lucide-react";
-import { useMemo } from "react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import invariant from "tiny-invariant";
 import { AddToFavoritesButton } from "~/components/AddToFavoritesButton";
@@ -70,10 +69,7 @@ const RecipePage = () => {
 
   const nutrition = JSON.parse(String(recipe.nutrition));
 
-  const difficulty = useMemo(
-    () => new Array(recipe.difficulty).fill(<Flame className="mr-1 h-4 w-4" />),
-    [recipe.difficulty],
-  );
+  const difficulty = new Array(recipe.difficulty).fill(<Flame className="mr-1 h-4 w-4" />);
 
   return (
     <div className={pageLayout}>
@@ -199,7 +195,11 @@ const RecipePage = () => {
           <ol className="collapse-content steps steps-vertical ml-4 items-center p-0">
             {recipe.steps.map((step) => (
               <li className="step" key={step.index}>
-                {step.instructions}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: step.instructionsHTML ?? "No instructions :(",
+                  }}
+                />
               </li>
             ))}
           </ol>

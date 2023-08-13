@@ -1,36 +1,53 @@
-import { Link, useLocation } from "@remix-run/react";
-import { ChevronUp } from "lucide-react";
+import { Link, useLocation, useSearchParams } from "@remix-run/react";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { useState, type ReactNode } from "react";
 import { getFilterOptions } from "~/hooks/useFilterOptions";
 
-export const Sort = () => {
-  const location = useLocation();
+const sortOptions = [
+  {
+    orderBy: "averageRating",
+    label: "Rating",
+  },
+  {
+    orderBy: "difficulty",
+    label: "Difficulty",
+  },
+  {
+    orderBy: "name",
+    label: "Name",
+  },
+];
 
+const ChevronButtonLink = ({ orderBy, children }: { orderBy: string; children: ReactNode }) => {
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const searchDirection = searchParams.get("direction");
+  const [direction, setDirection] = useState(searchDirection || "desc");
+  return (
+    <Link
+      role="button"
+      className="gap-2 btn btn-sm justify-between flex"
+      to={getFilterOptions("orderBy", orderBy, location, direction)}
+      onClick={() => setDirection(direction === "desc" ? "asc" : "desc")}
+    >
+      {children}
+      {direction === "desc" ? (
+        <ChevronUp className="h-6 w-6" />
+      ) : (
+        <ChevronDown className="h-6 w-6" />
+      )}
+    </Link>
+  );
+};
+
+export const Sort = () => {
   return (
     <div className="btn-group">
-      <Link
-        role="button"
-        className="gap-2 btn btn-sm justify-between flex"
-        to={getFilterOptions("orderBy", "averageRating", location)}
-      >
-        Rating
-        <ChevronUp className="h-6 w-6" />
-      </Link>
-      <Link
-        role="button"
-        className="gap-2 btn btn-sm justify-between flex"
-        to={getFilterOptions("orderBy", "difficulty", location)}
-      >
-        Difficulty
-        <ChevronUp className="h-6 w-6" />
-      </Link>
-      <Link
-        role="button"
-        className="gap-2 btn btn-sm justify-between flex"
-        to={getFilterOptions("orderBy", "name", location)}
-      >
-        Name
-        <ChevronUp className="h-6 w-6" />
-      </Link>
+      {sortOptions.map((option) => (
+        <ChevronButtonLink key={option.orderBy} orderBy={option.orderBy}>
+          {option.label}
+        </ChevronButtonLink>
+      ))}
     </div>
   );
 };

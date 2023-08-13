@@ -155,36 +155,6 @@ export const getAllDbRecipes = async (request: Request) => {
   const direction = url.searchParams.get("direction") || "desc";
   const skip = (Number(page) - 1) * take;
 
-  // const recipes = await prisma.recipe.findMany({
-  //   where: {
-  //     name: {
-  //       contains: search ?? undefined,
-  //     },
-  //     tags: {
-  //       some: {
-  //         name: tag ?? undefined,
-  //       },
-  //     },
-  //     ingredients: {
-  //       some: {
-  //         name: ingredient ?? undefined,
-  //       },
-  //     },
-  //   },
-  //   skip,
-  //   take,
-  //   orderBy: {
-  //     [sort]: direction,
-  //   },
-  //   select: {
-  //     id: true,
-  //     name: true,
-  //     tags: { select: { id: true, name: true } },
-  //     imagePath: true,
-  //     description: true,
-  //   },
-  // });
-
   return cachified({
     key: `recipes-${page}-${take}-${sort}-${direction}-${search}-${tag}-${ingredient}`,
     cache: cache,
