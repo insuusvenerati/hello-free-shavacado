@@ -1,8 +1,8 @@
-import { type LoaderArgs } from "@remix-run/server-runtime";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { typedjson } from "remix-typedjson";
 import { getWeather } from "~/models/weather.server";
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const lat = url.searchParams.get("lat");
   const lon = url.searchParams.get("lon");

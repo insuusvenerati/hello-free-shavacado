@@ -7,7 +7,7 @@ const skipLimit = process.env.CI ? 250 : 4000;
 const BASE_URL = `https://www.hellofresh.com/gw/recipes/recipes/search?country=us&locale=en-US&`;
 
 const TOKEN_URL =
-  "https://stiforr-cors-anywhere.fly.dev/https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials";
+  "https://www.hellofresh.com/gw/auth/token?client_id=senf&grant_type=client_credentials";
 
 export const itemNotValidForImport = (item: Item) => {
   return (

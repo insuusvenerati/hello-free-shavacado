@@ -7,11 +7,11 @@ import {
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
 } from "@remix-run/server-runtime";
-import { cachified } from "cachified";
 import { cache } from "~/cache.server";
 import { prisma } from "~/db.server";
 import { requireUser } from "~/session.server";
 import { uploadImage } from "~/utils/cloudinary.server";
+import { cachified } from "@epic-web/cachified";
 
 export const getRecipeCount = async (request: Request) => {
   const url = new URL(request.url);

@@ -1,6 +1,5 @@
 import { PassThrough } from "stream";
-import type { DataFunctionArgs, EntryContext } from "@remix-run/node";
-import { Response } from "@remix-run/node";
+import type { EntryContext, LoaderFunctionArgs } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
@@ -16,7 +15,7 @@ Sentry.init({
   environment: process.env.NODE_ENV,
 });
 
-export function handleError(error: unknown, { request }: DataFunctionArgs): void {
+export function handleError(error: unknown, { request }: LoaderFunctionArgs): void {
   if (error instanceof Error) {
     Sentry.captureRemixServerException(error, "remix.server", request);
   } else {

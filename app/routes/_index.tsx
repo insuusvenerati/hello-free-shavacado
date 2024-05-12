@@ -2,13 +2,13 @@ import type { User } from "@prisma/client";
 import {
   Await,
   Link,
-  useCatch,
   useLoaderData,
   useLocation,
+  useRouteError,
   useSearchParams,
 } from "@remix-run/react";
-import type { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules";
-import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/server-runtime";
+import type { ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
 import { Suspense, useMemo } from "react";
 import { AutoComplete } from "~/components/AutoComplete";
@@ -26,7 +26,7 @@ import { getFilterOptions } from "~/hooks/useFilterOptions";
 import { getAllDbRecipes, getDbIngredients, getDbTags } from "~/models/recipe.server";
 import { useMatchesData } from "~/utils";
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const page = url.searchParams.get("page") || 1;
 
@@ -204,17 +204,8 @@ export default function Index() {
   );
 }
 
-export const CatchBoundary: CatchBoundaryComponent = () => {
-  const caught = useCatch();
-  return (
-    <main className="container mx-auto h-screen p-1 lg:p-5">
-      <h1>Something went wrong</h1>
-      <pre>{caught.data}</pre>
-    </main>
-  );
-};
-
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }: { error: Error }) => {
+export const ErrorBoundary: ErrorBoundaryComponent = () => {
+  const error = useRouteError() as Error;
   return (
     <main className="container mx-auto h-screen p-1 lg:p-5">
       <h1>Something went wrong</h1>

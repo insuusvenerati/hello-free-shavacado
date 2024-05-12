@@ -1,8 +1,7 @@
-import { useSWEffect } from "@remix-pwa/sw";
-import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
+import { ManifestLink, useSWEffect } from "@remix-pwa/sw";
+import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -12,18 +11,18 @@ import {
 } from "@remix-run/react";
 import { captureRemixErrorBoundaryError, withSentry } from "@sentry/remix";
 import NProgress from "nprogress";
-import nProgressStyles from "nprogress/nprogress.css";
+import nProgressStyles from "nprogress/nprogress.css?url";
 import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
-import toastStyles from "react-toastify/dist/ReactToastify.css";
+import toastStyles from "react-toastify/dist/ReactToastify.css?url";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import { useGlobalTransitionStates } from "remix-utils";
+import { useGlobalNavigationState } from "remix-utils/use-global-navigation-state";
 import { Layout } from "./components/Layout";
 import { getUserColorScheme } from "./db/getUserColorScheme.server";
 import { getUserFavorites } from "./models/recipe.server";
 import { getThemeSession } from "./models/theme.server";
 import { getUser } from "./session.server";
-import tailwindStylesheetUrl from "./styles/tailwind.css";
+import tailwindStylesheetUrl from "./styles/tailwind.css?url";
 
 const SplashScreens = () => (
   <>
@@ -169,26 +168,28 @@ export const links: LinksFunction = () => {
 };
 
 export const meta: MetaFunction<typeof loader> = () => {
-  return {
-    charset: "utf-8",
-    title: "Hello Free Shavacado",
-    viewport: "width=device-width,initial-scale=1",
-    description: "Delicious!",
-    "og:url": "https://hf-staging.stiforr.com/",
-    "og:type": "website",
-    "og:image": "/logo.jpg",
-    "og:title": "Hello Free Shavacado",
-    "og:description": "Delicious!",
-    "twitter:card": "summary_large_image",
-    "twitter:domain": "hf-staging.stiforr.com",
-    "twitter:url": "https://hf-staging.stiforr.com/",
-    "twitter:title": "Hello Free Shavacado",
-    "twitter:description": "Delicious!",
-    "twitter:image": "/logo.jpg",
-  };
+  return [
+    {
+      charset: "utf-8",
+      title: "Hello Free Shavacado",
+      viewport: "width=device-width,initial-scale=1",
+      description: "Delicious!",
+      "og:url": "https://hf.stiforr.tech/",
+      "og:type": "website",
+      "og:image": "/logo.jpg",
+      "og:title": "Hello Free Shavacado",
+      "og:description": "Delicious!",
+      "twitter:card": "summary_large_image",
+      "twitter:domain": "hf.stiforr.tech",
+      "twitter:url": "https://hf.stiforr.tech/",
+      "twitter:title": "Hello Free Shavacado",
+      "twitter:description": "Delicious!",
+      "twitter:image": "/logo.jpg",
+    },
+  ];
 };
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   try {
     const user = await getUser(request);
 
@@ -210,7 +211,7 @@ export async function loader({ request }: LoaderArgs) {
 }
 function App() {
   const { colorScheme } = useTypedLoaderData<typeof loader>();
-  const [state] = useGlobalTransitionStates();
+  const [state] = useGlobalNavigationState();
 
   useSWEffect();
 
@@ -227,7 +228,7 @@ function App() {
         <link href="/icons/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />
         <link href="/icons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
         <link href="/icons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
-        <link rel="manifest" href="/resource/manifest.webmanifest" />
+        <ManifestLink />
         <link href="/icons/safari-pinned-tab.svg" rel="mask-icon" />
         <meta content="#da532c" name="msapplication-TileColor" />
         <meta content="#f69435" name="theme-color"></meta>
@@ -242,7 +243,6 @@ function App() {
         <ToastContainer theme={colorScheme === "dark" ? "dark" : "light"} />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
   );
@@ -252,17 +252,33 @@ export default withSentry(App);
 
 export function ErrorBoundary() {
   const error = useRouteError();
+  console.error(error);
 
   captureRemixErrorBoundaryError(error);
 
   // when true, this is what used to go to `CatchBoundary`
   if (isRouteErrorResponse(error)) {
     return (
-      <div>
-        <h1>Oops</h1>
-        <p>Status: {error.status}</p>
-        <p>{error.data.message}</p>
-      </div>
+      <html lang="en">
+        <head>
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <link href="/icons/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />
+          <link href="/icons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+          <link href="/icons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+          <ManifestLink />
+          <link href="/icons/safari-pinned-tab.svg" rel="mask-icon" />
+          <meta content="#da532c" name="msapplication-TileColor" />
+          <meta content="#f69435" name="theme-color"></meta>
+          <SplashScreens />
+          <Meta />
+          <Links />
+        </head>
+        <body className="min-h-screen">
+          <Layout>{error.data}</Layout>
+          <ScrollRestoration />
+          <Scripts />
+        </body>
+      </html>
     );
   }
 
@@ -274,28 +290,10 @@ export function ErrorBoundary() {
   }
 
   return (
-    <html lang="en">
-      <head>
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <link href="/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />
-        <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
-        <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
-        <link rel="manifest" href="/resource/manifest.webmanifest" />
-        <link href="/safari-pinned-tab.svg" rel="mask-icon" />
-        <meta content="#da532c" name="msapplication-TileColor" />
-        <meta content="#f69435" name="theme-color"></meta>
-        <SplashScreens />
-        <Meta />
-        <Links />
-      </head>
-      <body className="min-h-screen">
-        <Layout>
-          <pre> {errorMessage} </pre>
-        </Layout>
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
-    </html>
+    <>
+      <Layout>
+        <pre> {errorMessage} </pre>
+      </Layout>
+    </>
   );
 }
