@@ -4,7 +4,6 @@ import { Link, useFetcher } from "@remix-run/react";
 import { useMatchesData } from "~/utils";
 import { ColorSchemeSwitcher } from "./ColorSchemeSwitcher";
 import { SearchForm } from "./SearchForm";
-import { WeatherCard } from "./WeatherCard";
 
 export const Navbar = () => {
   const matchesData = useMatchesData<{ user: User }>("root");
@@ -18,12 +17,12 @@ export const Navbar = () => {
           <Link to="/" className="btn-ghost btn text-xl normal-case">
             Hello Free Shavacado
           </Link>
-          <WeatherCard />
+          {/* <WeatherCard /> */}
         </div>
       )}
 
       <div className="navbar-center w-full lg:max-w-md">
-        <SearchForm placeholder="Search" className="input-bordered input w-full" />
+        <SearchForm placeholder="Search" />
       </div>
       {matches && matchesData?.user ? (
         <div className="navbar-end max-w-sm gap-2">

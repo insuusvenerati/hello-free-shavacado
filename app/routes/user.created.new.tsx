@@ -1,5 +1,5 @@
-import { Form, useTransition } from "@remix-run/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime";
+import { Form, useNavigation } from "@remix-run/react";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { typedjson, useTypedActionData } from "remix-typedjson";
@@ -8,19 +8,19 @@ import { createRecipe } from "~/models/recipe.server";
 import { requireUser } from "~/session.server";
 import { cn } from "~/utils";
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const response = await createRecipe(request);
 
   return typedjson(response);
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   return await requireUser(request);
 };
 
 const CreateRecipePage = () => {
   const data = useTypedActionData<typeof action>();
-  const transition = useTransition();
+  const transition = useNavigation();
   const isLoading = transition.state === "submitting";
   const [ingredientsFields, setIngredientsFields] = useState([{ name: "ingredients", value: "" }]);
   const [stepsFields, setStepsFields] = useState([{ name: "steps", value: "" }]);
@@ -75,11 +75,12 @@ const CreateRecipePage = () => {
             />
           </label>
 
-          <label className="input-group">
+          <label htmlFor="imageUrl" className="input-group">
             <input
               accept="imaage/*"
               type="file"
               name="imageUrl"
+              id="imageUrl"
               className="file-input-bordered file-input"
             />
           </label>

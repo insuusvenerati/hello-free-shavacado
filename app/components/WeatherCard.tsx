@@ -2,7 +2,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { useTypedFetcher } from "remix-typedjson";
 import { useGetLocation } from "~/hooks/useGetLocation";
-import type { loader } from "~/routes/resource+/weather";
+import type { loader } from "~/routes/resource.weather";
 
 export const WeatherCard = () => {
   const [location, error] = useGetLocation();

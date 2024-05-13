@@ -3,7 +3,7 @@ import { useTypedFetcher } from "remix-typedjson";
 import { useMatchesData } from "~/utils";
 import type { SelectOption } from "./common/Select";
 import { Select } from "./common/Select";
-import type { action } from "~/routes/resource+/user-options";
+import type { action } from "~/routes/resource.user-options";
 
 const tagsOptions: SelectOption[] = [
   { value: "list", label: "List" },

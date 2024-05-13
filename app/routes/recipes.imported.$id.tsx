@@ -1,12 +1,11 @@
-import { Response } from "@remix-run/node";
-import type { LoaderArgs } from "@remix-run/server-runtime";
-import type { TypedMetaFunction } from "remix-typedjson";
+import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import invariant from "tiny-invariant";
 import { ShareButton } from "~/components/common/ShareButton";
 import { getImportedRecipeById } from "~/db/getImportedRecipeById.server";
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const url = request.url;
   const id = params.id;
   invariant(id, "id is required");
@@ -15,14 +14,16 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   return typedjson({ recipe, url });
 };
 
-export const meta: TypedMetaFunction<typeof loader> = ({ data }) => {
-  return {
-    title: data.recipe.name,
-    description: data.recipe.description,
-    "og:title": data.recipe.name,
-    "og:description": data.recipe.description,
-    "og:image": data.recipe.image,
-  };
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [
+    {
+      title: data.recipe.name,
+      description: data.recipe.description,
+      "og:title": data.recipe.name,
+      "og:description": data.recipe.description,
+      "og:image": data.recipe.image,
+    },
+  ];
 };
 const ImportedRecipePage = () => {
   const { recipe, url } = useTypedLoaderData<typeof loader>();

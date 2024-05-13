@@ -1,13 +1,10 @@
 import type { User } from "@prisma/client";
-import { Response } from "@remix-run/node";
-import type { CatchBoundaryComponent } from "@remix-run/react";
-import { useCatch } from "@remix-run/react";
-import type { LoaderArgs, MetaFunction } from "@remix-run/server-runtime";
+import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { Clock, Flame, Star } from "lucide-react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import invariant from "tiny-invariant";
 import { AddToFavoritesButton } from "~/components/AddToFavoritesButton";
-import { Container } from "~/components/common/Container";
 import { ShareButton } from "~/components/common/ShareButton";
 import {
   HF_AVATAR_IMAGE_URL,
@@ -18,7 +15,7 @@ import {
 import { getDbRecipeById } from "~/models/recipe.server";
 import { cn, useMatchesData } from "~/utils";
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const id = params.id;
   invariant(id, "id is required");
   const url = new URL(request.url);
@@ -36,19 +33,21 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return {
-    title: data.recipe.name,
-    description: data.recipe.description,
-    "og:description": data.recipe.description,
-    "og:image": `${HF_CARD_IMAGE_URL}${data.recipe.imagePath}`,
-    "og:url": "https://hello-free-shavacado-new.fly.dev/",
-    "og:type": "website",
-    "og:title": "Hello Free Shavacado",
-    "twitter:card": "summary_large_image",
-    "twitter:title": data.recipe.name,
-    "twitter:description": data.recipe.description,
-    "twitter:image": `${HF_CARD_IMAGE_URL}${data.recipe.imagePath}`,
-  };
+  return [
+    {
+      title: data.recipe.name,
+      description: data.recipe.description,
+      "og:description": data.recipe.description,
+      "og:image": `${HF_CARD_IMAGE_URL}${data.recipe.imagePath}`,
+      "og:url": "https://hello-free-shavacado-new.fly.dev/",
+      "og:type": "website",
+      "og:title": "Hello Free Shavacado",
+      "twitter:card": "summary_large_image",
+      "twitter:title": data.recipe.name,
+      "twitter:description": data.recipe.description,
+      "twitter:image": `${HF_CARD_IMAGE_URL}${data.recipe.imagePath}`,
+    },
+  ];
 };
 
 const RecipePage = () => {
@@ -211,12 +210,12 @@ const RecipePage = () => {
 
 export default RecipePage;
 
-export const CatchBoundary: CatchBoundaryComponent = () => {
-  const caught = useCatch();
-  console.log(caught);
-  return (
-    <Container>
-      <h1 className="text-xl">{caught.data}</h1>
-    </Container>
-  );
-};
+// export const CatchBoundary: CatchBoundaryComponent = () => {
+//   const caught = useCatch();
+//   console.log(caught);
+//   return (
+//     <Container>
+//       <h1 className="text-xl">{caught.data}</h1>
+//     </Container>
+//   );
+// };

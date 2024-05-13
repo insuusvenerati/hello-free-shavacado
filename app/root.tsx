@@ -228,7 +228,7 @@ function App() {
         <link href="/icons/android-chrome-192x192.png" rel="apple-touch-icon" sizes="192x192" />
         <link href="/icons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
         <link href="/icons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
-        <ManifestLink />
+        <ManifestLink manifestUrl="/resource/manifest.webmanifest" />
         <link href="/icons/safari-pinned-tab.svg" rel="mask-icon" />
         <meta content="#da532c" name="msapplication-TileColor" />
         <meta content="#f69435" name="theme-color"></meta>

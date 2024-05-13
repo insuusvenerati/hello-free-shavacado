@@ -17,15 +17,14 @@ export const SearchForm = ({ label, ...rest }: SearchFromProps) => {
   }, []);
 
   return (
-    <Form ref={formRef} method="get" className="form-control w-full">
-      <label className="input-group">
+    <Form ref={formRef} method="get" className="w-full">
+      <label className="input input-bordered flex items-center gap-2">
         {label}
         {search && (
           <>
             <button
               title="clear"
               type="button"
-              className="btn-square btn"
               onClick={() => {
                 setParams(new URLSearchParams());
                 formRef.current?.reset();
@@ -48,8 +47,15 @@ export const SearchForm = ({ label, ...rest }: SearchFromProps) => {
             </button>
           </>
         )}
-        <input ref={inputRef} defaultValue={search} name="search" type="text" {...rest} />
-        <button title="submit" type="submit" className="btn-square btn">
+        <input
+          className="grow"
+          ref={inputRef}
+          defaultValue={search}
+          name="search"
+          type="text"
+          {...rest}
+        />
+        <button title="submit" type="submit">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"

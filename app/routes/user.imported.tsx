@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
-import { useCatch } from "@remix-run/react";
-import type { ActionArgs, ErrorBoundaryComponent, LoaderArgs } from "@remix-run/server-runtime";
+import { useRouteError } from "@remix-run/react";
+import type { ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/server-runtime";
 import clsx from "clsx";
 import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
@@ -13,7 +14,7 @@ import { ImportedRecipeCard } from "~/components/ImportedRecipeCard";
 import { prisma } from "~/db.server";
 import { requireUser } from "~/session.server";
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const recipeDataScraper = (await import("recipe-data-scraper")).default;
   const user = await requireUser(request);
   const formData = await request.formData();
@@ -95,7 +96,7 @@ export const action = async ({ request }: ActionArgs) => {
   }
 };
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const user = await requireUser(request);
   const importedRecipes = await prisma.importedRecipe.findMany({
     where: { user: { id: user.id } },
@@ -184,19 +185,8 @@ const UserImportedPage = () => {
 
 export default UserImportedPage;
 
-export const CatchBoundary = () => {
-  const caught = useCatch();
-  console.log(caught);
-
-  return (
-    <div className="container mx-auto min-h-screen max-w-2xl">
-      <h1>Oh no</h1>
-      <pre>{JSON.stringify(caught, null, 2)}</pre>
-    </div>
-  );
-};
-
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }: { error: Error }) => {
+export const ErrorBoundary: ErrorBoundaryComponent = () => {
+  const error = useRouteError();
   console.log(error);
   return (
     <div className="container mx-auto min-h-screen max-w-2xl">

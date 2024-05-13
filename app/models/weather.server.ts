@@ -1,4 +1,4 @@
-import { cachified } from "cachified";
+import { cachified } from "@epic-web/cachified";
 import { cache } from "~/cache.server";
 import type { Root as Weather } from "~/types/weather";
 import { getLocationInfo } from "~/utils/geo-location";

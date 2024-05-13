@@ -6,7 +6,6 @@
   "scripts": {
     "postinstall": "prisma generate",
     "build": "run-s build:*",
-    "build:worker": "esbuild ./app/entry.workbox.ts --outfile=./public/entry.workbox.js --minify --bundle --platform=node --format=esm --define:process.env.NODE_ENV='\"production\"'",
     "build:webworker": "esbuild ./app/utils/worker.ts --outfile=./public/worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'",
     "build:remix": "cross-env NODE_ENV=production remix vite:build",
     "dev": "run-p dev:*",

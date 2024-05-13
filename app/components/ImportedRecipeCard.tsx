@@ -2,7 +2,7 @@ import type { ImportedRecipe } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import { useTypedFetcher } from "remix-typedjson";
 import { TrashIcon } from "./TrashIcon";
-import type { action } from "~/routes/resource+/imported";
+import type { action } from "~/routes/resource.imported";
 
 type Props = {
   recipe: ImportedRecipe;

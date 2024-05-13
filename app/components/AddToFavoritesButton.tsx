@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { useTypedFetcher } from "remix-typedjson";
 import { cn, useMatchesData } from "~/utils";
 import { TrashIcon } from "./TrashIcon";
-import type { action } from "~/routes/recipes+/favorite";
+import type { action } from "~/routes/recipes.favorite";
 
 type Props = {
   id: string | undefined;
